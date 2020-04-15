@@ -1,9 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"os"
-	"fmt"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -19,12 +19,12 @@ func SetupDB() {
 		log.Fatal("error loding .env file")
 	}
 	fmt.Println("connecting to database ...")
-	username := os.Getenv("db_user")
-	password := os.Getenv("db_pass")
-	dbName := os.Getenv("db_name")
-	dbHost := os.Getenv("db_host")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
 
-	connStr := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password) //Build connection string
+	connStr := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbUser, dbName, dbPassword) //Build connection string
 	//connStr := "user=postgres dbname=data_portal host=localhost sslmode=disable password=postgres"
 
 	DB, err = gorm.Open("postgres", connStr)
@@ -32,5 +32,4 @@ func SetupDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
