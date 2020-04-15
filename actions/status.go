@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"../models"
+	"github.com/factly/data-portal-api/models"
 )
 
 func CreateStatus(w http.ResponseWriter, r *http.Request) {

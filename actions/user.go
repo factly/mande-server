@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"../models"
+	"github.com/factly/data-portal-api/models"
 	"github.com/go-chi/chi"
 )
 

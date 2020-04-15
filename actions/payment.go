@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"../models"
+	"github.com/factly/data-portal-api/models"
 	"github.com/go-chi/chi"
 )
 
@@ -95,7 +95,7 @@ func DeletePayment(w http.ResponseWriter, r *http.Request) {
 	payment := &models.Payment{
 		ID: uint(id),
 	}
-	
+
 	json.NewDecoder(r.Body).Decode(&payment)
 
 	models.DB.First(&payment)

@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"./models"
+	"github.com/factly/data-portal-api/models"
 
-	"./actions"
+	"github.com/factly/data-portal-api/actions"
 
 	"github.com/go-chi/chi"
 )
@@ -79,7 +79,7 @@ func registerRoutes() http.Handler {
 
 	})
 	return r
-} 
+}
 
 func main() {
 	// db setup
