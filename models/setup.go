@@ -18,7 +18,6 @@ func SetupDB() {
 	if err != nil {
 		log.Fatal("error loding .env file")
 	}
-	fmt.Println("connecting to database ...")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
@@ -32,4 +31,5 @@ func SetupDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("connected to database ...")
 }

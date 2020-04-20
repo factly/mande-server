@@ -1,13 +1,18 @@
 package models
 
-import "net/url"
+import (
+	"net/url"
+	"time"
+)
 
 // User model
 type User struct {
-	ID    uint   `gorm:"primary_key" json:"id"`
-	Email string `gorm:"column:email" json:"email"`
-	Name  string `gorm:"column:name" json:"name"`
-	Age   int    `gorm:"column:age" json:"age"`
+	ID        uint      `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
+	Email     string    `gorm:"column:email" json:"email"`
+	Name      string    `gorm:"column:name" json:"name"`
+	Age       int       `gorm:"column:age" json:"age"`
 }
 
 func (u *User) Validate() url.Values {

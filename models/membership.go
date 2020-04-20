@@ -7,7 +7,7 @@ import (
 
 // Membership model
 type Membership struct {
-	ID        uint      `gorm:"primary_key"`
+	ID        uint      `gorm:"primary_key" json:"id"`
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
 	Status    string    `gorm:"column:status" json:"status"`

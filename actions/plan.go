@@ -10,9 +10,26 @@ import (
 	"github.com/go-chi/chi"
 )
 
+// Plan request body
+type plan struct {
+	PlanName string `json:"plan_name"`
+	PlanInfo string `json:"plan_info"`
+	Status   string `json:"status"`
+}
+
+// GetPlan - Get plan by id
+// @Summary Show a plan by id
+// @Description Get plan by ID
+// @Tags Plan
+// @ID get-plan-by-id
+// @Produce  json
+// @Param id path string true "Plan ID"
+// @Success 200 {object} models.Plan
+// @Router /plans/{id} [get]
 func GetPlan(w http.ResponseWriter, r *http.Request) {
-	planId := chi.URLParam(r, "planId")
-	id, err := strconv.Atoi(planId)
+	w.Header().Set("Content-Type", "application/json")
+	planID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(planID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -21,15 +38,24 @@ func GetPlan(w http.ResponseWriter, r *http.Request) {
 	req := &models.Plan{
 		ID: uint(id),
 	}
-	json.NewDecoder(r.Body).Decode(&req)
 
 	models.DB.Model(&models.Plan{}).First(&req)
 
 	json.NewEncoder(w).Encode(req)
 }
 
+// CreatePlan - create plan
+// @Summary Create plan
+// @Description create plan
+// @Tags Plan
+// @ID add-plan
+// @Consume json
+// @Produce  json
+// @Param Plan body plan true "Plan object"
+// @Success 200 {object} models.Plan
+// @Router /plans [post]
 func CreatePlan(w http.ResponseWriter, r *http.Request) {
-
+	w.Header().Set("Content-Type", "application/json")
 	req := &models.Plan{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -50,41 +76,56 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(req)
 }
 
+// UpdatePlan - Update plan by id
+// @Summary Update a plan by id
+// @Description Update plan by ID
+// @Tags Plan
+// @ID update-plan-by-id
+// @Produce json
+// @Consume json
+// @Param id path string true "Plan ID"
+// @Param Plan body plan false "Plan"
+// @Success 200 {object} models.Plan
+// @Router /plans/{id} [put]
 func UpdatePlan(w http.ResponseWriter, r *http.Request) {
-
-	planId := chi.URLParam(r, "planId")
-	id, err := strconv.Atoi(planId)
+	w.Header().Set("Content-Type", "application/json")
+	planID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(planID)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	req := &models.Plan{
+	req := &models.Plan{}
+	plan := &models.Plan{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
-	plan := &models.Plan{}
-	models.DB.First(&models.Plan{})
 
-	if req.PlanName != "" {
-		plan.PlanName = req.PlanName
-	}
-	if req.PlanInfo != "" {
-		plan.PlanInfo = req.PlanInfo
-	}
-	if req.Status != "" {
-		plan.Status = req.Status
-	}
+	models.DB.Model(&plan).Updates(models.Plan{
+		PlanName: req.PlanName,
+		PlanInfo: req.PlanInfo,
+		Status:   req.Status,
+	})
+	models.DB.First(&plan)
 
-	models.DB.Model(&models.Plan{}).Update(&plan)
-
-	json.NewEncoder(w).Encode(req)
+	json.NewEncoder(w).Encode(plan)
 }
 
+// DeletePlan - Delete plan by id
+// @Summary Delete a plan
+// @Description Delete plan by ID
+// @Tags Plan
+// @ID delete-plan-by-id
+// @Consume  json
+// @Param id path string true "Plan ID"
+// @Success 200 {object} models.Plan
+// @Router /plans/{id} [delete]
 func DeletePlan(w http.ResponseWriter, r *http.Request) {
-	planId := chi.URLParam(r, "planId")
-	id, err := strconv.Atoi(planId)
+	w.Header().Set("Content-Type", "application/json")
+	planID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(planID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -93,7 +134,6 @@ func DeletePlan(w http.ResponseWriter, r *http.Request) {
 	plan := &models.Plan{
 		ID: uint(id),
 	}
-	json.NewDecoder(r.Body).Decode(&plan)
 
 	models.DB.First(&plan)
 	models.DB.Delete(&plan)

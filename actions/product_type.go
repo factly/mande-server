@@ -8,6 +8,21 @@ import (
 	"github.com/factly/data-portal-api/models"
 )
 
+// productType request body
+type productType struct {
+	Name string `json:"name"`
+}
+
+// CreateProductType - Create product type
+// @Summary Create product type
+// @Description Create product type
+// @Tags Type
+// @ID add-type
+// @Consume json
+// @Produce  json
+// @Param Type body productType true "Type object"
+// @Success 200 {object} models.ProductType
+// @Router /products/{id}/type [post]
 func CreateProductType(w http.ResponseWriter, r *http.Request) {
 
 	req := &models.ProductType{}
@@ -27,30 +42,4 @@ func CreateProductType(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(req)
-}
-
-func UpdateProductType(w http.ResponseWriter, r *http.Request) {
-
-	req := &models.ProductType{}
-
-	json.NewDecoder(r.Body).Decode(&req)
-	productType := &models.ProductType{}
-	models.DB.First(&models.ProductType{})
-
-	if req.Name != "" {
-		productType.Name = req.Name
-	}
-
-	models.DB.Model(&models.ProductType{}).Update(&productType)
-	json.NewEncoder(w).Encode(productType)
-}
-
-func DeleteProductType(w http.ResponseWriter, r *http.Request) {
-	productType := &models.ProductType{}
-	json.NewDecoder(r.Body).Decode(&productType)
-
-	models.DB.First(&productType)
-	models.DB.Delete(&productType)
-
-	json.NewEncoder(w).Encode(productType)
 }

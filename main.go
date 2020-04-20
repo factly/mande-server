@@ -1,91 +1,33 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/factly/data-portal-api/models"
 
 	"github.com/factly/data-portal-api/actions"
-
-	"github.com/go-chi/chi"
 )
 
-func registerRoutes() http.Handler {
-	r := chi.NewRouter()
+// @title Data portal API
+// @version 1.0
+// @description This is a sample server.
 
-	r.Route("/currencies", func(r chi.Router) {
-		r.Post("/", actions.CreateCurrency)
-		r.Route("/{currencyId}", func(r chi.Router) {
-			r.Get("/", actions.GetCurrency)
-			r.Delete("/", actions.DeleteCurrency)
-			r.Put("/", actions.UpdateCurrency)
-		})
-	})
-	r.Route("/users", func(r chi.Router) {
-		r.Post("/", actions.CreateUser)
-		r.Route("/{userId}", func(r chi.Router) {
-			r.Get("/", actions.GetUser)
-			r.Delete("/", actions.DeleteUser)
-			r.Put("/", actions.UpdateUser)
-		})
-	})
-	r.Route("/plans", func(r chi.Router) {
-		r.Post("/", actions.CreatePlan)
-		r.Route("/{planId}", func(r chi.Router) {
-			r.Get("/", actions.GetPlan)
-			r.Delete("/", actions.DeletePlan)
-			r.Put("/", actions.UpdatePlan)
-		})
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
 
-	})
-	r.Route("/memberships", func(r chi.Router) {
-		r.Post("/", actions.CreateMembership)
-		r.Route("/{membershipId}", func(r chi.Router) {
-			r.Get("/", actions.GetMembership)
-			r.Delete("/", actions.DeleteMembership)
-			r.Put("/", actions.UpdateMembership)
-		})
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-	})
-	r.Route("/payments", func(r chi.Router) {
-		r.Post("/", actions.CreatePayment)
-		r.Route("/{paymentId}", func(r chi.Router) {
-			r.Get("/", actions.GetPayment)
-			r.Delete("/", actions.DeletePayment)
-			r.Put("/", actions.UpdatePayment)
-		})
-	})
-	r.Route("/products", func(r chi.Router) {
-		r.Post("/", actions.CreateProduct)
-		r.Route("/{productId}", func(r chi.Router) {
-			r.Get("/", actions.GetProduct)
-			r.Delete("/", actions.DeleteProduct)
-			r.Put("/", actions.UpdateProduct)
-			r.Post("/type", actions.CreateProductType)
-			r.Put("/type", actions.UpdateProductType)
-			r.Delete("/type", actions.DeleteProductType)
-			r.Post("/status", actions.CreateStatus)
-			r.Put("/status", actions.UpdateStatus)
-			r.Delete("/status", actions.DeleteStatus)
-		})
-	})
-	r.Route("/tags", func(r chi.Router) {
-		r.Post("/", actions.CreateTag)
-		r.Route("/{tagId}", func(r chi.Router) {
-			r.Get("/", actions.GetTag)
-			r.Delete("/", actions.DeleteTag)
-			r.Put("/", actions.UpdateTag)
-		})
-
-	})
-	return r
-}
+// @host localhost:3000
+// @BasePath /
 
 func main() {
 	// db setup
 	models.SetupDB()
 
-	// create tables
+	// db migrations
 	models.DB.AutoMigrate(
 		&models.Currency{},
 		&models.Payment{},
@@ -105,7 +47,8 @@ func main() {
 	models.DB.Model(&models.Product{}).AddForeignKey("currency_id", "currencies(id)", "RESTRICT", "RESTRICT")
 	models.DB.Model(&models.Product{}).AddForeignKey("status_id", "statuses(id)", "RESTRICT", "RESTRICT")
 	models.DB.Model(&models.Product{}).AddForeignKey("product_type_id", "product_types(id)", "RESTRICT", "RESTRICT")
-	r := registerRoutes()
 
+	r := actions.RegisterRoutes()
+	fmt.Println("swagger-ui http://localhost:3000/swagger/index.html")
 	http.ListenAndServe(":3000", r)
 }

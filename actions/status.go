@@ -8,8 +8,23 @@ import (
 	"github.com/factly/data-portal-api/models"
 )
 
-func CreateStatus(w http.ResponseWriter, r *http.Request) {
+// status request object
+type status struct {
+	Name string `json:"name"`
+}
 
+// CreateStatus - Create status
+// @Summary Create status
+// @Description Create status
+// @Tags Status
+// @ID add-status
+// @Consume json
+// @Produce  json
+// @Param Status body status true "Status object"
+// @Success 200 {object} models.Status
+// @Router /products/{id}/status [post]
+func CreateStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	req := &models.Status{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -27,31 +42,4 @@ func CreateStatus(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(req)
-}
-
-func UpdateStatus(w http.ResponseWriter, r *http.Request) {
-
-	req := &models.Status{}
-
-	json.NewDecoder(r.Body).Decode(&req)
-	status := &models.Status{}
-	models.DB.First(&models.Status{})
-
-	if req.Name != "" {
-		status.Name = req.Name
-	}
-
-	models.DB.Model(&models.Status{}).Update(&status)
-
-	json.NewEncoder(w).Encode(req)
-}
-
-func DeleteStatus(w http.ResponseWriter, r *http.Request) {
-	status := &models.Status{}
-	json.NewDecoder(r.Body).Decode(&status)
-
-	models.DB.First(&status)
-	models.DB.Delete(&status)
-
-	json.NewEncoder(w).Encode(status)
 }

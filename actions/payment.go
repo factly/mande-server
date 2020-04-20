@@ -10,9 +10,27 @@ import (
 	"github.com/go-chi/chi"
 )
 
+// payment request body
+type payment struct {
+	Amount     int    `json:"amount"`
+	Gateway    string `json:"gateway"`
+	CurrencyID uint   `json:"currency_id"`
+	Status     string `json:"status"`
+}
+
+// GetPayment - Get payment by id
+// @Summary Show a payment by id
+// @Description Get payment by ID
+// @Tags Payment
+// @ID get-payment-by-id
+// @Produce  json
+// @Param id path string true "Payment ID"
+// @Success 200 {object} models.Payment
+// @Router /payments/{id} [get]
 func GetPayment(w http.ResponseWriter, r *http.Request) {
-	paymentId := chi.URLParam(r, "paymentId")
-	id, err := strconv.Atoi(paymentId)
+	w.Header().Set("Content-Type", "application/json")
+	paymentID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -28,8 +46,18 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(req)
 }
 
+// CreatePayment - Create payment
+// @Summary Create payment
+// @Description Create payment
+// @Tags Payment
+// @ID add-payment
+// @Consume json
+// @Produce  json
+// @Param Payment body payment true "Payment object"
+// @Success 200 {object} models.Payment
+// @Router /payments [post]
 func CreatePayment(w http.ResponseWriter, r *http.Request) {
-
+	w.Header().Set("Content-Type", "application/json")
 	req := &models.Payment{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -50,43 +78,21 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(req)
 }
 
+// UpdatePayment - Update payment by id
+// @Summary Update a payment by id
+// @Description Update payment by ID
+// @Tags Payment
+// @ID update-payment-by-id
+// @Produce json
+// @Consume json
+// @Param id path string true "Payment ID"
+// @Param Payment body payment false "Payment"
+// @Success 200 {object} models.Payment
+// @Router /payments/{id} [put]
 func UpdatePayment(w http.ResponseWriter, r *http.Request) {
-	paymentId := chi.URLParam(r, "paymentId")
-	id, err := strconv.Atoi(paymentId)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	req := &models.Payment{
-		ID: uint(id),
-	}
-
-	json.NewDecoder(r.Body).Decode(&req)
-	payment := &models.Payment{}
-	models.DB.First(&models.Payment{})
-
-	if req.Amount != 0 {
-		payment.Amount = req.Amount
-	}
-	if req.Gateway != "" {
-		payment.Gateway = req.Gateway
-	}
-	if req.Status != "" {
-		payment.Status = req.Status
-	}
-	if req.CurrencyID != 0 {
-		payment.CurrencyID = req.CurrencyID
-	}
-
-	models.DB.Model(&models.Payment{}).Update(&payment)
-
-	json.NewEncoder(w).Encode(req)
-}
-
-func DeletePayment(w http.ResponseWriter, r *http.Request) {
-	paymentId := chi.URLParam(r, "paymentId")
-	id, err := strconv.Atoi(paymentId)
+	w.Header().Set("Content-Type", "application/json")
+	paymentID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {
 		log.Fatal(err)
@@ -96,9 +102,45 @@ func DeletePayment(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	json.NewDecoder(r.Body).Decode(&payment)
+	req := &models.Payment{}
+
+	json.NewDecoder(r.Body).Decode(&req)
+
+	models.DB.Model(&payment).Updates(&models.Payment{
+		Amount:     req.Amount,
+		Gateway:    req.Gateway,
+		Status:     req.Status,
+		CurrencyID: req.CurrencyID,
+	})
+	models.DB.First(&payment)
+	models.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+	json.NewEncoder(w).Encode(payment)
+}
+
+// DeletePayment - Delete payment by id
+// @Summary Delete a payment
+// @Description Delete payment by ID
+// @Tags Payment
+// @ID delete-payment-by-id
+// @Consume  json
+// @Param id path string true "Payment ID"
+// @Success 200 {object} models.Payment
+// @Router /payments/{id} [delete]
+func DeletePayment(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	paymentID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(paymentID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	payment := &models.Payment{
+		ID: uint(id),
+	}
 
 	models.DB.First(&payment)
+	models.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 	models.DB.Delete(&payment)
 
 	json.NewEncoder(w).Encode(payment)
