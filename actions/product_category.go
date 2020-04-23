@@ -42,7 +42,12 @@ func GetProductCategory(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.ProductCategory{}).First(&req)
+	err = models.DB.Model(&models.ProductCategory{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	json.NewEncoder(w).Encode(req)
 }

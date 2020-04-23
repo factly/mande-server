@@ -45,7 +45,12 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.Product{}).First(&req)
+	err = models.DB.Model(&models.Product{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	models.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
 	models.DB.Model(&req).Association("Currency").Find(&req.Currency)

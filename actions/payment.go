@@ -44,7 +44,12 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.Payment{}).First(&req)
+	err = models.DB.Model(&models.Payment{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	models.DB.Model(&req).Association("Currency").Find(&req.Currency)
 	json.NewEncoder(w).Encode(req)

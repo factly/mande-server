@@ -42,7 +42,12 @@ func GetProductTag(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.ProductTag{}).First(&req)
+	err = models.DB.Model(&models.ProductTag{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	json.NewEncoder(w).Encode(req)
 }

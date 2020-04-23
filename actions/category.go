@@ -43,7 +43,12 @@ func GetCategory(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.Category{}).First(&req)
+	err = models.DB.Model(&models.Category{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	json.NewEncoder(w).Encode(req)
 }

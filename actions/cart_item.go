@@ -43,7 +43,11 @@ func GetCartItem(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.CartItem{}).First(&req)
+	err = models.DB.Model(&models.CartItem{}).First(&req).Error
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 	models.DB.Model(&req).Association("Product").Find(&req.Product)
 	models.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
 	models.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)

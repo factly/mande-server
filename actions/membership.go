@@ -43,7 +43,12 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&models.Membership{}).First(&req)
+	err = models.DB.Model(&models.Membership{}).First(&req).Error
+
+	if err != nil {
+		validation.RecordNotFound(w, r)
+		return
+	}
 
 	models.DB.Model(&req).Association("User").Find(&req.User)
 	models.DB.Model(&req).Association("Plan").Find(&req.Plan)

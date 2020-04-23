@@ -138,6 +138,6 @@ func RegisterRoutes() http.Handler {
 
 	// swagger docs
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
-
+	/* add disable swagger in pr */
 	return r
 }
