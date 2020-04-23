@@ -1,5 +1,30 @@
 basePath: /
 definitions:
+  actions.cart:
+    properties:
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  actions.cartItem:
+    properties:
+      cart_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product_id:
+        type: integer
+    type: object
+  actions.category:
+    properties:
+      parent_id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
   actions.currency:
     properties:
       iso_code:
@@ -53,6 +78,20 @@ definitions:
       title:
         type: string
     type: object
+  actions.productCategory:
+    properties:
+      category_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  actions.productTag:
+    properties:
+      product_id:
+        type: integer
+      tag_id:
+        type: integer
+    type: object
   actions.productType:
     properties:
       name:
@@ -72,12 +111,69 @@ definitions:
     type: object
   actions.user:
     properties:
-      age:
-        type: integer
       email:
         type: string
-      name:
+      first_name:
         type: string
+      last_name:
+        type: string
+    type: object
+  models.Cart:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - status
+    - user_id
+    type: object
+  models.CartItem:
+    properties:
+      cart_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      product_id:
+        type: integer
+      updated_at:
+        type: string
+    required:
+    - cart_id
+    - is_deleted
+    - product_id
+    type: object
+  models.Category:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      parent_id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - parent_id
+    - slug
+    - title
     type: object
   models.Currency:
     properties:
@@ -91,6 +187,9 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - iso_code
+    - name
     type: object
   models.Membership:
     properties:
@@ -117,6 +216,11 @@ definitions:
         type: object
       user_id:
         type: integer
+    required:
+    - payment_id
+    - plan_id
+    - status
+    - user_id
     type: object
   models.Payment:
     properties:
@@ -137,6 +241,11 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - amount
+    - currency_id
+    - gateway
+    - status
     type: object
   models.Plan:
     properties:
@@ -152,6 +261,10 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - plan_info
+    - plan_name
+    - status
     type: object
   models.Product:
     properties:
@@ -182,6 +295,45 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - currency_id
+    - price
+    - product_type_id
+    - slug
+    - status_id
+    - title
+    type: object
+  models.ProductCategory:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      product_id:
+        type: integer
+      updated_at:
+        type: string
+    required:
+    - category_id
+    - product_id
+    type: object
+  models.ProductTag:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      product_id:
+        type: integer
+      tag_id:
+        type: integer
+      updated_at:
+        type: string
+    required:
+    - product_id
+    - tag_id
     type: object
   models.ProductType:
     properties:
@@ -193,6 +345,8 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - name
     type: object
   models.Status:
     properties:
@@ -204,6 +358,8 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - name
     type: object
   models.Tag:
     properties:
@@ -217,21 +373,28 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - slug
+    - title
     type: object
   models.User:
     properties:
-      age:
-        type: integer
       created_at:
         type: string
       email:
         type: string
+      first_name:
+        type: string
       id:
         type: integer
-      name:
+      last_name:
         type: string
       updated_at:
         type: string
+    required:
+    - email
+    - first_name
+    - last_name
     type: object
 host: localhost:3000
 info:
@@ -246,6 +409,324 @@ info:
   title: Data portal API
   version: "1.0"
 paths:
+  /cartItems:
+    post:
+      description: create cartItem
+      operationId: add-cartItem
+      parameters:
+      - description: CartItem object
+        in: body
+        name: CartItem
+        required: true
+        schema:
+          $ref: '#/definitions/actions.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cartItem
+      tags:
+      - CartItem
+  /cartItems/{id}:
+    delete:
+      description: Delete cartItem by ID
+      operationId: delete-cartItem-by-id
+      parameters:
+      - description: CartItem ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a cartItem
+      tags:
+      - CartItem
+    get:
+      description: Get cartItem by ID
+      operationId: get-cartItem-by-id
+      parameters:
+      - description: CartItem ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cartItem by id
+      tags:
+      - CartItem
+    put:
+      description: Update cartItem by ID
+      operationId: update-cartItem-by-id
+      parameters:
+      - description: CartItem ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: CartItem
+        in: body
+        name: CartItem
+        schema:
+          $ref: '#/definitions/actions.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a cartItem by id
+      tags:
+      - CartItem
+  /carts:
+    post:
+      description: create cart
+      operationId: add-cart
+      parameters:
+      - description: Cart object
+        in: body
+        name: Cart
+        required: true
+        schema:
+          $ref: '#/definitions/actions.cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cart
+      tags:
+      - Cart
+  /carts/{id}:
+    delete:
+      description: Delete cart by ID
+      operationId: delete-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a cart
+      tags:
+      - Cart
+    get:
+      description: Get cart by ID
+      operationId: get-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cart by id
+      tags:
+      - Cart
+    put:
+      description: Update cart by ID
+      operationId: update-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Cart
+        in: body
+        name: Cart
+        schema:
+          $ref: '#/definitions/actions.cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a cart by id
+      tags:
+      - Cart
+  /categories:
+    post:
+      description: create category
+      operationId: add-category
+      parameters:
+      - description: Category object
+        in: body
+        name: Category
+        required: true
+        schema:
+          $ref: '#/definitions/actions.category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create category
+      tags:
+      - Category
+  /categories/{id}:
+    delete:
+      description: Delete category by ID
+      operationId: delete-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a category
+      tags:
+      - Category
+    get:
+      description: Get category by ID
+      operationId: get-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a category by id
+      tags:
+      - Category
+    put:
+      description: Update category by ID
+      operationId: update-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category
+        in: body
+        name: Category
+        schema:
+          $ref: '#/definitions/actions.category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a category by id
+      tags:
+      - Category
   /currencies:
     post:
       description: Create currency
@@ -264,6 +745,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create currency
       tags:
       - Currency
@@ -282,6 +769,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a currency
       tags:
       - Currency
@@ -292,7 +785,6 @@ paths:
       - description: Currency ID
         in: path
         name: id
-        required: true
         type: string
       produces:
       - application/json
@@ -301,6 +793,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a currency by id
       tags:
       - Currency
@@ -325,6 +823,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a currency by id
       tags:
       - Currency
@@ -346,6 +850,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create membership
       tags:
       - Membership
@@ -364,6 +874,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a membership
       tags:
       - Membership
@@ -383,6 +899,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a membership by id
       tags:
       - Membership
@@ -407,6 +929,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a membership by id
       tags:
       - Membership
@@ -428,6 +956,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create payment
       tags:
       - Payment
@@ -446,6 +980,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a payment
       tags:
       - Payment
@@ -465,6 +1005,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a payment by id
       tags:
       - Payment
@@ -489,6 +1035,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a payment by id
       tags:
       - Payment
@@ -528,6 +1080,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a plan
       tags:
       - Plan
@@ -547,6 +1105,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a plan by id
       tags:
       - Plan
@@ -571,9 +1135,227 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a plan by id
       tags:
       - Plan
+  /productCategories:
+    post:
+      description: create productCategory
+      operationId: add-productCategory
+      parameters:
+      - description: ProductCategory object
+        in: body
+        name: ProductCategory
+        required: true
+        schema:
+          $ref: '#/definitions/actions.productCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productCategory
+      tags:
+      - ProductCategory
+  /productCategories/{id}:
+    delete:
+      description: Delete productCategory by ID
+      operationId: delete-productCategory-by-id
+      parameters:
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productCategory
+      tags:
+      - ProductCategory
+    get:
+      description: Get productCategory by ID
+      operationId: get-productCategory-by-id
+      parameters:
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a productCategory by id
+      tags:
+      - ProductCategory
+    put:
+      description: Update productCategory by ID
+      operationId: update-productCategory-by-id
+      parameters:
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductCategory
+        in: body
+        name: ProductCategory
+        schema:
+          $ref: '#/definitions/actions.productCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a productCategory by id
+      tags:
+      - ProductCategory
+  /productTags:
+    post:
+      description: create productTag
+      operationId: add-productTag
+      parameters:
+      - description: ProductTag object
+        in: body
+        name: ProductTag
+        required: true
+        schema:
+          $ref: '#/definitions/actions.productTag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productTag
+      tags:
+      - ProductTag
+  /productTags/{id}:
+    delete:
+      description: Delete productTag by ID
+      operationId: delete-productTag-by-id
+      parameters:
+      - description: ProductTag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productTag
+      tags:
+      - ProductTag
+    get:
+      description: Get productTag by ID
+      operationId: get-productTag-by-id
+      parameters:
+      - description: ProductTag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a productTag by id
+      tags:
+      - ProductTag
+    put:
+      description: Update productTag by ID
+      operationId: update-productTag-by-id
+      parameters:
+      - description: ProductTag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductTag
+        in: body
+        name: ProductTag
+        schema:
+          $ref: '#/definitions/actions.productTag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a productTag by id
+      tags:
+      - ProductTag
   /products:
     post:
       description: Create product
@@ -592,6 +1374,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create product
       tags:
       - Product
@@ -610,6 +1398,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a product
       tags:
       - Product
@@ -629,6 +1423,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a product by id
       tags:
       - Product
@@ -653,6 +1453,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a product by id
       tags:
       - Product
@@ -674,6 +1480,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Status'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create status
       tags:
       - Status
@@ -695,6 +1507,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create product type
       tags:
       - Type
@@ -716,6 +1534,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create tag
       tags:
       - Tag
@@ -734,6 +1558,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a tag
       tags:
       - Tag
@@ -753,6 +1583,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a tag by id
       tags:
       - Tag
@@ -777,6 +1613,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a tag by id
       tags:
       - Tag
@@ -798,6 +1640,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Create user
       tags:
       - User
@@ -816,6 +1664,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Delete a user
       tags:
       - User
@@ -835,6 +1689,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Show a user by id
       tags:
       - User
@@ -859,6 +1719,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
       summary: Update a user by id
       tags:
       - User

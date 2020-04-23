@@ -7,14 +7,16 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/validationerrors"
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
 
 // user request body
 type user struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
-	Age   int    `json:"age"`
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
 
 // GetUser - Get user by id
@@ -25,13 +27,15 @@ type user struct {
 // @Produce  json
 // @Param id path string true "User ID"
 // @Success 200 {object} models.User
+// @Failure 400 {array} string
 // @Router /users/{id} [get]
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.User{
@@ -52,20 +56,21 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param User body user true "User object"
 // @Success 200 {object} models.User
+// @Failure 400 {array} string
 // @Router /users [post]
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	req := &models.User{}
 	json.NewDecoder(r.Body).Decode(&req)
 
-	if validErrs := req.Validate(); len(validErrs) > 0 {
-		err := map[string]interface{}{"validationError": validErrs}
-		w.Header().Set("Content-type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		msg := err.Error()
+		validationerrors.ValidErrors(w, r, msg)
 		return
 	}
-	err := models.DB.Model(&models.User{}).Create(&req).Error
+	err = models.DB.Model(&models.User{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -84,13 +89,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 // @Param id path string true "User ID"
 // @Param User body user false "User"
 // @Success 200 {object} models.User
+// @Failure 400 {array} string
 // @Router /users/{id} [put]
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.User{}
@@ -100,7 +107,11 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		ID: uint(id),
 	}
 
-	models.DB.Model(&user).Updates(&models.User{Email: req.Email, Name: req.Name})
+	models.DB.Model(&user).Updates(&models.User{
+		Email:     req.Email,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+	})
 	models.DB.First(&user)
 	json.NewEncoder(w).Encode(user)
 }
@@ -113,20 +124,28 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "User ID"
 // @Success 200 {object} models.User
+// @Failure 400 {array} string
 // @Router /users/{id} [delete]
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	user := &models.User{
 		ID: uint(id),
 	}
 
-	models.DB.First(&user)
+	// check record exists or not
+	err = models.DB.First(&user).Error
+	if err != nil {
+		validationerrors.RecordNotFound(w, r)
+		return
+	}
+
 	models.DB.Delete(&user)
 
 	json.NewEncoder(w).Encode(user)

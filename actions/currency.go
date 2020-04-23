@@ -7,7 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/validationerrors"
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
 
 // currency request body
@@ -22,14 +24,16 @@ type currency struct {
 // @Tags Currency
 // @ID get-currency-by-id
 // @Produce  json
-// @Param id path string true "Currency ID"
+// @Param id path string false "Currency ID"
 // @Success 200 {object} models.Currency
+// @Failure 400 {array} string
 // @Router /currencies/{id} [get]
 func GetCurrency(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.Currency{
@@ -50,6 +54,7 @@ func GetCurrency(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param Currency body currency true "Currency object"
 // @Success 200 {object} models.Currency
+// @Failure 400 {array} string
 // @Router /currencies [post]
 func CreateCurrency(w http.ResponseWriter, r *http.Request) {
 
@@ -57,14 +62,15 @@ func CreateCurrency(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	if validErrs := req.Validate(); len(validErrs) > 0 {
-		err := map[string]interface{}{"validationError": validErrs}
-		w.Header().Set("Content-type", "applciation/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		msg := err.Error()
+		validationerrors.ValidErrors(w, r, msg)
 		return
 	}
-	err := models.DB.Model(&models.Currency{}).Create(&req).Error
+
+	err = models.DB.Model(&models.Currency{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -83,12 +89,14 @@ func CreateCurrency(w http.ResponseWriter, r *http.Request) {
 // @Param id path string true "Currecny ID"
 // @Param Currency body currency false "Currency"
 // @Success 200 {object} models.Currency
+// @Failure 400 {array} string
 // @Router /currencies/{id} [put]
 func UpdateCurrency(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	currency := &models.Currency{
@@ -110,19 +118,27 @@ func UpdateCurrency(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Currency ID"
 // @Success 200 {object} models.Currency
+// @Failure 400 {array} string
 // @Router /currencies/{id} [delete]
 func DeleteCurrency(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	currency := &models.Currency{
 		ID: uint(id),
 	}
 
-	models.DB.First(&currency)
+	// check record exists or not
+	err = models.DB.First(&currency).Error
+	if err != nil {
+		validationerrors.RecordNotFound(w, r)
+		return
+	}
+
 	models.DB.Delete(&currency)
 
 	json.NewEncoder(w).Encode(currency)

@@ -7,7 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/validationerrors"
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
 
 // Plan request body
@@ -25,6 +27,7 @@ type plan struct {
 // @Produce  json
 // @Param id path string true "Plan ID"
 // @Success 200 {object} models.Plan
+// @Failure 400 {array} string
 // @Router /plans/{id} [get]
 func GetPlan(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -32,7 +35,8 @@ func GetPlan(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.Plan{
@@ -60,14 +64,15 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	if validErrs := req.Validate(); len(validErrs) > 0 {
-		err := map[string]interface{}{"validationError": validErrs}
-		w.Header().Set("Content-type", "applciation/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+	validate := validator.New()
+	err := validate.Struct(req)
+	if err != nil {
+		msg := err.Error()
+		validationerrors.ValidErrors(w, r, msg)
 		return
 	}
-	err := models.DB.Model(&models.Plan{}).Create(&req).Error
+
+	err = models.DB.Model(&models.Plan{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -86,6 +91,7 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 // @Param id path string true "Plan ID"
 // @Param Plan body plan false "Plan"
 // @Success 200 {object} models.Plan
+// @Failure 400 {array} string
 // @Router /plans/{id} [put]
 func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -93,7 +99,8 @@ func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.Plan{}
@@ -121,6 +128,7 @@ func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Plan ID"
 // @Success 200 {object} models.Plan
+// @Failure 400 {array} string
 // @Router /plans/{id} [delete]
 func DeletePlan(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -128,14 +136,21 @@ func DeletePlan(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	plan := &models.Plan{
 		ID: uint(id),
 	}
 
-	models.DB.First(&plan)
+	// check record exists or not
+	err = models.DB.First(&plan).Error
+
+	if err != nil {
+		validationerrors.RecordNotFound(w, r)
+		return
+	}
 	models.DB.Delete(&plan)
 
 	json.NewEncoder(w).Encode(plan)

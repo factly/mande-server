@@ -7,7 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/validationerrors"
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
 
 // membership request body
@@ -26,13 +28,15 @@ type membership struct {
 // @Produce  json
 // @Param id path string true "Membership ID"
 // @Success 200 {object} models.Membership
+// @Failure 400 {array} string
 // @Router /memberships/{id} [get]
 func GetMembership(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.Membership{
@@ -57,21 +61,22 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param Membership body membership true "Membership object"
 // @Success 200 {object} models.Membership
+// @Failure 400 {array} string
 // @Router /memberships [post]
 func CreateMembership(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	req := &models.Membership{}
 	json.NewDecoder(r.Body).Decode(&req)
 
-	if validErrs := req.Validate(); len(validErrs) > 0 {
-		err := map[string]interface{}{"validationError": validErrs}
-		w.Header().Set("Content-type", "applciation/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+	validate := validator.New()
+	err := validate.StructExcept(req, "User", "Plan", "Payment")
+	if err != nil {
+		msg := err.Error()
+		validationerrors.ValidErrors(w, r, msg)
 		return
 	}
 
-	err := models.DB.Model(&models.Membership{}).Create(&req).Error
+	err = models.DB.Model(&models.Membership{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -94,13 +99,15 @@ func CreateMembership(w http.ResponseWriter, r *http.Request) {
 // @Param id path string true "Membership ID"
 // @Param Membership body membership false "Membership"
 // @Success 200 {object} models.Membership
+// @Failure 400 {array} string
 // @Router /memberships/{id} [put]
 func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	membership := &models.Membership{
@@ -133,20 +140,27 @@ func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Membership ID"
 // @Success 200 {object} models.Membership
+// @Failure 400 {array} string
 // @Router /memberships/{id} [delete]
 func DeleteMembership(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	membership := &models.Membership{
 		ID: uint(id),
 	}
 
-	models.DB.First(&membership)
+	// check record exists or not
+	err = models.DB.First(&membership).Error
+	if err != nil {
+		validationerrors.RecordNotFound(w, r)
+		return
+	}
 	models.DB.Delete(&membership)
 
 	json.NewEncoder(w).Encode(membership)

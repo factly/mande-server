@@ -7,7 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/validationerrors"
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
 
 type product struct {
@@ -27,6 +29,7 @@ type product struct {
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Success 200 {object} models.Product
+// @Failure 400 {array} string
 // @Router /products/{id} [get]
 func GetProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -34,7 +37,8 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	req := &models.Product{
@@ -58,21 +62,22 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param Product body product true "Product object"
 // @Success 200 {object} models.Product
+// @Failure 400 {array} string
 // @Router /products [post]
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	req := &models.Product{}
 	json.NewDecoder(r.Body).Decode(&req)
 
-	if validErrs := req.Validate(); len(validErrs) > 0 {
-		err := map[string]interface{}{"validationError": validErrs}
-		w.Header().Set("Content-type", "applciation/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+	validate := validator.New()
+	err := validate.StructExcept(req, "ProductType", "Status", "Currency")
+	if err != nil {
+		msg := err.Error()
+		validationerrors.ValidErrors(w, r, msg)
 		return
 	}
 
-	err := models.DB.Model(&models.Product{}).Create(&req).Error
+	err = models.DB.Model(&models.Product{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -93,6 +98,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 // @Param id path string true "Product ID"
 // @Param Product body product false "Product"
 // @Success 200 {object} models.Product
+// @Failure 400 {array} string
 // @Router /products/{id} [put]
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -100,7 +106,8 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	product := &models.Product{
@@ -134,6 +141,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Product ID"
 // @Success 200 {object} models.Product
+// @Failure 400 {array} string
 // @Router /products/{id} [delete]
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -141,14 +149,21 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		log.Fatal(err)
+		validationerrors.InvalidID(w, r)
+		return
 	}
 
 	product := &models.Product{
 		ID: uint(id),
 	}
 
-	models.DB.First(&product)
+	// check record exists or not
+	err = models.DB.First(&product).Error
+	if err != nil {
+		validationerrors.RecordNotFound(w, r)
+		return
+	}
+
 	models.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
 	models.DB.Model(&product).Association("Currency").Find(&product.Currency)
 	models.DB.Model(&product).Association("Status").Find(&product.Status)

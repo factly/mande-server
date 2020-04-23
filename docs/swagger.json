@@ -17,6 +17,483 @@
     "host": "localhost:3000",
     "basePath": "/",
     "paths": {
+        "/cartItems": {
+            "post": {
+                "description": "create cartItem",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Create cartItem",
+                "operationId": "add-cartItem",
+                "parameters": [
+                    {
+                        "description": "CartItem object",
+                        "name": "CartItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.cartItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cartItems/{id}": {
+            "get": {
+                "description": "Get cartItem by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Show a cartItem by id",
+                "operationId": "get-cartItem-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CartItem ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update cartItem by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Update a cartItem by id",
+                "operationId": "update-cartItem-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CartItem ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CartItem",
+                        "name": "CartItem",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/actions.cartItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete cartItem by ID",
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Delete a cartItem",
+                "operationId": "delete-cartItem-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CartItem ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/carts": {
+            "post": {
+                "description": "create cart",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Create cart",
+                "operationId": "add-cart",
+                "parameters": [
+                    {
+                        "description": "Cart object",
+                        "name": "Cart",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.cart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/carts/{id}": {
+            "get": {
+                "description": "Get cart by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Show a cart by id",
+                "operationId": "get-cart-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update cart by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Update a cart by id",
+                "operationId": "update-cart-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Cart",
+                        "name": "Cart",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/actions.cart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete cart by ID",
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Delete a cart",
+                "operationId": "delete-cart-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "description": "create category",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create category",
+                "operationId": "add-category",
+                "parameters": [
+                    {
+                        "description": "Category object",
+                        "name": "Category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "description": "Get category by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Show a category by id",
+                "operationId": "get-category-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update category by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update a category by id",
+                "operationId": "update-category-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Category",
+                        "name": "Category",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/actions.category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete category by ID",
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete a category",
+                "operationId": "delete-category-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/currencies": {
             "post": {
                 "description": "Create currency",
@@ -45,6 +522,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Currency"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -65,8 +551,7 @@
                         "type": "string",
                         "description": "Currency ID",
                         "name": "id",
-                        "in": "path",
-                        "required": true
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -74,6 +559,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Currency"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -111,6 +605,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Currency"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -135,6 +638,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Currency"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -168,6 +680,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Membership"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -197,6 +718,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Membership"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -234,6 +764,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Membership"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -258,6 +797,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Membership"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -291,6 +839,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Payment"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -320,6 +877,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -357,6 +923,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Payment"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -381,6 +956,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -444,6 +1028,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Plan"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -480,6 +1073,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Plan"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -504,6 +1106,333 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Plan"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/productCategories": {
+            "post": {
+                "description": "create productCategory",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Create productCategory",
+                "operationId": "add-productCategory",
+                "parameters": [
+                    {
+                        "description": "ProductCategory object",
+                        "name": "ProductCategory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.productCategory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/productCategories/{id}": {
+            "get": {
+                "description": "Get productCategory by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Show a productCategory by id",
+                "operationId": "get-productCategory-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductCategory ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update productCategory by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Update a productCategory by id",
+                "operationId": "update-productCategory-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductCategory ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductCategory",
+                        "name": "ProductCategory",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/actions.productCategory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete productCategory by ID",
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Delete a productCategory",
+                "operationId": "delete-productCategory-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductCategory ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/productTags": {
+            "post": {
+                "description": "create productTag",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Create productTag",
+                "operationId": "add-productTag",
+                "parameters": [
+                    {
+                        "description": "ProductTag object",
+                        "name": "ProductTag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.productTag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/productTags/{id}": {
+            "get": {
+                "description": "Get productTag by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Show a productTag by id",
+                "operationId": "get-productTag-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductTag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update productTag by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Update a productTag by id",
+                "operationId": "update-productTag-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductTag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductTag",
+                        "name": "ProductTag",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/actions.productTag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete productTag by ID",
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Delete a productTag",
+                "operationId": "delete-productTag-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductTag ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -537,6 +1466,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Product"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -566,6 +1504,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -603,6 +1550,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Product"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -627,6 +1583,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -660,6 +1625,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Status"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -691,6 +1665,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.ProductType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -724,6 +1707,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Tag"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -753,6 +1745,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Tag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -790,6 +1791,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.Tag"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -814,6 +1824,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Tag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -847,6 +1866,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -876,6 +1904,15 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -913,6 +1950,15 @@
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -938,12 +1984,60 @@
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "actions.cart": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "actions.cartItem": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "type": "integer"
+                },
+                "is_deleted": {
+                    "type": "boolean"
+                },
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "actions.category": {
+            "type": "object",
+            "properties": {
+                "parent_id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "actions.currency": {
             "type": "object",
             "properties": {
@@ -1026,6 +2120,28 @@
                 }
             }
         },
+        "actions.productCategory": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "actions.productTag": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                },
+                "tag_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "actions.productType": {
             "type": "object",
             "properties": {
@@ -1056,19 +2172,107 @@
         "actions.user": {
             "type": "object",
             "properties": {
-                "age": {
-                    "type": "integer"
-                },
                 "email": {
                     "type": "string"
                 },
-                "name": {
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Cart": {
+            "type": "object",
+            "required": [
+                "status",
+                "user_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CartItem": {
+            "type": "object",
+            "required": [
+                "cart_id",
+                "is_deleted",
+                "product_id"
+            ],
+            "properties": {
+                "cart_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_deleted": {
+                    "type": "boolean"
+                },
+                "product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Category": {
+            "type": "object",
+            "required": [
+                "parent_id",
+                "slug",
+                "title"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "parent_id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
         },
         "models.Currency": {
             "type": "object",
+            "required": [
+                "iso_code",
+                "name"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1089,6 +2293,12 @@
         },
         "models.Membership": {
             "type": "object",
+            "required": [
+                "payment_id",
+                "plan_id",
+                "status",
+                "user_id"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1127,6 +2337,12 @@
         },
         "models.Payment": {
             "type": "object",
+            "required": [
+                "amount",
+                "currency_id",
+                "gateway",
+                "status"
+            ],
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -1157,6 +2373,11 @@
         },
         "models.Plan": {
             "type": "object",
+            "required": [
+                "plan_info",
+                "plan_name",
+                "status"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1180,6 +2401,14 @@
         },
         "models.Product": {
             "type": "object",
+            "required": [
+                "currency_id",
+                "price",
+                "product_type_id",
+                "slug",
+                "status_id",
+                "title"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1222,8 +2451,59 @@
                 }
             }
         },
+        "models.ProductCategory": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "product_id"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProductTag": {
+            "type": "object",
+            "required": [
+                "product_id",
+                "tag_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ProductType": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1241,6 +2521,9 @@
         },
         "models.Status": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1258,6 +2541,10 @@
         },
         "models.Tag": {
             "type": "object",
+            "required": [
+                "slug",
+                "title"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -1278,20 +2565,25 @@
         },
         "models.User": {
             "type": "object",
+            "required": [
+                "email",
+                "first_name",
+                "last_name"
+            ],
             "properties": {
-                "age": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 },
+                "first_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
+                "last_name": {
                     "type": "string"
                 },
                 "updated_at": {
