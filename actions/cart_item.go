@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -35,7 +35,7 @@ func GetCartItem(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartItemID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -72,7 +72,7 @@ func CreateCartItem(w http.ResponseWriter, r *http.Request) {
 	err := validate.StructExcept(req, "Product")
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 	err = models.DB.Model(&models.CartItem{}).Create(&req).Error
@@ -105,7 +105,7 @@ func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartItemID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -145,7 +145,7 @@ func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartItemID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -157,7 +157,7 @@ func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
 	err = models.DB.First(&cartItem).Error
 
 	if err != nil {
-		validationerrors.RecordNotFound(w, r)
+		validation.RecordNotFound(w, r)
 		return
 	}
 	models.DB.Delete(&cartItem)

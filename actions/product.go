@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -37,7 +37,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -73,7 +73,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	err := validate.StructExcept(req, "ProductType", "Status", "Currency")
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 
@@ -106,7 +106,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -149,7 +149,7 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -160,7 +160,7 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = models.DB.First(&product).Error
 	if err != nil {
-		validationerrors.RecordNotFound(w, r)
+		validation.RecordNotFound(w, r)
 		return
 	}
 

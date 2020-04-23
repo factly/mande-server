@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -35,7 +35,7 @@ func CreateStatus(w http.ResponseWriter, r *http.Request) {
 	err := validate.Struct(req)
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 

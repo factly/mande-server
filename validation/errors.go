@@ -1,4 +1,4 @@
-package validationerrors
+package validation
 
 import (
 	"encoding/json"

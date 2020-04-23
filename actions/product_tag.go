@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -34,7 +34,7 @@ func GetProductTag(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productTagID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -68,7 +68,7 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 	err := validate.Struct(req)
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 
@@ -99,7 +99,7 @@ func UpdateProductTag(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productTagID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -135,7 +135,7 @@ func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(productTagID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -147,7 +147,7 @@ func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
 	err = models.DB.First(&productTag).Error
 
 	if err != nil {
-		validationerrors.RecordNotFound(w, r)
+		validation.RecordNotFound(w, r)
 		return
 	}
 	models.DB.Delete(&productTag)

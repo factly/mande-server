@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -35,7 +35,7 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -72,7 +72,7 @@ func CreateMembership(w http.ResponseWriter, r *http.Request) {
 	err := validate.StructExcept(req, "User", "Plan", "Payment")
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 
@@ -106,7 +106,7 @@ func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -147,7 +147,7 @@ func DeleteMembership(w http.ResponseWriter, r *http.Request) {
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -158,7 +158,7 @@ func DeleteMembership(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = models.DB.First(&membership).Error
 	if err != nil {
-		validationerrors.RecordNotFound(w, r)
+		validation.RecordNotFound(w, r)
 		return
 	}
 	models.DB.Delete(&membership)

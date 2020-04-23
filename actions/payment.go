@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-api/models"
-	"github.com/factly/data-portal-api/validationerrors"
+	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -36,7 +36,7 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -70,7 +70,7 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 	err := validate.StructExcept(req, "Currency")
 	if err != nil {
 		msg := err.Error()
-		validationerrors.ValidErrors(w, r, msg)
+		validation.ValidErrors(w, r, msg)
 		return
 	}
 
@@ -101,7 +101,7 @@ func UpdatePayment(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -140,7 +140,7 @@ func DeletePayment(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {
-		validationerrors.InvalidID(w, r)
+		validation.InvalidID(w, r)
 		return
 	}
 
@@ -151,7 +151,7 @@ func DeletePayment(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = models.DB.First(&payment).Error
 	if err != nil {
-		validationerrors.RecordNotFound(w, r)
+		validation.RecordNotFound(w, r)
 		return
 	}
 	models.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
