@@ -19,6 +19,40 @@ type category struct {
 	ParentID uint   `json:"parent_id"`
 }
 
+// GetCategories - Get all categories
+// @Summary Show all categories
+// @Description Get all categories
+// @Tags Category
+// @ID get-all-categories
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Category
+// @Router /categories [get]
+func GetCategories(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var categories []models.Category
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.Category{}).Find(&categories)
+
+	json.NewEncoder(w).Encode(categories)
+}
+
 // GetCategory - Get category by id
 // @Summary Show a category by id
 // @Description Get category by ID

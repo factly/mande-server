@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/factly/data-portal-api/models"
 	"github.com/factly/data-portal-api/validation"
@@ -13,6 +14,40 @@ import (
 // status request object
 type status struct {
 	Name string `json:"name"`
+}
+
+// GetStatuses - Get all statuses
+// @Summary Show all statuses
+// @Description Get all statuses
+// @Tags Status
+// @ID get-all-statuses
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Status
+// @Router /products/{id}/status [get]
+func GetStatuses(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var statuses []models.Status
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.Status{}).Find(&statuses)
+
+	json.NewEncoder(w).Encode(statuses)
 }
 
 // CreateStatus - Create status

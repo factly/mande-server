@@ -19,6 +19,40 @@ type user struct {
 	LastName  string `json:"last_name"`
 }
 
+// GetUsers - Get all users
+// @Summary Show all users
+// @Description Get all users
+// @Tags User
+// @ID get-all-users
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.User
+// @Router /users [get]
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var users []models.User
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.User{}).Find(&users)
+
+	json.NewEncoder(w).Encode(users)
+}
+
 // GetUser - Get user by id
 // @Summary Show a user by id
 // @Description Get user by ID

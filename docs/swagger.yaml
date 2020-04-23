@@ -85,7 +85,7 @@ definitions:
       product_id:
         type: integer
     type: object
-  actions.productTag:
+  actions.productTags:
     properties:
       product_id:
         type: integer
@@ -153,7 +153,6 @@ definitions:
         type: string
     required:
     - cart_id
-    - is_deleted
     - product_id
     type: object
   models.Category:
@@ -410,6 +409,30 @@ info:
   version: "1.0"
 paths:
   /cartItems:
+    get:
+      description: Get all cartItems
+      operationId: get-all-cartItems
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CartItem'
+            type: array
+      summary: Show all cartItems
+      tags:
+      - CartItem
     post:
       description: create cartItem
       operationId: add-cartItem
@@ -516,6 +539,30 @@ paths:
       tags:
       - CartItem
   /carts:
+    get:
+      description: Get all carts
+      operationId: get-all-carts
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Cart'
+            type: array
+      summary: Show all carts
+      tags:
+      - Cart
     post:
       description: create cart
       operationId: add-cart
@@ -622,6 +669,30 @@ paths:
       tags:
       - Cart
   /categories:
+    get:
+      description: Get all categories
+      operationId: get-all-categories
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+      summary: Show all categories
+      tags:
+      - Category
     post:
       description: create category
       operationId: add-category
@@ -728,6 +799,30 @@ paths:
       tags:
       - Category
   /currencies:
+    get:
+      description: Get all currencies
+      operationId: get-all-currencies
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Currency'
+            type: array
+      summary: Show all currencies
+      tags:
+      - Currency
     post:
       description: Create currency
       operationId: add-currency
@@ -833,6 +928,30 @@ paths:
       tags:
       - Currency
   /memberships:
+    get:
+      description: Get all memberships
+      operationId: get-all-memberships
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Membership'
+            type: array
+      summary: Show all memberships
+      tags:
+      - Membership
     post:
       description: Create membership
       operationId: add-membership
@@ -939,6 +1058,30 @@ paths:
       tags:
       - Membership
   /payments:
+    get:
+      description: Get all payments
+      operationId: get-all-payments
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Payment'
+            type: array
+      summary: Show all payments
+      tags:
+      - Payment
     post:
       description: Create payment
       operationId: add-payment
@@ -1045,6 +1188,30 @@ paths:
       tags:
       - Payment
   /plans:
+    get:
+      description: Get all plans
+      operationId: get-all-plans
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Plan'
+            type: array
+      summary: Show all plans
+      tags:
+      - Plan
     post:
       description: create plan
       operationId: add-plan
@@ -1145,6 +1312,30 @@ paths:
       tags:
       - Plan
   /productCategories:
+    get:
+      description: Get all productCategories
+      operationId: get-all-productCategories
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductCategory'
+            type: array
+      summary: Show all productCategories
+      tags:
+      - ProductCategory
     post:
       description: create productCategory
       operationId: add-productCategory
@@ -1251,16 +1442,40 @@ paths:
       tags:
       - ProductCategory
   /productTags:
+    get:
+      description: Get all productTags
+      operationId: get-all-productTags
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductTag'
+            type: array
+      summary: Show all productTags
+      tags:
+      - ProductTag
     post:
-      description: create productTag
-      operationId: add-productTag
+      description: create productTags
+      operationId: add-productTags
       parameters:
       - description: ProductTag object
         in: body
         name: ProductTag
         required: true
         schema:
-          $ref: '#/definitions/actions.productTag'
+          $ref: '#/definitions/actions.productTags'
       produces:
       - application/json
       responses:
@@ -1274,13 +1489,13 @@ paths:
             items:
               type: string
             type: array
-      summary: Create productTag
+      summary: Create productTags
       tags:
       - ProductTag
   /productTags/{id}:
     delete:
-      description: Delete productTag by ID
-      operationId: delete-productTag-by-id
+      description: Delete productTags by ID
+      operationId: delete-productTags-by-id
       parameters:
       - description: ProductTag ID
         in: path
@@ -1298,12 +1513,12 @@ paths:
             items:
               type: string
             type: array
-      summary: Delete a productTag
+      summary: Delete a productTags
       tags:
       - ProductTag
     get:
-      description: Get productTag by ID
-      operationId: get-productTag-by-id
+      description: Get productTags by ID
+      operationId: get-productTags-by-id
       parameters:
       - description: ProductTag ID
         in: path
@@ -1323,12 +1538,12 @@ paths:
             items:
               type: string
             type: array
-      summary: Show a productTag by id
+      summary: Show a productTags by id
       tags:
       - ProductTag
     put:
-      description: Update productTag by ID
-      operationId: update-productTag-by-id
+      description: Update productTags by ID
+      operationId: update-productTags-by-id
       parameters:
       - description: ProductTag ID
         in: path
@@ -1339,7 +1554,7 @@ paths:
         in: body
         name: ProductTag
         schema:
-          $ref: '#/definitions/actions.productTag'
+          $ref: '#/definitions/actions.productTags'
       produces:
       - application/json
       responses:
@@ -1353,10 +1568,34 @@ paths:
             items:
               type: string
             type: array
-      summary: Update a productTag by id
+      summary: Update a productTags by id
       tags:
       - ProductTag
   /products:
+    get:
+      description: Get all products
+      operationId: get-all-products
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+      summary: Show all products
+      tags:
+      - Product
     post:
       description: Create product
       operationId: add-product
@@ -1463,6 +1702,30 @@ paths:
       tags:
       - Product
   /products/{id}/status:
+    get:
+      description: Get all statuses
+      operationId: get-all-statuses
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Status'
+            type: array
+      summary: Show all statuses
+      tags:
+      - Status
     post:
       description: Create status
       operationId: add-status
@@ -1490,6 +1753,30 @@ paths:
       tags:
       - Status
   /products/{id}/type:
+    get:
+      description: Get all productTypes
+      operationId: get-all-productTypes
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductType'
+            type: array
+      summary: Show all productTypes
+      tags:
+      - Type
     post:
       description: Create product type
       operationId: add-type
@@ -1517,6 +1804,30 @@ paths:
       tags:
       - Type
   /tags:
+    get:
+      description: Get all tags
+      operationId: get-all-tags
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tag'
+            type: array
+      summary: Show all tags
+      tags:
+      - Tag
     post:
       description: Create tag
       operationId: add-tag
@@ -1623,6 +1934,30 @@ paths:
       tags:
       - Tag
   /users:
+    get:
+      description: Get all users
+      operationId: get-all-users
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: Show all users
+      tags:
+      - User
     post:
       description: Create user
       operationId: add-user

@@ -21,6 +21,40 @@ type product struct {
 	CurrencyID    uint   `json:"currency_id"`
 }
 
+// GetProducts - Get all products
+// @Summary Show all products
+// @Description Get all products
+// @Tags Product
+// @ID get-all-products
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Product
+// @Router /products [get]
+func GetProducts(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var products []models.Product
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Preload("Currency").Preload("Status").Preload("ProductType").Model(&models.Product{}).Find(&products)
+
+	json.NewEncoder(w).Encode(products)
+}
+
 // GetProduct - Get product by id
 // @Summary Show a product by id
 // @Description Get product by ID

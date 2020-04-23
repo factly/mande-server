@@ -20,6 +20,40 @@ type payment struct {
 	Status     string `json:"status"`
 }
 
+// GetPayments - Get all payments
+// @Summary Show all payments
+// @Description Get all payments
+// @Tags Payment
+// @ID get-all-payments
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Payment
+// @Router /payments [get]
+func GetPayments(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var payments []models.Payment
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Preload("Currency").Model(&models.Payment{}).Find(&payments)
+
+	json.NewEncoder(w).Encode(payments)
+}
+
 // GetPayment - Get payment by id
 // @Summary Show a payment by id
 // @Description Get payment by ID

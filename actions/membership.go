@@ -20,6 +20,40 @@ type membership struct {
 	PlanID    uint   `json:"plan_id"`
 }
 
+// GetMemberships - Get all memberships
+// @Summary Show all memberships
+// @Description Get all memberships
+// @Tags Membership
+// @ID get-all-memberships
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Membership
+// @Router /memberships [get]
+func GetMemberships(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var memberships []models.Membership
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&models.Membership{}).Find(&memberships)
+
+	json.NewEncoder(w).Encode(memberships)
+}
+
 // GetMembership - Get membership by id
 // @Summary Show a membership by id
 // @Description Get membership by ID

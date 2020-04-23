@@ -19,6 +19,40 @@ type plan struct {
 	Status   string `json:"status"`
 }
 
+// GetPlans - Get all plans
+// @Summary Show all plans
+// @Description Get all plans
+// @Tags Plan
+// @ID get-all-plans
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Plan
+// @Router /plans [get]
+func GetPlans(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var plans []models.Plan
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.Plan{}).Find(&plans)
+
+	json.NewEncoder(w).Encode(plans)
+}
+
 // GetPlan - Get plan by id
 // @Summary Show a plan by id
 // @Description Get plan by ID

@@ -18,6 +18,40 @@ type cart struct {
 	UserID uint   `json:"user_id"`
 }
 
+// GetCarts - Get all carts
+// @Summary Show all carts
+// @Description Get all carts
+// @Tags Cart
+// @ID get-all-carts
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Cart
+// @Router /carts [get]
+func GetCarts(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var carts []models.Cart
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.Cart{}).Find(&carts)
+
+	json.NewEncoder(w).Encode(carts)
+}
+
 // GetCart - Get cart by id
 // @Summary Show a cart by id
 // @Description Get cart by ID

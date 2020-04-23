@@ -18,6 +18,40 @@ type currency struct {
 	Name    string `json:"name"`
 }
 
+// GetCurrencies - Get all currencies
+// @Summary Show all currencies
+// @Description Get all currencies
+// @Tags Currency
+// @ID get-all-currencies
+// @Produce  json
+// @Param limit query string false "limt per page"
+// @Param page query string false "page number"
+// @Success 200 {array} models.Currency
+// @Router /currencies [get]
+func GetCurrencies(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var currencies []models.Currency
+	p := r.URL.Query().Get("page")
+	pg, _ := strconv.Atoi(p) // pg contains page number
+	l := r.URL.Query().Get("limit")
+	li, _ := strconv.Atoi(l) // li contains perPage number
+
+	offset := 0 // no. of records to skip
+	limit := 5  // limt
+
+	if li > 0 && li <= 10 {
+		limit = li
+	}
+
+	if pg > 1 {
+		offset = (pg - 1) * limit
+	}
+
+	models.DB.Offset(offset).Limit(limit).Model(&models.Currency{}).Find(&currencies)
+
+	json.NewEncoder(w).Encode(currencies)
+}
+
 // GetCurrency - Get currency by id
 // @Summary Show a currency by id
 // @Description get currency by ID

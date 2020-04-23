@@ -18,6 +18,42 @@
     "basePath": "/",
     "paths": {
         "/cartItems": {
+            "get": {
+                "description": "Get all cartItems",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Show all cartItems",
+                "operationId": "get-all-cartItems",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CartItem"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create cartItem",
                 "produces": [
@@ -177,6 +213,42 @@
             }
         },
         "/carts": {
+            "get": {
+                "description": "Get all carts",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Show all carts",
+                "operationId": "get-all-carts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Cart"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create cart",
                 "produces": [
@@ -336,6 +408,42 @@
             }
         },
         "/categories": {
+            "get": {
+                "description": "Get all categories",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Show all categories",
+                "operationId": "get-all-categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Category"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create category",
                 "produces": [
@@ -495,6 +603,42 @@
             }
         },
         "/currencies": {
+            "get": {
+                "description": "Get all currencies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "Show all currencies",
+                "operationId": "get-all-currencies",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Currency"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create currency",
                 "produces": [
@@ -653,6 +797,42 @@
             }
         },
         "/memberships": {
+            "get": {
+                "description": "Get all memberships",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Membership"
+                ],
+                "summary": "Show all memberships",
+                "operationId": "get-all-memberships",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Membership"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create membership",
                 "produces": [
@@ -812,6 +992,42 @@
             }
         },
         "/payments": {
+            "get": {
+                "description": "Get all payments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Show all payments",
+                "operationId": "get-all-payments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Payment"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create payment",
                 "produces": [
@@ -971,6 +1187,42 @@
             }
         },
         "/plans": {
+            "get": {
+                "description": "Get all plans",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Plan"
+                ],
+                "summary": "Show all plans",
+                "operationId": "get-all-plans",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Plan"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create plan",
                 "produces": [
@@ -1121,6 +1373,42 @@
             }
         },
         "/productCategories": {
+            "get": {
+                "description": "Get all productCategories",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Show all productCategories",
+                "operationId": "get-all-productCategories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ProductCategory"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "create productCategory",
                 "produces": [
@@ -1280,16 +1568,52 @@
             }
         },
         "/productTags": {
-            "post": {
-                "description": "create productTag",
+            "get": {
+                "description": "Get all productTags",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductTag"
                 ],
-                "summary": "Create productTag",
-                "operationId": "add-productTag",
+                "summary": "Show all productTags",
+                "operationId": "get-all-productTags",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ProductTag"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create productTags",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Create productTags",
+                "operationId": "add-productTags",
                 "parameters": [
                     {
                         "description": "ProductTag object",
@@ -1297,7 +1621,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.productTag"
+                            "$ref": "#/definitions/actions.productTags"
                         }
                     }
                 ],
@@ -1322,15 +1646,15 @@
         },
         "/productTags/{id}": {
             "get": {
-                "description": "Get productTag by ID",
+                "description": "Get productTags by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductTag"
                 ],
-                "summary": "Show a productTag by id",
-                "operationId": "get-productTag-by-id",
+                "summary": "Show a productTags by id",
+                "operationId": "get-productTags-by-id",
                 "parameters": [
                     {
                         "type": "string",
@@ -1359,15 +1683,15 @@
                 }
             },
             "put": {
-                "description": "Update productTag by ID",
+                "description": "Update productTags by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductTag"
                 ],
-                "summary": "Update a productTag by id",
-                "operationId": "update-productTag-by-id",
+                "summary": "Update a productTags by id",
+                "operationId": "update-productTags-by-id",
                 "parameters": [
                     {
                         "type": "string",
@@ -1381,7 +1705,7 @@
                         "name": "ProductTag",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.productTag"
+                            "$ref": "#/definitions/actions.productTags"
                         }
                     }
                 ],
@@ -1404,12 +1728,12 @@
                 }
             },
             "delete": {
-                "description": "Delete productTag by ID",
+                "description": "Delete productTags by ID",
                 "tags": [
                     "ProductTag"
                 ],
-                "summary": "Delete a productTag",
-                "operationId": "delete-productTag-by-id",
+                "summary": "Delete a productTags",
+                "operationId": "delete-productTags-by-id",
                 "parameters": [
                     {
                         "type": "string",
@@ -1439,6 +1763,42 @@
             }
         },
         "/products": {
+            "get": {
+                "description": "Get all products",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Show all products",
+                "operationId": "get-all-products",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Product"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create product",
                 "produces": [
@@ -1598,6 +1958,42 @@
             }
         },
         "/products/{id}/status": {
+            "get": {
+                "description": "Get all statuses",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Show all statuses",
+                "operationId": "get-all-statuses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Status"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create status",
                 "produces": [
@@ -1639,6 +2035,42 @@
             }
         },
         "/products/{id}/type": {
+            "get": {
+                "description": "Get all productTypes",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Show all productTypes",
+                "operationId": "get-all-productTypes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ProductType"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create product type",
                 "produces": [
@@ -1680,6 +2112,42 @@
             }
         },
         "/tags": {
+            "get": {
+                "description": "Get all tags",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Show all tags",
+                "operationId": "get-all-tags",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Tag"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create tag",
                 "produces": [
@@ -1839,6 +2307,42 @@
             }
         },
         "/users": {
+            "get": {
+                "description": "Get all users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Show all users",
+                "operationId": "get-all-users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create user",
                 "produces": [
@@ -2131,7 +2635,7 @@
                 }
             }
         },
-        "actions.productTag": {
+        "actions.productTags": {
             "type": "object",
             "properties": {
                 "product_id": {
@@ -2211,7 +2715,6 @@
             "type": "object",
             "required": [
                 "cart_id",
-                "is_deleted",
                 "product_id"
             ],
             "properties": {
