@@ -50,6 +50,8 @@ func SetupDB() {
 		&ProductCategory{},
 		&Cart{},
 		&CartItem{},
+		&Order{},
+		&OrderItem{},
 	)
 
 	// Adding foreignKey
@@ -67,4 +69,8 @@ func SetupDB() {
 	DB.Model(&Cart{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&CartItem{}).AddForeignKey("cart_id", "carts(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&CartItem{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Order{}).AddForeignKey("payment_id", "payments(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Order{}).AddForeignKey("cart_id", "carts(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&OrderItem{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&OrderItem{}).AddForeignKey("order_id", "orders(id)", "RESTRICT", "RESTRICT")
 }

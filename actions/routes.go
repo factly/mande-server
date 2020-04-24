@@ -150,8 +150,30 @@ func RegisterRoutes() http.Handler {
 
 	})
 
+	r.Route("/orders", func(r chi.Router) {
+		r.Post("/", CreateOrder)
+		r.Get("/", GetOrders)
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", GetOrder)
+			r.Delete("/", DeleteOrder)
+			r.Put("/", UpdateOrder)
+		})
+
+	})
+
+	r.Route("/order-items", func(r chi.Router) {
+		r.Post("/", CreateOrderItem)
+		r.Get("/", GetOrders)
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", GetOrderItem)
+			r.Delete("/", DeleteOrderItem)
+			r.Put("/", UpdateOrderItem)
+		})
+
+	})
+
 	// swagger docs
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
-	/* add disable swagger in pr */
+	/* disable swagger in production */
 	return r
 }
