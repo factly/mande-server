@@ -29,7 +29,7 @@ type productCategory struct {
 // @Success 200 {array} models.ProductCategory
 // @Router /productCategories [get]
 func GetProductCategories(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var productCategories []models.ProductCategory
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -63,7 +63,7 @@ func GetProductCategories(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productCategories/{id} [get]
 func GetProductCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productCategoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productCategoryID)
 
@@ -98,7 +98,7 @@ func GetProductCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productCategories [post]
 func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.ProductCategory{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -132,7 +132,7 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productCategories/{id} [put]
 func UpdateProductCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productCategoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productCategoryID)
 
@@ -168,7 +168,7 @@ func UpdateProductCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productCategories/{id} [delete]
 func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productCategoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productCategoryID)
 

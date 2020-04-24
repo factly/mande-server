@@ -29,7 +29,7 @@ type productTags struct {
 // @Success 200 {array} models.ProductTag
 // @Router /productTags [get]
 func GetProductTags(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var productTags []models.ProductTag
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -63,7 +63,7 @@ func GetProductTags(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productTags/{id} [get]
 func GetProductTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productTagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productTagID)
 
@@ -98,7 +98,7 @@ func GetProductTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productTags [post]
 func CreateProductTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.ProductTag{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -133,7 +133,7 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productTags/{id} [put]
 func UpdateProductTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productTagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productTagID)
 
@@ -169,7 +169,7 @@ func UpdateProductTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /productTags/{id} [delete]
 func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productTagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productTagID)
 

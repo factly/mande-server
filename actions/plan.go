@@ -30,7 +30,7 @@ type plan struct {
 // @Success 200 {array} models.Plan
 // @Router /plans [get]
 func GetPlans(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var plans []models.Plan
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -64,7 +64,7 @@ func GetPlans(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /plans/{id} [get]
 func GetPlan(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)
 
@@ -98,7 +98,7 @@ func GetPlan(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} models.Plan
 // @Router /plans [post]
 func CreatePlan(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Plan{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -133,7 +133,7 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /plans/{id} [put]
 func UpdatePlan(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)
 
@@ -170,7 +170,7 @@ func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /plans/{id} [delete]
 func DeletePlan(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)
 

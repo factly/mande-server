@@ -30,7 +30,7 @@ type user struct {
 // @Success 200 {array} models.User
 // @Router /users [get]
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var users []models.User
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -64,7 +64,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /users/{id} [get]
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
@@ -98,7 +98,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /users [post]
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.User{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -131,7 +131,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /users/{id} [put]
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
@@ -166,7 +166,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /users/{id} [delete]
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {

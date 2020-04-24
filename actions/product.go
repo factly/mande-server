@@ -32,7 +32,7 @@ type product struct {
 // @Success 200 {array} models.Product
 // @Router /products [get]
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var products []models.Product
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -66,7 +66,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{id} [get]
 func GetProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productID)
 
@@ -104,7 +104,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products [post]
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Product{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -140,7 +140,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{id} [put]
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productID)
 
@@ -183,7 +183,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{id} [delete]
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	productID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productID)
 

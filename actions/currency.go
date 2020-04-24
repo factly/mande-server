@@ -29,7 +29,7 @@ type currency struct {
 // @Success 200 {array} models.Currency
 // @Router /currencies [get]
 func GetCurrencies(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var currencies []models.Currency
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number

@@ -31,7 +31,7 @@ type membership struct {
 // @Success 200 {array} models.Membership
 // @Router /memberships [get]
 func GetMemberships(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var memberships []models.Membership
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -65,7 +65,7 @@ func GetMemberships(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /memberships/{id} [get]
 func GetMembership(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
@@ -103,7 +103,7 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func CreateMembership(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Membership{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -141,7 +141,7 @@ func CreateMembership(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /memberships/{id} [put]
 func UpdateMembership(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
@@ -182,7 +182,7 @@ func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /memberships/{id} [delete]
 func DeleteMembership(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {

@@ -31,7 +31,7 @@ type payment struct {
 // @Success 200 {array} models.Payment
 // @Router /payments [get]
 func GetPayments(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var payments []models.Payment
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -65,7 +65,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /payments/{id} [get]
 func GetPayment(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)
 
@@ -101,7 +101,7 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /payments [post]
 func CreatePayment(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Payment{}
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -135,7 +135,7 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /payments/{id} [put]
 func UpdatePayment(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)
 
@@ -174,7 +174,7 @@ func UpdatePayment(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /payments/{id} [delete]
 func DeletePayment(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)
 

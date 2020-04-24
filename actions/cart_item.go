@@ -30,7 +30,7 @@ type cartItem struct {
 // @Success 200 {array} models.CartItem
 // @Router /cartItems [get]
 func GetCartItems(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var cartItems []models.CartItem
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -64,7 +64,7 @@ func GetCartItems(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [get]
 func GetCartItem(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	cartItemID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(cartItemID)
 
@@ -101,7 +101,7 @@ func GetCartItem(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /cartItems [post]
 func CreateCartItem(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.CartItem{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -138,7 +138,7 @@ func CreateCartItem(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [put]
 func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	cartItemID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(cartItemID)
 
@@ -178,7 +178,7 @@ func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [delete]
 func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	cartItemID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(cartItemID)
 

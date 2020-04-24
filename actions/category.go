@@ -30,7 +30,7 @@ type category struct {
 // @Success 200 {array} models.Category
 // @Router /categories [get]
 func GetCategories(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var categories []models.Category
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -64,7 +64,7 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /categories/{id} [get]
 func GetCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	categoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(categoryID)
 
@@ -99,7 +99,7 @@ func GetCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /categories [post]
 func CreateCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Category{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -134,7 +134,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /categories/{id} [put]
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	categoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(categoryID)
 
@@ -170,7 +170,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /categories/{id} [delete]
 func DeleteCategory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	categoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(categoryID)
 

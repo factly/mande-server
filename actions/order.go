@@ -31,7 +31,7 @@ type order struct {
 // @Success 200 {array} models.Order
 // @Router /orders [get]
 func GetOrders(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var orders []models.Order
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -65,7 +65,7 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /orders/{id} [get]
 func GetOrder(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	orderID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(orderID)
 
@@ -100,7 +100,7 @@ func GetOrder(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /orders [post]
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Order{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -135,7 +135,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /orders/{id} [put]
 func UpdateOrder(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	orderID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(orderID)
 
@@ -173,7 +173,7 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /orders/{id} [delete]
 func DeleteOrder(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	orderID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(orderID)
 

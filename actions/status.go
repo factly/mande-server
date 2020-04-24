@@ -27,7 +27,7 @@ type status struct {
 // @Success 200 {array} models.Status
 // @Router /products/{id}/status [get]
 func GetStatuses(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var statuses []models.Status
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -62,7 +62,7 @@ func GetStatuses(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{id}/status [post]
 func CreateStatus(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Status{}
 	json.NewDecoder(r.Body).Decode(&req)
 

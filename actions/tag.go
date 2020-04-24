@@ -29,7 +29,7 @@ type tag struct {
 // @Success 200 {array} models.Tag
 // @Router /tags [get]
 func GetTags(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var tags []models.Tag
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
@@ -63,7 +63,7 @@ func GetTags(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /tags/{id} [get]
 func GetTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
 	if err != nil {
@@ -97,7 +97,7 @@ func GetTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /tags [post]
 func CreateTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	req := &models.Tag{}
 
 	json.NewDecoder(r.Body).Decode(&req)
@@ -131,7 +131,7 @@ func CreateTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /tags/{id} [put]
 func UpdateTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
 	if err != nil {
@@ -162,7 +162,7 @@ func UpdateTag(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /tags/{id} [delete]
 func DeleteTag(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
 	if err != nil {

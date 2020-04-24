@@ -27,7 +27,7 @@ type productType struct {
 // @Success 200 {array} models.ProductType
 // @Router /products/{id}/type [get]
 func GetProductTypes(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+
 	var productTypes []models.ProductType
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
