@@ -1,8 +1,12 @@
 FROM golang:latest
-WORKDIR /usr/src/app
-COPY . .
+WORKDIR /app
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
+ENV DB_HOST "postgresdb"
+ENV DB_NAME "postgres"
+ENV DB_PASSWORD "postgres"
+ENV DB_USER "postgres"
 RUN go build -o main .
 EXPOSE 3000
-ENV DB_HOST "postgresdb"
 CMD ["./main"]
