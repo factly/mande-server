@@ -86,6 +86,19 @@ func RegisterRoutes() http.Handler {
 			r.Get("/type", GetProductTypes)
 			r.Post("/status", CreateStatus)
 			r.Get("/status", GetStatuses)
+			r.Route("/tag", func(r chi.Router) {
+				r.Post("/", CreateProductTag)
+				r.Route("/{tid}", func(r chi.Router) {
+					r.Delete("/", DeleteProductTag)
+				})
+			})
+			r.Route("/category", func(r chi.Router) {
+				r.Post("/", CreateProductCategory)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Delete("/", DeleteProductCategory)
+				})
+
+			})
 		})
 	})
 	r.Route("/tags", func(r chi.Router) {
@@ -98,16 +111,6 @@ func RegisterRoutes() http.Handler {
 		})
 
 	})
-	r.Route("/productTags", func(r chi.Router) {
-		r.Post("/", CreateProductTag)
-		r.Get("/", GetProductTags)
-		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", GetProductTag)
-			r.Delete("/", DeleteProductTag)
-			r.Put("/", UpdateProductTag)
-		})
-
-	})
 
 	r.Route("/categories", func(r chi.Router) {
 		r.Post("/", CreateCategory)
@@ -116,17 +119,6 @@ func RegisterRoutes() http.Handler {
 			r.Get("/", GetCategory)
 			r.Delete("/", DeleteCategory)
 			r.Put("/", UpdateCategory)
-		})
-
-	})
-
-	r.Route("/productCategories", func(r chi.Router) {
-		r.Post("/", CreateProductCategory)
-		r.Get("/", GetProductCategories)
-		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", GetProductCategory)
-			r.Delete("/", DeleteProductCategory)
-			r.Put("/", UpdateProductCategory)
 		})
 
 	})

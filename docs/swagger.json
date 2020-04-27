@@ -1755,396 +1755,6 @@
                 }
             }
         },
-        "/productCategories": {
-            "get": {
-                "description": "Get all productCategories",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductCategory"
-                ],
-                "summary": "Show all productCategories",
-                "operationId": "get-all-productCategories",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.ProductCategory"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create productCategory",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductCategory"
-                ],
-                "summary": "Create productCategory",
-                "operationId": "add-productCategory",
-                "parameters": [
-                    {
-                        "description": "ProductCategory object",
-                        "name": "ProductCategory",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/actions.productCategory"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/productCategories/{id}": {
-            "get": {
-                "description": "Get productCategory by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductCategory"
-                ],
-                "summary": "Show a productCategory by id",
-                "operationId": "get-productCategory-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductCategory ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update productCategory by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductCategory"
-                ],
-                "summary": "Update a productCategory by id",
-                "operationId": "update-productCategory-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductCategory ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "ProductCategory",
-                        "name": "ProductCategory",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/actions.productCategory"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete productCategory by ID",
-                "tags": [
-                    "ProductCategory"
-                ],
-                "summary": "Delete a productCategory",
-                "operationId": "delete-productCategory-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductCategory ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/productTags": {
-            "get": {
-                "description": "Get all productTags",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Show all productTags",
-                "operationId": "get-all-productTags",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.ProductTag"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create productTags",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Create productTags",
-                "operationId": "add-productTags",
-                "parameters": [
-                    {
-                        "description": "ProductTag object",
-                        "name": "ProductTag",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/actions.productTags"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/productTags/{id}": {
-            "get": {
-                "description": "Get productTags by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Show a productTags by id",
-                "operationId": "get-productTags-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductTag ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update productTags by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Update a productTags by id",
-                "operationId": "update-productTags-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductTag ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "ProductTag",
-                        "name": "ProductTag",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/actions.productTags"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete productTags by ID",
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Delete a productTags",
-                "operationId": "delete-productTags-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductTag ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/products": {
             "get": {
                 "description": "Get all products",
@@ -2326,6 +1936,188 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/productCategories": {
+            "post": {
+                "description": "create productCategory",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Create productCategory",
+                "operationId": "add-productCategory",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductCategory object",
+                        "name": "ProductCategory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.productCategory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/productCategories/{cid}": {
+            "delete": {
+                "description": "Delete productCategory by ID",
+                "tags": [
+                    "ProductCategory"
+                ],
+                "summary": "Delete a productCategory",
+                "operationId": "delete-productCategory-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ProductCategory ID",
+                        "name": "cid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/productTags": {
+            "post": {
+                "description": "create productTags",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Create productTags",
+                "operationId": "add-productTags",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductTag object",
+                        "name": "ProductTag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.productTags"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/productTags/{tid}": {
+            "delete": {
+                "description": "Delete productTags by ID",
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Delete a productTags",
+                "operationId": "delete-productTags-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ProductTag ID",
+                        "name": "tid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
                         }
                     },
                     "400": {

@@ -1639,266 +1639,6 @@ paths:
       summary: Update a plan by id
       tags:
       - Plan
-  /productCategories:
-    get:
-      description: Get all productCategories
-      operationId: get-all-productCategories
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ProductCategory'
-            type: array
-      summary: Show all productCategories
-      tags:
-      - ProductCategory
-    post:
-      description: create productCategory
-      operationId: add-productCategory
-      parameters:
-      - description: ProductCategory object
-        in: body
-        name: ProductCategory
-        required: true
-        schema:
-          $ref: '#/definitions/actions.productCategory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductCategory'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create productCategory
-      tags:
-      - ProductCategory
-  /productCategories/{id}:
-    delete:
-      description: Delete productCategory by ID
-      operationId: delete-productCategory-by-id
-      parameters:
-      - description: ProductCategory ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductCategory'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a productCategory
-      tags:
-      - ProductCategory
-    get:
-      description: Get productCategory by ID
-      operationId: get-productCategory-by-id
-      parameters:
-      - description: ProductCategory ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductCategory'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a productCategory by id
-      tags:
-      - ProductCategory
-    put:
-      description: Update productCategory by ID
-      operationId: update-productCategory-by-id
-      parameters:
-      - description: ProductCategory ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: ProductCategory
-        in: body
-        name: ProductCategory
-        schema:
-          $ref: '#/definitions/actions.productCategory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductCategory'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a productCategory by id
-      tags:
-      - ProductCategory
-  /productTags:
-    get:
-      description: Get all productTags
-      operationId: get-all-productTags
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ProductTag'
-            type: array
-      summary: Show all productTags
-      tags:
-      - ProductTag
-    post:
-      description: create productTags
-      operationId: add-productTags
-      parameters:
-      - description: ProductTag object
-        in: body
-        name: ProductTag
-        required: true
-        schema:
-          $ref: '#/definitions/actions.productTags'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductTag'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create productTags
-      tags:
-      - ProductTag
-  /productTags/{id}:
-    delete:
-      description: Delete productTags by ID
-      operationId: delete-productTags-by-id
-      parameters:
-      - description: ProductTag ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductTag'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a productTags
-      tags:
-      - ProductTag
-    get:
-      description: Get productTags by ID
-      operationId: get-productTags-by-id
-      parameters:
-      - description: ProductTag ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductTag'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a productTags by id
-      tags:
-      - ProductTag
-    put:
-      description: Update productTags by ID
-      operationId: update-productTags-by-id
-      parameters:
-      - description: ProductTag ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: ProductTag
-        in: body
-        name: ProductTag
-        schema:
-          $ref: '#/definitions/actions.productTags'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ProductTag'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a productTags by id
-      tags:
-      - ProductTag
   /products:
     get:
       description: Get all products
@@ -2029,6 +1769,128 @@ paths:
       summary: Update a product by id
       tags:
       - Product
+  /products/{id}/productCategories:
+    post:
+      description: create productCategory
+      operationId: add-productCategory
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductCategory object
+        in: body
+        name: ProductCategory
+        required: true
+        schema:
+          $ref: '#/definitions/actions.productCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productCategory
+      tags:
+      - ProductCategory
+  /products/{id}/productCategories/{cid}:
+    delete:
+      description: Delete productCategory by ID
+      operationId: delete-productCategory-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductCategory ID
+        in: path
+        name: cid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productCategory
+      tags:
+      - ProductCategory
+  /products/{id}/productTags:
+    post:
+      description: create productTags
+      operationId: add-productTags
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductTag object
+        in: body
+        name: ProductTag
+        required: true
+        schema:
+          $ref: '#/definitions/actions.productTags'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productTags
+      tags:
+      - ProductTag
+  /products/{id}/productTags/{tid}:
+    delete:
+      description: Delete productTags by ID
+      operationId: delete-productTags-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductTag ID
+        in: path
+        name: tid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productTags
+      tags:
+      - ProductTag
   /products/{id}/status:
     get:
       description: Get all statuses
