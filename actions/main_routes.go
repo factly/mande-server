@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"github.com/factly/data-portal-api/actions/tag"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -25,10 +26,7 @@ func RegisterRoutes() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-
-	r.Route("/tags", func(r chi.Router) {
-		r.Get("/", GetTags)
-	})
+	r.Mount("/tags", tag.TagRouter{}.Router())
 
 	return r
 }

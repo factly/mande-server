@@ -1,4 +1,4 @@
-package actions
+package tag
 
 import (
 	"encoding/json"
@@ -24,7 +24,7 @@ type tag struct {
 // @Param page query string false "page number"
 // @Success 200 {array} models.Tag
 // @Router /tags [get]
-func GetTags(w http.ResponseWriter, r *http.Request) {
+func getTags(w http.ResponseWriter, r *http.Request) {
 
 	var tags []models.Tag
 	p := r.URL.Query().Get("page")
