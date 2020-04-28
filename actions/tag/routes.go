@@ -4,10 +4,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-type TagRouter struct {}
-
-
-func (tag TagRouter) Router() chi.Router {
+func Router() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", getTags)    // GET /tag - return list of tags

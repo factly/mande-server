@@ -26,7 +26,7 @@ func RegisterRoutes() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	r.Mount("/tags", tag.TagRouter{}.Router())
+	r.Mount("/tags", tag.Router())
 
 	return r
 }

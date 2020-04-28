@@ -8,12 +8,6 @@ import (
 	"github.com/factly/data-portal-api/models"
 )
 
-// tag request body
-type tag struct {
-	Title string `json:"title"`
-	Slug  string `json:"slug"`
-}
-
 // GetTags - Get all tags
 // @Summary Show all tags
 // @Description Get all tags
