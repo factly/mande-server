@@ -15,7 +15,6 @@ import (
 // ProductCategory request body
 type productCategory struct {
 	CategoryID uint `json:"category_id"`
-	ProductID  uint `json:"product_id"`
 }
 
 // CreateProductCategory - create productCategory
@@ -32,12 +31,22 @@ type productCategory struct {
 // @Router /products/{id}/productCategories [post]
 func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.ProductCategory{}
+	productID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(productID)
+
+	if err != nil {
+		validation.InvalidID(w, r)
+		return
+	}
+
+	req := &models.ProductCategory{
+		ProductID: uint(id),
+	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err = validate.Struct(req)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
@@ -64,7 +73,6 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{id}/productCategories/{cid} [delete]
 func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
-
 	productCategoryID := chi.URLParam(r, "cid")
 	id, err := strconv.Atoi(productCategoryID)
 

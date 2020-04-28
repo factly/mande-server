@@ -102,13 +102,9 @@ definitions:
     properties:
       category_id:
         type: integer
-      product_id:
-        type: integer
     type: object
   actions.productTags:
     properties:
-      product_id:
-        type: integer
       tag_id:
         type: integer
     type: object

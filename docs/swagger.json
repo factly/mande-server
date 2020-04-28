@@ -2835,18 +2835,12 @@
             "properties": {
                 "category_id": {
                     "type": "integer"
-                },
-                "product_id": {
-                    "type": "integer"
                 }
             }
         },
         "actions.productTags": {
             "type": "object",
             "properties": {
-                "product_id": {
-                    "type": "integer"
-                },
                 "tag_id": {
                     "type": "integer"
                 }

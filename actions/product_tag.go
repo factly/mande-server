@@ -14,8 +14,7 @@ import (
 
 // ProductTag request body
 type productTags struct {
-	TagID     uint `json:"tag_id"`
-	ProductID uint `json:"product_id"`
+	TagID uint `json:"tag_id"`
 }
 
 // CreateProductTag - create productTags
@@ -32,12 +31,22 @@ type productTags struct {
 // @Router /products/{id}/productTags [post]
 func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.ProductTag{}
+	productID := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(productID)
+
+	if err != nil {
+		validation.InvalidID(w, r)
+		return
+	}
+
+	req := &models.ProductTag{
+		ProductID: uint(id),
+	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err = validate.Struct(req)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)

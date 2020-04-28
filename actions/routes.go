@@ -94,7 +94,7 @@ func RegisterRoutes() http.Handler {
 			})
 			r.Route("/category", func(r chi.Router) {
 				r.Post("/", CreateProductCategory)
-				r.Route("/{id}", func(r chi.Router) {
+				r.Route("/{cid}", func(r chi.Router) {
 					r.Delete("/", DeleteProductCategory)
 				})
 
