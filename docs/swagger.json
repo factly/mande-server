@@ -1950,7 +1950,7 @@
                 }
             }
         },
-        "/products/{id}/productCategories": {
+        "/products/{id}/category": {
             "post": {
                 "description": "create productCategory",
                 "produces": [
@@ -1998,7 +1998,7 @@
                 }
             }
         },
-        "/products/{id}/productCategories/{cid}": {
+        "/products/{id}/category/{cid}": {
             "delete": {
                 "description": "Delete productCategory by ID",
                 "tags": [
@@ -2016,7 +2016,7 @@
                     },
                     {
                         "type": "string",
-                        "description": "ProductCategory ID",
+                        "description": "Category ID",
                         "name": "cid",
                         "in": "path",
                         "required": true
@@ -2027,97 +2027,6 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.ProductCategory"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{id}/productTags": {
-            "post": {
-                "description": "create productTags",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Create productTags",
-                "operationId": "add-productTags",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "ProductTag object",
-                        "name": "ProductTag",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/actions.productTags"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{id}/productTags/{tid}": {
-            "delete": {
-                "description": "Delete productTags by ID",
-                "tags": [
-                    "ProductTag"
-                ],
-                "summary": "Delete a productTags",
-                "operationId": "delete-productTags-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "ProductTag ID",
-                        "name": "tid",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ProductTag"
                         }
                     },
                     "400": {
@@ -2195,6 +2104,97 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/tag": {
+            "post": {
+                "description": "create productTags",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Create productTags",
+                "operationId": "add-productTags",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductTag object",
+                        "name": "ProductTag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/actions.productTags"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/tag/{tid}": {
+            "delete": {
+                "description": "Delete productTags by ID",
+                "tags": [
+                    "ProductTag"
+                ],
+                "summary": "Delete a productTags",
+                "operationId": "delete-productTags-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ProductTag ID",
+                        "name": "tid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProductTag"
                         }
                     },
                     "400": {

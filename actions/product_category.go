@@ -28,7 +28,7 @@ type productCategory struct {
 // @Param ProductCategory body productCategory true "ProductCategory object"
 // @Success 200 {object} models.ProductCategory
 // @Failure 400 {array} string
-// @Router /products/{id}/productCategories [post]
+// @Router /products/{id}/category [post]
 func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 
 	productID := chi.URLParam(r, "id")
@@ -68,13 +68,21 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 // @ID delete-productCategory-by-id
 // @Consume  json
 // @Param id path string true "Product ID"
-// @Param cid path string true "ProductCategory ID"
+// @Param cid path string true "Category ID"
 // @Success 200 {object} models.ProductCategory
 // @Failure 400 {array} string
-// @Router /products/{id}/productCategories/{cid} [delete]
+// @Router /products/{id}/category/{cid} [delete]
 func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
-	productCategoryID := chi.URLParam(r, "cid")
-	id, err := strconv.Atoi(productCategoryID)
+	categoryID := chi.URLParam(r, "cid")
+	cid, err := strconv.Atoi(categoryID)
+
+	if err != nil {
+		validation.InvalidID(w, r)
+		return
+	}
+
+	productID := chi.URLParam(r, "id")
+	pid, err := strconv.Atoi(productID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
@@ -82,7 +90,8 @@ func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	productCategory := &models.ProductCategory{
-		ID: uint(id),
+		CategoryID: uint(cid),
+		ProductID:  uint(pid),
 	}
 
 	// check record exists or not

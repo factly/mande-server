@@ -28,7 +28,7 @@ type productTags struct {
 // @Param ProductTag body productTags true "ProductTag object"
 // @Success 200 {object} models.ProductTag
 // @Failure 400 {array} string
-// @Router /products/{id}/productTags [post]
+// @Router /products/{id}/tag [post]
 func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 
 	productID := chi.URLParam(r, "id")
@@ -72,11 +72,19 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 // @Param tid path string true "ProductTag ID"
 // @Success 200 {object} models.ProductTag
 // @Failure 400 {array} string
-// @Router /products/{id}/productTags/{tid} [delete]
+// @Router /products/{id}/tag/{tid} [delete]
 func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
 
-	productTagID := chi.URLParam(r, "tid")
-	id, err := strconv.Atoi(productTagID)
+	tagID := chi.URLParam(r, "tid")
+	tid, err := strconv.Atoi(tagID)
+
+	if err != nil {
+		validation.InvalidID(w, r)
+		return
+	}
+
+	productID := chi.URLParam(r, "id")
+	pid, err := strconv.Atoi(productID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
@@ -84,7 +92,8 @@ func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
 	}
 
 	productTags := &models.ProductTag{
-		ID: uint(id),
+		TagID:     uint(tid),
+		ProductID: uint(pid),
 	}
 
 	// check record exists or not
