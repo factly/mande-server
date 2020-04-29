@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,10 +17,10 @@ import (
 // @ID get-tag-by-id
 // @Produce  json
 // @Param id path string true "Tag ID"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [get]
-func getTagByID(w http.ResponseWriter, r *http.Request) {
+func getDetails(w http.ResponseWriter, r *http.Request) {
 
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
@@ -29,11 +29,11 @@ func getTagByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Tag{
+	req := &model.Tag{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Tag{}).First(&req).Error
+	err = model.DB.Model(&model.Tag{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)

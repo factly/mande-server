@@ -1,9 +1,9 @@
-package actions
+package action
 
 import (
 	"net/http"
 
-	"github.com/factly/data-portal-api/actions/tag"
+	"github.com/factly/data-portal-api/action/tag"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"

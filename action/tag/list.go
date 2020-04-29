@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 )
 
 // GetTags - Get all tags
@@ -16,11 +16,11 @@ import (
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Tag
+// @Success 200 {array} model.Tag
 // @Router /tags [get]
-func getTags(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
-	var tags []models.Tag
+	var tags []model.Tag
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -37,7 +37,7 @@ func getTags(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Tag{}).Find(&tags)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Tag{}).Find(&tags)
 
 	json.NewEncoder(w).Encode(tags)
 }

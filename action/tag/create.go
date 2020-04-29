@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -18,12 +18,12 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Tag body tag true "Tag object"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags [post]
-func createTag(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Tag{}
+	req := &model.Tag{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -34,7 +34,7 @@ func createTag(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = models.DB.Model(&models.Tag{}).Create(&req).Error
+	err = model.DB.Model(&model.Tag{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)

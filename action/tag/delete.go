@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,10 +17,10 @@ import (
 // @ID delete-tag-by-id
 // @Consume  json
 // @Param id path string true "Tag ID"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [delete]
-func deleteTag(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
@@ -29,18 +29,18 @@ func deleteTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := &models.Tag{
+	tag := &model.Tag{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&tag).Error
+	err = model.DB.First(&tag).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Delete(&tag)
+	model.DB.Delete(&tag)
 
 	json.NewEncoder(w).Encode(tag)
 }
