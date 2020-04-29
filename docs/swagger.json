@@ -993,194 +993,6 @@
                 }
             }
         },
-        "/order-items": {
-            "get": {
-                "description": "Get all order items",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Show all order items",
-                "operationId": "get-all-order-items",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.OrderItem"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create order items",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Create order items",
-                "operationId": "add-order-item",
-                "parameters": [
-                    {
-                        "description": "Order item object",
-                        "name": "OrderItem",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/action.orderItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/order-items/{id}": {
-            "get": {
-                "description": "Get order item by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Show a order item by id",
-                "operationId": "get-order-item-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order item ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete order item by ID",
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Delete a order item",
-                "operationId": "delete-order-items-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OrderItem ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orderItems/{id}": {
-            "put": {
-                "description": "Update orderItems by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Update a orderItems by id",
-                "operationId": "update-orderItems-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OrderItem ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "OrderItem",
-                        "name": "OrderItem",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/action.orderItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/orders": {
             "get": {
                 "description": "Get all orders",
@@ -1362,6 +1174,229 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/order-items": {
+            "get": {
+                "description": "Get all order items",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Show all order items",
+                "operationId": "get-all-order-items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.OrderItem"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create order items",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Create order items",
+                "operationId": "add-order-item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Order item object",
+                        "name": "OrderItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/item.orderItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderItem"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/order-items/{oid}": {
+            "get": {
+                "description": "Get order item by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Show a order item by id",
+                "operationId": "get-order-item-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order item ID",
+                        "name": "oid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete order item by ID",
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Delete a order item",
+                "operationId": "delete-order-items-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OrderItem ID",
+                        "name": "oid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/orderItems/{oid}": {
+            "put": {
+                "description": "Update orderItems by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Update a orderItems by id",
+                "operationId": "update-orderItems-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OrderItem ID",
+                        "name": "oid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "OrderItem",
+                        "name": "OrderItem",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/item.orderItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderItem"
                         }
                     },
                     "400": {
@@ -2537,7 +2572,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.user"
+                            "$ref": "#/definitions/user.user"
                         }
                     }
                 ],
@@ -2621,7 +2656,7 @@
                         "name": "User",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.user"
+                            "$ref": "#/definitions/user.user"
                         }
                     }
                 ],
@@ -2680,34 +2715,6 @@
         }
     },
     "definitions": {
-        "action.orderItem": {
-            "type": "object",
-            "properties": {
-                "extra_info": {
-                    "type": "string"
-                },
-                "order_id": {
-                    "type": "integer"
-                },
-                "product_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "action.user": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                }
-            }
-        },
         "cart.cart": {
             "type": "object",
             "properties": {
@@ -2763,6 +2770,20 @@
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "item.orderItem": {
+            "type": "object",
+            "properties": {
+                "extra_info": {
+                    "type": "string"
+                },
+                "order_id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3368,6 +3389,20 @@
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.user": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
                     "type": "string"
                 }
             }

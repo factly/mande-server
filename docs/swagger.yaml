@@ -1,23 +1,5 @@
 basePath: /
 definitions:
-  action.orderItem:
-    properties:
-      extra_info:
-        type: string
-      order_id:
-        type: integer
-      product_id:
-        type: integer
-    type: object
-  action.user:
-    properties:
-      email:
-        type: string
-      first_name:
-        type: string
-      last_name:
-        type: string
-    type: object
   cart.cart:
     properties:
       status:
@@ -54,6 +36,15 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  item.orderItem:
+    properties:
+      extra_info:
+        type: string
+      order_id:
+        type: integer
+      product_id:
+        type: integer
     type: object
   membership.membership:
     properties:
@@ -462,6 +453,15 @@ definitions:
       slug:
         type: string
       title:
+        type: string
+    type: object
+  user.user:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
         type: string
     type: object
 host: localhost:3000
@@ -1127,131 +1127,6 @@ paths:
       summary: Update a membership by id
       tags:
       - Membership
-  /order-items:
-    get:
-      description: Get all order items
-      operationId: get-all-order-items
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.OrderItem'
-            type: array
-      summary: Show all order items
-      tags:
-      - OrderItem
-    post:
-      description: create order items
-      operationId: add-order-item
-      parameters:
-      - description: Order item object
-        in: body
-        name: OrderItem
-        required: true
-        schema:
-          $ref: '#/definitions/action.orderItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-      summary: Create order items
-      tags:
-      - OrderItem
-  /order-items/{id}:
-    delete:
-      description: Delete order item by ID
-      operationId: delete-order-items-by-id
-      parameters:
-      - description: OrderItem ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a order item
-      tags:
-      - OrderItem
-    get:
-      description: Get order item by ID
-      operationId: get-order-item-by-id
-      parameters:
-      - description: Order item ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a order item by id
-      tags:
-      - OrderItem
-  /orderItems/{id}:
-    put:
-      description: Update orderItems by ID
-      operationId: update-orderItems-by-id
-      parameters:
-      - description: OrderItem ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: OrderItem
-        in: body
-        name: OrderItem
-        schema:
-          $ref: '#/definitions/action.orderItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a orderItems by id
-      tags:
-      - OrderItem
   /orders:
     get:
       description: Get all orders
@@ -1382,6 +1257,156 @@ paths:
       summary: Update a orders by id
       tags:
       - Order
+  /orders/{id}/order-items:
+    get:
+      description: Get all order items
+      operationId: get-all-order-items
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.OrderItem'
+            type: array
+      summary: Show all order items
+      tags:
+      - OrderItem
+    post:
+      description: create order items
+      operationId: add-order-item
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order item object
+        in: body
+        name: OrderItem
+        required: true
+        schema:
+          $ref: '#/definitions/item.orderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+      summary: Create order items
+      tags:
+      - OrderItem
+  /orders/{id}/order-items/{oid}:
+    delete:
+      description: Delete order item by ID
+      operationId: delete-order-items-by-id
+      parameters:
+      - description: OrderItem ID
+        in: path
+        name: oid
+        required: true
+        type: string
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a order item
+      tags:
+      - OrderItem
+    get:
+      description: Get order item by ID
+      operationId: get-order-item-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order item ID
+        in: path
+        name: oid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a order item by id
+      tags:
+      - OrderItem
+  /orders/{id}/orderItems/{oid}:
+    put:
+      description: Update orderItems by ID
+      operationId: update-orderItems-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: OrderItem ID
+        in: path
+        name: oid
+        required: true
+        type: string
+      - description: OrderItem
+        in: body
+        name: OrderItem
+        schema:
+          $ref: '#/definitions/item.orderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a orderItems by id
+      tags:
+      - OrderItem
   /payments:
     get:
       description: Get all payments
@@ -2154,7 +2179,7 @@ paths:
         name: User
         required: true
         schema:
-          $ref: '#/definitions/action.user'
+          $ref: '#/definitions/user.user'
       produces:
       - application/json
       responses:
@@ -2233,7 +2258,7 @@ paths:
         in: body
         name: User
         schema:
-          $ref: '#/definitions/action.user'
+          $ref: '#/definitions/user.user'
       produces:
       - application/json
       responses:

@@ -1,6 +1,9 @@
 package order
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-api/action/order/item"
+	"github.com/go-chi/chi"
+)
 
 // Order request body
 type order struct {
@@ -21,6 +24,7 @@ func Router() chi.Router {
 		r.Get("/", getOrderByID)   // GET /orders/{id} - read a single order by :id
 		r.Put("/", updateOrder)    // PUT /orders/{id} - update a single order by :id
 		r.Delete("/", deleteOrder) // DELETE /orders/{id} - delete a single order by :id
+		r.Mount("/", item.Router())
 	})
 
 	return r
