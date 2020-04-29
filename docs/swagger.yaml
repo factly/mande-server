@@ -9,17 +9,6 @@ definitions:
       product_id:
         type: integer
     type: object
-  action.membership:
-    properties:
-      payment_id:
-        type: integer
-      plan_id:
-        type: integer
-      status:
-        type: string
-      user_id:
-        type: integer
-    type: object
   action.order:
     properties:
       cart_id:
@@ -126,6 +115,17 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  membership.membership:
+    properties:
+      payment_id:
+        type: integer
+      plan_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
     type: object
   model.Cart:
     properties:
@@ -1030,7 +1030,7 @@ paths:
         name: Membership
         required: true
         schema:
-          $ref: '#/definitions/action.membership'
+          $ref: '#/definitions/membership.membership'
       produces:
       - application/json
       responses:
@@ -1109,7 +1109,7 @@ paths:
         in: body
         name: Membership
         schema:
-          $ref: '#/definitions/action.membership'
+          $ref: '#/definitions/membership.membership'
       produces:
       - application/json
       responses:

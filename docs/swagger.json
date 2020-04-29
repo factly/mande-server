@@ -850,7 +850,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.membership"
+                            "$ref": "#/definitions/membership.membership"
                         }
                     }
                 ],
@@ -934,7 +934,7 @@
                         "name": "Membership",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.membership"
+                            "$ref": "#/definitions/membership.membership"
                         }
                     }
                 ],
@@ -2692,23 +2692,6 @@
                 }
             }
         },
-        "action.membership": {
-            "type": "object",
-            "properties": {
-                "payment_id": {
-                    "type": "integer"
-                },
-                "plan_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "action.order": {
             "type": "object",
             "properties": {
@@ -2873,6 +2856,23 @@
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "membership.membership": {
+            "type": "object",
+            "properties": {
+                "payment_id": {
+                    "type": "integer"
+                },
+                "plan_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
