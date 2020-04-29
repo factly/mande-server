@@ -1,14 +1,5 @@
 basePath: /
 definitions:
-  action.cartItem:
-    properties:
-      cart_id:
-        type: integer
-      is_deleted:
-        type: boolean
-      product_id:
-        type: integer
-    type: object
   action.orderItem:
     properties:
       extra_info:
@@ -67,6 +58,15 @@ definitions:
       status:
         type: string
       user_id:
+        type: integer
+    type: object
+  cartitem.cartItem:
+    properties:
+      cart_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product_id:
         type: integer
     type: object
   category.category:
@@ -477,7 +477,7 @@ info:
   title: Data portal API
   version: "1.0"
 paths:
-  /cartItems:
+  /cart-items:
     get:
       description: Get all cartItems
       operationId: get-all-cartItems
@@ -502,33 +502,7 @@ paths:
       summary: Show all cartItems
       tags:
       - CartItem
-    post:
-      description: create cartItem
-      operationId: add-cartItem
-      parameters:
-      - description: CartItem object
-        in: body
-        name: CartItem
-        required: true
-        schema:
-          $ref: '#/definitions/action.cartItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.CartItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create cartItem
-      tags:
-      - CartItem
-  /cartItems/{id}:
+  /cart-items/{id}:
     delete:
       description: Delete cartItem by ID
       operationId: delete-cartItem-by-id
@@ -590,7 +564,7 @@ paths:
         in: body
         name: CartItem
         schema:
-          $ref: '#/definitions/action.cartItem'
+          $ref: '#/definitions/cartitem.cartItem'
       produces:
       - application/json
       responses:
@@ -605,6 +579,33 @@ paths:
               type: string
             type: array
       summary: Update a cartItem by id
+      tags:
+      - CartItem
+  /cart-tems:
+    post:
+      description: create cartItem
+      operationId: add-cartItem
+      parameters:
+      - description: CartItem object
+        in: body
+        name: CartItem
+        required: true
+        schema:
+          $ref: '#/definitions/cartitem.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cartItem
       tags:
       - CartItem
   /carts:

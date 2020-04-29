@@ -17,7 +17,7 @@
     "host": "localhost:3000",
     "basePath": "/",
     "paths": {
-        "/cartItems": {
+        "/cart-items": {
             "get": {
                 "description": "Get all cartItems",
                 "produces": [
@@ -53,48 +53,9 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "create cartItem",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Create cartItem",
-                "operationId": "add-cartItem",
-                "parameters": [
-                    {
-                        "description": "CartItem object",
-                        "name": "CartItem",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/action.cartItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
             }
         },
-        "/cartItems/{id}": {
+        "/cart-items/{id}": {
             "get": {
                 "description": "Get cartItem by ID",
                 "produces": [
@@ -155,7 +116,7 @@
                         "name": "CartItem",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.cartItem"
+                            "$ref": "#/definitions/cartitem.cartItem"
                         }
                     }
                 ],
@@ -191,6 +152,47 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart-tems": {
+            "post": {
+                "description": "create cartItem",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Create cartItem",
+                "operationId": "add-cartItem",
+                "parameters": [
+                    {
+                        "description": "CartItem object",
+                        "name": "CartItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cartitem.cartItem"
+                        }
                     }
                 ],
                 "responses": {
@@ -2678,20 +2680,6 @@
         }
     },
     "definitions": {
-        "action.cartItem": {
-            "type": "object",
-            "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
-                "is_deleted": {
-                    "type": "boolean"
-                },
-                "product_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "action.orderItem": {
             "type": "object",
             "properties": {
@@ -2782,6 +2770,20 @@
                     "type": "string"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "cartitem.cartItem": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "type": "integer"
+                },
+                "is_deleted": {
+                    "type": "boolean"
+                },
+                "product_id": {
                     "type": "integer"
                 }
             }

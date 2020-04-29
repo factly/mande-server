@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-api/action/cart"
+	"github.com/factly/data-portal-api/action/cartitem"
 	"github.com/factly/data-portal-api/action/category"
 	"github.com/factly/data-portal-api/action/currency"
 	"github.com/factly/data-portal-api/action/membership"
@@ -79,17 +80,8 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/categories", category.Router())
 
 	r.Mount("/carts", cart.Router())
+	r.Mount("/cart-items", cartitem.Router())
 
-	r.Route("/cartItems", func(r chi.Router) {
-		r.Post("/", CreateCartItem)
-		r.Get("/", GetCartItems)
-		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", GetCartItem)
-			r.Delete("/", DeleteCartItem)
-			r.Put("/", UpdateCartItem)
-		})
-
-	})
 	r.Mount("/orders", order.Router())
 
 	r.Route("/order-items", func(r chi.Router) {
@@ -99,7 +91,6 @@ func RegisterRoutes() http.Handler {
 			r.Delete("/", DeleteOrderItem)
 			r.Put("/", UpdateOrderItem)
 		})
-
 	})
 
 	// swagger docs
