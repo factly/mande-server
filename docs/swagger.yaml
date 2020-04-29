@@ -1,13 +1,13 @@
 basePath: /
 definitions:
-  actions.cart:
+  action.cart:
     properties:
       status:
         type: string
       user_id:
         type: integer
     type: object
-  actions.cartItem:
+  action.cartItem:
     properties:
       cart_id:
         type: integer
@@ -16,7 +16,7 @@ definitions:
       product_id:
         type: integer
     type: object
-  actions.category:
+  action.category:
     properties:
       parent_id:
         type: integer
@@ -25,14 +25,14 @@ definitions:
       title:
         type: string
     type: object
-  actions.currency:
+  action.currency:
     properties:
       iso_code:
         type: string
       name:
         type: string
     type: object
-  actions.membership:
+  action.membership:
     properties:
       payment_id:
         type: integer
@@ -43,7 +43,7 @@ definitions:
       user_id:
         type: integer
     type: object
-  actions.order:
+  action.order:
     properties:
       cart_id:
         type: integer
@@ -54,7 +54,7 @@ definitions:
       user_id:
         type: integer
     type: object
-  actions.orderItem:
+  action.orderItem:
     properties:
       extra_info:
         type: string
@@ -63,7 +63,7 @@ definitions:
       product_id:
         type: integer
     type: object
-  actions.payment:
+  action.payment:
     properties:
       amount:
         type: integer
@@ -74,7 +74,7 @@ definitions:
       status:
         type: string
     type: object
-  actions.plan:
+  action.plan:
     properties:
       plan_info:
         type: string
@@ -83,7 +83,7 @@ definitions:
       status:
         type: string
     type: object
-  actions.product:
+  action.product:
     properties:
       currency_id:
         type: integer
@@ -98,34 +98,34 @@ definitions:
       title:
         type: string
     type: object
-  actions.productCategory:
+  action.productCategory:
     properties:
       category_id:
         type: integer
     type: object
-  actions.productTags:
+  action.productTags:
     properties:
       tag_id:
         type: integer
     type: object
-  actions.productType:
+  action.productType:
     properties:
       name:
         type: string
     type: object
-  actions.status:
+  action.status:
     properties:
       name:
         type: string
     type: object
-  actions.tag:
+  action.tag:
     properties:
       slug:
         type: string
       title:
         type: string
     type: object
-  actions.user:
+  action.user:
     properties:
       email:
         type: string
@@ -511,7 +511,7 @@ paths:
         name: CartItem
         required: true
         schema:
-          $ref: '#/definitions/actions.cartItem'
+          $ref: '#/definitions/action.cartItem'
       produces:
       - application/json
       responses:
@@ -590,7 +590,7 @@ paths:
         in: body
         name: CartItem
         schema:
-          $ref: '#/definitions/actions.cartItem'
+          $ref: '#/definitions/action.cartItem'
       produces:
       - application/json
       responses:
@@ -641,7 +641,7 @@ paths:
         name: Cart
         required: true
         schema:
-          $ref: '#/definitions/actions.cart'
+          $ref: '#/definitions/action.cart'
       produces:
       - application/json
       responses:
@@ -720,7 +720,7 @@ paths:
         in: body
         name: Cart
         schema:
-          $ref: '#/definitions/actions.cart'
+          $ref: '#/definitions/action.cart'
       produces:
       - application/json
       responses:
@@ -771,7 +771,7 @@ paths:
         name: Category
         required: true
         schema:
-          $ref: '#/definitions/actions.category'
+          $ref: '#/definitions/action.category'
       produces:
       - application/json
       responses:
@@ -850,7 +850,7 @@ paths:
         in: body
         name: Category
         schema:
-          $ref: '#/definitions/actions.category'
+          $ref: '#/definitions/action.category'
       produces:
       - application/json
       responses:
@@ -901,7 +901,7 @@ paths:
         name: Currency
         required: true
         schema:
-          $ref: '#/definitions/actions.currency'
+          $ref: '#/definitions/action.currency'
       produces:
       - application/json
       responses:
@@ -979,7 +979,7 @@ paths:
         in: body
         name: Currency
         schema:
-          $ref: '#/definitions/actions.currency'
+          $ref: '#/definitions/action.currency'
       produces:
       - application/json
       responses:
@@ -1030,7 +1030,7 @@ paths:
         name: Membership
         required: true
         schema:
-          $ref: '#/definitions/actions.membership'
+          $ref: '#/definitions/action.membership'
       produces:
       - application/json
       responses:
@@ -1109,7 +1109,7 @@ paths:
         in: body
         name: Membership
         schema:
-          $ref: '#/definitions/actions.membership'
+          $ref: '#/definitions/action.membership'
       produces:
       - application/json
       responses:
@@ -1160,7 +1160,7 @@ paths:
         name: OrderItem
         required: true
         schema:
-          $ref: '#/definitions/actions.orderItem'
+          $ref: '#/definitions/action.orderItem'
       produces:
       - application/json
       responses:
@@ -1234,7 +1234,7 @@ paths:
         in: body
         name: OrderItem
         schema:
-          $ref: '#/definitions/actions.orderItem'
+          $ref: '#/definitions/action.orderItem'
       produces:
       - application/json
       responses:
@@ -1285,7 +1285,7 @@ paths:
         name: Order
         required: true
         schema:
-          $ref: '#/definitions/actions.order'
+          $ref: '#/definitions/action.order'
       produces:
       - application/json
       responses:
@@ -1364,7 +1364,7 @@ paths:
         in: body
         name: Order
         schema:
-          $ref: '#/definitions/actions.order'
+          $ref: '#/definitions/action.order'
       produces:
       - application/json
       responses:
@@ -1415,7 +1415,7 @@ paths:
         name: Payment
         required: true
         schema:
-          $ref: '#/definitions/actions.payment'
+          $ref: '#/definitions/action.payment'
       produces:
       - application/json
       responses:
@@ -1494,7 +1494,7 @@ paths:
         in: body
         name: Payment
         schema:
-          $ref: '#/definitions/actions.payment'
+          $ref: '#/definitions/action.payment'
       produces:
       - application/json
       responses:
@@ -1545,7 +1545,7 @@ paths:
         name: Plan
         required: true
         schema:
-          $ref: '#/definitions/actions.plan'
+          $ref: '#/definitions/action.plan'
       produces:
       - application/json
       responses:
@@ -1618,7 +1618,7 @@ paths:
         in: body
         name: Plan
         schema:
-          $ref: '#/definitions/actions.plan'
+          $ref: '#/definitions/action.plan'
       produces:
       - application/json
       responses:
@@ -1669,7 +1669,7 @@ paths:
         name: Product
         required: true
         schema:
-          $ref: '#/definitions/actions.product'
+          $ref: '#/definitions/action.product'
       produces:
       - application/json
       responses:
@@ -1748,7 +1748,7 @@ paths:
         in: body
         name: Product
         schema:
-          $ref: '#/definitions/actions.product'
+          $ref: '#/definitions/action.product'
       produces:
       - application/json
       responses:
@@ -1780,7 +1780,7 @@ paths:
         name: ProductCategory
         required: true
         schema:
-          $ref: '#/definitions/actions.productCategory'
+          $ref: '#/definitions/action.productCategory'
       produces:
       - application/json
       responses:
@@ -1860,7 +1860,7 @@ paths:
         name: Status
         required: true
         schema:
-          $ref: '#/definitions/actions.status'
+          $ref: '#/definitions/action.status'
       produces:
       - application/json
       responses:
@@ -1892,7 +1892,7 @@ paths:
         name: ProductTag
         required: true
         schema:
-          $ref: '#/definitions/actions.productTags'
+          $ref: '#/definitions/action.productTags'
       produces:
       - application/json
       responses:
@@ -1972,7 +1972,7 @@ paths:
         name: Type
         required: true
         schema:
-          $ref: '#/definitions/actions.productType'
+          $ref: '#/definitions/action.productType'
       produces:
       - application/json
       responses:
@@ -2023,7 +2023,7 @@ paths:
         name: Tag
         required: true
         schema:
-          $ref: '#/definitions/actions.tag'
+          $ref: '#/definitions/action.tag'
       produces:
       - application/json
       responses:
@@ -2102,7 +2102,7 @@ paths:
         in: body
         name: Tag
         schema:
-          $ref: '#/definitions/actions.tag'
+          $ref: '#/definitions/action.tag'
       produces:
       - application/json
       responses:
@@ -2153,7 +2153,7 @@ paths:
         name: User
         required: true
         schema:
-          $ref: '#/definitions/actions.user'
+          $ref: '#/definitions/action.user'
       produces:
       - application/json
       responses:
@@ -2232,7 +2232,7 @@ paths:
         in: body
         name: User
         schema:
-          $ref: '#/definitions/actions.user'
+          $ref: '#/definitions/action.user'
       produces:
       - application/json
       responses:

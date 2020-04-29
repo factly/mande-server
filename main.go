@@ -6,7 +6,7 @@ import (
 
 	"github.com/factly/data-portal-api/models"
 
-	"github.com/factly/data-portal-api/actions"
+	"github.com/factly/data-portal-api/action"
 )
 
 // @title Data portal API
@@ -28,7 +28,7 @@ func main() {
 	models.SetupDB()
 
 	// register routes
-	r := actions.RegisterRoutes()
+	r := action.RegisterRoutes()
 
 	fmt.Println("swagger-ui http://localhost:3000/swagger/index.html")
 	http.ListenAndServe(":3000", r)

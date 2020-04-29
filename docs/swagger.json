@@ -71,7 +71,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.cartItem"
+                            "$ref": "#/definitions/action.cartItem"
                         }
                     }
                 ],
@@ -155,7 +155,7 @@
                         "name": "CartItem",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.cartItem"
+                            "$ref": "#/definitions/action.cartItem"
                         }
                     }
                 ],
@@ -266,7 +266,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.cart"
+                            "$ref": "#/definitions/action.cart"
                         }
                     }
                 ],
@@ -350,7 +350,7 @@
                         "name": "Cart",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.cart"
+                            "$ref": "#/definitions/action.cart"
                         }
                     }
                 ],
@@ -461,7 +461,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.category"
+                            "$ref": "#/definitions/action.category"
                         }
                     }
                 ],
@@ -545,7 +545,7 @@
                         "name": "Category",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.category"
+                            "$ref": "#/definitions/action.category"
                         }
                     }
                 ],
@@ -656,7 +656,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.currency"
+                            "$ref": "#/definitions/action.currency"
                         }
                     }
                 ],
@@ -739,7 +739,7 @@
                         "name": "Currency",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.currency"
+                            "$ref": "#/definitions/action.currency"
                         }
                     }
                 ],
@@ -850,7 +850,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.membership"
+                            "$ref": "#/definitions/action.membership"
                         }
                     }
                 ],
@@ -934,7 +934,7 @@
                         "name": "Membership",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.membership"
+                            "$ref": "#/definitions/action.membership"
                         }
                     }
                 ],
@@ -1045,7 +1045,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.orderItem"
+                            "$ref": "#/definitions/action.orderItem"
                         }
                     }
                 ],
@@ -1156,7 +1156,7 @@
                         "name": "OrderItem",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.orderItem"
+                            "$ref": "#/definitions/action.orderItem"
                         }
                     }
                 ],
@@ -1233,7 +1233,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.order"
+                            "$ref": "#/definitions/action.order"
                         }
                     }
                 ],
@@ -1317,7 +1317,7 @@
                         "name": "Order",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.order"
+                            "$ref": "#/definitions/action.order"
                         }
                     }
                 ],
@@ -1428,7 +1428,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.payment"
+                            "$ref": "#/definitions/action.payment"
                         }
                     }
                 ],
@@ -1512,7 +1512,7 @@
                         "name": "Payment",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.payment"
+                            "$ref": "#/definitions/action.payment"
                         }
                     }
                 ],
@@ -1623,7 +1623,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.plan"
+                            "$ref": "#/definitions/action.plan"
                         }
                     }
                 ],
@@ -1698,7 +1698,7 @@
                         "name": "Plan",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.plan"
+                            "$ref": "#/definitions/action.plan"
                         }
                     }
                 ],
@@ -1809,7 +1809,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.product"
+                            "$ref": "#/definitions/action.product"
                         }
                     }
                 ],
@@ -1893,7 +1893,7 @@
                         "name": "Product",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.product"
+                            "$ref": "#/definitions/action.product"
                         }
                     }
                 ],
@@ -1975,7 +1975,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.productCategory"
+                            "$ref": "#/definitions/action.productCategory"
                         }
                     }
                 ],
@@ -2095,7 +2095,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.status"
+                            "$ref": "#/definitions/action.status"
                         }
                     }
                 ],
@@ -2143,7 +2143,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.productTags"
+                            "$ref": "#/definitions/action.productTags"
                         }
                     }
                 ],
@@ -2263,7 +2263,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.productType"
+                            "$ref": "#/definitions/action.productType"
                         }
                     }
                 ],
@@ -2340,7 +2340,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.tag"
+                            "$ref": "#/definitions/action.tag"
                         }
                     }
                 ],
@@ -2424,7 +2424,7 @@
                         "name": "Tag",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.tag"
+                            "$ref": "#/definitions/action.tag"
                         }
                     }
                 ],
@@ -2535,7 +2535,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/actions.user"
+                            "$ref": "#/definitions/action.user"
                         }
                     }
                 ],
@@ -2619,7 +2619,7 @@
                         "name": "User",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/actions.user"
+                            "$ref": "#/definitions/action.user"
                         }
                     }
                 ],
@@ -2678,7 +2678,7 @@
         }
     },
     "definitions": {
-        "actions.cart": {
+        "action.cart": {
             "type": "object",
             "properties": {
                 "status": {
@@ -2689,7 +2689,7 @@
                 }
             }
         },
-        "actions.cartItem": {
+        "action.cartItem": {
             "type": "object",
             "properties": {
                 "cart_id": {
@@ -2703,7 +2703,7 @@
                 }
             }
         },
-        "actions.category": {
+        "action.category": {
             "type": "object",
             "properties": {
                 "parent_id": {
@@ -2717,7 +2717,7 @@
                 }
             }
         },
-        "actions.currency": {
+        "action.currency": {
             "type": "object",
             "properties": {
                 "iso_code": {
@@ -2728,7 +2728,7 @@
                 }
             }
         },
-        "actions.membership": {
+        "action.membership": {
             "type": "object",
             "properties": {
                 "payment_id": {
@@ -2745,7 +2745,7 @@
                 }
             }
         },
-        "actions.order": {
+        "action.order": {
             "type": "object",
             "properties": {
                 "cart_id": {
@@ -2762,7 +2762,7 @@
                 }
             }
         },
-        "actions.orderItem": {
+        "action.orderItem": {
             "type": "object",
             "properties": {
                 "extra_info": {
@@ -2776,7 +2776,7 @@
                 }
             }
         },
-        "actions.payment": {
+        "action.payment": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -2793,7 +2793,7 @@
                 }
             }
         },
-        "actions.plan": {
+        "action.plan": {
             "type": "object",
             "properties": {
                 "plan_info": {
@@ -2807,7 +2807,7 @@
                 }
             }
         },
-        "actions.product": {
+        "action.product": {
             "type": "object",
             "properties": {
                 "currency_id": {
@@ -2830,7 +2830,7 @@
                 }
             }
         },
-        "actions.productCategory": {
+        "action.productCategory": {
             "type": "object",
             "properties": {
                 "category_id": {
@@ -2838,7 +2838,7 @@
                 }
             }
         },
-        "actions.productTags": {
+        "action.productTags": {
             "type": "object",
             "properties": {
                 "tag_id": {
@@ -2846,7 +2846,7 @@
                 }
             }
         },
-        "actions.productType": {
+        "action.productType": {
             "type": "object",
             "properties": {
                 "name": {
@@ -2854,7 +2854,7 @@
                 }
             }
         },
-        "actions.status": {
+        "action.status": {
             "type": "object",
             "properties": {
                 "name": {
@@ -2862,7 +2862,7 @@
                 }
             }
         },
-        "actions.tag": {
+        "action.tag": {
             "type": "object",
             "properties": {
                 "slug": {
@@ -2873,7 +2873,7 @@
                 }
             }
         },
-        "actions.user": {
+        "action.user": {
             "type": "object",
             "properties": {
                 "email": {
