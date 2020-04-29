@@ -1811,7 +1811,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.product"
+                            "$ref": "#/definitions/product.product"
                         }
                     }
                 ],
@@ -1895,7 +1895,7 @@
                         "name": "Product",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.product"
+                            "$ref": "#/definitions/product.product"
                         }
                     }
                 ],
@@ -1977,7 +1977,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.productCategory"
+                            "$ref": "#/definitions/category.productCategory"
                         }
                     }
                 ],
@@ -2097,7 +2097,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.status"
+                            "$ref": "#/definitions/status.status"
                         }
                     }
                 ],
@@ -2145,7 +2145,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.productTags"
+                            "$ref": "#/definitions/tag.productTags"
                         }
                     }
                 ],
@@ -2265,7 +2265,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.productType"
+                            "$ref": "#/definitions/prodtype.productType"
                         }
                     }
                 ],
@@ -2694,61 +2694,6 @@
                 }
             }
         },
-        "action.product": {
-            "type": "object",
-            "properties": {
-                "currency_id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "product_type_id": {
-                    "type": "integer"
-                },
-                "slug": {
-                    "type": "string"
-                },
-                "status_id": {
-                    "type": "integer"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "action.productCategory": {
-            "type": "object",
-            "properties": {
-                "category_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "action.productTags": {
-            "type": "object",
-            "properties": {
-                "tag_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "action.productType": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "action.status": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "action.user": {
             "type": "object",
             "properties": {
@@ -2799,6 +2744,14 @@
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "category.productCategory": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3358,6 +3311,53 @@
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "prodtype.productType": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "product.product": {
+            "type": "object",
+            "properties": {
+                "currency_id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "product_type_id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "status.status": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tag.productTags": {
+            "type": "object",
+            "properties": {
+                "tag_id": {
+                    "type": "integer"
                 }
             }
         },

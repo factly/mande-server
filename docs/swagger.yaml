@@ -9,41 +9,6 @@ definitions:
       product_id:
         type: integer
     type: object
-  action.product:
-    properties:
-      currency_id:
-        type: integer
-      price:
-        type: integer
-      product_type_id:
-        type: integer
-      slug:
-        type: string
-      status_id:
-        type: integer
-      title:
-        type: string
-    type: object
-  action.productCategory:
-    properties:
-      category_id:
-        type: integer
-    type: object
-  action.productTags:
-    properties:
-      tag_id:
-        type: integer
-    type: object
-  action.productType:
-    properties:
-      name:
-        type: string
-    type: object
-  action.status:
-    properties:
-      name:
-        type: string
-    type: object
   action.user:
     properties:
       email:
@@ -77,6 +42,11 @@ definitions:
         type: string
       title:
         type: string
+    type: object
+  category.productCategory:
+    properties:
+      category_id:
+        type: integer
     type: object
   currency.currency:
     properties:
@@ -456,6 +426,36 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  prodtype.productType:
+    properties:
+      name:
+        type: string
+    type: object
+  product.product:
+    properties:
+      currency_id:
+        type: integer
+      price:
+        type: integer
+      product_type_id:
+        type: integer
+      slug:
+        type: string
+      status_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  status.status:
+    properties:
+      name:
+        type: string
+    type: object
+  tag.productTags:
+    properties:
+      tag_id:
+        type: integer
     type: object
   tag.tag:
     properties:
@@ -1670,7 +1670,7 @@ paths:
         name: Product
         required: true
         schema:
-          $ref: '#/definitions/action.product'
+          $ref: '#/definitions/product.product'
       produces:
       - application/json
       responses:
@@ -1749,7 +1749,7 @@ paths:
         in: body
         name: Product
         schema:
-          $ref: '#/definitions/action.product'
+          $ref: '#/definitions/product.product'
       produces:
       - application/json
       responses:
@@ -1781,7 +1781,7 @@ paths:
         name: ProductCategory
         required: true
         schema:
-          $ref: '#/definitions/action.productCategory'
+          $ref: '#/definitions/category.productCategory'
       produces:
       - application/json
       responses:
@@ -1861,7 +1861,7 @@ paths:
         name: Status
         required: true
         schema:
-          $ref: '#/definitions/action.status'
+          $ref: '#/definitions/status.status'
       produces:
       - application/json
       responses:
@@ -1893,7 +1893,7 @@ paths:
         name: ProductTag
         required: true
         schema:
-          $ref: '#/definitions/action.productTags'
+          $ref: '#/definitions/tag.productTags'
       produces:
       - application/json
       responses:
@@ -1973,7 +1973,7 @@ paths:
         name: Type
         required: true
         schema:
-          $ref: '#/definitions/action.productType'
+          $ref: '#/definitions/prodtype.productType'
       produces:
       - application/json
       responses:
