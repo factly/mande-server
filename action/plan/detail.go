@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [get]
-func getPlanByID(w http.ResponseWriter, r *http.Request) {
+func detail(w http.ResponseWriter, r *http.Request) {
 
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)

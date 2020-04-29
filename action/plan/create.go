@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// CreatePlan - create plan
+// Create - create plan
 // @Summary Create plan
 // @Description create plan
 // @Tags Plan
@@ -20,7 +20,7 @@ import (
 // @Param Plan body plan true "Plan object"
 // @Success 200 {object} model.Plan
 // @Router /plans [post]
-func CreatePlan(w http.ResponseWriter, r *http.Request) {
+func Create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Plan{}
 

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updatePayment - Update payment by id
+// update - Update payment by id
 // @Summary Update a payment by id
 // @Description Update payment by ID
 // @Tags Payment
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [put]
-func updatePayment(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)

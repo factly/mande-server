@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deletePlan - Delete plan by id
+// delete - Delete plan by id
 // @Summary Delete a plan
 // @Description Delete plan by ID
 // @Tags Plan
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [delete]
-func deletePlan(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)

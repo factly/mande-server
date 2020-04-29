@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getPayments - Get all payments
+// list - Get all payments
 // @Summary Show all payments
 // @Description Get all payments
 // @Tags Payment
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Payment
 // @Router /payments [get]
-func getPayments(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var payments []model.Payment
 	p := r.URL.Query().Get("page")

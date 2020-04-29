@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updatePlan - Update plan by id
+// update - Update plan by id
 // @Summary Update a plan by id
 // @Description Update plan by ID
 // @Tags Plan
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [put]
-func updatePlan(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)

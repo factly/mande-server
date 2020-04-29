@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createPayment - Create payment
+// create - Create payment
 // @Summary Create payment
 // @Description Create payment
 // @Tags Payment
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments [post]
-func createPayment(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Payment{}
 	json.NewDecoder(r.Body).Decode(&req)

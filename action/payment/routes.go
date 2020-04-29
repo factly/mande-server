@@ -14,13 +14,13 @@ type payment struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getPayments)    // GET /payments - return list of payments
-	r.Post("/", createPayment) // POST /payments - create a new payment and persist it
+	r.Get("/", list)    // GET /payments - return list of payments
+	r.Post("/", create) // POST /payments - create a new payment and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getPaymentByID)   // GET /payments/{id} - read a single payment by :id
-		r.Put("/", updatePayment)    // PUT /payments/{id} - update a single payment by :id
-		r.Delete("/", deletePayment) // DELETE /payments/{id} - delete a single payment by :id
+		r.Get("/", detail)    // GET /payments/{id} - read a single payment by :id
+		r.Put("/", update)    // PUT /payments/{id} - update a single payment by :id
+		r.Delete("/", delete) // DELETE /payments/{id} - delete a single payment by :id
 	})
 
 	return r

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deletePayment - Delete payment by id
+// delete - Delete payment by id
 // @Summary Delete a payment
 // @Description Delete payment by ID
 // @Tags Payment
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [delete]
-func deletePayment(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)
