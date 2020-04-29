@@ -17,13 +17,13 @@ type order struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getOrders)    // GET /orders - return list of orders
-	r.Post("/", createOrder) // POST /orders - create a new order and persist it
+	r.Get("/", list)    // GET /orders - return list of orders
+	r.Post("/", create) // POST /orders - create a new order and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getOrderByID)   // GET /orders/{id} - read a single order by :id
-		r.Put("/", updateOrder)    // PUT /orders/{id} - update a single order by :id
-		r.Delete("/", deleteOrder) // DELETE /orders/{id} - delete a single order by :id
+		r.Get("/", detail)    // GET /orders/{id} - read a single order by :id
+		r.Put("/", update)    // PUT /orders/{id} - update a single order by :id
+		r.Delete("/", delete) // DELETE /orders/{id} - delete a single order by :id
 		r.Mount("/", item.Router())
 	})
 

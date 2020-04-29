@@ -1208,14 +1208,14 @@ paths:
       summary: Create orders
       tags:
       - Order
-  /orders/{id}:
+  /orders/{order_id}:
     delete:
       description: Delete orders by ID
       operationId: delete-orders-by-id
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       responses:
@@ -1238,7 +1238,7 @@ paths:
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       produces:
@@ -1263,7 +1263,7 @@ paths:
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       - description: Order
@@ -1287,14 +1287,14 @@ paths:
       summary: Update a orders by id
       tags:
       - Order
-  /orders/{id}/order-items:
+  /orders/{order_id}/order-items:
     get:
       description: Get all order items
       operationId: get-all-order-items
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       - description: limt per page
@@ -1323,7 +1323,7 @@ paths:
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       - description: Order item object
@@ -1342,19 +1342,19 @@ paths:
       summary: Create order items
       tags:
       - OrderItem
-  /orders/{id}/order-items/{oid}:
+  /orders/{order_id}/order-items/{item_id}:
     delete:
       description: Delete order item by ID
       operationId: delete-order-items-by-id
       parameters:
       - description: OrderItem ID
         in: path
-        name: oid
+        name: item_id
         required: true
         type: string
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       responses:
@@ -1377,12 +1377,12 @@ paths:
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       - description: Order item ID
         in: path
-        name: oid
+        name: item_id
         required: true
         type: string
       produces:
@@ -1401,19 +1401,19 @@ paths:
       summary: Show a order item by id
       tags:
       - OrderItem
-  /orders/{id}/orderItems/{oid}:
+  /orders/{order_id}/orderItems/{item_id}:
     put:
       description: Update orderItems by ID
       operationId: update-orderItems-by-id
       parameters:
       - description: Order ID
         in: path
-        name: id
+        name: order_id
         required: true
         type: string
       - description: OrderItem ID
         in: path
-        name: oid
+        name: item_id
         required: true
         type: string
       - description: OrderItem

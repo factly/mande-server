@@ -10,22 +10,22 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updateOrderItem - Update orderItems by id
+// update - Update orderItems by id
 // @Summary Update a orderItems by id
 // @Description Update orderItems by ID
 // @Tags OrderItem
 // @ID update-orderItems-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Order ID"
-// @Param oid path string true "OrderItem ID"
+// @Param order_id path string true "Order ID"
+// @Param item_id path string true "OrderItem ID"
 // @Param OrderItem body orderItem false "OrderItem"
 // @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
-// @Router /orders/{id}/orderItems/{oid} [put]
-func updateOrderItem(w http.ResponseWriter, r *http.Request) {
+// @Router /orders/{order_id}/orderItems/{item_id} [put]
+func update(w http.ResponseWriter, r *http.Request) {
 
-	orderItemID := chi.URLParam(r, "oid")
+	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
 	if err != nil {

@@ -10,20 +10,20 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deleteOrderItem - Delete order item by id
+// delete - Delete order item by id
 // @Summary Delete a order item
 // @Description Delete order item by ID
 // @Tags OrderItem
 // @ID delete-order-items-by-id
 // @Consume  json
-// @Param oid path string true "OrderItem ID"
-// @Param id path string true "Order ID"
+// @Param item_id path string true "OrderItem ID"
+// @Param order_id path string true "Order ID"
 // @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
-// @Router /orders/{id}/order-items/{oid} [delete]
-func deleteOrderItem(w http.ResponseWriter, r *http.Request) {
+// @Router /orders/{order_id}/order-items/{item_id} [delete]
+func delete(w http.ResponseWriter, r *http.Request) {
 
-	orderItemID := chi.URLParam(r, "oid")
+	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
 	if err != nil {

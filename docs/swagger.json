@@ -1112,7 +1112,7 @@
                 }
             }
         },
-        "/orders/{id}": {
+        "/orders/{order_id}": {
             "get": {
                 "description": "Get orders by ID",
                 "produces": [
@@ -1127,7 +1127,7 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     }
@@ -1164,7 +1164,7 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     },
@@ -1206,7 +1206,7 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     }
@@ -1230,7 +1230,7 @@
                 }
             }
         },
-        "/orders/{id}/order-items": {
+        "/orders/{order_id}/order-items": {
             "get": {
                 "description": "Get all order items",
                 "produces": [
@@ -1245,7 +1245,7 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     },
@@ -1288,7 +1288,7 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     },
@@ -1312,7 +1312,7 @@
                 }
             }
         },
-        "/orders/{id}/order-items/{oid}": {
+        "/orders/{order_id}/order-items/{item_id}": {
             "get": {
                 "description": "Get order item by ID",
                 "produces": [
@@ -1327,14 +1327,14 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Order item ID",
-                        "name": "oid",
+                        "name": "item_id",
                         "in": "path",
                         "required": true
                     }
@@ -1368,14 +1368,14 @@
                     {
                         "type": "string",
                         "description": "OrderItem ID",
-                        "name": "oid",
+                        "name": "item_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     }
@@ -1399,7 +1399,7 @@
                 }
             }
         },
-        "/orders/{id}/orderItems/{oid}": {
+        "/orders/{order_id}/orderItems/{item_id}": {
             "put": {
                 "description": "Update orderItems by ID",
                 "produces": [
@@ -1414,14 +1414,14 @@
                     {
                         "type": "string",
                         "description": "Order ID",
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "OrderItem ID",
-                        "name": "oid",
+                        "name": "item_id",
                         "in": "path",
                         "required": true
                     },

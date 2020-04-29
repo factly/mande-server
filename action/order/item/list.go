@@ -8,18 +8,18 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getOrderItems - Get all order items
+// list - Get all order items
 // @Summary Show all order items
 // @Description Get all order items
 // @Tags OrderItem
 // @ID get-all-order-items
 // @Produce  json
-// @Param id path string true "Order ID"
+// @Param order_id path string true "Order ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {array} model.OrderItem
-// @Router /orders/{id}/order-items [get]
-func getOrderItems(w http.ResponseWriter, r *http.Request) {
+// @Router /orders/{order_id}/order-items [get]
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var orderItems []model.OrderItem
 	p := r.URL.Query().Get("page")

@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getOrders - Get all orders
+// list - Get all orders
 // @Summary Show all orders
 // @Description Get all orders
 // @Tags Order
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Order
 // @Router /orders [get]
-func getOrders(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var orders []model.Order
 	p := r.URL.Query().Get("page")

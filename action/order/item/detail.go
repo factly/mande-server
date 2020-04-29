@@ -10,20 +10,20 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// getOrderItemByID - Get order item by id
+// detail - Get order item by id
 // @Summary Show a order item by id
 // @Description Get order item by ID
 // @Tags OrderItem
 // @ID get-order-item-by-id
 // @Produce  json
-// @Param id path string true "Order ID"
-// @Param oid path string true "Order item ID"
+// @Param order_id path string true "Order ID"
+// @Param item_id path string true "Order item ID"
 // @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
-// @Router /orders/{id}/order-items/{oid} [get]
-func getOrderItemByID(w http.ResponseWriter, r *http.Request) {
+// @Router /orders/{order_id}/order-items/{item_id} [get]
+func detail(w http.ResponseWriter, r *http.Request) {
 
-	orderItemID := chi.URLParam(r, "oid")
+	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createOrder - create orders
+// create - create orders
 // @Summary Create orders
 // @Description create orders
 // @Tags Order
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders [post]
-func createOrder(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Order{}
 

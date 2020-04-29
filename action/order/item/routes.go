@@ -13,13 +13,13 @@ type orderItem struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getOrderItems)    // GET /order-items - return list of order items
-	r.Post("/", createOrderItem) // POST /order-items - create a new order item and persist it
+	r.Get("/", list)    // GET /orders/{order_id}/order-items - return list of order items
+	r.Post("/", create) // POST /order-items - create a new order item and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getOrderItemByID)   // GET /order-items/{id} - read a single order item by :id
-		r.Put("/", updateOrderItem)    // PUT /order-items/{id} - update a single order item by :id
-		r.Delete("/", deleteOrderItem) // DELETE /order-items/{id} - delete a single order item by :id
+	r.Route("/{item_id}", func(r chi.Router) {
+		r.Get("/", detail)    // GET /orders/{order_id}/order-items/{item_id} - read a single order item by :id
+		r.Put("/", update)    // PUT /orders/{order_id}/order-items/{item_id} - update a single order item by :id
+		r.Delete("/", delete) // DELETE /orders/{order_id}/order-items/{item_id} - delete a single order item by :id
 	})
 
 	return r
