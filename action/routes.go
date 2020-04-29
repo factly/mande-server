@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-api/action/cart"
-	"github.com/factly/data-portal-api/action/cartitem"
 	"github.com/factly/data-portal-api/action/category"
 	"github.com/factly/data-portal-api/action/currency"
 	"github.com/factly/data-portal-api/action/membership"
@@ -47,7 +46,6 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/categories", category.Router())
 
 	r.Mount("/carts", cart.Router())
-	r.Mount("/cart-items", cartitem.Router())
 
 	r.Mount("/orders", order.Router())
 

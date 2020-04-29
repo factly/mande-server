@@ -1,4 +1,4 @@
-package cartitem
+package item
 
 import (
 	"encoding/json"
