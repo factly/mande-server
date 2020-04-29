@@ -2,11 +2,12 @@ package tag
 
 import (
 	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/factly/data-portal-api/models"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-playground/validator/v10"
-	"log"
-	"net/http"
 )
 
 // CreateTag - Create tag

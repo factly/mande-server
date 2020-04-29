@@ -2,13 +2,13 @@ package tag
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	"github.com/factly/data-portal-api/models"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
-	"net/http"
-	"strconv"
 )
-
 
 // DeleteTag - Delete tag by id
 // @Summary Delete a tag
