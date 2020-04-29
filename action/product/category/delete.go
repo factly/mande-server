@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// DeleteProductCategory - Delete productCategory by id
+// delete - Delete productCategory by id
 // @Summary Delete a productCategory
 // @Description Delete productCategory by ID
 // @Tags ProductCategory
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.ProductCategory
 // @Failure 400 {array} string
 // @Router /products/{id}/category/{cid} [delete]
-func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 	categoryID := chi.URLParam(r, "cid")
 	cid, err := strconv.Atoi(categoryID)
 

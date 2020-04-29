@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// GetProductTypes - Get all productTypes
+// list - Get all productTypes
 // @Summary Show all productTypes
 // @Description Get all productTypes
 // @Tags Type
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.ProductType
 // @Router /products/{id}/type [get]
-func GetProductTypes(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var productTypes []model.ProductType
 	p := r.URL.Query().Get("page")

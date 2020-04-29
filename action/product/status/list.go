@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// GetStatuses - Get all statuses
+// list - Get all statuses
 // @Summary Show all statuses
 // @Description Get all statuses
 // @Tags Status
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Status
 // @Router /products/{id}/status [get]
-func GetStatuses(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var statuses []model.Status
 	p := r.URL.Query().Get("page")

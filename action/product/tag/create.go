@@ -12,12 +12,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// ProductTag request body
-type productTags struct {
-	TagID uint `json:"tag_id"`
-}
-
-// CreateProductTag - create productTags
+// create - create productTags
 // @Summary Create productTags
 // @Description create productTags
 // @Tags ProductTag
@@ -29,7 +24,7 @@ type productTags struct {
 // @Success 200 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag [post]
-func CreateProductTag(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	productID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productID)

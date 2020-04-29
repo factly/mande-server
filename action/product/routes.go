@@ -27,23 +27,10 @@ func Router() chi.Router {
 		r.Get("/", detail)
 		r.Delete("/", delete)
 		r.Put("/", update)
-		r.Post("/type", prodtype.CreateProductType)
-		r.Get("/type", prodtype.GetProductTypes)
-		r.Post("/status", status.CreateStatus)
-		r.Get("/status", status.GetStatuses)
-		r.Route("/tag", func(r chi.Router) {
-			r.Post("/", tag.CreateProductTag)
-			r.Route("/{tid}", func(r chi.Router) {
-				r.Delete("/", tag.DeleteProductTag)
-			})
-		})
-		r.Route("/category", func(r chi.Router) {
-			r.Post("/", category.CreateProductCategory)
-			r.Route("/{cid}", func(r chi.Router) {
-				r.Delete("/", category.DeleteProductCategory)
-			})
-
-		})
+		r.Mount("/type", prodtype.Router())     // product-type router
+		r.Mount("/status", status.Router())     // product-type router
+		r.Mount("/tag", tag.Router())           // product-tag router
+		r.Mount("/category", category.Router()) // product-category router
 	})
 
 	return r

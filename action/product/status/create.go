@@ -10,12 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// status request object
-type status struct {
-	Name string `json:"name"`
-}
-
-// CreateStatus - Create status
+// create - Create status
 // @Summary Create status
 // @Description Create status
 // @Tags Status
@@ -26,7 +21,7 @@ type status struct {
 // @Success 200 {object} model.Status
 // @Failure 400 {array} string
 // @Router /products/{id}/status [post]
-func CreateStatus(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Status{}
 	json.NewDecoder(r.Body).Decode(&req)

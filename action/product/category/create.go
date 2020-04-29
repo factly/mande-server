@@ -12,12 +12,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// ProductCategory request body
-type productCategory struct {
-	CategoryID uint `json:"category_id"`
-}
-
-// CreateProductCategory - create productCategory
+// create - create productCategory
 // @Summary Create productCategory
 // @Description create productCategory
 // @Tags ProductCategory
@@ -29,7 +24,7 @@ type productCategory struct {
 // @Success 200 {object} model.ProductCategory
 // @Failure 400 {array} string
 // @Router /products/{id}/category [post]
-func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	productID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(productID)
