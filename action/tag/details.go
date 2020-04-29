@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [get]
-func getDetails(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
