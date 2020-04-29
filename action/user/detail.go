@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// getUserByID - Get user by id
+// detail - Get user by id
 // @Summary Show a user by id
 // @Description Get user by ID
 // @Tags User
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.User
 // @Failure 400 {array} string
 // @Router /users/{id} [get]
-func getUserByID(w http.ResponseWriter, r *http.Request) {
+func detail(w http.ResponseWriter, r *http.Request) {
 
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)

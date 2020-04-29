@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deleteUser - Delete user by id
+// delete - Delete user by id
 // @Summary Delete a user
 // @Description Delete user by ID
 // @Tags User
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.User
 // @Failure 400 {array} string
 // @Router /users/{id} [delete]
-func deleteUser(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 
 	userID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(userID)

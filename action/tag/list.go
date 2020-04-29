@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getTags - Get all tags
+// list - Get all tags
 // @Summary Show all tags
 // @Description Get all tags
 // @Tags Tag
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Tag
 // @Router /tags [get]
-func getTags(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var tags []model.Tag
 	p := r.URL.Query().Get("page")

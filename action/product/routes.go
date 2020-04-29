@@ -21,12 +21,12 @@ type product struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", createProduct)
-	r.Get("/", getProducts)
+	r.Post("/", create)
+	r.Get("/", list)
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getProductByID)
-		r.Delete("/", deleteProduct)
-		r.Put("/", updateProduct)
+		r.Get("/", detail)
+		r.Delete("/", delete)
+		r.Put("/", update)
 		r.Post("/type", prodtype.CreateProductType)
 		r.Get("/type", prodtype.GetProductTypes)
 		r.Post("/status", status.CreateStatus)

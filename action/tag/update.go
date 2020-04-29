@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updateTag - Update tag by id
+// update - Update tag by id
 // @Summary Update a tag by id
 // @Description Update tag by ID
 // @Tags Tag
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [put]
-func updateTag(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)

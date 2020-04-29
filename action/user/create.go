@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createUser - Create user
+// create - Create user
 // @Summary Create user
 // @Description Create user
 // @Tags User
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.User
 // @Failure 400 {array} string
 // @Router /users [post]
-func createUser(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.User{}
 	json.NewDecoder(r.Body).Decode(&req)

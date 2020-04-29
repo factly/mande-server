@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createTag - Create tag
+// create - Create tag
 // @Summary Create tag
 // @Description Create tag
 // @Tags Tag
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags [post]
-func createTag(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Tag{}
 

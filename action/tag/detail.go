@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// getTagByID - Get tag by id
+// detail - Get tag by id
 // @Summary Show a tag by id
 // @Description Get tag by ID
 // @Tags Tag
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [get]
-func getTagByID(w http.ResponseWriter, r *http.Request) {
+func detail(w http.ResponseWriter, r *http.Request) {
 
 	tagID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tagID)
