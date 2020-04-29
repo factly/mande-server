@@ -14,7 +14,7 @@ import (
 // @Summary Delete a cartItem
 // @Description Delete cartItem by ID
 // @Tags CartItem
-// @ID delete-cartItem-by-id
+// @ID delete-cart-item-by-id
 // @Consume  json
 // @Param cart_id path string true "Cart ID"
 // @Param item_id path string true "Cart-item ID"

@@ -94,59 +94,6 @@
                 }
             }
         },
-        "/carts/cart_id/cart-items/{item_id}": {
-            "get": {
-                "description": "Get cartItem by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Show a cartItem by id",
-                "operationId": "get-cartItem-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Cart-item ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "CartItem ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/carts/{cart_id}": {
             "get": {
                 "description": "Get cart by ID",
@@ -199,7 +146,7 @@
                     {
                         "type": "string",
                         "description": "Cart ID",
-                        "name": "id",
+                        "name": "cart_id",
                         "in": "path",
                         "required": true
                     },
@@ -275,7 +222,7 @@
                     "CartItem"
                 ],
                 "summary": "Show all cartItems",
-                "operationId": "get-all-cartItems",
+                "operationId": "get-all-cart-items",
                 "parameters": [
                     {
                         "type": "string",
@@ -318,7 +265,7 @@
                     "CartItem"
                 ],
                 "summary": "Create cartItem",
-                "operationId": "add-cartItem",
+                "operationId": "add-cart-item",
                 "parameters": [
                     {
                         "type": "string",
@@ -357,6 +304,50 @@
             }
         },
         "/carts/{cart_id}/cart-items/{item_id}": {
+            "get": {
+                "description": "Get cartItem by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CartItem"
+                ],
+                "summary": "Show a cartItem by id",
+                "operationId": "get-cart-item-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart ID",
+                        "name": "cart_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart-item ID",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CartItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Update cartItem by ID",
                 "produces": [
@@ -366,7 +357,7 @@
                     "CartItem"
                 ],
                 "summary": "Update a cartItem by id",
-                "operationId": "update-cartItem-by-id",
+                "operationId": "update-cart-item-by-id",
                 "parameters": [
                     {
                         "type": "string",
@@ -415,7 +406,7 @@
                     "CartItem"
                 ],
                 "summary": "Delete a cartItem",
-                "operationId": "delete-cartItem-by-id",
+                "operationId": "delete-cart-item-by-id",
                 "parameters": [
                     {
                         "type": "string",

@@ -12,7 +12,7 @@ import (
 // @Summary Show all cartItems
 // @Description Get all cartItems
 // @Tags CartItem
-// @ID get-all-cartItems
+// @ID get-all-cart-items
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param limit query string false "limt per page"

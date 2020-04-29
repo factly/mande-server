@@ -583,7 +583,7 @@ paths:
       parameters:
       - description: Cart ID
         in: path
-        name: id
+        name: cart_id
         required: true
         type: string
       - description: Cart
@@ -610,7 +610,7 @@ paths:
   /carts/{cart_id}/cart-items:
     get:
       description: Get all cartItems
-      operationId: get-all-cartItems
+      operationId: get-all-cart-items
       parameters:
       - description: Cart ID
         in: path
@@ -639,7 +639,7 @@ paths:
       - CartItem
     post:
       description: create cartItem
-      operationId: add-cartItem
+      operationId: add-cart-item
       parameters:
       - description: Cart ID
         in: path
@@ -671,7 +671,7 @@ paths:
   /carts/{cart_id}/cart-items/{item_id}:
     delete:
       description: Delete cartItem by ID
-      operationId: delete-cartItem-by-id
+      operationId: delete-cart-item-by-id
       parameters:
       - description: Cart ID
         in: path
@@ -697,9 +697,39 @@ paths:
       summary: Delete a cartItem
       tags:
       - CartItem
+    get:
+      description: Get cartItem by ID
+      operationId: get-cart-item-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cartItem by id
+      tags:
+      - CartItem
     put:
       description: Update cartItem by ID
-      operationId: update-cartItem-by-id
+      operationId: update-cart-item-by-id
       parameters:
       - description: Cart ID
         in: path
@@ -730,42 +760,6 @@ paths:
               type: string
             type: array
       summary: Update a cartItem by id
-      tags:
-      - CartItem
-  /carts/cart_id/cart-items/{item_id}:
-    get:
-      description: Get cartItem by ID
-      operationId: get-cartItem-by-id
-      parameters:
-      - description: Cart ID
-        in: path
-        name: cart_id
-        required: true
-        type: string
-      - description: Cart-item ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: CartItem ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.CartItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a cartItem by id
       tags:
       - CartItem
   /categories:

@@ -14,7 +14,7 @@ import (
 // @Summary Update a cartItem by id
 // @Description Update cartItem by ID
 // @Tags CartItem
-// @ID update-cartItem-by-id
+// @ID update-cart-item-by-id
 // @Produce json
 // @Consume json
 // @Param cart_id path string true "Cart ID"

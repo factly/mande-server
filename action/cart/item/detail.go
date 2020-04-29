@@ -14,16 +14,14 @@ import (
 // @Summary Show a cartItem by id
 // @Description Get cartItem by ID
 // @Tags CartItem
-// @ID get-cartItem-by-id
+// @ID get-cart-item-by-id
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param item_id path string true "Cart-item ID"
-// @Param id path string true "CartItem ID"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts/cart_id/cart-items/{item_id} [get]
+// @Router /carts/{cart_id}/cart-items/{item_id} [get]
 func detail(w http.ResponseWriter, r *http.Request) {
-
 	cartItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(cartItemID)
 
