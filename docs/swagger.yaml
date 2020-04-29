@@ -1,12 +1,5 @@
 basePath: /
 definitions:
-  action.cart:
-    properties:
-      status:
-        type: string
-      user_id:
-        type: integer
-    type: object
   action.cartItem:
     properties:
       cart_id:
@@ -23,13 +16,6 @@ definitions:
       slug:
         type: string
       title:
-        type: string
-    type: object
-  action.currency:
-    properties:
-      iso_code:
-        type: string
-      name:
         type: string
     type: object
   action.membership:
@@ -126,6 +112,13 @@ definitions:
         type: string
       last_name:
         type: string
+    type: object
+  cart.cart:
+    properties:
+      status:
+        type: string
+      user_id:
+        type: integer
     type: object
   currency.currency:
     properties:
@@ -648,7 +641,7 @@ paths:
         name: Cart
         required: true
         schema:
-          $ref: '#/definitions/action.cart'
+          $ref: '#/definitions/cart.cart'
       produces:
       - application/json
       responses:
@@ -727,7 +720,7 @@ paths:
         in: body
         name: Cart
         schema:
-          $ref: '#/definitions/action.cart'
+          $ref: '#/definitions/cart.cart'
       produces:
       - application/json
       responses:
@@ -908,7 +901,7 @@ paths:
         name: Currency
         required: true
         schema:
-          $ref: '#/definitions/action.currency'
+          $ref: '#/definitions/currency.currency'
       produces:
       - application/json
       responses:
@@ -986,7 +979,7 @@ paths:
         in: body
         name: Currency
         schema:
-          $ref: '#/definitions/action.currency'
+          $ref: '#/definitions/currency.currency'
       produces:
       - application/json
       responses:

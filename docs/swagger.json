@@ -266,7 +266,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.cart"
+                            "$ref": "#/definitions/cart.cart"
                         }
                     }
                 ],
@@ -350,7 +350,7 @@
                         "name": "Cart",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.cart"
+                            "$ref": "#/definitions/cart.cart"
                         }
                     }
                 ],
@@ -656,7 +656,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.currency"
+                            "$ref": "#/definitions/currency.currency"
                         }
                     }
                 ],
@@ -739,7 +739,7 @@
                         "name": "Currency",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.currency"
+                            "$ref": "#/definitions/currency.currency"
                         }
                     }
                 ],
@@ -2678,17 +2678,6 @@
         }
     },
     "definitions": {
-        "action.cart": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "action.cartItem": {
             "type": "object",
             "properties": {
@@ -2713,17 +2702,6 @@
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "action.currency": {
-            "type": "object",
-            "properties": {
-                "iso_code": {
-                    "type": "string"
-                },
-                "name": {
                     "type": "string"
                 }
             }
@@ -2873,6 +2851,17 @@
                 },
                 "last_name": {
                     "type": "string"
+                }
+            }
+        },
+        "cart.cart": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
