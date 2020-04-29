@@ -10,19 +10,19 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deleteCart - Delete cart by id
+// delete - Delete cart by id
 // @Summary Delete a cart
 // @Description Delete cart by ID
 // @Tags Cart
 // @ID delete-cart-by-id
 // @Consume  json
-// @Param id path string true "Cart ID"
+// @Param cart_id path string true "Cart ID"
 // @Success 200 {object} model.Cart
 // @Failure 400 {array} string
-// @Router /carts/{id} [delete]
-func deleteCart(w http.ResponseWriter, r *http.Request) {
+// @Router /carts/{cart_id} [delete]
+func delete(w http.ResponseWriter, r *http.Request) {
 
-	cartID := chi.URLParam(r, "id")
+	cartID := chi.URLParam(r, "cart_id")
 	id, err := strconv.Atoi(cartID)
 
 	if err != nil {

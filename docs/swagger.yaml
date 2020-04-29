@@ -37,6 +37,15 @@ definitions:
       name:
         type: string
     type: object
+  item.cartItem:
+    properties:
+      cart_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product_id:
+        type: integer
+    type: object
   item.orderItem:
     properties:
       extra_info:
@@ -659,14 +668,14 @@ paths:
       summary: Create cart
       tags:
       - Cart
-  /carts/{id}:
+  /carts/{cart_id}:
     delete:
       description: Delete cart by ID
       operationId: delete-cart-by-id
       parameters:
       - description: Cart ID
         in: path
-        name: id
+        name: cart_id
         required: true
         type: string
       responses:
@@ -689,7 +698,7 @@ paths:
       parameters:
       - description: Cart ID
         in: path
-        name: id
+        name: cart_id
         required: true
         type: string
       produces:
@@ -738,6 +747,167 @@ paths:
       summary: Update a cart by id
       tags:
       - Cart
+  /carts/{cart_id}/cart-items:
+    get:
+      description: Get all cartItems
+      operationId: get-all-cartItems
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.CartItem'
+            type: array
+      summary: Show all cartItems
+      tags:
+      - CartItem
+    post:
+      description: create cartItem
+      operationId: add-cartItem
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: CartItem object
+        in: body
+        name: CartItem
+        required: true
+        schema:
+          $ref: '#/definitions/item.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cartItem
+      tags:
+      - CartItem
+  /carts/{cart_id}/cart-items/{item_id}:
+    delete:
+      description: Delete cartItem by ID
+      operationId: delete-cartItem-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a cartItem
+      tags:
+      - CartItem
+    put:
+      description: Update cartItem by ID
+      operationId: update-cartItem-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: CartItem
+        in: body
+        name: CartItem
+        schema:
+          $ref: '#/definitions/item.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a cartItem by id
+      tags:
+      - CartItem
+  /carts/cart_id/cart-items/{item_id}:
+    get:
+      description: Get cartItem by ID
+      operationId: get-cartItem-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: CartItem ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cartItem by id
+      tags:
+      - CartItem
   /categories:
     get:
       description: Get all categories

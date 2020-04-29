@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createCart - create cart
+// create - create cart
 // @Summary Create cart
 // @Description create cart
 // @Tags Cart
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts [post]
-func createCart(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Cart{}
 

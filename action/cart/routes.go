@@ -12,13 +12,13 @@ type cart struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getCarts)    // GET /carts - return list of carts
-	r.Post("/", createCart) // POST /carts - create a new cart and persist it
+	r.Get("/", list)    // GET /carts - return list of carts
+	r.Post("/", create) // POST /carts - create a new cart and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getCartByID)   // GET /carts/{id} - read a single cart by :id
-		r.Put("/", updateCart)    // PUT /carts/{id} - update a single cart by :id
-		r.Delete("/", deleteCart) // DELETE /carts/{id} - delete a single cart by :id
+	r.Route("/{cart_id}", func(r chi.Router) {
+		r.Get("/", detail)    // GET /carts/{cart_id} - read a single cart by :id
+		r.Put("/", update)    // PUT /carts/{cart_id} - update a single cart by :id
+		r.Delete("/", delete) // DELETE /carts/{cart_id} - delete a single cart by :id
 	})
 
 	return r
