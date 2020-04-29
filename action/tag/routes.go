@@ -19,7 +19,7 @@ func Router() chi.Router {
 
 	r.Route("/{id}", func(r chi.Router) {
 		r.Get("/", getTagByID)   // GET /tags/{id} - read a single tag by :id
-		r.Get("/", updateTag)    // PUT /tags/{id} - update a single tag by :id
+		r.Put("/", updateTag)    // PUT /tags/{id} - update a single tag by :id
 		r.Delete("/", deleteTag) // DELETE /tags/{id} - delete a single tag by :id
 	})
 

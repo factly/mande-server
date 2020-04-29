@@ -127,6 +127,13 @@ definitions:
       last_name:
         type: string
     type: object
+  currency.currency:
+    properties:
+      iso_code:
+        type: string
+      name:
+        type: string
+    type: object
   model.Cart:
     properties:
       created_at:

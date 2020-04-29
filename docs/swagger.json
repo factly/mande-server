@@ -2876,6 +2876,17 @@
                 }
             }
         },
+        "currency.currency": {
+            "type": "object",
+            "properties": {
+                "iso_code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Cart": {
             "type": "object",
             "required": [
