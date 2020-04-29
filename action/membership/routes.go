@@ -14,13 +14,13 @@ type membership struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getMemberships)    // GET /memberships - return list of memberships
-	r.Post("/", createMembership) // POST /memberships - create a new membership and persist it
+	r.Get("/", list)    // GET /memberships - return list of memberships
+	r.Post("/", create) // POST /memberships - create a new membership and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getMembershipbyID)   // GET /memberships/{id} - read a single membership by :id
-		r.Put("/", updateMembership)    // PUT /memberships/{id} - update a single membership by :id
-		r.Delete("/", deleteMembership) // DELETE /memberships/{id} - delete a single membership by :id
+		r.Get("/", detail)    // GET /memberships/{id} - read a single membership by :id
+		r.Put("/", update)    // PUT /memberships/{id} - update a single membership by :id
+		r.Delete("/", delete) // DELETE /memberships/{id} - delete a single membership by :id
 	})
 
 	return r

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updateCurrency - Update currency by id
+// update - Update currency by id
 // @Summary Update a currency by id
 // @Description Update currency by ID
 // @Tags Currency
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
 // @Router /currencies/{id} [put]
-func updateCurrency(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createMembership - Create membership
+// create - Create membership
 // @Summary Create membership
 // @Description Create membership
 // @Tags Membership
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
-func createMembership(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Membership{}
 	json.NewDecoder(r.Body).Decode(&req)

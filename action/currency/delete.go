@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deleteCurrency - Delete currency by id
+// delete - Delete currency by id
 // @Summary Delete a currency
 // @Description Delete currency by ID
 // @Tags Currency
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
 // @Router /currencies/{id} [delete]
-func deleteCurrency(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {

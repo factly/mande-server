@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updateCategory - Update category by id
+// update - Update category by id
 // @Summary Update a category by id
 // @Description Update category by ID
 // @Tags Category
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories/{id} [put]
-func updateCategory(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 
 	categoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(categoryID)

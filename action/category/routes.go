@@ -13,13 +13,13 @@ type category struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getCategories)   // GET /categories - return list of categories
-	r.Post("/", createCategory) // POST /categories - create a new category and persist it
+	r.Get("/", list)    // GET /categories - return list of categories
+	r.Post("/", create) // POST /categories - create a new category and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getCategoryByID)   // GET /categories/{id} - read a single category by :id
-		r.Put("/", updateCategory)    // PUT /categories/{id} - update a single category by :id
-		r.Delete("/", deleteCategory) // DELETE /categories/{id} - delete a single category by :id
+		r.Get("/", detail)    // GET /categories/{id} - read a single category by :id
+		r.Put("/", update)    // PUT /categories/{id} - update a single category by :id
+		r.Delete("/", delete) // DELETE /categories/{id} - delete a single category by :id
 	})
 
 	return r

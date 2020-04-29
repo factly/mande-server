@@ -12,13 +12,13 @@ type currency struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", getCurrencies)   // GET /currencies - return list of currencies
-	r.Post("/", createCurrency) // POST /currencies - create a new currency and persist it
+	r.Get("/", list)    // GET /currencies - return list of currencies
+	r.Post("/", create) // POST /currencies - create a new currency and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", getCurrencyByID)   // GET /currencies/{id} - read a single currency by :id
-		r.Put("/", updateCurrency)    // PUT /currencies/{id} - update a single currency by :id
-		r.Delete("/", deleteCurrency) // DELETE /currencies/{id} - delete a single currency by :id
+		r.Get("/", detail)    // GET /currencies/{id} - read a single currency by :id
+		r.Put("/", update)    // PUT /currencies/{id} - update a single currency by :id
+		r.Delete("/", delete) // DELETE /currencies/{id} - delete a single currency by :id
 	})
 
 	return r

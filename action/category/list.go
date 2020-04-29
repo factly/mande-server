@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getCategories - Get all categories
+// list - Get all categories
 // @Summary Show all categories
 // @Description Get all categories
 // @Tags Category
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Category
 // @Router /categories [get]
-func getCategories(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var categories []model.Category
 	p := r.URL.Query().Get("page")

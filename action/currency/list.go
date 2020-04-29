@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getCurrencies - Get all currencies
+// list - Get all currencies
 // @Summary Show all currencies
 // @Description Get all currencies
 // @Tags Currency
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Currency
 // @Router /currencies [get]
-func getCurrencies(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var currencies []model.Currency
 	p := r.URL.Query().Get("page")

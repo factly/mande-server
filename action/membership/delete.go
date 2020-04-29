@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// deleteMembership - Delete membership by id
+// delete - Delete membership by id
 // @Summary Delete a membership
 // @Description Delete membership by ID
 // @Tags Membership
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [delete]
-func deleteMembership(w http.ResponseWriter, r *http.Request) {
+func delete(w http.ResponseWriter, r *http.Request) {
 
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)

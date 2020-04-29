@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// updateMembership - Update membership by id
+// update - Update membership by id
 // @Summary Update a membership by id
 // @Description Update membership by ID
 // @Tags Membership
@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [put]
-func updateMembership(w http.ResponseWriter, r *http.Request) {
+func update(w http.ResponseWriter, r *http.Request) {
 
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)

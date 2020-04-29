@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createCategory - create category
+// create - create category
 // @Summary Create category
 // @Description create category
 // @Tags Category
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories [post]
-func createCategory(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Category{}
 

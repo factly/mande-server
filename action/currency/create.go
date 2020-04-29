@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// createCurrency - Create currency
+// create - Create currency
 // @Summary Create currency
 // @Description Create currency
 // @Tags Currency
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
 // @Router /currencies [post]
-func createCurrency(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.Currency{}
 

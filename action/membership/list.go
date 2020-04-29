@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-api/model"
 )
 
-// getMemberships - Get all memberships
+// list - Get all memberships
 // @Summary Show all memberships
 // @Description Get all memberships
 // @Tags Membership
@@ -18,7 +18,7 @@ import (
 // @Param page query string false "page number"
 // @Success 200 {array} model.Membership
 // @Router /memberships [get]
-func getMemberships(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	var memberships []model.Membership
 	p := r.URL.Query().Get("page")

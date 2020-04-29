@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// getMembershipbyID - Get membership by id
+// detail - Get membership by id
 // @Summary Show a membership by id
 // @Description Get membership by ID
 // @Tags Membership
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [get]
-func getMembershipbyID(w http.ResponseWriter, r *http.Request) {
+func detail(w http.ResponseWriter, r *http.Request) {
 
 	membershipID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(membershipID)
