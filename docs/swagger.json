@@ -212,7 +212,7 @@
                 }
             }
         },
-        "/carts/{cart_id}/cart-items": {
+        "/carts/{cart_id}/items": {
             "get": {
                 "description": "Get all cartItems",
                 "produces": [
@@ -303,7 +303,7 @@
                 }
             }
         },
-        "/carts/{cart_id}/cart-items/{item_id}": {
+        "/carts/{cart_id}/items/{item_id}": {
             "get": {
                 "description": "Get cartItem by ID",
                 "produces": [
@@ -1221,7 +1221,7 @@
                 }
             }
         },
-        "/orders/{order_id}/order-items": {
+        "/orders/{order_id}/items": {
             "get": {
                 "description": "Get all order items",
                 "produces": [
@@ -1303,7 +1303,7 @@
                 }
             }
         },
-        "/orders/{order_id}/order-items/{item_id}": {
+        "/orders/{order_id}/items/{item_id}": {
             "get": {
                 "description": "Get order item by ID",
                 "produces": [
@@ -1348,49 +1348,6 @@
                     }
                 }
             },
-            "delete": {
-                "description": "Delete order item by ID",
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Delete a order item",
-                "operationId": "delete-order-items-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OrderItem ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/{order_id}/orderItems/{item_id}": {
             "put": {
                 "description": "Update orderItems by ID",
                 "produces": [
@@ -1423,6 +1380,47 @@
                         "schema": {
                             "$ref": "#/definitions/item.orderItem"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderItem"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete order item by ID",
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "Delete a order item",
+                "operationId": "delete-order-items-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OrderItem ID",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

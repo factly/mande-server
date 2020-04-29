@@ -22,7 +22,7 @@ import (
 // @Param CartItem body cartItem false "CartItem"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts/{cart_id}/cart-items/{item_id} [put]
+// @Router /carts/{cart_id}/items/{item_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
 	cartItemID := chi.URLParam(r, "item_id")

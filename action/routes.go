@@ -41,12 +41,9 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/memberships", membership.Router())
 	r.Mount("/payments", payment.Router())
 	r.Mount("/products", product.Router())
-
 	r.Mount("/tags", tag.Router())
 	r.Mount("/categories", category.Router())
-
 	r.Mount("/carts", cart.Router())
-
 	r.Mount("/orders", order.Router())
 
 	// swagger docs

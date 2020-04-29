@@ -607,7 +607,7 @@ paths:
       summary: Update a cart by id
       tags:
       - Cart
-  /carts/{cart_id}/cart-items:
+  /carts/{cart_id}/items:
     get:
       description: Get all cartItems
       operationId: get-all-cart-items
@@ -668,7 +668,7 @@ paths:
       summary: Create cartItem
       tags:
       - CartItem
-  /carts/{cart_id}/cart-items/{item_id}:
+  /carts/{cart_id}/items/{item_id}:
     delete:
       description: Delete cartItem by ID
       operationId: delete-cart-item-by-id
@@ -1281,7 +1281,7 @@ paths:
       summary: Update a orders by id
       tags:
       - Order
-  /orders/{order_id}/order-items:
+  /orders/{order_id}/items:
     get:
       description: Get all order items
       operationId: get-all-order-items
@@ -1336,7 +1336,7 @@ paths:
       summary: Create order items
       tags:
       - OrderItem
-  /orders/{order_id}/order-items/{item_id}:
+  /orders/{order_id}/items/{item_id}:
     delete:
       description: Delete order item by ID
       operationId: delete-order-items-by-id
@@ -1395,7 +1395,6 @@ paths:
       summary: Show a order item by id
       tags:
       - OrderItem
-  /orders/{order_id}/orderItems/{item_id}:
     put:
       description: Update orderItems by ID
       operationId: update-orderItems-by-id

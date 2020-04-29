@@ -18,7 +18,7 @@ import (
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {array} model.CartItem
-// @Router /carts/{cart_id}/cart-items [get]
+// @Router /carts/{cart_id}/items [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	var cartItems []model.CartItem

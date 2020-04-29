@@ -20,7 +20,7 @@ import (
 // @Param item_id path string true "Cart-item ID"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts/{cart_id}/cart-items/{item_id} [delete]
+// @Router /carts/{cart_id}/items/{item_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
 	cartItemID := chi.URLParam(r, "item_id")

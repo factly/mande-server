@@ -24,7 +24,7 @@ func Router() chi.Router {
 		r.Get("/", detail)    // GET /orders/{id} - read a single order by :id
 		r.Put("/", update)    // PUT /orders/{id} - update a single order by :id
 		r.Delete("/", delete) // DELETE /orders/{id} - delete a single order by :id
-		r.Mount("/", item.Router())
+		r.Mount("/items", item.Router())
 	})
 
 	return r

@@ -21,7 +21,7 @@ import (
 // @Param CartItem body cartItem true "CartItem object"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts/{cart_id}/cart-items [post]
+// @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.CartItem{}

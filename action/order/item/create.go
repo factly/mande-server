@@ -20,7 +20,7 @@ import (
 // @Param order_id path string true "Order ID"
 // @Param OrderItem body orderItem true "Order item object"
 // @Success 200 {object} model.OrderItem
-// @Router /orders/{order_id}/order-items [post]
+// @Router /orders/{order_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
 	req := &model.OrderItem{}
