@@ -9,15 +9,6 @@ definitions:
       product_id:
         type: integer
     type: object
-  action.category:
-    properties:
-      parent_id:
-        type: integer
-      slug:
-        type: string
-      title:
-        type: string
-    type: object
   action.membership:
     properties:
       payment_id:
@@ -119,6 +110,15 @@ definitions:
         type: string
       user_id:
         type: integer
+    type: object
+  category.category:
+    properties:
+      parent_id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
     type: object
   currency.currency:
     properties:
@@ -771,7 +771,7 @@ paths:
         name: Category
         required: true
         schema:
-          $ref: '#/definitions/action.category'
+          $ref: '#/definitions/category.category'
       produces:
       - application/json
       responses:
@@ -850,7 +850,7 @@ paths:
         in: body
         name: Category
         schema:
-          $ref: '#/definitions/action.category'
+          $ref: '#/definitions/category.category'
       produces:
       - application/json
       responses:

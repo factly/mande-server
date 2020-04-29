@@ -461,7 +461,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.category"
+                            "$ref": "#/definitions/category.category"
                         }
                     }
                 ],
@@ -545,7 +545,7 @@
                         "name": "Category",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.category"
+                            "$ref": "#/definitions/category.category"
                         }
                     }
                 ],
@@ -2692,20 +2692,6 @@
                 }
             }
         },
-        "action.category": {
-            "type": "object",
-            "properties": {
-                "parent_id": {
-                    "type": "integer"
-                },
-                "slug": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
         "action.membership": {
             "type": "object",
             "properties": {
@@ -2862,6 +2848,20 @@
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "category.category": {
+            "type": "object",
+            "properties": {
+                "parent_id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
