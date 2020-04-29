@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -27,11 +27,11 @@ type plan struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Plan
+// @Success 200 {array} model.Plan
 // @Router /plans [get]
 func GetPlans(w http.ResponseWriter, r *http.Request) {
 
-	var plans []models.Plan
+	var plans []model.Plan
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -48,7 +48,7 @@ func GetPlans(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Plan{}).Find(&plans)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Plan{}).Find(&plans)
 
 	json.NewEncoder(w).Encode(plans)
 }
@@ -60,7 +60,7 @@ func GetPlans(w http.ResponseWriter, r *http.Request) {
 // @ID get-plan-by-id
 // @Produce  json
 // @Param id path string true "Plan ID"
-// @Success 200 {object} models.Plan
+// @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [get]
 func GetPlan(w http.ResponseWriter, r *http.Request) {
@@ -73,11 +73,11 @@ func GetPlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Plan{
+	req := &model.Plan{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Plan{}).First(&req).Error
+	err = model.DB.Model(&model.Plan{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
@@ -95,11 +95,11 @@ func GetPlan(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Plan body plan true "Plan object"
-// @Success 200 {object} models.Plan
+// @Success 200 {object} model.Plan
 // @Router /plans [post]
 func CreatePlan(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Plan{}
+	req := &model.Plan{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -111,7 +111,7 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Plan{}).Create(&req).Error
+	err = model.DB.Model(&model.Plan{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -129,7 +129,7 @@ func CreatePlan(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Plan ID"
 // @Param Plan body plan false "Plan"
-// @Success 200 {object} models.Plan
+// @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [put]
 func UpdatePlan(w http.ResponseWriter, r *http.Request) {
@@ -142,19 +142,19 @@ func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Plan{}
-	plan := &models.Plan{
+	req := &model.Plan{}
+	plan := &model.Plan{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&plan).Updates(models.Plan{
+	model.DB.Model(&plan).Updates(model.Plan{
 		PlanName: req.PlanName,
 		PlanInfo: req.PlanInfo,
 		Status:   req.Status,
 	})
-	models.DB.First(&plan)
+	model.DB.First(&plan)
 
 	json.NewEncoder(w).Encode(plan)
 }
@@ -166,7 +166,7 @@ func UpdatePlan(w http.ResponseWriter, r *http.Request) {
 // @ID delete-plan-by-id
 // @Consume  json
 // @Param id path string true "Plan ID"
-// @Success 200 {object} models.Plan
+// @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [delete]
 func DeletePlan(w http.ResponseWriter, r *http.Request) {
@@ -179,18 +179,18 @@ func DeletePlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	plan := &models.Plan{
+	plan := &model.Plan{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&plan).Error
+	err = model.DB.First(&plan).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&plan)
+	model.DB.Delete(&plan)
 
 	json.NewEncoder(w).Encode(plan)
 }

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -27,11 +27,11 @@ type cartItem struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.CartItem
+// @Success 200 {array} model.CartItem
 // @Router /cartItems [get]
 func GetCartItems(w http.ResponseWriter, r *http.Request) {
 
-	var cartItems []models.CartItem
+	var cartItems []model.CartItem
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -48,7 +48,7 @@ func GetCartItems(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&models.CartItem{}).Find(&cartItems)
+	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Find(&cartItems)
 
 	json.NewEncoder(w).Encode(cartItems)
 }
@@ -60,7 +60,7 @@ func GetCartItems(w http.ResponseWriter, r *http.Request) {
 // @ID get-cartItem-by-id
 // @Produce  json
 // @Param id path string true "CartItem ID"
-// @Success 200 {object} models.CartItem
+// @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [get]
 func GetCartItem(w http.ResponseWriter, r *http.Request) {
@@ -73,19 +73,19 @@ func GetCartItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.CartItem{
+	req := &model.CartItem{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.CartItem{}).First(&req).Error
+	err = model.DB.Model(&model.CartItem{}).First(&req).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Model(&req).Association("Product").Find(&req.Product)
-	models.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
-	models.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
-	models.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
+	model.DB.Model(&req).Association("Product").Find(&req.Product)
+	model.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
+	model.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
+	model.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -97,12 +97,12 @@ func GetCartItem(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param CartItem body cartItem true "CartItem object"
-// @Success 200 {object} models.CartItem
+// @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /cartItems [post]
 func CreateCartItem(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.CartItem{}
+	req := &model.CartItem{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -113,15 +113,15 @@ func CreateCartItem(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = models.DB.Model(&models.CartItem{}).Create(&req).Error
+	err = model.DB.Model(&model.CartItem{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&req).Association("Product").Find(&req.Product)
-	models.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
-	models.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
-	models.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
+	model.DB.Model(&req).Association("Product").Find(&req.Product)
+	model.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
+	model.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
+	model.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -134,7 +134,7 @@ func CreateCartItem(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "CartItem ID"
 // @Param CartItem body cartItem false "CartItem"
-// @Success 200 {object} models.CartItem
+// @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [put]
 func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
@@ -147,23 +147,23 @@ func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.CartItem{}
-	cartItem := &models.CartItem{
+	req := &model.CartItem{}
+	cartItem := &model.CartItem{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&cartItem).Updates(models.CartItem{
+	model.DB.Model(&cartItem).Updates(model.CartItem{
 		IsDeleted: req.IsDeleted,
 		CartID:    req.CartID,
 		ProductID: req.ProductID,
 	})
-	models.DB.First(&cartItem)
-	models.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
-	models.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
-	models.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
-	models.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
+	model.DB.First(&cartItem)
+	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
+	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
+	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
+	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 	json.NewEncoder(w).Encode(cartItem)
 }
 
@@ -174,7 +174,7 @@ func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
 // @ID delete-cartItem-by-id
 // @Consume  json
 // @Param id path string true "CartItem ID"
-// @Success 200 {object} models.CartItem
+// @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /cartItems/{id} [delete]
 func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
@@ -187,21 +187,21 @@ func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cartItem := &models.CartItem{
+	cartItem := &model.CartItem{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&cartItem).Error
+	err = model.DB.First(&cartItem).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&cartItem)
-	models.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
-	models.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
-	models.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
-	models.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
+	model.DB.Delete(&cartItem)
+	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
+	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
+	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
+	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 	json.NewEncoder(w).Encode(cartItem)
 }

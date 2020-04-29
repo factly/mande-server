@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -28,11 +28,11 @@ type order struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Order
+// @Success 200 {array} model.Order
 // @Router /orders [get]
 func GetOrders(w http.ResponseWriter, r *http.Request) {
 
-	var orders []models.Order
+	var orders []model.Order
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -49,7 +49,7 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("Payment").Preload("Payment.Currency").Preload("Cart").Model(&models.Order{}).Find(&orders)
+	model.DB.Offset(offset).Limit(limit).Preload("Payment").Preload("Payment.Currency").Preload("Cart").Model(&model.Order{}).Find(&orders)
 
 	json.NewEncoder(w).Encode(orders)
 }
@@ -61,7 +61,7 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 // @ID get-orders-by-id
 // @Produce  json
 // @Param id path string true "Order ID"
-// @Success 200 {object} models.Order
+// @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders/{id} [get]
 func GetOrder(w http.ResponseWriter, r *http.Request) {
@@ -74,11 +74,11 @@ func GetOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Order{
+	req := &model.Order{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req).Error
+	err = model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
@@ -96,12 +96,12 @@ func GetOrder(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Order body order true "Order object"
-// @Success 200 {object} models.Order
+// @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders [post]
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Order{}
+	req := &model.Order{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -113,12 +113,12 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Order{}).Create(&req).Error
+	err = model.DB.Model(&model.Order{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&models.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req)
+	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -131,7 +131,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Order ID"
 // @Param Order body order false "Order"
-// @Success 200 {object} models.Order
+// @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders/{id} [put]
 func UpdateOrder(w http.ResponseWriter, r *http.Request) {
@@ -144,20 +144,20 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Order{}
-	orders := &models.Order{
+	req := &model.Order{}
+	orders := &model.Order{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&orders).Updates(models.Order{
+	model.DB.Model(&orders).Updates(model.Order{
 		UserID:    req.UserID,
 		PaymentID: req.PaymentID,
 		Status:    req.Status,
 		CartID:    req.CartID,
 	})
-	models.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&orders)
+	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&orders)
 
 	json.NewEncoder(w).Encode(orders)
 }
@@ -169,7 +169,7 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 // @ID delete-orders-by-id
 // @Consume  json
 // @Param id path string true "Order ID"
-// @Success 200 {object} models.Order
+// @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders/{id} [delete]
 func DeleteOrder(w http.ResponseWriter, r *http.Request) {
@@ -182,18 +182,18 @@ func DeleteOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orders := &models.Order{
+	orders := &model.Order{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&orders).Error
+	err = model.DB.First(&orders).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").Delete(&orders)
+	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").Delete(&orders)
 
 	json.NewEncoder(w).Encode(orders)
 }

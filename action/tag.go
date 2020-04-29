@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -26,11 +26,11 @@ type tag struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Tag
+// @Success 200 {array} model.Tag
 // @Router /tags [get]
 func GetTags(w http.ResponseWriter, r *http.Request) {
 
-	var tags []models.Tag
+	var tags []model.Tag
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -47,7 +47,7 @@ func GetTags(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Tag{}).Find(&tags)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Tag{}).Find(&tags)
 
 	json.NewEncoder(w).Encode(tags)
 }
@@ -59,7 +59,7 @@ func GetTags(w http.ResponseWriter, r *http.Request) {
 // @ID get-tag-by-id
 // @Produce  json
 // @Param id path string true "Tag ID"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [get]
 func GetTag(w http.ResponseWriter, r *http.Request) {
@@ -71,11 +71,11 @@ func GetTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Tag{
+	req := &model.Tag{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Tag{}).First(&req).Error
+	err = model.DB.Model(&model.Tag{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
@@ -93,12 +93,12 @@ func GetTag(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Tag body tag true "Tag object"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags [post]
 func CreateTag(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Tag{}
+	req := &model.Tag{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -109,7 +109,7 @@ func CreateTag(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = models.DB.Model(&models.Tag{}).Create(&req).Error
+	err = model.DB.Model(&model.Tag{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -127,7 +127,7 @@ func CreateTag(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Tag ID"
 // @Param Tag body tag false "Tag"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [put]
 func UpdateTag(w http.ResponseWriter, r *http.Request) {
@@ -139,15 +139,15 @@ func UpdateTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Tag{}
-	tag := &models.Tag{
+	req := &model.Tag{}
+	tag := &model.Tag{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&tag).Update(&models.Tag{Title: req.Title, Slug: req.Slug})
-	models.DB.First(&tag)
+	model.DB.Model(&tag).Update(&model.Tag{Title: req.Title, Slug: req.Slug})
+	model.DB.First(&tag)
 	json.NewEncoder(w).Encode(tag)
 }
 
@@ -158,7 +158,7 @@ func UpdateTag(w http.ResponseWriter, r *http.Request) {
 // @ID delete-tag-by-id
 // @Consume  json
 // @Param id path string true "Tag ID"
-// @Success 200 {object} models.Tag
+// @Success 200 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags/{id} [delete]
 func DeleteTag(w http.ResponseWriter, r *http.Request) {
@@ -170,18 +170,18 @@ func DeleteTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := &models.Tag{
+	tag := &model.Tag{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&tag).Error
+	err = model.DB.First(&tag).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Delete(&tag)
+	model.DB.Delete(&tag)
 
 	json.NewEncoder(w).Encode(tag)
 }

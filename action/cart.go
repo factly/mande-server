@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -26,11 +26,11 @@ type cart struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Cart
+// @Success 200 {array} model.Cart
 // @Router /carts [get]
 func GetCarts(w http.ResponseWriter, r *http.Request) {
 
-	var carts []models.Cart
+	var carts []model.Cart
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -47,7 +47,7 @@ func GetCarts(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Cart{}).Find(&carts)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Cart{}).Find(&carts)
 
 	json.NewEncoder(w).Encode(carts)
 }
@@ -59,7 +59,7 @@ func GetCarts(w http.ResponseWriter, r *http.Request) {
 // @ID get-cart-by-id
 // @Produce  json
 // @Param id path string true "Cart ID"
-// @Success 200 {object} models.Cart
+// @Success 200 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts/{id} [get]
 func GetCart(w http.ResponseWriter, r *http.Request) {
@@ -72,11 +72,11 @@ func GetCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Cart{
+	req := &model.Cart{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Cart{}).First(&req).Error
+	err = model.DB.Model(&model.Cart{}).First(&req).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
@@ -93,12 +93,12 @@ func GetCart(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Cart body cart true "Cart object"
-// @Success 200 {object} models.Cart
+// @Success 200 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts [post]
 func CreateCart(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Cart{}
+	req := &model.Cart{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -110,7 +110,7 @@ func CreateCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Cart{}).Create(&req).Error
+	err = model.DB.Model(&model.Cart{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -128,7 +128,7 @@ func CreateCart(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Cart ID"
 // @Param Cart body cart false "Cart"
-// @Success 200 {object} models.Cart
+// @Success 200 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts/{id} [put]
 func UpdateCart(w http.ResponseWriter, r *http.Request) {
@@ -141,18 +141,18 @@ func UpdateCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Cart{}
-	cart := &models.Cart{
+	req := &model.Cart{}
+	cart := &model.Cart{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&cart).Updates(models.Cart{
+	model.DB.Model(&cart).Updates(model.Cart{
 		Status: req.Status,
 		UserID: req.UserID,
 	})
-	models.DB.First(&cart)
+	model.DB.First(&cart)
 
 	json.NewEncoder(w).Encode(cart)
 }
@@ -164,7 +164,7 @@ func UpdateCart(w http.ResponseWriter, r *http.Request) {
 // @ID delete-cart-by-id
 // @Consume  json
 // @Param id path string true "Cart ID"
-// @Success 200 {object} models.Cart
+// @Success 200 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts/{id} [delete]
 func DeleteCart(w http.ResponseWriter, r *http.Request) {
@@ -177,18 +177,18 @@ func DeleteCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart := &models.Cart{
+	cart := &model.Cart{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&cart).Error
+	err = model.DB.First(&cart).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&cart)
+	model.DB.Delete(&cart)
 
 	json.NewEncoder(w).Encode(cart)
 }

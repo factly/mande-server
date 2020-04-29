@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -27,11 +27,11 @@ type orderItem struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.OrderItem
+// @Success 200 {array} model.OrderItem
 // @Router /order-items [get]
 func GetOrderItems(w http.ResponseWriter, r *http.Request) {
 
-	var orderItems []models.OrderItem
+	var orderItems []model.OrderItem
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -48,7 +48,7 @@ func GetOrderItems(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&models.OrderItem{}).Find(&orderItems)
+	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Find(&orderItems)
 
 	json.NewEncoder(w).Encode(orderItems)
 }
@@ -60,7 +60,7 @@ func GetOrderItems(w http.ResponseWriter, r *http.Request) {
 // @ID get-order-item-by-id
 // @Produce  json
 // @Param id path string true "Order item ID"
-// @Success 200 {object} models.OrderItem
+// @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
 // @Router /order-items/{id} [get]
 func GetOrderItem(w http.ResponseWriter, r *http.Request) {
@@ -73,11 +73,11 @@ func GetOrderItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.OrderItem{
+	req := &model.OrderItem{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req).Error
+	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
@@ -95,11 +95,11 @@ func GetOrderItem(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param OrderItem body orderItem true "Order item object"
-// @Success 200 {object} models.OrderItem
+// @Success 200 {object} model.OrderItem
 // @Router /order-items [post]
 func CreateOrderItem(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.OrderItem{}
+	req := &model.OrderItem{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -111,12 +111,12 @@ func CreateOrderItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.OrderItem{}).Create(&req).Error
+	err = model.DB.Model(&model.OrderItem{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&models.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req)
+	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -129,7 +129,7 @@ func CreateOrderItem(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "OrderItem ID"
 // @Param OrderItem body orderItem false "OrderItem"
-// @Success 200 {object} models.OrderItem
+// @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
 // @Router /orderItems/{id} [put]
 func UpdateOrderItem(w http.ResponseWriter, r *http.Request) {
@@ -142,19 +142,19 @@ func UpdateOrderItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.OrderItem{}
-	orderItem := &models.OrderItem{
+	req := &model.OrderItem{}
+	orderItem := &model.OrderItem{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&orderItem).Updates(models.OrderItem{
+	model.DB.Model(&orderItem).Updates(model.OrderItem{
 		ExtraInfo: req.ExtraInfo,
 		ProductID: req.ProductID,
 		OrderID:   req.OrderID,
 	})
-	models.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
 
 	json.NewEncoder(w).Encode(orderItem)
 }
@@ -166,7 +166,7 @@ func UpdateOrderItem(w http.ResponseWriter, r *http.Request) {
 // @ID delete-order-items-by-id
 // @Consume  json
 // @Param id path string true "OrderItem ID"
-// @Success 200 {object} models.OrderItem
+// @Success 200 {object} model.OrderItem
 // @Failure 400 {array} string
 // @Router /order-items/{id} [delete]
 func DeleteOrderItem(w http.ResponseWriter, r *http.Request) {
@@ -179,18 +179,18 @@ func DeleteOrderItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderItems := &models.OrderItem{
+	orderItems := &model.OrderItem{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&orderItems).Error
+	err = model.DB.First(&orderItems).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Delete(&orderItems)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Delete(&orderItems)
 
 	json.NewEncoder(w).Encode(orderItems)
 }

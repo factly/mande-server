@@ -1,11 +1,11 @@
-package models
+package model
 
 import (
 	"time"
 )
 
-// ProductType model
-type ProductType struct {
+//Status model
+type Status struct {
 	ID        uint      `gorm:"primary_key"`
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`

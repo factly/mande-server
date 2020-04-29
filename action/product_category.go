@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -26,7 +26,7 @@ type productCategory struct {
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Param ProductCategory body productCategory true "ProductCategory object"
-// @Success 200 {object} models.ProductCategory
+// @Success 200 {object} model.ProductCategory
 // @Failure 400 {array} string
 // @Router /products/{id}/category [post]
 func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.ProductCategory{
+	req := &model.ProductCategory{
 		ProductID: uint(id),
 	}
 
@@ -52,7 +52,7 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = models.DB.Model(&models.ProductCategory{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductCategory{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +69,7 @@ func CreateProductCategory(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Product ID"
 // @Param cid path string true "Category ID"
-// @Success 200 {object} models.ProductCategory
+// @Success 200 {object} model.ProductCategory
 // @Failure 400 {array} string
 // @Router /products/{id}/category/{cid} [delete]
 func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
@@ -89,19 +89,19 @@ func DeleteProductCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productCategory := &models.ProductCategory{
+	productCategory := &model.ProductCategory{
 		CategoryID: uint(cid),
 		ProductID:  uint(pid),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&productCategory).Error
+	err = model.DB.First(&productCategory).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&productCategory)
+	model.DB.Delete(&productCategory)
 
 	json.NewEncoder(w).Encode(productCategory)
 }

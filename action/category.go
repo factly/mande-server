@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -27,11 +27,11 @@ type category struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Category
+// @Success 200 {array} model.Category
 // @Router /categories [get]
 func GetCategories(w http.ResponseWriter, r *http.Request) {
 
-	var categories []models.Category
+	var categories []model.Category
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -48,7 +48,7 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Category{}).Find(&categories)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Category{}).Find(&categories)
 
 	json.NewEncoder(w).Encode(categories)
 }
@@ -60,7 +60,7 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 // @ID get-category-by-id
 // @Produce  json
 // @Param id path string true "Category ID"
-// @Success 200 {object} models.Category
+// @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories/{id} [get]
 func GetCategory(w http.ResponseWriter, r *http.Request) {
@@ -73,11 +73,11 @@ func GetCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Category{
+	req := &model.Category{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Category{}).First(&req).Error
+	err = model.DB.Model(&model.Category{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
@@ -95,12 +95,12 @@ func GetCategory(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Category body category true "Category object"
-// @Success 200 {object} models.Category
+// @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories [post]
 func CreateCategory(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Category{}
+	req := &model.Category{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
@@ -112,7 +112,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Category{}).Create(&req).Error
+	err = model.DB.Model(&model.Category{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -130,7 +130,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Category ID"
 // @Param Category body category false "Category"
-// @Success 200 {object} models.Category
+// @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories/{id} [put]
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
@@ -143,18 +143,18 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Category{}
-	category := &models.Category{
+	req := &model.Category{}
+	category := &model.Category{
 		ID: uint(id),
 	}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&category).Updates(models.Category{
+	model.DB.Model(&category).Updates(model.Category{
 		Title: req.Title,
 		Slug:  req.Slug,
 	})
-	models.DB.First(&category)
+	model.DB.First(&category)
 
 	json.NewEncoder(w).Encode(category)
 }
@@ -166,7 +166,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 // @ID delete-category-by-id
 // @Consume  json
 // @Param id path string true "Category ID"
-// @Success 200 {object} models.Category
+// @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories/{id} [delete]
 func DeleteCategory(w http.ResponseWriter, r *http.Request) {
@@ -179,18 +179,18 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	category := &models.Category{
+	category := &model.Category{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&category).Error
+	err = model.DB.First(&category).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&category)
+	model.DB.Delete(&category)
 
 	json.NewEncoder(w).Encode(category)
 }

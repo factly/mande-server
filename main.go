@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 
 	"github.com/factly/data-portal-api/action"
 )
@@ -25,7 +25,7 @@ import (
 
 func main() {
 	// db setup
-	models.SetupDB()
+	model.SetupDB()
 
 	// register routes
 	r := action.RegisterRoutes()

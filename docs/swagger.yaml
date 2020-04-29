@@ -134,7 +134,7 @@ definitions:
       last_name:
         type: string
     type: object
-  models.Cart:
+  model.Cart:
     properties:
       created_at:
         type: string
@@ -150,7 +150,7 @@ definitions:
     - status
     - user_id
     type: object
-  models.CartItem:
+  model.CartItem:
     properties:
       cart_id:
         type: integer
@@ -161,7 +161,7 @@ definitions:
       is_deleted:
         type: boolean
       product:
-        $ref: '#/definitions/models.Product'
+        $ref: '#/definitions/model.Product'
         type: object
       product_id:
         type: integer
@@ -171,7 +171,7 @@ definitions:
     - cart_id
     - product_id
     type: object
-  models.Category:
+  model.Category:
     properties:
       created_at:
         type: string
@@ -190,7 +190,7 @@ definitions:
     - slug
     - title
     type: object
-  models.Currency:
+  model.Currency:
     properties:
       created_at:
         type: string
@@ -206,19 +206,19 @@ definitions:
     - iso_code
     - name
     type: object
-  models.Membership:
+  model.Membership:
     properties:
       created_at:
         type: string
       id:
         type: integer
       payment:
-        $ref: '#/definitions/models.Payment'
+        $ref: '#/definitions/model.Payment'
         type: object
       payment_id:
         type: integer
       plan:
-        $ref: '#/definitions/models.Plan'
+        $ref: '#/definitions/model.Plan'
         type: object
       plan_id:
         type: integer
@@ -227,7 +227,7 @@ definitions:
       updated_at:
         type: string
       user:
-        $ref: '#/definitions/models.User'
+        $ref: '#/definitions/model.User'
         type: object
       user_id:
         type: integer
@@ -237,10 +237,10 @@ definitions:
     - status
     - user_id
     type: object
-  models.Order:
+  model.Order:
     properties:
       cart:
-        $ref: '#/definitions/models.Cart'
+        $ref: '#/definitions/model.Cart'
         type: object
       cart_id:
         type: integer
@@ -249,7 +249,7 @@ definitions:
       id:
         type: integer
       payment:
-        $ref: '#/definitions/models.Payment'
+        $ref: '#/definitions/model.Payment'
         type: object
       payment_id:
         type: integer
@@ -265,7 +265,7 @@ definitions:
     - status
     - user_id
     type: object
-  models.OrderItem:
+  model.OrderItem:
     properties:
       created_at:
         type: string
@@ -274,12 +274,12 @@ definitions:
       id:
         type: integer
       order:
-        $ref: '#/definitions/models.Order'
+        $ref: '#/definitions/model.Order'
         type: object
       order_id:
         type: integer
       product:
-        $ref: '#/definitions/models.Product'
+        $ref: '#/definitions/model.Product'
         type: object
       product_id:
         type: integer
@@ -290,14 +290,14 @@ definitions:
     - order_id
     - product_id
     type: object
-  models.Payment:
+  model.Payment:
     properties:
       amount:
         type: integer
       created_at:
         type: string
       currency:
-        $ref: '#/definitions/models.Currency'
+        $ref: '#/definitions/model.Currency'
         type: object
       currency_id:
         type: integer
@@ -315,7 +315,7 @@ definitions:
     - gateway
     - status
     type: object
-  models.Plan:
+  model.Plan:
     properties:
       created_at:
         type: string
@@ -334,12 +334,12 @@ definitions:
     - plan_name
     - status
     type: object
-  models.Product:
+  model.Product:
     properties:
       created_at:
         type: string
       currency:
-        $ref: '#/definitions/models.Currency'
+        $ref: '#/definitions/model.Currency'
         type: object
       currency_id:
         type: integer
@@ -350,12 +350,12 @@ definitions:
       product_type_id:
         type: integer
       productType:
-        $ref: '#/definitions/models.ProductType'
+        $ref: '#/definitions/model.ProductType'
         type: object
       slug:
         type: string
       status:
-        $ref: '#/definitions/models.Status'
+        $ref: '#/definitions/model.Status'
         type: object
       status_id:
         type: integer
@@ -371,7 +371,7 @@ definitions:
     - status_id
     - title
     type: object
-  models.ProductCategory:
+  model.ProductCategory:
     properties:
       category_id:
         type: integer
@@ -387,7 +387,7 @@ definitions:
     - category_id
     - product_id
     type: object
-  models.ProductTag:
+  model.ProductTag:
     properties:
       created_at:
         type: string
@@ -403,7 +403,7 @@ definitions:
     - product_id
     - tag_id
     type: object
-  models.ProductType:
+  model.ProductType:
     properties:
       created_at:
         type: string
@@ -416,7 +416,7 @@ definitions:
     required:
     - name
     type: object
-  models.Status:
+  model.Status:
     properties:
       created_at:
         type: string
@@ -429,7 +429,7 @@ definitions:
     required:
     - name
     type: object
-  models.Tag:
+  model.Tag:
     properties:
       created_at:
         type: string
@@ -445,7 +445,7 @@ definitions:
     - slug
     - title
     type: object
-  models.User:
+  model.User:
     properties:
       created_at:
         type: string
@@ -497,7 +497,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.CartItem'
+              $ref: '#/definitions/model.CartItem'
             type: array
       summary: Show all cartItems
       tags:
@@ -518,7 +518,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.CartItem'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -542,7 +542,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.CartItem'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -567,7 +567,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.CartItem'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -597,7 +597,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.CartItem'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -627,7 +627,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Cart'
+              $ref: '#/definitions/model.Cart'
             type: array
       summary: Show all carts
       tags:
@@ -648,7 +648,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Cart'
+            $ref: '#/definitions/model.Cart'
         "400":
           description: Bad Request
           schema:
@@ -672,7 +672,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Cart'
+            $ref: '#/definitions/model.Cart'
         "400":
           description: Bad Request
           schema:
@@ -697,7 +697,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Cart'
+            $ref: '#/definitions/model.Cart'
         "400":
           description: Bad Request
           schema:
@@ -727,7 +727,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Cart'
+            $ref: '#/definitions/model.Cart'
         "400":
           description: Bad Request
           schema:
@@ -757,7 +757,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Category'
+              $ref: '#/definitions/model.Category'
             type: array
       summary: Show all categories
       tags:
@@ -778,7 +778,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Category'
+            $ref: '#/definitions/model.Category'
         "400":
           description: Bad Request
           schema:
@@ -802,7 +802,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Category'
+            $ref: '#/definitions/model.Category'
         "400":
           description: Bad Request
           schema:
@@ -827,7 +827,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Category'
+            $ref: '#/definitions/model.Category'
         "400":
           description: Bad Request
           schema:
@@ -857,7 +857,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Category'
+            $ref: '#/definitions/model.Category'
         "400":
           description: Bad Request
           schema:
@@ -887,7 +887,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Currency'
+              $ref: '#/definitions/model.Currency'
             type: array
       summary: Show all currencies
       tags:
@@ -908,7 +908,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Currency'
+            $ref: '#/definitions/model.Currency'
         "400":
           description: Bad Request
           schema:
@@ -932,7 +932,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Currency'
+            $ref: '#/definitions/model.Currency'
         "400":
           description: Bad Request
           schema:
@@ -956,7 +956,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Currency'
+            $ref: '#/definitions/model.Currency'
         "400":
           description: Bad Request
           schema:
@@ -986,7 +986,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Currency'
+            $ref: '#/definitions/model.Currency'
         "400":
           description: Bad Request
           schema:
@@ -1016,7 +1016,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Membership'
+              $ref: '#/definitions/model.Membership'
             type: array
       summary: Show all memberships
       tags:
@@ -1037,7 +1037,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Membership'
+            $ref: '#/definitions/model.Membership'
         "400":
           description: Bad Request
           schema:
@@ -1061,7 +1061,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Membership'
+            $ref: '#/definitions/model.Membership'
         "400":
           description: Bad Request
           schema:
@@ -1086,7 +1086,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Membership'
+            $ref: '#/definitions/model.Membership'
         "400":
           description: Bad Request
           schema:
@@ -1116,7 +1116,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Membership'
+            $ref: '#/definitions/model.Membership'
         "400":
           description: Bad Request
           schema:
@@ -1146,7 +1146,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.OrderItem'
+              $ref: '#/definitions/model.OrderItem'
             type: array
       summary: Show all order items
       tags:
@@ -1167,7 +1167,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.OrderItem'
+            $ref: '#/definitions/model.OrderItem'
       summary: Create order items
       tags:
       - OrderItem
@@ -1185,7 +1185,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.OrderItem'
+            $ref: '#/definitions/model.OrderItem'
         "400":
           description: Bad Request
           schema:
@@ -1210,7 +1210,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.OrderItem'
+            $ref: '#/definitions/model.OrderItem'
         "400":
           description: Bad Request
           schema:
@@ -1241,7 +1241,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.OrderItem'
+            $ref: '#/definitions/model.OrderItem'
         "400":
           description: Bad Request
           schema:
@@ -1271,7 +1271,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Order'
+              $ref: '#/definitions/model.Order'
             type: array
       summary: Show all orders
       tags:
@@ -1292,7 +1292,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -1316,7 +1316,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -1341,7 +1341,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -1371,7 +1371,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/model.Order'
         "400":
           description: Bad Request
           schema:
@@ -1401,7 +1401,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Payment'
+              $ref: '#/definitions/model.Payment'
             type: array
       summary: Show all payments
       tags:
@@ -1422,7 +1422,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Payment'
+            $ref: '#/definitions/model.Payment'
         "400":
           description: Bad Request
           schema:
@@ -1446,7 +1446,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Payment'
+            $ref: '#/definitions/model.Payment'
         "400":
           description: Bad Request
           schema:
@@ -1471,7 +1471,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Payment'
+            $ref: '#/definitions/model.Payment'
         "400":
           description: Bad Request
           schema:
@@ -1501,7 +1501,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Payment'
+            $ref: '#/definitions/model.Payment'
         "400":
           description: Bad Request
           schema:
@@ -1531,7 +1531,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Plan'
+              $ref: '#/definitions/model.Plan'
             type: array
       summary: Show all plans
       tags:
@@ -1552,7 +1552,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Plan'
+            $ref: '#/definitions/model.Plan'
       summary: Create plan
       tags:
       - Plan
@@ -1570,7 +1570,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Plan'
+            $ref: '#/definitions/model.Plan'
         "400":
           description: Bad Request
           schema:
@@ -1595,7 +1595,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Plan'
+            $ref: '#/definitions/model.Plan'
         "400":
           description: Bad Request
           schema:
@@ -1625,7 +1625,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Plan'
+            $ref: '#/definitions/model.Plan'
         "400":
           description: Bad Request
           schema:
@@ -1655,7 +1655,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Product'
+              $ref: '#/definitions/model.Product'
             type: array
       summary: Show all products
       tags:
@@ -1676,7 +1676,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Product'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1700,7 +1700,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Product'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1725,7 +1725,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Product'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1755,7 +1755,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Product'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1787,7 +1787,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProductCategory'
+            $ref: '#/definitions/model.ProductCategory'
         "400":
           description: Bad Request
           schema:
@@ -1816,7 +1816,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProductCategory'
+            $ref: '#/definitions/model.ProductCategory'
         "400":
           description: Bad Request
           schema:
@@ -1846,7 +1846,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Status'
+              $ref: '#/definitions/model.Status'
             type: array
       summary: Show all statuses
       tags:
@@ -1867,7 +1867,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Status'
+            $ref: '#/definitions/model.Status'
         "400":
           description: Bad Request
           schema:
@@ -1899,7 +1899,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProductTag'
+            $ref: '#/definitions/model.ProductTag'
         "400":
           description: Bad Request
           schema:
@@ -1928,7 +1928,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProductTag'
+            $ref: '#/definitions/model.ProductTag'
         "400":
           description: Bad Request
           schema:
@@ -1958,7 +1958,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.ProductType'
+              $ref: '#/definitions/model.ProductType'
             type: array
       summary: Show all productTypes
       tags:
@@ -1979,7 +1979,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProductType'
+            $ref: '#/definitions/model.ProductType'
         "400":
           description: Bad Request
           schema:
@@ -2009,7 +2009,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Tag'
+              $ref: '#/definitions/model.Tag'
             type: array
       summary: Show all tags
       tags:
@@ -2030,7 +2030,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Tag'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Bad Request
           schema:
@@ -2054,7 +2054,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Tag'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Bad Request
           schema:
@@ -2079,7 +2079,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Tag'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Bad Request
           schema:
@@ -2109,7 +2109,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Tag'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Bad Request
           schema:
@@ -2139,7 +2139,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/model.User'
             type: array
       summary: Show all users
       tags:
@@ -2160,7 +2160,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:
@@ -2184,7 +2184,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:
@@ -2209,7 +2209,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:
@@ -2239,7 +2239,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:

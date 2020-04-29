@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -24,11 +24,11 @@ type status struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Status
+// @Success 200 {array} model.Status
 // @Router /products/{id}/status [get]
 func GetStatuses(w http.ResponseWriter, r *http.Request) {
 
-	var statuses []models.Status
+	var statuses []model.Status
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -45,7 +45,7 @@ func GetStatuses(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Model(&models.Status{}).Find(&statuses)
+	model.DB.Offset(offset).Limit(limit).Model(&model.Status{}).Find(&statuses)
 
 	json.NewEncoder(w).Encode(statuses)
 }
@@ -58,12 +58,12 @@ func GetStatuses(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Status body status true "Status object"
-// @Success 200 {object} models.Status
+// @Success 200 {object} model.Status
 // @Failure 400 {array} string
 // @Router /products/{id}/status [post]
 func CreateStatus(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Status{}
+	req := &model.Status{}
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
@@ -74,7 +74,7 @@ func CreateStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Status{}).Create(&req).Error
+	err = model.DB.Model(&model.Status{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)

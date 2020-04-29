@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -28,11 +28,11 @@ type payment struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Payment
+// @Success 200 {array} model.Payment
 // @Router /payments [get]
 func GetPayments(w http.ResponseWriter, r *http.Request) {
 
-	var payments []models.Payment
+	var payments []model.Payment
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -49,7 +49,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("Currency").Model(&models.Payment{}).Find(&payments)
+	model.DB.Offset(offset).Limit(limit).Preload("Currency").Model(&model.Payment{}).Find(&payments)
 
 	json.NewEncoder(w).Encode(payments)
 }
@@ -61,7 +61,7 @@ func GetPayments(w http.ResponseWriter, r *http.Request) {
 // @ID get-payment-by-id
 // @Produce  json
 // @Param id path string true "Payment ID"
-// @Success 200 {object} models.Payment
+// @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [get]
 func GetPayment(w http.ResponseWriter, r *http.Request) {
@@ -74,18 +74,18 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Payment{
+	req := &model.Payment{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Payment{}).First(&req).Error
+	err = model.DB.Model(&model.Payment{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -97,12 +97,12 @@ func GetPayment(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Payment body payment true "Payment object"
-// @Success 200 {object} models.Payment
+// @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments [post]
 func CreatePayment(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Payment{}
+	req := &model.Payment{}
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
@@ -113,12 +113,12 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Payment{}).Create(&req).Error
+	err = model.DB.Model(&model.Payment{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -131,7 +131,7 @@ func CreatePayment(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Payment ID"
 // @Param Payment body payment false "Payment"
-// @Success 200 {object} models.Payment
+// @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [put]
 func UpdatePayment(w http.ResponseWriter, r *http.Request) {
@@ -144,22 +144,22 @@ func UpdatePayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payment := &models.Payment{
+	payment := &model.Payment{
 		ID: uint(id),
 	}
 
-	req := &models.Payment{}
+	req := &model.Payment{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&payment).Updates(&models.Payment{
+	model.DB.Model(&payment).Updates(&model.Payment{
 		Amount:     req.Amount,
 		Gateway:    req.Gateway,
 		Status:     req.Status,
 		CurrencyID: req.CurrencyID,
 	})
-	models.DB.First(&payment)
-	models.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+	model.DB.First(&payment)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 	json.NewEncoder(w).Encode(payment)
 }
 
@@ -170,7 +170,7 @@ func UpdatePayment(w http.ResponseWriter, r *http.Request) {
 // @ID delete-payment-by-id
 // @Consume  json
 // @Param id path string true "Payment ID"
-// @Success 200 {object} models.Payment
+// @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [delete]
 func DeletePayment(w http.ResponseWriter, r *http.Request) {
@@ -183,18 +183,18 @@ func DeletePayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payment := &models.Payment{
+	payment := &model.Payment{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&payment).Error
+	err = model.DB.First(&payment).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
-	models.DB.Delete(&payment)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+	model.DB.Delete(&payment)
 
 	json.NewEncoder(w).Encode(payment)
 }

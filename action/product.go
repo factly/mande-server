@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -29,11 +29,11 @@ type product struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Product
+// @Success 200 {array} model.Product
 // @Router /products [get]
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 
-	var products []models.Product
+	var products []model.Product
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -50,7 +50,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("Currency").Preload("Status").Preload("ProductType").Model(&models.Product{}).Find(&products)
+	model.DB.Offset(offset).Limit(limit).Preload("Currency").Preload("Status").Preload("ProductType").Model(&model.Product{}).Find(&products)
 
 	json.NewEncoder(w).Encode(products)
 }
@@ -62,7 +62,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 // @ID get-product-by-id
 // @Produce  json
 // @Param id path string true "Product ID"
-// @Success 200 {object} models.Product
+// @Success 200 {object} model.Product
 // @Failure 400 {array} string
 // @Router /products/{id} [get]
 func GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -75,20 +75,20 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Product{
+	req := &model.Product{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Product{}).First(&req).Error
+	err = model.DB.Model(&model.Product{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
-	models.DB.Model(&req).Association("Currency").Find(&req.Currency)
-	models.DB.Model(&req).Association("Status").Find(&req.Status)
+	model.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
+	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&req).Association("Status").Find(&req.Status)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -100,12 +100,12 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Product body product true "Product object"
-// @Success 200 {object} models.Product
+// @Success 200 {object} model.Product
 // @Failure 400 {array} string
 // @Router /products [post]
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Product{}
+	req := &model.Product{}
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
@@ -116,14 +116,14 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Product{}).Create(&req).Error
+	err = model.DB.Model(&model.Product{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
-	models.DB.Model(&req).Association("Currency").Find(&req.Currency)
-	models.DB.Model(&req).Association("Status").Find(&req.Status)
+	model.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
+	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&req).Association("Status").Find(&req.Status)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -136,7 +136,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Product ID"
 // @Param Product body product false "Product"
-// @Success 200 {object} models.Product
+// @Success 200 {object} model.Product
 // @Failure 400 {array} string
 // @Router /products/{id} [put]
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -149,14 +149,14 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &models.Product{
+	product := &model.Product{
 		ID: uint(id),
 	}
 
-	req := &models.Product{}
+	req := &model.Product{}
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&product).Updates(&models.Product{
+	model.DB.Model(&product).Updates(&model.Product{
 		CurrencyID:    req.CurrencyID,
 		ProductTypeID: req.ProductTypeID,
 		StatusID:      req.StatusID,
@@ -164,10 +164,10 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		Price:         req.Price,
 		Slug:          req.Slug,
 	})
-	models.DB.First(&product).First(&product)
-	models.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	models.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	models.DB.Model(&product).Association("Status").Find(&product.Status)
+	model.DB.First(&product).First(&product)
+	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
+	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
+	model.DB.Model(&product).Association("Status").Find(&product.Status)
 
 	json.NewEncoder(w).Encode(product)
 }
@@ -179,7 +179,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 // @ID delete-product-by-id
 // @Consume  json
 // @Param id path string true "Product ID"
-// @Success 200 {object} models.Product
+// @Success 200 {object} model.Product
 // @Failure 400 {array} string
 // @Router /products/{id} [delete]
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -192,21 +192,21 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &models.Product{
+	product := &model.Product{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&product).Error
+	err = model.DB.First(&product).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	models.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	models.DB.Model(&product).Association("Status").Find(&product.Status)
-	models.DB.Delete(&product)
+	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
+	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
+	model.DB.Model(&product).Association("Status").Find(&product.Status)
+	model.DB.Delete(&product)
 
 	json.NewEncoder(w).Encode(product)
 }

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -28,11 +28,11 @@ type membership struct {
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} models.Membership
+// @Success 200 {array} model.Membership
 // @Router /memberships [get]
 func GetMemberships(w http.ResponseWriter, r *http.Request) {
 
-	var memberships []models.Membership
+	var memberships []model.Membership
 	p := r.URL.Query().Get("page")
 	pg, _ := strconv.Atoi(p) // pg contains page number
 	l := r.URL.Query().Get("limit")
@@ -49,7 +49,7 @@ func GetMemberships(w http.ResponseWriter, r *http.Request) {
 		offset = (pg - 1) * limit
 	}
 
-	models.DB.Offset(offset).Limit(limit).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&models.Membership{}).Find(&memberships)
+	model.DB.Offset(offset).Limit(limit).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Find(&memberships)
 
 	json.NewEncoder(w).Encode(memberships)
 }
@@ -61,7 +61,7 @@ func GetMemberships(w http.ResponseWriter, r *http.Request) {
 // @ID get-membership-by-id
 // @Produce  json
 // @Param id path string true "Membership ID"
-// @Success 200 {object} models.Membership
+// @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [get]
 func GetMembership(w http.ResponseWriter, r *http.Request) {
@@ -73,21 +73,21 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.Membership{
+	req := &model.Membership{
 		ID: uint(id),
 	}
 
-	err = models.DB.Model(&models.Membership{}).First(&req).Error
+	err = model.DB.Model(&model.Membership{}).First(&req).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	models.DB.Model(&req).Association("User").Find(&req.User)
-	models.DB.Model(&req).Association("Plan").Find(&req.Plan)
-	models.DB.Model(&req).Association("Payment").Find(&req.Payment)
-	models.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
+	model.DB.Model(&req).Association("User").Find(&req.User)
+	model.DB.Model(&req).Association("Plan").Find(&req.Plan)
+	model.DB.Model(&req).Association("Payment").Find(&req.Payment)
+	model.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
 	json.NewEncoder(w).Encode(req)
 }
 
@@ -99,12 +99,12 @@ func GetMembership(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Produce  json
 // @Param Membership body membership true "Membership object"
-// @Success 200 {object} models.Membership
+// @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func CreateMembership(w http.ResponseWriter, r *http.Request) {
 
-	req := &models.Membership{}
+	req := &model.Membership{}
 	json.NewDecoder(r.Body).Decode(&req)
 
 	validate := validator.New()
@@ -115,15 +115,15 @@ func CreateMembership(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.Membership{}).Create(&req).Error
+	err = model.DB.Model(&model.Membership{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	models.DB.Model(&req).Association("User").Find(&req.User)
-	models.DB.Model(&req).Association("Plan").Find(&req.Plan)
-	models.DB.Model(&req).Association("Payment").Find(&req.Payment)
-	models.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
+	model.DB.Model(&req).Association("User").Find(&req.User)
+	model.DB.Model(&req).Association("Plan").Find(&req.Plan)
+	model.DB.Model(&req).Association("Payment").Find(&req.Payment)
+	model.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
 
 	json.NewEncoder(w).Encode(req)
 }
@@ -137,7 +137,7 @@ func CreateMembership(w http.ResponseWriter, r *http.Request) {
 // @Consume json
 // @Param id path string true "Membership ID"
 // @Param Membership body membership false "Membership"
-// @Success 200 {object} models.Membership
+// @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [put]
 func UpdateMembership(w http.ResponseWriter, r *http.Request) {
@@ -149,25 +149,25 @@ func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	membership := &models.Membership{
+	membership := &model.Membership{
 		ID: uint(id),
 	}
-	req := &models.Membership{}
+	req := &model.Membership{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	models.DB.Model(&membership).Updates(models.Membership{
+	model.DB.Model(&membership).Updates(model.Membership{
 		UserID:    req.UserID,
 		PaymentID: req.PaymentID,
 		PlanID:    req.PlanID,
 		Status:    req.Status,
 	})
 
-	models.DB.First(&membership)
-	models.DB.Model(&membership).Association("User").Find(&membership.User)
-	models.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
-	models.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
-	models.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
+	model.DB.First(&membership)
+	model.DB.Model(&membership).Association("User").Find(&membership.User)
+	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
+	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
+	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
 	json.NewEncoder(w).Encode(membership)
 }
 
@@ -178,7 +178,7 @@ func UpdateMembership(w http.ResponseWriter, r *http.Request) {
 // @ID delete-membership-by-id
 // @Consume  json
 // @Param id path string true "Membership ID"
-// @Success 200 {object} models.Membership
+// @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{id} [delete]
 func DeleteMembership(w http.ResponseWriter, r *http.Request) {
@@ -190,17 +190,17 @@ func DeleteMembership(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	membership := &models.Membership{
+	membership := &model.Membership{
 		ID: uint(id),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&membership).Error
+	err = model.DB.First(&membership).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&membership)
+	model.DB.Delete(&membership)
 
 	json.NewEncoder(w).Encode(membership)
 }

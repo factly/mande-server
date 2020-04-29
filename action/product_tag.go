@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/models"
+	"github.com/factly/data-portal-api/model"
 	"github.com/factly/data-portal-api/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -26,7 +26,7 @@ type productTags struct {
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Param ProductTag body productTags true "ProductTag object"
-// @Success 200 {object} models.ProductTag
+// @Success 200 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag [post]
 func CreateProductTag(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &models.ProductTag{
+	req := &model.ProductTag{
 		ProductID: uint(id),
 	}
 
@@ -53,7 +53,7 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DB.Model(&models.ProductTag{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductTag{}).Create(&req).Error
 
 	if err != nil {
 		log.Fatal(err)
@@ -70,7 +70,7 @@ func CreateProductTag(w http.ResponseWriter, r *http.Request) {
 // @Consume  json
 // @Param id path string true "Product ID"
 // @Param tid path string true "ProductTag ID"
-// @Success 200 {object} models.ProductTag
+// @Success 200 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag/{tid} [delete]
 func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
@@ -91,19 +91,19 @@ func DeleteProductTag(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productTags := &models.ProductTag{
+	productTags := &model.ProductTag{
 		TagID:     uint(tid),
 		ProductID: uint(pid),
 	}
 
 	// check record exists or not
-	err = models.DB.First(&productTags).Error
+	err = model.DB.First(&productTags).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	models.DB.Delete(&productTags)
+	model.DB.Delete(&productTags)
 
 	json.NewEncoder(w).Encode(productTags)
 }
