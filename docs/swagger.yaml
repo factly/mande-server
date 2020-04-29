@@ -9,17 +9,6 @@ definitions:
       product_id:
         type: integer
     type: object
-  action.order:
-    properties:
-      cart_id:
-        type: integer
-      payment_id:
-        type: integer
-      status:
-        type: string
-      user_id:
-        type: integer
-    type: object
   action.orderItem:
     properties:
       extra_info:
@@ -28,26 +17,6 @@ definitions:
         type: integer
       product_id:
         type: integer
-    type: object
-  action.payment:
-    properties:
-      amount:
-        type: integer
-      currency_id:
-        type: integer
-      gateway:
-        type: string
-      status:
-        type: string
-    type: object
-  action.plan:
-    properties:
-      plan_info:
-        type: string
-      plan_name:
-        type: string
-      status:
-        type: string
     type: object
   action.product:
     properties:
@@ -456,6 +425,37 @@ definitions:
     - email
     - first_name
     - last_name
+    type: object
+  order.order:
+    properties:
+      cart_id:
+        type: integer
+      payment_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  payment.payment:
+    properties:
+      amount:
+        type: integer
+      currency_id:
+        type: integer
+      gateway:
+        type: string
+      status:
+        type: string
+    type: object
+  plan.plan:
+    properties:
+      plan_info:
+        type: string
+      plan_name:
+        type: string
+      status:
+        type: string
     type: object
   tag.tag:
     properties:
@@ -1285,7 +1285,7 @@ paths:
         name: Order
         required: true
         schema:
-          $ref: '#/definitions/action.order'
+          $ref: '#/definitions/order.order'
       produces:
       - application/json
       responses:
@@ -1364,7 +1364,7 @@ paths:
         in: body
         name: Order
         schema:
-          $ref: '#/definitions/action.order'
+          $ref: '#/definitions/order.order'
       produces:
       - application/json
       responses:
@@ -1415,7 +1415,7 @@ paths:
         name: Payment
         required: true
         schema:
-          $ref: '#/definitions/action.payment'
+          $ref: '#/definitions/payment.payment'
       produces:
       - application/json
       responses:
@@ -1494,7 +1494,7 @@ paths:
         in: body
         name: Payment
         schema:
-          $ref: '#/definitions/action.payment'
+          $ref: '#/definitions/payment.payment'
       produces:
       - application/json
       responses:
@@ -1545,7 +1545,7 @@ paths:
         name: Plan
         required: true
         schema:
-          $ref: '#/definitions/action.plan'
+          $ref: '#/definitions/plan.plan'
       produces:
       - application/json
       responses:
@@ -1618,7 +1618,7 @@ paths:
         in: body
         name: Plan
         schema:
-          $ref: '#/definitions/action.plan'
+          $ref: '#/definitions/plan.plan'
       produces:
       - application/json
       responses:

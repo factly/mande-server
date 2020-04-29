@@ -1233,7 +1233,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.order"
+                            "$ref": "#/definitions/order.order"
                         }
                     }
                 ],
@@ -1317,7 +1317,7 @@
                         "name": "Order",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.order"
+                            "$ref": "#/definitions/order.order"
                         }
                     }
                 ],
@@ -1428,7 +1428,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.payment"
+                            "$ref": "#/definitions/payment.payment"
                         }
                     }
                 ],
@@ -1512,7 +1512,7 @@
                         "name": "Payment",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.payment"
+                            "$ref": "#/definitions/payment.payment"
                         }
                     }
                 ],
@@ -1623,7 +1623,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/action.plan"
+                            "$ref": "#/definitions/plan.plan"
                         }
                     }
                 ],
@@ -1698,7 +1698,7 @@
                         "name": "Plan",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/action.plan"
+                            "$ref": "#/definitions/plan.plan"
                         }
                     }
                 ],
@@ -2692,23 +2692,6 @@
                 }
             }
         },
-        "action.order": {
-            "type": "object",
-            "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
-                "payment_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "action.orderItem": {
             "type": "object",
             "properties": {
@@ -2720,37 +2703,6 @@
                 },
                 "product_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "action.payment": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "currency_id": {
-                    "type": "integer"
-                },
-                "gateway": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "action.plan": {
-            "type": "object",
-            "properties": {
-                "plan_info": {
-                    "type": "string"
-                },
-                "plan_name": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
                 }
             }
         },
@@ -3355,6 +3307,54 @@
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "order.order": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "type": "integer"
+                },
+                "payment_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "payment.payment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "currency_id": {
+                    "type": "integer"
+                },
+                "gateway": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "plan.plan": {
+            "type": "object",
+            "properties": {
+                "plan_info": {
+                    "type": "string"
+                },
+                "plan_name": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }
