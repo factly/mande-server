@@ -118,13 +118,6 @@ definitions:
       name:
         type: string
     type: object
-  action.tag:
-    properties:
-      slug:
-        type: string
-      title:
-        type: string
-    type: object
   action.user:
     properties:
       email:
@@ -463,6 +456,13 @@ definitions:
     - email
     - first_name
     - last_name
+    type: object
+  tag.tag:
+    properties:
+      slug:
+        type: string
+      title:
+        type: string
     type: object
 host: localhost:3000
 info:
@@ -2023,7 +2023,7 @@ paths:
         name: Tag
         required: true
         schema:
-          $ref: '#/definitions/action.tag'
+          $ref: '#/definitions/tag.tag'
       produces:
       - application/json
       responses:
@@ -2102,7 +2102,7 @@ paths:
         in: body
         name: Tag
         schema:
-          $ref: '#/definitions/action.tag'
+          $ref: '#/definitions/tag.tag'
       produces:
       - application/json
       responses:
