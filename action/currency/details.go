@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// detail - Get currency by id
+// details - Get currency by id
 // @Summary Show a currency by id
 // @Description get currency by ID
 // @Tags Currency
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
 // @Router /currencies/{id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 	currencyID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {

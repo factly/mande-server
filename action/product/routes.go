@@ -24,7 +24,7 @@ func Router() chi.Router {
 	r.Post("/", create)
 	r.Get("/", list)
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", detail)
+		r.Get("/", details)
 		r.Delete("/", delete)
 		r.Put("/", update)
 		r.Mount("/type", prodtype.Router())     // product-type router

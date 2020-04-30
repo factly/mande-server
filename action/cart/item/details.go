@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// detail - Get cartItem by id
+// details - Get cartItem by id
 // @Summary Show a cartItem by id
 // @Description Get cartItem by ID
 // @Tags CartItem
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items/{item_id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 	cartItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(cartItemID)
 

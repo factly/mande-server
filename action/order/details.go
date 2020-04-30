@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// detail - Get orders by id
+// details - Get orders by id
 // @Summary Show a orders by id
 // @Description Get orders by ID
 // @Tags Order
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders/{order_id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 
 	orderID := chi.URLParam(r, "order_id")
 	id, err := strconv.Atoi(orderID)

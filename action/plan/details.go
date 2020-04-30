@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// getPlanByID - Get plan by id
+// details - Get plan by id
 // @Summary Show a plan by id
 // @Description Get plan by ID
 // @Tags Plan
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string
 // @Router /plans/{id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 
 	planID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(planID)

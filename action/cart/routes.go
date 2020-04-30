@@ -19,7 +19,7 @@ func Router() chi.Router {
 	r.Post("/", create) // POST /carts - create a new cart and persist it
 
 	r.Route("/{cart_id}", func(r chi.Router) {
-		r.Get("/", detail)               // GET /carts/{cart_id} - read a single cart by :id
+		r.Get("/", details)              // GET /carts/{cart_id} - read a single cart by :id
 		r.Put("/", update)               // PUT /carts/{cart_id} - update a single cart by :id
 		r.Delete("/", delete)            // DELETE /carts/{cart_id} - delete a single cart by :id
 		r.Mount("/items", item.Router()) // cart-item router

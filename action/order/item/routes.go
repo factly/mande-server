@@ -17,7 +17,7 @@ func Router() chi.Router {
 	r.Post("/", create) // POST /order-items - create a new order item and persist it
 
 	r.Route("/{item_id}", func(r chi.Router) {
-		r.Get("/", detail)    // GET /orders/{order_id}/order-items/{item_id} - read a single order item by :id
+		r.Get("/", details)   // GET /orders/{order_id}/order-items/{item_id} - read a single order item by :id
 		r.Put("/", update)    // PUT /orders/{order_id}/order-items/{item_id} - update a single order item by :id
 		r.Delete("/", delete) // DELETE /orders/{order_id}/order-items/{item_id} - delete a single order item by :id
 	})

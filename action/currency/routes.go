@@ -16,7 +16,7 @@ func Router() chi.Router {
 	r.Post("/", create) // POST /currencies - create a new currency and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", detail)    // GET /currencies/{id} - read a single currency by :id
+		r.Get("/", details)   // GET /currencies/{id} - read a single currency by :id
 		r.Put("/", update)    // PUT /currencies/{id} - update a single currency by :id
 		r.Delete("/", delete) // DELETE /currencies/{id} - delete a single currency by :id
 	})

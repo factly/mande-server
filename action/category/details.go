@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// detail - Get category by id
+// details - Get category by id
 // @Summary Show a category by id
 // @Description Get category by ID
 // @Tags Category
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories/{id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 
 	categoryID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(categoryID)

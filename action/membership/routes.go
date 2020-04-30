@@ -18,7 +18,7 @@ func Router() chi.Router {
 	r.Post("/", create) // POST /memberships - create a new membership and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", detail)    // GET /memberships/{id} - read a single membership by :id
+		r.Get("/", details)   // GET /memberships/{id} - read a single membership by :id
 		r.Put("/", update)    // PUT /memberships/{id} - update a single membership by :id
 		r.Delete("/", delete) // DELETE /memberships/{id} - delete a single membership by :id
 	})

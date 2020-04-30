@@ -17,7 +17,7 @@ func Router() chi.Router {
 	r.Post("/", Create) // POST /plans - create a new plan and persist it
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", detail)    // GET /plans/{id} - read a single plan by :id
+		r.Get("/", details)   // GET /plans/{id} - read a single plan by :id
 		r.Put("/", update)    // PUT /plans/{id} - update a single plan by :id
 		r.Delete("/", delete) // DELETE /plans/{id} - delete a single plan by :id
 	})

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// detail - Get payment by id
+// details - Get payment by id
 // @Summary Show a payment by id
 // @Description Get payment by ID
 // @Tags Payment
@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments/{id} [get]
-func detail(w http.ResponseWriter, r *http.Request) {
+func details(w http.ResponseWriter, r *http.Request) {
 
 	paymentID := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(paymentID)
