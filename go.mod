@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/factly/data-portal-api v0.0.0-20200429164039-90a4a1597150
 	github.com/go-chi/chi v4.1.0+incompatible
 	github.com/go-chi/cors v1.1.1
 	github.com/go-playground/validator/v10 v10.2.0

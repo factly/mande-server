@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/factly/data-portal-server/model"
-
 	"github.com/factly/data-portal-server/action"
+	"github.com/factly/data-portal-server/model"
 )
 
 // @title Data portal API

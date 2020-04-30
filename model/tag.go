@@ -12,5 +12,3 @@ type Tag struct {
 	Title     string    `gorm:"column:title" json:"title" validate:"required"`
 	Slug      string    `gorm:"column:slug" json:"slug" validate:"required"`
 }
-
-/* include meta in tag model*/
