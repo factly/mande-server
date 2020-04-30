@@ -2842,16 +2842,7 @@
                 "user_id"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "status": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {
@@ -2869,12 +2860,6 @@
                 "cart_id": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "is_deleted": {
                     "type": "boolean"
                 },
@@ -2884,9 +2869,6 @@
                 },
                 "product_id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -2898,12 +2880,6 @@
                 "title"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "parent_id": {
                     "type": "integer"
                 },
@@ -2911,9 +2887,6 @@
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -2925,19 +2898,10 @@
                 "name"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "iso_code": {
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -2951,12 +2915,6 @@
                 "user_id"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "payment": {
                     "type": "object",
                     "$ref": "#/definitions/model.Payment"
@@ -2972,9 +2930,6 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 },
                 "user": {
@@ -3002,12 +2957,6 @@
                 "cart_id": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "payment": {
                     "type": "object",
                     "$ref": "#/definitions/model.Payment"
@@ -3016,9 +2965,6 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {
@@ -3034,14 +2980,8 @@
                 "product_id"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "extra_info": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "order": {
                     "type": "object",
@@ -3056,9 +2996,6 @@
                 },
                 "product_id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3074,9 +3011,6 @@
                 "amount": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
                 "currency": {
                     "type": "object",
                     "$ref": "#/definitions/model.Currency"
@@ -3087,13 +3021,7 @@
                 "gateway": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "status": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3106,12 +3034,6 @@
                 "status"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "plan_info": {
                     "type": "string"
                 },
@@ -3119,9 +3041,6 @@
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3137,17 +3056,11 @@
                 "title"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "currency": {
                     "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
-                    "type": "integer"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "price": {
@@ -3172,9 +3085,6 @@
                 },
                 "title": {
                     "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3188,17 +3098,8 @@
                 "category_id": {
                     "type": "integer"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "product_id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3209,20 +3110,11 @@
                 "tag_id"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "product_id": {
                     "type": "integer"
                 },
                 "tag_id": {
                     "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3273,19 +3165,10 @@
                 "title"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "slug": {
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -3298,22 +3181,13 @@
                 "last_name"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
                 "first_name": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "last_name": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

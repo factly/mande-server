@@ -28,9 +28,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency := &model.Currency{
-		ID: uint(id),
-	}
+	currency := &model.Currency{}
+	currency.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&currency).Error

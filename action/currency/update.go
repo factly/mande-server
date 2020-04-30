@@ -30,9 +30,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency := &model.Currency{
-		ID: uint(id),
-	}
+	currency := &model.Currency{}
+	currency.ID = uint(id)
 	req := &model.Currency{}
 
 	json.NewDecoder(r.Body).Decode(&req)

@@ -28,9 +28,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Currency{
-		ID: uint(id),
-	}
+	req := &model.Currency{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Currency{}).First(&req).Error
 

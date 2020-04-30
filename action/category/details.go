@@ -30,9 +30,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Category{
-		ID: uint(id),
-	}
+	req := &model.Category{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Category{}).First(&req).Error
 

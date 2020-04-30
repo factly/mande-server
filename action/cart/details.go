@@ -30,9 +30,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Cart{
-		ID: uint(id),
-	}
+	req := &model.Cart{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Cart{}).First(&req).Error
 	if err != nil {

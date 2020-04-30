@@ -59,13 +59,7 @@ definitions:
     type: object
   model.Cart:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       status:
-        type: string
-      updated_at:
         type: string
       user_id:
         type: integer
@@ -77,10 +71,6 @@ definitions:
     properties:
       cart_id:
         type: integer
-      created_at:
-        type: string
-      id:
-        type: integer
       is_deleted:
         type: boolean
       product:
@@ -88,25 +78,17 @@ definitions:
         type: object
       product_id:
         type: integer
-      updated_at:
-        type: string
     required:
     - cart_id
     - product_id
     type: object
   model.Category:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       parent_id:
         type: integer
       slug:
         type: string
       title:
-        type: string
-      updated_at:
         type: string
     required:
     - parent_id
@@ -115,15 +97,9 @@ definitions:
     type: object
   model.Currency:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       iso_code:
         type: string
       name:
-        type: string
-      updated_at:
         type: string
     required:
     - iso_code
@@ -131,10 +107,6 @@ definitions:
     type: object
   model.Membership:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       payment:
         $ref: '#/definitions/model.Payment'
         type: object
@@ -146,8 +118,6 @@ definitions:
       plan_id:
         type: integer
       status:
-        type: string
-      updated_at:
         type: string
       user:
         $ref: '#/definitions/model.User'
@@ -167,18 +137,12 @@ definitions:
         type: object
       cart_id:
         type: integer
-      created_at:
-        type: string
-      id:
-        type: integer
       payment:
         $ref: '#/definitions/model.Payment'
         type: object
       payment_id:
         type: integer
       status:
-        type: string
-      updated_at:
         type: string
       user_id:
         type: integer
@@ -190,12 +154,8 @@ definitions:
     type: object
   model.OrderItem:
     properties:
-      created_at:
-        type: string
       extra_info:
         type: string
-      id:
-        type: integer
       order:
         $ref: '#/definitions/model.Order'
         type: object
@@ -206,8 +166,6 @@ definitions:
         type: object
       product_id:
         type: integer
-      updated_at:
-        type: string
     required:
     - extra_info
     - order_id
@@ -217,8 +175,6 @@ definitions:
     properties:
       amount:
         type: integer
-      created_at:
-        type: string
       currency:
         $ref: '#/definitions/model.Currency'
         type: object
@@ -226,11 +182,7 @@ definitions:
         type: integer
       gateway:
         type: string
-      id:
-        type: integer
       status:
-        type: string
-      updated_at:
         type: string
     required:
     - amount
@@ -240,17 +192,11 @@ definitions:
     type: object
   model.Plan:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       plan_info:
         type: string
       plan_name:
         type: string
       status:
-        type: string
-      updated_at:
         type: string
     required:
     - plan_info
@@ -259,14 +205,10 @@ definitions:
     type: object
   model.Product:
     properties:
-      created_at:
-        type: string
       currency:
         $ref: '#/definitions/model.Currency'
         type: object
       currency_id:
-        type: integer
-      id:
         type: integer
       price:
         type: integer
@@ -284,8 +226,6 @@ definitions:
         type: integer
       title:
         type: string
-      updated_at:
-        type: string
     required:
     - currency_id
     - price
@@ -298,30 +238,18 @@ definitions:
     properties:
       category_id:
         type: integer
-      created_at:
-        type: string
-      id:
-        type: integer
       product_id:
         type: integer
-      updated_at:
-        type: string
     required:
     - category_id
     - product_id
     type: object
   model.ProductTag:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       product_id:
         type: integer
       tag_id:
         type: integer
-      updated_at:
-        type: string
     required:
     - product_id
     - tag_id
@@ -354,15 +282,9 @@ definitions:
     type: object
   model.Tag:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       slug:
         type: string
       title:
-        type: string
-      updated_at:
         type: string
     required:
     - slug
@@ -370,17 +292,11 @@ definitions:
     type: object
   model.User:
     properties:
-      created_at:
-        type: string
       email:
         type: string
       first_name:
         type: string
-      id:
-        type: integer
       last_name:
-        type: string
-      updated_at:
         type: string
     required:
     - email

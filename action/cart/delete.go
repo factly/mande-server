@@ -30,9 +30,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart := &model.Cart{
-		ID: uint(id),
-	}
+	cart := &model.Cart{}
+	cart.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&cart).Error
