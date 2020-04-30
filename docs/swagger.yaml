@@ -1,0 +1,2205 @@
+basePath: /
+definitions:
+  cart.cart:
+    properties:
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  category.category:
+    properties:
+      parent_id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+  category.productCategory:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  currency.currency:
+    properties:
+      iso_code:
+        type: string
+      name:
+        type: string
+    type: object
+  item.cartItem:
+    properties:
+      cart_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product_id:
+        type: integer
+    type: object
+  item.orderItem:
+    properties:
+      extra_info:
+        type: string
+      order_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  membership.membership:
+    properties:
+      payment_id:
+        type: integer
+      plan_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.Cart:
+    properties:
+      status:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - status
+    - user_id
+    type: object
+  model.CartItem:
+    properties:
+      cart_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      product:
+        $ref: '#/definitions/model.Product'
+        type: object
+      product_id:
+        type: integer
+    required:
+    - cart_id
+    - product_id
+    type: object
+  model.Category:
+    properties:
+      parent_id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    required:
+    - parent_id
+    - slug
+    - title
+    type: object
+  model.Currency:
+    properties:
+      iso_code:
+        type: string
+      name:
+        type: string
+    required:
+    - iso_code
+    - name
+    type: object
+  model.Membership:
+    properties:
+      payment:
+        $ref: '#/definitions/model.Payment'
+        type: object
+      payment_id:
+        type: integer
+      plan:
+        $ref: '#/definitions/model.Plan'
+        type: object
+      plan_id:
+        type: integer
+      status:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+        type: object
+      user_id:
+        type: integer
+    required:
+    - payment_id
+    - plan_id
+    - status
+    - user_id
+    type: object
+  model.Order:
+    properties:
+      cart:
+        $ref: '#/definitions/model.Cart'
+        type: object
+      cart_id:
+        type: integer
+      payment:
+        $ref: '#/definitions/model.Payment'
+        type: object
+      payment_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - cart_id
+    - payment_id
+    - status
+    - user_id
+    type: object
+  model.OrderItem:
+    properties:
+      extra_info:
+        type: string
+      order:
+        $ref: '#/definitions/model.Order'
+        type: object
+      order_id:
+        type: integer
+      product:
+        $ref: '#/definitions/model.Product'
+        type: object
+      product_id:
+        type: integer
+    required:
+    - extra_info
+    - order_id
+    - product_id
+    type: object
+  model.Payment:
+    properties:
+      amount:
+        type: integer
+      currency:
+        $ref: '#/definitions/model.Currency'
+        type: object
+      currency_id:
+        type: integer
+      gateway:
+        type: string
+      status:
+        type: string
+    required:
+    - amount
+    - currency_id
+    - gateway
+    - status
+    type: object
+  model.Plan:
+    properties:
+      plan_info:
+        type: string
+      plan_name:
+        type: string
+      status:
+        type: string
+    required:
+    - plan_info
+    - plan_name
+    - status
+    type: object
+  model.Product:
+    properties:
+      currency:
+        $ref: '#/definitions/model.Currency'
+        type: object
+      currency_id:
+        type: integer
+      price:
+        type: integer
+      product_type_id:
+        type: integer
+      productType:
+        $ref: '#/definitions/model.ProductType'
+        type: object
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/model.Status'
+        type: object
+      status_id:
+        type: integer
+      title:
+        type: string
+    required:
+    - currency_id
+    - price
+    - product_type_id
+    - slug
+    - status_id
+    - title
+    type: object
+  model.ProductCategory:
+    properties:
+      category_id:
+        type: integer
+      product_id:
+        type: integer
+    required:
+    - category_id
+    - product_id
+    type: object
+  model.ProductTag:
+    properties:
+      product_id:
+        type: integer
+      tag_id:
+        type: integer
+    required:
+    - product_id
+    - tag_id
+    type: object
+  model.ProductType:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  model.Status:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  model.Tag:
+    properties:
+      slug:
+        type: string
+      title:
+        type: string
+    required:
+    - slug
+    - title
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    type: object
+  order.order:
+    properties:
+      cart_id:
+        type: integer
+      payment_id:
+        type: integer
+      status:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  payment.payment:
+    properties:
+      amount:
+        type: integer
+      currency_id:
+        type: integer
+      gateway:
+        type: string
+      status:
+        type: string
+    type: object
+  plan.plan:
+    properties:
+      plan_info:
+        type: string
+      plan_name:
+        type: string
+      status:
+        type: string
+    type: object
+  prodtype.productType:
+    properties:
+      name:
+        type: string
+    type: object
+  product.product:
+    properties:
+      currency_id:
+        type: integer
+      price:
+        type: integer
+      product_type_id:
+        type: integer
+      slug:
+        type: string
+      status_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  status.status:
+    properties:
+      name:
+        type: string
+    type: object
+  tag.productTags:
+    properties:
+      tag_id:
+        type: integer
+    type: object
+  tag.tag:
+    properties:
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+  user.user:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Data portal API
+  version: "1.0"
+paths:
+  /carts:
+    get:
+      description: Get all carts
+      operationId: get-all-carts
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Cart'
+            type: array
+      summary: Show all carts
+      tags:
+      - Cart
+    post:
+      description: create cart
+      operationId: add-cart
+      parameters:
+      - description: Cart object
+        in: body
+        name: Cart
+        required: true
+        schema:
+          $ref: '#/definitions/cart.cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cart
+      tags:
+      - Cart
+  /carts/{cart_id}:
+    delete:
+      description: Delete cart by ID
+      operationId: delete-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a cart
+      tags:
+      - Cart
+    get:
+      description: Get cart by ID
+      operationId: get-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cart by id
+      tags:
+      - Cart
+    put:
+      description: Update cart by ID
+      operationId: update-cart-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart
+        in: body
+        name: Cart
+        schema:
+          $ref: '#/definitions/cart.cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Cart'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a cart by id
+      tags:
+      - Cart
+  /carts/{cart_id}/items:
+    get:
+      description: Get all cartItems
+      operationId: get-all-cart-items
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.CartItem'
+            type: array
+      summary: Show all cartItems
+      tags:
+      - CartItem
+    post:
+      description: create cartItem
+      operationId: add-cart-item
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: CartItem object
+        in: body
+        name: CartItem
+        required: true
+        schema:
+          $ref: '#/definitions/item.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create cartItem
+      tags:
+      - CartItem
+  /carts/{cart_id}/items/{item_id}:
+    delete:
+      description: Delete cartItem by ID
+      operationId: delete-cart-item-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a cartItem
+      tags:
+      - CartItem
+    get:
+      description: Get cartItem by ID
+      operationId: get-cart-item-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a cartItem by id
+      tags:
+      - CartItem
+    put:
+      description: Update cartItem by ID
+      operationId: update-cart-item-by-id
+      parameters:
+      - description: Cart ID
+        in: path
+        name: cart_id
+        required: true
+        type: string
+      - description: Cart-item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: CartItem
+        in: body
+        name: CartItem
+        schema:
+          $ref: '#/definitions/item.cartItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CartItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a cartItem by id
+      tags:
+      - CartItem
+  /categories:
+    get:
+      description: Get all categories
+      operationId: get-all-categories
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Category'
+            type: array
+      summary: Show all categories
+      tags:
+      - Category
+    post:
+      description: create category
+      operationId: add-category
+      parameters:
+      - description: Category object
+        in: body
+        name: Category
+        required: true
+        schema:
+          $ref: '#/definitions/category.category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create category
+      tags:
+      - Category
+  /categories/{id}:
+    delete:
+      description: Delete category by ID
+      operationId: delete-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a category
+      tags:
+      - Category
+    get:
+      description: Get category by ID
+      operationId: get-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a category by id
+      tags:
+      - Category
+    put:
+      description: Update category by ID
+      operationId: update-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category
+        in: body
+        name: Category
+        schema:
+          $ref: '#/definitions/category.category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Category'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a category by id
+      tags:
+      - Category
+  /currencies:
+    get:
+      description: Get all currencies
+      operationId: get-all-currencies
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Currency'
+            type: array
+      summary: Show all currencies
+      tags:
+      - Currency
+    post:
+      description: Create currency
+      operationId: add-currency
+      parameters:
+      - description: Currency object
+        in: body
+        name: Currency
+        required: true
+        schema:
+          $ref: '#/definitions/currency.currency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create currency
+      tags:
+      - Currency
+  /currencies/{id}:
+    delete:
+      description: Delete currency by ID
+      operationId: delete-currency-by-id
+      parameters:
+      - description: Currency ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a currency
+      tags:
+      - Currency
+    get:
+      description: get currency by ID
+      operationId: get-currency-by-id
+      parameters:
+      - description: Currency ID
+        in: path
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a currency by id
+      tags:
+      - Currency
+    put:
+      description: Update currency by ID
+      operationId: update-currency-by-id
+      parameters:
+      - description: Currecny ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Currency
+        in: body
+        name: Currency
+        schema:
+          $ref: '#/definitions/currency.currency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a currency by id
+      tags:
+      - Currency
+  /memberships:
+    get:
+      description: Get all memberships
+      operationId: get-all-memberships
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Membership'
+            type: array
+      summary: Show all memberships
+      tags:
+      - Membership
+    post:
+      description: Create membership
+      operationId: add-membership
+      parameters:
+      - description: Membership object
+        in: body
+        name: Membership
+        required: true
+        schema:
+          $ref: '#/definitions/membership.membership'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create membership
+      tags:
+      - Membership
+  /memberships/{id}:
+    delete:
+      description: Delete membership by ID
+      operationId: delete-membership-by-id
+      parameters:
+      - description: Membership ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a membership
+      tags:
+      - Membership
+    get:
+      description: Get membership by ID
+      operationId: get-membership-by-id
+      parameters:
+      - description: Membership ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a membership by id
+      tags:
+      - Membership
+    put:
+      description: Update membership by ID
+      operationId: update-membership-by-id
+      parameters:
+      - description: Membership ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Membership
+        in: body
+        name: Membership
+        schema:
+          $ref: '#/definitions/membership.membership'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Membership'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a membership by id
+      tags:
+      - Membership
+  /orders:
+    get:
+      description: Get all orders
+      operationId: get-all-orders
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Order'
+            type: array
+      summary: Show all orders
+      tags:
+      - Order
+    post:
+      description: create orders
+      operationId: add-orders
+      parameters:
+      - description: Order object
+        in: body
+        name: Order
+        required: true
+        schema:
+          $ref: '#/definitions/order.order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create orders
+      tags:
+      - Order
+  /orders/{order_id}:
+    delete:
+      description: Delete orders by ID
+      operationId: delete-orders-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a orders
+      tags:
+      - Order
+    get:
+      description: Get orders by ID
+      operationId: get-orders-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a orders by id
+      tags:
+      - Order
+    put:
+      description: Update orders by ID
+      operationId: update-orders-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: Order
+        in: body
+        name: Order
+        schema:
+          $ref: '#/definitions/order.order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a orders by id
+      tags:
+      - Order
+  /orders/{order_id}/items:
+    get:
+      description: Get all order items
+      operationId: get-all-order-items
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.OrderItem'
+            type: array
+      summary: Show all order items
+      tags:
+      - OrderItem
+    post:
+      description: create order items
+      operationId: add-order-item
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: Order item object
+        in: body
+        name: OrderItem
+        required: true
+        schema:
+          $ref: '#/definitions/item.orderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+      summary: Create order items
+      tags:
+      - OrderItem
+  /orders/{order_id}/items/{item_id}:
+    delete:
+      description: Delete order item by ID
+      operationId: delete-order-items-by-id
+      parameters:
+      - description: OrderItem ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a order item
+      tags:
+      - OrderItem
+    get:
+      description: Get order item by ID
+      operationId: get-order-item-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: Order item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a order item by id
+      tags:
+      - OrderItem
+    put:
+      description: Update orderItems by ID
+      operationId: update-orderItems-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: OrderItem ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: OrderItem
+        in: body
+        name: OrderItem
+        schema:
+          $ref: '#/definitions/item.orderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OrderItem'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a orderItems by id
+      tags:
+      - OrderItem
+  /payments:
+    get:
+      description: Get all payments
+      operationId: get-all-payments
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Payment'
+            type: array
+      summary: Show all payments
+      tags:
+      - Payment
+    post:
+      description: Create payment
+      operationId: add-payment
+      parameters:
+      - description: Payment object
+        in: body
+        name: Payment
+        required: true
+        schema:
+          $ref: '#/definitions/payment.payment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create payment
+      tags:
+      - Payment
+  /payments/{id}:
+    delete:
+      description: Delete payment by ID
+      operationId: delete-payment-by-id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a payment
+      tags:
+      - Payment
+    get:
+      description: Get payment by ID
+      operationId: get-payment-by-id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a payment by id
+      tags:
+      - Payment
+    put:
+      description: Update payment by ID
+      operationId: update-payment-by-id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Payment
+        in: body
+        name: Payment
+        schema:
+          $ref: '#/definitions/payment.payment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a payment by id
+      tags:
+      - Payment
+  /plans:
+    get:
+      description: Get all plans
+      operationId: get-all-plans
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Plan'
+            type: array
+      summary: Show all plans
+      tags:
+      - Plan
+    post:
+      description: create plan
+      operationId: add-plan
+      parameters:
+      - description: Plan object
+        in: body
+        name: Plan
+        required: true
+        schema:
+          $ref: '#/definitions/plan.plan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plan'
+      summary: Create plan
+      tags:
+      - Plan
+  /plans/{id}:
+    delete:
+      description: Delete plan by ID
+      operationId: delete-plan-by-id
+      parameters:
+      - description: Plan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a plan
+      tags:
+      - Plan
+    get:
+      description: Get plan by ID
+      operationId: get-plan-by-id
+      parameters:
+      - description: Plan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a plan by id
+      tags:
+      - Plan
+    put:
+      description: Update plan by ID
+      operationId: update-plan-by-id
+      parameters:
+      - description: Plan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Plan
+        in: body
+        name: Plan
+        schema:
+          $ref: '#/definitions/plan.plan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a plan by id
+      tags:
+      - Plan
+  /products:
+    get:
+      description: Get all products
+      operationId: get-all-products
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Product'
+            type: array
+      summary: Show all products
+      tags:
+      - Product
+    post:
+      description: Create product
+      operationId: add-product
+      parameters:
+      - description: Product object
+        in: body
+        name: Product
+        required: true
+        schema:
+          $ref: '#/definitions/product.product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create product
+      tags:
+      - Product
+  /products/{id}:
+    delete:
+      description: Delete product by ID
+      operationId: delete-product-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a product
+      tags:
+      - Product
+    get:
+      description: Get product by ID
+      operationId: get-product-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a product by id
+      tags:
+      - Product
+    put:
+      description: Update product by ID
+      operationId: update-product-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product
+        in: body
+        name: Product
+        schema:
+          $ref: '#/definitions/product.product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Product'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a product by id
+      tags:
+      - Product
+  /products/{id}/category:
+    post:
+      description: create productCategory
+      operationId: add-productCategory
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductCategory object
+        in: body
+        name: ProductCategory
+        required: true
+        schema:
+          $ref: '#/definitions/category.productCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productCategory
+      tags:
+      - ProductCategory
+  /products/{id}/category/{cid}:
+    delete:
+      description: Delete productCategory by ID
+      operationId: delete-productCategory-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: cid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductCategory'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productCategory
+      tags:
+      - ProductCategory
+  /products/{id}/status:
+    get:
+      description: Get all statuses
+      operationId: get-all-statuses
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Status'
+            type: array
+      summary: Show all statuses
+      tags:
+      - Status
+    post:
+      description: Create status
+      operationId: add-status
+      parameters:
+      - description: Status object
+        in: body
+        name: Status
+        required: true
+        schema:
+          $ref: '#/definitions/status.status'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create status
+      tags:
+      - Status
+  /products/{id}/tag:
+    post:
+      description: create productTags
+      operationId: add-productTags
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductTag object
+        in: body
+        name: ProductTag
+        required: true
+        schema:
+          $ref: '#/definitions/tag.productTags'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create productTags
+      tags:
+      - ProductTag
+  /products/{id}/tag/{tid}:
+    delete:
+      description: Delete productTags by ID
+      operationId: delete-productTags-by-id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductTag ID
+        in: path
+        name: tid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductTag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a productTags
+      tags:
+      - ProductTag
+  /products/{id}/type:
+    get:
+      description: Get all productTypes
+      operationId: get-all-productTypes
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.ProductType'
+            type: array
+      summary: Show all productTypes
+      tags:
+      - Type
+    post:
+      description: Create product type
+      operationId: add-type
+      parameters:
+      - description: Type object
+        in: body
+        name: Type
+        required: true
+        schema:
+          $ref: '#/definitions/prodtype.productType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create product type
+      tags:
+      - Type
+  /tags:
+    get:
+      description: Get all tags
+      operationId: get-all-tags
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tag'
+            type: array
+      summary: Show all tags
+      tags:
+      - Tag
+    post:
+      description: Create tag
+      operationId: add-tag
+      parameters:
+      - description: Tag object
+        in: body
+        name: Tag
+        required: true
+        schema:
+          $ref: '#/definitions/tag.tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create tag
+      tags:
+      - Tag
+  /tags/{id}:
+    delete:
+      description: Delete tag by ID
+      operationId: delete-tag-by-id
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a tag
+      tags:
+      - Tag
+    get:
+      description: Get tag by ID
+      operationId: get-tag-by-id
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a tag by id
+      tags:
+      - Tag
+    put:
+      description: Update tag by ID
+      operationId: update-tag-by-id
+      parameters:
+      - description: Tag ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Tag
+        in: body
+        name: Tag
+        schema:
+          $ref: '#/definitions/tag.tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a tag by id
+      tags:
+      - Tag
+  /users:
+    get:
+      description: Get all users
+      operationId: get-all-users
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      summary: Show all users
+      tags:
+      - User
+    post:
+      description: Create user
+      operationId: add-user
+      parameters:
+      - description: User object
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/user.user'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create user
+      tags:
+      - User
+  /users/{id}:
+    delete:
+      description: Delete user by ID
+      operationId: delete-user-by-id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a user
+      tags:
+      - User
+    get:
+      description: Get user by ID
+      operationId: get-user-by-id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a user by id
+      tags:
+      - User
+    put:
+      description: Update user by ID
+      operationId: update-user-by-id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User
+        in: body
+        name: User
+        schema:
+          $ref: '#/definitions/user.user'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a user by id
+      tags:
+      - User
+swagger: "2.0"

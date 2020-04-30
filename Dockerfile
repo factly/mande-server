@@ -1,6 +1,8 @@
-FROM golang:1.14.2-alpine3.11
-WORKDIR /usr/src/app
-COPY . /usr/src/app
+FROM golang:1.14
+WORKDIR /app
+COPY go.mod go.sum ./
 RUN go mod download
-RUN go get github.com/githubnemo/CompileDaemon
-ENTRYPOINT CompileDaemon --build="go build main.go" --command=./main
+COPY . .
+RUN go build -o main .
+EXPOSE 3000
+CMD ["./main"]

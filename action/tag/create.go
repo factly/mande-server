@@ -5,12 +5,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/factly/data-portal-api/model"
-	"github.com/factly/data-portal-api/validation"
+	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
 
-// CreateTag - Create tag
+// create - Create tag
 // @Summary Create tag
 // @Description Create tag
 // @Tags Tag

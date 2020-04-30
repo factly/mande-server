@@ -36,6 +36,41 @@ func SetupDB() {
 
 	// db migrations
 	DB.AutoMigrate(
+		&Currency{},
+		&Payment{},
+		&Membership{},
+		&Plan{},
+		&User{},
+		&Product{},
+		&ProductType{},
+		&Status{},
 		&Tag{},
+		&ProductTag{},
+		&Category{},
+		&ProductCategory{},
+		&Cart{},
+		&CartItem{},
+		&Order{},
+		&OrderItem{},
 	)
+
+	// Adding foreignKey
+	DB.Model(&Payment{}).AddForeignKey("currency_id", "currencies(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Membership{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Membership{}).AddForeignKey("plan_id", "plans(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Membership{}).AddForeignKey("payment_id", "payments(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Product{}).AddForeignKey("currency_id", "currencies(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Product{}).AddForeignKey("status_id", "statuses(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Product{}).AddForeignKey("product_type_id", "product_types(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&ProductTag{}).AddForeignKey("tag_id", "tags(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&ProductTag{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&ProductCategory{}).AddForeignKey("category_id", "categories(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&ProductCategory{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Cart{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&CartItem{}).AddForeignKey("cart_id", "carts(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&CartItem{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Order{}).AddForeignKey("payment_id", "payments(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Order{}).AddForeignKey("cart_id", "carts(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&OrderItem{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&OrderItem{}).AddForeignKey("order_id", "orders(id)", "RESTRICT", "RESTRICT")
 }

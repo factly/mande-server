@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/model"
+	"github.com/factly/data-portal-server/model"
 )
 
-// GetTags - Get all tags
+// list - Get all tags
 // @Summary Show all tags
 // @Description Get all tags
 // @Tags Tag

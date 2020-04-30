@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/model"
-	"github.com/factly/data-portal-api/validation"
+	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
 
-// GetTag - Get tag by id
+// details - Get tag by id
 // @Summary Show a tag by id
 // @Description Get tag by ID
 // @Tags Tag
@@ -29,9 +29,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Tag{
-		ID: uint(id),
-	}
+	req := &model.Tag{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Tag{}).First(&req).Error
 

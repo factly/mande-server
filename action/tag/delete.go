@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/model"
-	"github.com/factly/data-portal-api/validation"
+	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
 
-// DeleteTag - Delete tag by id
+// delete - Delete tag by id
 // @Summary Delete a tag
 // @Description Delete tag by ID
 // @Tags Tag
@@ -29,9 +29,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := &model.Tag{
-		ID: uint(id),
-	}
+	tag := &model.Tag{}
+	tag.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&tag).Error
