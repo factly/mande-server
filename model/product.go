@@ -19,3 +19,21 @@ type Product struct {
 	CurrencyID    uint        `gorm:"column:currency_id" json:"currency_id" validate:"required"`
 	Currency      Currency    `gorm:"foreignkey:currency_id;association_foreignkey:id"`
 }
+
+// ProductCategory model
+type ProductCategory struct {
+	ID         uint      `gorm:"primary_key" json:"id"`
+	CreatedAt  time.Time `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"column:updated_at" json:"updated_at"`
+	CategoryID uint      `gorm:"column:category_id" json:"category_id" validate:"required"`
+	ProductID  uint      `gorm:"column:product_id" json:"product_id" validate:"required"`
+}
+
+// ProductTag model
+type ProductTag struct {
+	ID        uint      `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
+	TagID     uint      `gorm:"column:tag_id" json:"tag_id" validate:"required"`
+	ProductID uint      `gorm:"column:product_id" json:"product_id" validate:"required"`
+}
