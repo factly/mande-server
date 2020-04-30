@@ -256,26 +256,14 @@ definitions:
     type: object
   model.ProductType:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       name:
-        type: string
-      updated_at:
         type: string
     required:
     - name
     type: object
   model.Status:
     properties:
-      created_at:
-        type: string
-      id:
-        type: integer
       name:
-        type: string
-      updated_at:
         type: string
     required:
     - name
