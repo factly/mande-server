@@ -30,9 +30,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Order{
-		ID: uint(id),
-	}
+	req := &model.Order{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req).Error
 

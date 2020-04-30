@@ -31,9 +31,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderItems := &model.OrderItem{
-		ID: uint(id),
-	}
+	orderItems := &model.OrderItem{}
+	orderItems.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&orderItems).Error

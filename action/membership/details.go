@@ -29,9 +29,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Membership{
-		ID: uint(id),
-	}
+	req := &model.Membership{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Membership{}).First(&req).Error
 

@@ -31,9 +31,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	membership := &model.Membership{
-		ID: uint(id),
-	}
+	membership := &model.Membership{}
+	membership.ID = uint(id)
 	req := &model.Membership{}
 
 	json.NewDecoder(r.Body).Decode(&req)
