@@ -1,14 +1,12 @@
 package model
 
 import (
-	"time"
+	"github.com/jinzhu/gorm"
 )
 
 // Product model
 type Product struct {
-	ID            uint        `gorm:"primary_key"`
-	CreatedAt     time.Time   `gorm:"column:created_at" json:"created_at"`
-	UpdatedAt     time.Time   `gorm:"column:updated_at" json:"updated_at"`
+	gorm.Model
 	Title         string      `gorm:"column:title" json:"title" validate:"required"`
 	Slug          string      `gorm:"column:slug" json:"slug" validate:"required"`
 	Price         int         `gorm:"column:price" json:"price" validate:"required"`
@@ -22,18 +20,14 @@ type Product struct {
 
 // ProductCategory model
 type ProductCategory struct {
-	ID         uint      `gorm:"primary_key" json:"id"`
-	CreatedAt  time.Time `gorm:"column:created_at" json:"created_at"`
-	UpdatedAt  time.Time `gorm:"column:updated_at" json:"updated_at"`
-	CategoryID uint      `gorm:"column:category_id" json:"category_id" validate:"required"`
-	ProductID  uint      `gorm:"column:product_id" json:"product_id" validate:"required"`
+	gorm.Model
+	CategoryID uint `gorm:"column:category_id" json:"category_id" validate:"required"`
+	ProductID  uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }
 
 // ProductTag model
 type ProductTag struct {
-	ID        uint      `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
-	TagID     uint      `gorm:"column:tag_id" json:"tag_id" validate:"required"`
-	ProductID uint      `gorm:"column:product_id" json:"product_id" validate:"required"`
+	gorm.Model
+	TagID     uint `gorm:"column:tag_id" json:"tag_id" validate:"required"`
+	ProductID uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }

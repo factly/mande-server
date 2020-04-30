@@ -32,9 +32,9 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &model.Product{
-		ID: uint(id),
-	}
+	product := &model.Product{}
+
+	product.ID = uint(id)
 
 	req := &model.Product{}
 	json.NewDecoder(r.Body).Decode(&req)

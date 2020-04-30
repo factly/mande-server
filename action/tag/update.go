@@ -32,9 +32,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &model.Tag{}
-	tag := &model.Tag{
-		ID: uint(id),
-	}
+	tag := &model.Tag{}
+	tag.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&req)
 
