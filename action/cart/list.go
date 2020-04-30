@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/model"
+	"github.com/factly/data-portal-server/model"
 )
 
 // list - Get all carts

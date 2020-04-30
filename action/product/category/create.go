@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-api/model"
-	"github.com/factly/data-portal-api/validation"
+	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )

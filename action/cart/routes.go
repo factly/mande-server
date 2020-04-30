@@ -1,7 +1,7 @@
 package cart
 
 import (
-	"github.com/factly/data-portal-api/action/cart/item"
+	"github.com/factly/data-portal-server/action/cart/item"
 	"github.com/go-chi/chi"
 )
 

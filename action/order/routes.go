@@ -1,7 +1,7 @@
 package order
 
 import (
-	"github.com/factly/data-portal-api/action/order/item"
+	"github.com/factly/data-portal-server/action/order/item"
 	"github.com/go-chi/chi"
 )
 

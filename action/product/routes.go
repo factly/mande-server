@@ -1,10 +1,10 @@
 package product
 
 import (
-	"github.com/factly/data-portal-api/action/product/category"
-	"github.com/factly/data-portal-api/action/product/prodtype"
-	"github.com/factly/data-portal-api/action/product/status"
-	"github.com/factly/data-portal-api/action/product/tag"
+	"github.com/factly/data-portal-server/action/product/category"
+	"github.com/factly/data-portal-server/action/product/prodtype"
+	"github.com/factly/data-portal-server/action/product/status"
+	"github.com/factly/data-portal-server/action/product/tag"
 	"github.com/go-chi/chi"
 )
 
