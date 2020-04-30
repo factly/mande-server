@@ -30,9 +30,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	plan := &model.Plan{
-		ID: uint(id),
-	}
+	plan := &model.Plan{}
+
+	plan.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&plan).Error

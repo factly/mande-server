@@ -30,9 +30,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Payment{
-		ID: uint(id),
-	}
+	req := &model.Payment{}
+	req.ID = uint(id)
 
 	err = model.DB.Model(&model.Payment{}).First(&req).Error
 

@@ -30,9 +30,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payment := &model.Payment{
-		ID: uint(id),
-	}
+	payment := &model.Payment{}
+
+	payment.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&payment).Error

@@ -33,9 +33,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &model.Plan{}
-	plan := &model.Plan{
-		ID: uint(id),
-	}
+	plan := &model.Plan{}
+	plan.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&req)
 

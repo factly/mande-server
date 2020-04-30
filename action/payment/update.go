@@ -32,9 +32,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payment := &model.Payment{
-		ID: uint(id),
-	}
+	payment := &model.Payment{}
+	payment.ID = uint(id)
 
 	req := &model.Payment{}
 
