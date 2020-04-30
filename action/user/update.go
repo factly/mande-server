@@ -34,9 +34,9 @@ func update(w http.ResponseWriter, r *http.Request) {
 	req := &model.User{}
 
 	json.NewDecoder(r.Body).Decode(&req)
-	user := &model.User{
-		ID: uint(id),
-	}
+	user := &model.User{}
+
+	user.ID = uint(id)
 
 	model.DB.Model(&user).Updates(&model.User{
 		Email:     req.Email,

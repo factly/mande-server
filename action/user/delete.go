@@ -29,9 +29,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &model.User{
-		ID: uint(id),
-	}
+	user := &model.User{}
+
+	user.ID = uint(id)
 
 	// check record exists or not
 	err = model.DB.First(&user).Error
