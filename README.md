@@ -5,13 +5,16 @@
 
  ## Development environment ( sample )
 
+```
 DB_USER=postgres
 DB_PASSWORD=password
 DB_NAME=data_portal_db
 DB_HOST=localhost
+```
 
 ##  Run
-To start *go run main.go* 
+
+To start  `go run main.go`
 
 With docker run `docker-compose up`
 
