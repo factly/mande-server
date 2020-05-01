@@ -30,7 +30,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Offset(offset).Limit(limit).Model(&model.Plan{}).Find(&data.Nodes).Offset(0).Limit(-1).Count(&data.Total)
+	model.DB.Model(&model.Plan{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
 	json.NewEncoder(w).Encode(data)
 }
