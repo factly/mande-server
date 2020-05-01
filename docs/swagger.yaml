@@ -7,6 +7,15 @@ definitions:
       user_id:
         type: integer
     type: object
+  cart.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Cart'
+        type: array
+      total:
+        type: integer
+    type: object
   category.category:
     properties:
       parent_id:
@@ -15,6 +24,15 @@ definitions:
         type: string
       title:
         type: string
+    type: object
+  category.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Category'
+        type: array
+      total:
+        type: integer
     type: object
   category.productCategory:
     properties:
@@ -27,6 +45,15 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  currency.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Currency'
+        type: array
+      total:
+        type: integer
     type: object
   item.cartItem:
     properties:
@@ -46,6 +73,15 @@ definitions:
       product_id:
         type: integer
     type: object
+  item.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.OrderItem'
+        type: array
+      total:
+        type: integer
+    type: object
   membership.membership:
     properties:
       payment_id:
@@ -55,6 +91,15 @@ definitions:
       status:
         type: string
       user_id:
+        type: integer
+    type: object
+  membership.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Membership'
+        type: array
+      total:
         type: integer
     type: object
   model.Cart:
@@ -302,6 +347,24 @@ definitions:
       user_id:
         type: integer
     type: object
+  order.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
+      total:
+        type: integer
+    type: object
+  payment.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Payment'
+        type: array
+      total:
+        type: integer
+    type: object
   payment.payment:
     properties:
       amount:
@@ -313,6 +376,15 @@ definitions:
       status:
         type: string
     type: object
+  plan.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Plan'
+        type: array
+      total:
+        type: integer
+    type: object
   plan.plan:
     properties:
       plan_info:
@@ -322,10 +394,28 @@ definitions:
       status:
         type: string
     type: object
+  prodtype.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.ProductType'
+        type: array
+      total:
+        type: integer
+    type: object
   prodtype.productType:
     properties:
       name:
         type: string
+    type: object
+  product.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+      total:
+        type: integer
     type: object
   product.product:
     properties:
@@ -342,10 +432,28 @@ definitions:
       title:
         type: string
     type: object
+  status.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Status'
+        type: array
+      total:
+        type: integer
+    type: object
   status.status:
     properties:
       name:
         type: string
+    type: object
+  tag.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      total:
+        type: integer
     type: object
   tag.productTags:
     properties:
@@ -358,6 +466,15 @@ definitions:
         type: string
       title:
         type: string
+    type: object
+  user.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+      total:
+        type: integer
     type: object
   user.user:
     properties:
@@ -400,9 +517,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Cart'
-            type: array
+            $ref: '#/definitions/cart.paging'
       summary: Show all carts
       tags:
       - Cart
@@ -535,9 +650,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.CartItem'
-            type: array
+            $ref: '#/definitions/item.paging'
       summary: Show all cartItems
       tags:
       - CartItem
@@ -685,9 +798,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Category'
-            type: array
+            $ref: '#/definitions/category.paging'
       summary: Show all categories
       tags:
       - Category
@@ -815,9 +926,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Currency'
-            type: array
+            $ref: '#/definitions/currency.paging'
       summary: Show all currencies
       tags:
       - Currency
@@ -944,9 +1053,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Membership'
-            type: array
+            $ref: '#/definitions/membership.paging'
       summary: Show all memberships
       tags:
       - Membership
@@ -1074,9 +1181,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Order'
-            type: array
+            $ref: '#/definitions/order.paging'
       summary: Show all orders
       tags:
       - Order
@@ -1209,9 +1314,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.OrderItem'
-            type: array
+            $ref: '#/definitions/item.paging'
       summary: Show all order items
       tags:
       - OrderItem
@@ -1353,9 +1456,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Payment'
-            type: array
+            $ref: '#/definitions/payment.paging'
       summary: Show all payments
       tags:
       - Payment
@@ -1483,9 +1584,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Plan'
-            type: array
+            $ref: '#/definitions/plan.paging'
       summary: Show all plans
       tags:
       - Plan
@@ -1607,9 +1706,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Product'
-            type: array
+            $ref: '#/definitions/product.paging'
       summary: Show all products
       tags:
       - Product
@@ -1798,9 +1895,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Status'
-            type: array
+            $ref: '#/definitions/status.paging'
       summary: Show all statuses
       tags:
       - Status
@@ -1910,9 +2005,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.ProductType'
-            type: array
+            $ref: '#/definitions/prodtype.paging'
       summary: Show all productTypes
       tags:
       - Type
@@ -1961,9 +2054,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Tag'
-            type: array
+            $ref: '#/definitions/tag.paging'
       summary: Show all tags
       tags:
       - Tag
@@ -2091,9 +2182,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
+            $ref: '#/definitions/user.paging'
       summary: Show all users
       tags:
       - User

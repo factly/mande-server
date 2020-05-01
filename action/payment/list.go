@@ -8,6 +8,12 @@ import (
 	"github.com/factly/data-portal-server/util"
 )
 
+// list response
+type paging struct {
+	Total int             `json:"total"`
+	Nodes []model.Payment `json:"nodes"`
+}
+
 // list - Get all payments
 // @Summary Show all payments
 // @Description Get all payments
@@ -16,15 +22,15 @@ import (
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} model.Payment
+// @Success 200 {object} paging
 // @Router /payments [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var payments []model.Payment
+	data := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Offset(offset).Limit(limit).Preload("Currency").Model(&model.Payment{}).Find(&payments)
+	model.DB.Offset(offset).Limit(limit).Preload("Currency").Model(&model.Payment{}).Find(&data.Nodes).Offset(0).Limit(-1).Count(&data.Total)
 
-	json.NewEncoder(w).Encode(payments)
+	json.NewEncoder(w).Encode(data)
 }

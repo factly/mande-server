@@ -8,6 +8,12 @@ import (
 	"github.com/factly/data-portal-server/util"
 )
 
+// list response
+type paging struct {
+	Total int               `json:"total"`
+	Nodes []model.OrderItem `json:"nodes"`
+}
+
 // list - Get all order items
 // @Summary Show all order items
 // @Description Get all order items
@@ -17,15 +23,15 @@ import (
 // @Param order_id path string true "Order ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} model.OrderItem
+// @Success 200 {object} paging
 // @Router /orders/{order_id}/items [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var orderItems []model.OrderItem
+	data := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Find(&orderItems)
+	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Find(&data.Nodes).Offset(0).Limit(-1).Count(&data.Total)
 
-	json.NewEncoder(w).Encode(orderItems)
+	json.NewEncoder(w).Encode(data)
 }
