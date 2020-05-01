@@ -46,10 +46,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Cart"
-                            }
+                            "$ref": "#/definitions/cart.paging"
                         }
                     }
                 }
@@ -248,10 +245,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.CartItem"
-                            }
+                            "$ref": "#/definitions/item.paging"
                         }
                     }
                 }
@@ -471,10 +465,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Category"
-                            }
+                            "$ref": "#/definitions/category.paging"
                         }
                     }
                 }
@@ -666,10 +657,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Currency"
-                            }
+                            "$ref": "#/definitions/currency.paging"
                         }
                     }
                 }
@@ -860,10 +848,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Membership"
-                            }
+                            "$ref": "#/definitions/membership.paging"
                         }
                     }
                 }
@@ -1055,10 +1040,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Order"
-                            }
+                            "$ref": "#/definitions/order.paging"
                         }
                     }
                 }
@@ -1257,10 +1239,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.OrderItem"
-                            }
+                            "$ref": "#/definitions/item.paging"
                         }
                     }
                 }
@@ -1471,10 +1450,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Payment"
-                            }
+                            "$ref": "#/definitions/payment.paging"
                         }
                     }
                 }
@@ -1666,10 +1642,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Plan"
-                            }
+                            "$ref": "#/definitions/plan.paging"
                         }
                     }
                 }
@@ -1852,10 +1825,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Product"
-                            }
+                            "$ref": "#/definitions/product.paging"
                         }
                     }
                 }
@@ -2138,10 +2108,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Status"
-                            }
+                            "$ref": "#/definitions/status.paging"
                         }
                     }
                 }
@@ -2306,10 +2273,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ProductType"
-                            }
+                            "$ref": "#/definitions/prodtype.paging"
                         }
                     }
                 }
@@ -2383,10 +2347,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Tag"
-                            }
+                            "$ref": "#/definitions/tag.paging"
                         }
                     }
                 }
@@ -2578,10 +2539,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.User"
-                            }
+                            "$ref": "#/definitions/user.paging"
                         }
                     }
                 }
@@ -2757,6 +2715,20 @@
                 }
             }
         },
+        "cart.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Cart"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "category.category": {
             "type": "object",
             "properties": {
@@ -2768,6 +2740,20 @@
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "category.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Category"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -2787,6 +2773,20 @@
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "currency.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Currency"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -2818,6 +2818,20 @@
                 }
             }
         },
+        "item.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.OrderItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "membership.membership": {
             "type": "object",
             "properties": {
@@ -2831,6 +2845,20 @@
                     "type": "string"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "membership.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Membership"
+                    }
+                },
+                "total": {
                     "type": "integer"
                 }
             }
@@ -3191,6 +3219,34 @@
                 }
             }
         },
+        "order.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Order"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "payment.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Payment"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "payment.payment": {
             "type": "object",
             "properties": {
@@ -3208,6 +3264,20 @@
                 }
             }
         },
+        "plan.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Plan"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "plan.plan": {
             "type": "object",
             "properties": {
@@ -3222,11 +3292,39 @@
                 }
             }
         },
+        "prodtype.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ProductType"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "prodtype.productType": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "product.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -3253,11 +3351,39 @@
                 }
             }
         },
+        "status.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Status"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "status.status": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "tag.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Tag"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -3277,6 +3403,20 @@
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "user.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.User"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

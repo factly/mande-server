@@ -3,10 +3,16 @@ package item
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 )
+
+// list response
+type paging struct {
+	Total int               `json:"total"`
+	Nodes []model.OrderItem `json:"nodes"`
+}
 
 // list - Get all order items
 // @Summary Show all order items
@@ -17,28 +23,15 @@ import (
 // @Param order_id path string true "Order ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} model.OrderItem
+// @Success 200 {object} paging
 // @Router /orders/{order_id}/items [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var orderItems []model.OrderItem
-	p := r.URL.Query().Get("page")
-	pg, _ := strconv.Atoi(p) // pg contains page number
-	l := r.URL.Query().Get("limit")
-	li, _ := strconv.Atoi(l) // li contains perPage number
+	data := paging{}
 
-	offset := 0 // no. of records to skip
-	limit := 5  // limt
+	offset, limit := util.Paging(r.URL.Query())
 
-	if li > 0 && li <= 10 {
-		limit = li
-	}
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Offset(offset).Limit(limit).Count(&data.Total).Find(&data.Nodes)
 
-	if pg > 1 {
-		offset = (pg - 1) * limit
-	}
-
-	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Find(&orderItems)
-
-	json.NewEncoder(w).Encode(orderItems)
+	json.NewEncoder(w).Encode(data)
 }

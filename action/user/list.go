@@ -3,10 +3,16 @@ package user
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 )
+
+// list response
+type paging struct {
+	Total int          `json:"total"`
+	Nodes []model.User `json:"nodes"`
+}
 
 // list - Get all users
 // @Summary Show all users
@@ -16,28 +22,15 @@ import (
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
-// @Success 200 {array} model.User
+// @Success 200 {object} paging
 // @Router /users [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var users []model.User
-	p := r.URL.Query().Get("page")
-	pg, _ := strconv.Atoi(p) // pg contains page number
-	l := r.URL.Query().Get("limit")
-	li, _ := strconv.Atoi(l) // li contains perPage number
+	data := paging{}
 
-	offset := 0 // no. of records to skip
-	limit := 5  // limt
+	offset, limit := util.Paging(r.URL.Query())
 
-	if li > 0 && li <= 10 {
-		limit = li
-	}
+	model.DB.Model(&model.User{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	if pg > 1 {
-		offset = (pg - 1) * limit
-	}
-
-	model.DB.Offset(offset).Limit(limit).Model(&model.User{}).Find(&users)
-
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(data)
 }
