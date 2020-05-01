@@ -3,9 +3,9 @@ package membership
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 )
 
 // list - Get all memberships
@@ -21,21 +21,8 @@ import (
 func list(w http.ResponseWriter, r *http.Request) {
 
 	var memberships []model.Membership
-	p := r.URL.Query().Get("page")
-	pg, _ := strconv.Atoi(p) // pg contains page number
-	l := r.URL.Query().Get("limit")
-	li, _ := strconv.Atoi(l) // li contains perPage number
 
-	offset := 0 // no. of records to skip
-	limit := 5  // limt
-
-	if li > 0 && li <= 10 {
-		limit = li
-	}
-
-	if pg > 1 {
-		offset = (pg - 1) * limit
-	}
+	offset, limit := util.Paging(r.URL.Query())
 
 	model.DB.Offset(offset).Limit(limit).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Find(&memberships)
 

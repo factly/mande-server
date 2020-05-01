@@ -3,9 +3,9 @@ package item
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 )
 
 // list - Get all order items
@@ -22,21 +22,8 @@ import (
 func list(w http.ResponseWriter, r *http.Request) {
 
 	var orderItems []model.OrderItem
-	p := r.URL.Query().Get("page")
-	pg, _ := strconv.Atoi(p) // pg contains page number
-	l := r.URL.Query().Get("limit")
-	li, _ := strconv.Atoi(l) // li contains perPage number
 
-	offset := 0 // no. of records to skip
-	limit := 5  // limt
-
-	if li > 0 && li <= 10 {
-		limit = li
-	}
-
-	if pg > 1 {
-		offset = (pg - 1) * limit
-	}
+	offset, limit := util.Paging(r.URL.Query())
 
 	model.DB.Offset(offset).Limit(limit).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Find(&orderItems)
 
