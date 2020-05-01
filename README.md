@@ -8,7 +8,7 @@
 ```
 DB_USER=postgres
 DB_PASSWORD=password
-DB_NAME=data_portal_db
+DB_NAME=data_portal
 DB_HOST=localhost
 ```
 
