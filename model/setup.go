@@ -13,11 +13,16 @@ import (
 // DB - gorm DB
 var DB *gorm.DB
 
-// SetupDB is database setuo
+// SetupDB is database setup
 func SetupDB() {
-	err := godotenv.Load()
+	env := os.Getenv("ENVIRONMENT")
+	if "" == env {
+		env = "local"
+	}
+	envFileName := ".env." + env
+	err := godotenv.Load(envFileName)
 	if err != nil {
-		log.Fatal("error loding .env file")
+		log.Fatal("error loading .env.local file")
 	}
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")

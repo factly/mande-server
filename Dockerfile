@@ -1,8 +1,6 @@
-FROM golang:1.14
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
+FROM golang:1.14.2-alpine3.11
+WORKDIR /usr/src/app
 COPY . .
-RUN go build -o main .
-EXPOSE 3000
-CMD ["./main"]
+RUN go mod download
+RUN go get -u github.com/cosmtrek/air
+ENTRYPOINT air -d
