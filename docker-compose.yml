@@ -6,6 +6,7 @@ services:
       - .:/usr/src/app
     ports:
       - 3000:3000
+      - 8898:8898
     env_file:
       - ./.env.local
     depends_on:
