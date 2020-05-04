@@ -35,24 +35,24 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.ProductCategory{
+	productCategory := &model.ProductCategory{
 		ProductID: uint(id),
 	}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&productCategory)
 
 	validate := validator.New()
-	err = validate.Struct(req)
+	err = validate.Struct(productCategory)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.ProductCategory{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, productCategory)
 }

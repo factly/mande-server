@@ -24,23 +24,23 @@ import (
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Payment{}
-	json.NewDecoder(r.Body).Decode(&req)
+	payment := &model.Payment{}
+	json.NewDecoder(r.Body).Decode(&payment)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Currency")
+	err := validate.StructExcept(payment, "Currency")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Payment{}).Create(&req).Error
+	err = model.DB.Model(&model.Payment{}).Create(&payment).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, payment)
 }

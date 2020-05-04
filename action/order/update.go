@@ -34,18 +34,18 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &model.Order{}
-	orders := &model.Order{}
-	orders.ID = uint(id)
+	order := &model.Order{}
+	order.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	model.DB.Model(&orders).Updates(model.Order{
+	model.DB.Model(&order).Updates(model.Order{
 		UserID:    req.UserID,
 		PaymentID: req.PaymentID,
 		Status:    req.Status,
 		CartID:    req.CartID,
 	})
-	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&orders)
+	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order)
 
-	util.Render(w, http.StatusOK, orders)
+	util.Render(w, http.StatusOK, order)
 }

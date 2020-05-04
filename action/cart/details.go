@@ -30,14 +30,14 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Cart{}
-	req.ID = uint(id)
+	cart := &model.Cart{}
+	cart.ID = uint(id)
 
-	err = model.DB.Model(&model.Cart{}).First(&req).Error
+	err = model.DB.Model(&model.Cart{}).First(&cart).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, cart)
 }

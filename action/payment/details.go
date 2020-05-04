@@ -30,17 +30,17 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Payment{}
-	req.ID = uint(id)
+	payment := &model.Payment{}
+	payment.ID = uint(id)
 
-	err = model.DB.Model(&model.Payment{}).First(&req).Error
+	err = model.DB.Model(&model.Payment{}).First(&payment).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, payment)
 }

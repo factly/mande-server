@@ -23,23 +23,23 @@ import (
 // @Router /plans [post]
 func Create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Plan{}
+	plan := &model.Plan{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&plan)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(plan)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Plan{}).Create(&req).Error
+	err = model.DB.Model(&model.Plan{}).Create(&plan).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, plan)
 }

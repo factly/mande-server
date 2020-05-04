@@ -25,26 +25,26 @@ import (
 // @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.CartItem{}
+	cartItem := &model.CartItem{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&cartItem)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Product")
+	err := validate.StructExcept(cartItem, "Product")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.CartItem{}).Create(&req).Error
+	err = model.DB.Model(&model.CartItem{}).Create(&cartItem).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("Product").Find(&req.Product)
-	model.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
-	model.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
-	model.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
+	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
+	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
+	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
+	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, cartItem)
 }

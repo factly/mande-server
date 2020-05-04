@@ -30,15 +30,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Plan{}
-	req.ID = uint(id)
+	plan := &model.Plan{}
+	plan.ID = uint(id)
 
-	err = model.DB.Model(&model.Plan{}).First(&req).Error
+	err = model.DB.Model(&model.Plan{}).First(&plan).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, plan)
 }

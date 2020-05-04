@@ -24,24 +24,24 @@ import (
 // @Router /orders [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Order{}
+	order := &model.Order{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&order)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Payment", "Cart")
+	err := validate.StructExcept(order, "Payment", "Cart")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Order{}).Create(&req).Error
+	err = model.DB.Model(&model.Order{}).Create(&order).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&req)
+	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, order)
 }

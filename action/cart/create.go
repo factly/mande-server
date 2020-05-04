@@ -24,23 +24,23 @@ import (
 // @Router /carts [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Cart{}
+	cart := &model.Cart{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&cart)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(cart)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Cart{}).Create(&req).Error
+	err = model.DB.Model(&model.Cart{}).Create(&cart).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, cart)
 }

@@ -24,24 +24,24 @@ import (
 // @Router /orders/{order_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.OrderItem{}
+	orderItem := &model.OrderItem{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&orderItem)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Product", "Order")
+	err := validate.StructExcept(orderItem, "Product", "Order")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.OrderItem{}).Create(&req).Error
+	err = model.DB.Model(&model.OrderItem{}).Create(&orderItem).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req)
+	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, orderItem)
 }

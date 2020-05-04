@@ -24,23 +24,23 @@ import (
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Currency{}
+	currency := &model.Currency{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&currency)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(currency)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Currency{}).Create(&req).Error
+	err = model.DB.Model(&model.Currency{}).Create(&currency).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, currency)
 }

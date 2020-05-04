@@ -24,25 +24,25 @@ import (
 // @Router /products [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Product{}
-	json.NewDecoder(r.Body).Decode(&req)
+	product := &model.Product{}
+	json.NewDecoder(r.Body).Decode(&product)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "ProductType", "Status", "Currency")
+	err := validate.StructExcept(product, "ProductType", "Status", "Currency")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Product{}).Create(&req).Error
+	err = model.DB.Model(&model.Product{}).Create(&product).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
-	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
-	model.DB.Model(&req).Association("Status").Find(&req.Status)
+	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
+	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
+	model.DB.Model(&product).Association("Status").Find(&product.Status)
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, product)
 }

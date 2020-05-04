@@ -24,21 +24,21 @@ import (
 // @Router /users [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.User{}
-	json.NewDecoder(r.Body).Decode(&req)
+	user := &model.User{}
+	json.NewDecoder(r.Body).Decode(&user)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(user)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.User{}).Create(&req).Error
+	err = model.DB.Model(&model.User{}).Create(&user).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, user)
 }

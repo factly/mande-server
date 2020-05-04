@@ -24,22 +24,22 @@ import (
 // @Router /products/{id}/type [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.ProductType{}
-	json.NewDecoder(r.Body).Decode(&req)
+	productType := &model.ProductType{}
+	json.NewDecoder(r.Body).Decode(&productType)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(productType)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.ProductType{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductType{}).Create(&productType).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, req)
+	util.Render(w, http.StatusOK, productType)
 }
