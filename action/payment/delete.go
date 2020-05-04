@@ -1,11 +1,11 @@
 package payment
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -43,5 +43,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 	model.DB.Delete(&payment)
 
-	json.NewEncoder(w).Encode(payment)
+	util.Render(w, http.StatusOK, payment)
 }

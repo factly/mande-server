@@ -1,11 +1,11 @@
 package membership
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -43,5 +43,6 @@ func details(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&req).Association("Plan").Find(&req.Plan)
 	model.DB.Model(&req).Association("Payment").Find(&req.Payment)
 	model.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
-	json.NewEncoder(w).Encode(req)
+
+	util.Render(w, http.StatusOK, req)
 }

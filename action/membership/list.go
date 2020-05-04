@@ -1,7 +1,6 @@
 package membership
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
@@ -32,5 +31,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	util.Render(w, http.StatusOK, data)
 }

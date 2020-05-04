@@ -1,7 +1,6 @@
 package payment
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
@@ -32,5 +31,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Currency").Model(&model.Payment{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	util.Render(w, http.StatusOK, data)
 }

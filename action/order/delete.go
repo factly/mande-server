@@ -1,11 +1,11 @@
 package order
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -42,5 +42,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").Delete(&orders)
 
-	json.NewEncoder(w).Encode(orders)
+	util.Render(w, http.StatusOK, orders)
 }

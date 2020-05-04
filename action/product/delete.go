@@ -1,11 +1,11 @@
 package product
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -46,5 +46,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&product).Association("Status").Find(&product.Status)
 	model.DB.Delete(&product)
 
-	json.NewEncoder(w).Encode(product)
+	util.Render(w, http.StatusOK, product)
 }

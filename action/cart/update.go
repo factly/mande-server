@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -43,5 +44,5 @@ func update(w http.ResponseWriter, r *http.Request) {
 	})
 	model.DB.First(&cart)
 
-	json.NewEncoder(w).Encode(cart)
+	util.Render(w, http.StatusOK, cart)
 }

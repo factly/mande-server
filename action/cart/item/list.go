@@ -1,7 +1,6 @@
 package item
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
@@ -33,5 +32,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	util.Render(w, http.StatusOK, data)
 }

@@ -1,11 +1,11 @@
 package product
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -44,5 +44,6 @@ func details(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&req).Association("ProductType").Find(&req.ProductType)
 	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
 	model.DB.Model(&req).Association("Status").Find(&req.Status)
-	json.NewEncoder(w).Encode(req)
+
+	util.Render(w, http.StatusOK, req)
 }

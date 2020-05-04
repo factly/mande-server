@@ -1,11 +1,11 @@
 package item
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -43,5 +43,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Delete(&orderItems)
 
-	json.NewEncoder(w).Encode(orderItems)
+	util.Render(w, http.StatusOK, orderItems)
 }
