@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -42,5 +42,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusCreated, currency)
+	render.JSON(w, http.StatusCreated, currency)
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 )
 
 // list response
@@ -31,5 +32,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Currency{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	util.Render(w, http.StatusOK, data)
+	render.JSON(w, http.StatusOK, data)
 }

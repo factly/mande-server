@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -51,5 +51,5 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
 	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
 
-	util.Render(w, http.StatusOK, membership)
+	render.JSON(w, http.StatusOK, membership)
 }

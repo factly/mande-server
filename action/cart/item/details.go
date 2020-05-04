@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -43,5 +43,5 @@ func details(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
 	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 
-	util.Render(w, http.StatusOK, cartItem)
+	render.JSON(w, http.StatusOK, cartItem)
 }
