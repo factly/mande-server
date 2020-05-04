@@ -14,7 +14,6 @@ type paging struct {
 	Nodes []model.Tag `json:"nodes"`
 }
 
-// list - Get all tags
 // @Summary Show all tags
 // @Description Get all tags
 // @Tags Tag

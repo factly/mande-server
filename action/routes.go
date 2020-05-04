@@ -19,7 +19,6 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// RegisterRoutes - CRUD servies
 func RegisterRoutes() http.Handler {
 	r := chi.NewRouter()
 
@@ -34,9 +33,8 @@ func RegisterRoutes() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	// swagger docs
-	r.Get("/swagger/*", httpSwagger.WrapHandler)
 	/* disable swagger in production */
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	r.Mount("/currencies", currency.Router())
 	r.Mount("/users", user.Router())

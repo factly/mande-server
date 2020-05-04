@@ -2001,7 +2001,7 @@ paths:
       - Type
   /tags:
     get:
-      description: Get all tags
+      description: Get all tags created
       operationId: get-all-tags
       parameters:
       - description: limt per page

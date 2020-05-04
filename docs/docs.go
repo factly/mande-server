@@ -2276,7 +2276,7 @@ var doc = `{
         },
         "/tags": {
             "get": {
-                "description": "Get all tags",
+                "description": "Get all tags created",
                 "produces": [
                     "application/json"
                 ],
