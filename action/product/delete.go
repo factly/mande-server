@@ -17,7 +17,7 @@ import (
 // @ID delete-product-by-id
 // @Consume  json
 // @Param id path string true "Product ID"
-// @Success 200 {object} model.Product
+// @Success 200
 // @Failure 400 {array} string
 // @Router /products/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -41,10 +41,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
 	model.DB.Delete(&product)
 
-	util.Render(w, http.StatusOK, product)
+	util.Render(w, http.StatusOK, nil)
 }

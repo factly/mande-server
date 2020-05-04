@@ -18,7 +18,7 @@ import (
 // @Consume  json
 // @Param id path string true "Product ID"
 // @Param tid path string true "ProductTag ID"
-// @Success 200 {object} model.ProductTag
+// @Success 200
 // @Failure 400 {array} string
 // @Router /products/{id}/tag/{tid} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -53,5 +53,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&productTags)
 
-	util.Render(w, http.StatusOK, productTags)
+	util.Render(w, http.StatusOK, nil)
 }

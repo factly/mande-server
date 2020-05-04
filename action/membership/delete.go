@@ -17,7 +17,7 @@ import (
 // @ID delete-membership-by-id
 // @Consume  json
 // @Param id path string true "Membership ID"
-// @Success 200 {object} model.Membership
+// @Success 200
 // @Failure 400 {array} string
 // @Router /memberships/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -40,5 +40,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&membership)
 
-	util.Render(w, http.StatusOK, membership)
+	util.Render(w, http.StatusOK, nil)
 }

@@ -17,7 +17,7 @@ import (
 // @ID delete-cart-by-id
 // @Consume  json
 // @Param cart_id path string true "Cart ID"
-// @Success 200 {object} model.Cart
+// @Success 200
 // @Failure 400 {array} string
 // @Router /carts/{cart_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&cart)
 
-	util.Render(w, http.StatusOK, cart)
+	util.Render(w, http.StatusOK, nil)
 }

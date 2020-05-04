@@ -18,7 +18,7 @@ import (
 // @Consume  json
 // @Param item_id path string true "OrderItem ID"
 // @Param order_id path string true "Order ID"
-// @Success 200 {object} model.OrderItem
+// @Success 200
 // @Failure 400 {array} string
 // @Router /orders/{order_id}/items/{item_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +41,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Delete(&orderItems)
+	model.DB.Delete(&orderItems)
 
-	util.Render(w, http.StatusOK, orderItems)
+	util.Render(w, http.StatusOK, nil)
 }

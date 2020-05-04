@@ -17,7 +17,7 @@ import (
 // @ID delete-payment-by-id
 // @Consume  json
 // @Param id path string true "Payment ID"
-// @Success 200 {object} model.Payment
+// @Success 200
 // @Failure 400 {array} string
 // @Router /payments/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -40,8 +40,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+
 	model.DB.Delete(&payment)
 
-	util.Render(w, http.StatusOK, payment)
+	util.Render(w, http.StatusOK, nil)
 }

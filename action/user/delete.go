@@ -17,7 +17,7 @@ import (
 // @ID delete-user-by-id
 // @Consume  json
 // @Param id path string true "User ID"
-// @Success 200 {object} model.User
+// @Success 200
 // @Failure 400 {array} string
 // @Router /users/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Delete(&user)
 
-	util.Render(w, http.StatusOK, user)
+	util.Render(w, http.StatusOK, nil)
 }

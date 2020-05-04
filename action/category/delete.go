@@ -17,7 +17,7 @@ import (
 // @ID delete-category-by-id
 // @Consume  json
 // @Param id path string true "Category ID"
-// @Success 200 {object} model.Category
+// @Success 200
 // @Failure 400 {array} string
 // @Router /categories/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&category)
 
-	util.Render(w, http.StatusOK, category)
+	util.Render(w, http.StatusOK, nil)
 }

@@ -17,7 +17,7 @@ import (
 // @ID delete-currency-by-id
 // @Consume  json
 // @Param id path string true "Currency ID"
-// @Success 200 {object} model.Currency
+// @Success 200
 // @Failure 400 {array} string
 // @Router /currencies/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -40,5 +40,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Delete(&currency)
 
-	util.Render(w, http.StatusOK, currency)
+	util.Render(w, http.StatusOK, nil)
 }

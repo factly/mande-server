@@ -17,7 +17,7 @@ import (
 // @ID delete-plan-by-id
 // @Consume  json
 // @Param id path string true "Plan ID"
-// @Success 200 {object} model.Plan
+// @Success 200
 // @Failure 400 {array} string
 // @Router /plans/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -43,5 +43,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&plan)
 
-	util.Render(w, http.StatusOK, plan)
+	util.Render(w, http.StatusOK, nil)
 }
