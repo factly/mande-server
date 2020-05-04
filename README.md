@@ -19,3 +19,11 @@ To start  `go run main.go`
 With docker run `docker-compose up`
 
 Swagger-ui :- http://localhost:3000/swagger/index.html
+
+## Test
+
+Go to the following url to get all the test details
+http://localhost:8898/
+
+We are using `goconvey` for manage out BDD
+For more details visit http://goconvey.co/
