@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -44,5 +45,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		LastName:  req.LastName,
 	})
 	model.DB.First(&user)
-	json.NewEncoder(w).Encode(user)
+
+	render.JSON(w, http.StatusOK, user)
 }

@@ -1,11 +1,11 @@
 package order
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 )
 
 // list response
@@ -32,5 +32,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").Model(&model.Order{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	render.JSON(w, http.StatusOK, data)
 }

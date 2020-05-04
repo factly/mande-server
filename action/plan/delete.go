@@ -1,11 +1,11 @@
 package plan
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,7 +17,7 @@ import (
 // @ID delete-plan-by-id
 // @Consume  json
 // @Param id path string true "Plan ID"
-// @Success 200 {object} model.Plan
+// @Success 200
 // @Failure 400 {array} string
 // @Router /plans/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -43,5 +43,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&plan)
 
-	json.NewEncoder(w).Encode(plan)
+	render.JSON(w, http.StatusOK, nil)
 }

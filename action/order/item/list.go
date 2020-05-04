@@ -1,11 +1,11 @@
 package item
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 )
 
 // list response
@@ -33,5 +33,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Offset(offset).Limit(limit).Count(&data.Total).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	render.JSON(w, http.StatusOK, data)
 }

@@ -1,11 +1,11 @@
 package payment
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -30,16 +30,17 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Payment{}
-	req.ID = uint(id)
+	payment := &model.Payment{}
+	payment.ID = uint(id)
 
-	err = model.DB.Model(&model.Payment{}).First(&req).Error
+	err = model.DB.Model(&model.Payment{}).First(&payment).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+
+	render.JSON(w, http.StatusOK, payment)
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -18,28 +19,28 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Category body category true "Category object"
-// @Success 200 {object} model.Category
+// @Success 201 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Category{}
+	category := &model.Category{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&category)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(category)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Category{}).Create(&req).Error
+	err = model.DB.Model(&model.Category{}).Create(&category).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusCreated, category)
 }

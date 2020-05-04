@@ -1,11 +1,11 @@
 package tag
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -29,15 +29,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Tag{}
-	req.ID = uint(id)
+	tag := &model.Tag{}
+	tag.ID = uint(id)
 
-	err = model.DB.Model(&model.Tag{}).First(&req).Error
+	err = model.DB.Model(&model.Tag{}).First(&tag).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusOK, tag)
 }

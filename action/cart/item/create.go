@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -19,30 +20,31 @@ import (
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param CartItem body cartItem true "CartItem object"
-// @Success 200 {object} model.CartItem
+// @Success 201 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.CartItem{}
+	cartItem := &model.CartItem{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&cartItem)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Product")
+	err := validate.StructExcept(cartItem, "Product")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.CartItem{}).Create(&req).Error
+	err = model.DB.Model(&model.CartItem{}).Create(&cartItem).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("Product").Find(&req.Product)
-	model.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
-	model.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
-	model.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
+	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
+	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
+	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
+
+	render.JSON(w, http.StatusCreated, cartItem)
 }

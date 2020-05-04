@@ -1,11 +1,11 @@
 package user
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -29,16 +29,16 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.User{}
+	user := &model.User{}
 
-	req.ID = uint(id)
+	user.ID = uint(id)
 
-	err = model.DB.Model(&model.User{}).First(&req).Error
+	err = model.DB.Model(&model.User{}).First(&user).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusOK, user)
 }

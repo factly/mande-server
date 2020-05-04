@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -19,27 +20,28 @@ import (
 // @Produce  json
 // @Param order_id path string true "Order ID"
 // @Param OrderItem body orderItem true "Order item object"
-// @Success 200 {object} model.OrderItem
+// @Success 201 {object} model.OrderItem
 // @Router /orders/{order_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.OrderItem{}
+	orderItem := &model.OrderItem{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&orderItem)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Product", "Order")
+	err := validate.StructExcept(orderItem, "Product", "Order")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.OrderItem{}).Create(&req).Error
+	err = model.DB.Model(&model.OrderItem{}).Create(&orderItem).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&req)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
+
+	render.JSON(w, http.StatusCreated, orderItem)
 }

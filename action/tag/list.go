@@ -1,11 +1,11 @@
 package tag
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/render"
 )
 
 // list response
@@ -31,5 +31,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Tag{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
-	json.NewEncoder(w).Encode(data)
+	render.JSON(w, http.StatusOK, data)
 }

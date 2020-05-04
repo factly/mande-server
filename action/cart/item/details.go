@@ -1,11 +1,11 @@
 package item
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -30,17 +30,18 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.CartItem{}
-	req.ID = uint(id)
+	cartItem := &model.CartItem{}
+	cartItem.ID = uint(id)
 
-	err = model.DB.Model(&model.CartItem{}).First(&req).Error
+	err = model.DB.Model(&model.CartItem{}).First(&cartItem).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Model(&req).Association("Product").Find(&req.Product)
-	model.DB.Model(&req.Product).Association("Status").Find(&req.Product.Status)
-	model.DB.Model(&req.Product).Association("ProductType").Find(&req.Product.ProductType)
-	model.DB.Model(&req.Product).Association("Currency").Find(&req.Product.Currency)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
+	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
+	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
+	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
+
+	render.JSON(w, http.StatusOK, cartItem)
 }

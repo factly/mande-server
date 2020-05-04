@@ -1,11 +1,11 @@
 package order
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,7 +17,7 @@ import (
 // @ID delete-orders-by-id
 // @Consume  json
 // @Param order_id path string true "Order ID"
-// @Success 200 {object} model.Order
+// @Success 200
 // @Failure 400 {array} string
 // @Router /orders/{order_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").Delete(&orders)
+	model.DB.Delete(&orders)
 
-	json.NewEncoder(w).Encode(orders)
+	render.JSON(w, http.StatusOK, nil)
 }

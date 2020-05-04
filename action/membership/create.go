@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -18,31 +19,31 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Membership body membership true "Membership object"
-// @Success 200 {object} model.Membership
+// @Success 201 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Membership{}
-	json.NewDecoder(r.Body).Decode(&req)
+	membership := &model.Membership{}
+	json.NewDecoder(r.Body).Decode(&membership)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "User", "Plan", "Payment")
+	err := validate.StructExcept(membership, "User", "Plan", "Payment")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Membership{}).Create(&req).Error
+	err = model.DB.Model(&model.Membership{}).Create(&membership).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("User").Find(&req.User)
-	model.DB.Model(&req).Association("Plan").Find(&req.Plan)
-	model.DB.Model(&req).Association("Payment").Find(&req.Payment)
-	model.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
+	model.DB.Model(&membership).Association("User").Find(&membership.User)
+	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
+	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
+	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusCreated, membership)
 }

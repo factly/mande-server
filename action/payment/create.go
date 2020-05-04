@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -18,27 +19,28 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Payment body payment true "Payment object"
-// @Success 200 {object} model.Payment
+// @Success 201 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Payment{}
-	json.NewDecoder(r.Body).Decode(&req)
+	payment := &model.Payment{}
+	json.NewDecoder(r.Body).Decode(&payment)
 
 	validate := validator.New()
-	err := validate.StructExcept(req, "Currency")
+	err := validate.StructExcept(payment, "Currency")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Payment{}).Create(&req).Error
+	err = model.DB.Model(&model.Payment{}).Create(&payment).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&req).Association("Currency").Find(&req.Currency)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+
+	render.JSON(w, http.StatusCreated, payment)
 }

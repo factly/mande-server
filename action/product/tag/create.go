@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -21,7 +22,7 @@ import (
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Param ProductTag body productTags true "ProductTag object"
-// @Success 200 {object} model.ProductTag
+// @Success 201 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -34,25 +35,25 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.ProductTag{
+	productTag := &model.ProductTag{
 		ProductID: uint(id),
 	}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&productTag)
 
 	validate := validator.New()
-	err = validate.Struct(req)
+	err = validate.Struct(productTag)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.ProductTag{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusCreated, productTag)
 }

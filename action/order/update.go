@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -33,18 +34,18 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &model.Order{}
-	orders := &model.Order{}
-	orders.ID = uint(id)
+	order := &model.Order{}
+	order.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	model.DB.Model(&orders).Updates(model.Order{
+	model.DB.Model(&order).Updates(model.Order{
 		UserID:    req.UserID,
 		PaymentID: req.PaymentID,
 		Status:    req.Status,
 		CartID:    req.CartID,
 	})
-	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&orders)
+	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order)
 
-	json.NewEncoder(w).Encode(orders)
+	render.JSON(w, http.StatusOK, order)
 }

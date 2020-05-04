@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-playground/validator/v10"
 )
@@ -18,27 +19,27 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Plan body plan true "Plan object"
-// @Success 200 {object} model.Plan
+// @Success 201 {object} model.Plan
 // @Router /plans [post]
 func Create(w http.ResponseWriter, r *http.Request) {
 
-	req := &model.Plan{}
+	plan := &model.Plan{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&plan)
 
 	validate := validator.New()
-	err := validate.Struct(req)
+	err := validate.Struct(plan)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
 
-	err = model.DB.Model(&model.Plan{}).Create(&req).Error
+	err = model.DB.Model(&model.Plan{}).Create(&plan).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusCreated, plan)
 }

@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
@@ -21,7 +22,7 @@ import (
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Param ProductCategory body productCategory true "ProductCategory object"
-// @Success 200 {object} model.ProductCategory
+// @Success 201 {object} model.ProductCategory
 // @Failure 400 {array} string
 // @Router /products/{id}/category [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -34,24 +35,24 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.ProductCategory{
+	productCategory := &model.ProductCategory{
 		ProductID: uint(id),
 	}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&productCategory)
 
 	validate := validator.New()
-	err = validate.Struct(req)
+	err = validate.Struct(productCategory)
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.ProductCategory{}).Create(&req).Error
+	err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusCreated, productCategory)
 }

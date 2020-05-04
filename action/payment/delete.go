@@ -1,11 +1,11 @@
 package payment
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,7 +17,7 @@ import (
 // @ID delete-payment-by-id
 // @Consume  json
 // @Param id path string true "Payment ID"
-// @Success 200 {object} model.Payment
+// @Success 200
 // @Failure 400 {array} string
 // @Router /payments/{id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -40,8 +40,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+
 	model.DB.Delete(&payment)
 
-	json.NewEncoder(w).Encode(payment)
+	render.JSON(w, http.StatusOK, nil)
 }

@@ -1,11 +1,11 @@
 package membership
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -29,19 +29,20 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Membership{}
-	req.ID = uint(id)
+	membership := &model.Membership{}
+	membership.ID = uint(id)
 
-	err = model.DB.Model(&model.Membership{}).First(&req).Error
+	err = model.DB.Model(&model.Membership{}).First(&membership).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Model(&req).Association("User").Find(&req.User)
-	model.DB.Model(&req).Association("Plan").Find(&req.Plan)
-	model.DB.Model(&req).Association("Payment").Find(&req.Payment)
-	model.DB.Model(&req.Payment).Association("Currency").Find(&req.Payment.Currency)
-	json.NewEncoder(w).Encode(req)
+	model.DB.Model(&membership).Association("User").Find(&membership.User)
+	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
+	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
+	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
+
+	render.JSON(w, http.StatusOK, membership)
 }

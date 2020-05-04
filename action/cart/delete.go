@@ -1,11 +1,11 @@
 package cart
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -17,7 +17,7 @@ import (
 // @ID delete-cart-by-id
 // @Consume  json
 // @Param cart_id path string true "Cart ID"
-// @Success 200 {object} model.Cart
+// @Success 200
 // @Failure 400 {array} string
 // @Router /carts/{cart_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&cart)
 
-	json.NewEncoder(w).Encode(cart)
+	render.JSON(w, http.StatusOK, nil)
 }

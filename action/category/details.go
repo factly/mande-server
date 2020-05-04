@@ -1,11 +1,11 @@
 package category
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
 )
@@ -30,15 +30,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Category{}
-	req.ID = uint(id)
+	category := &model.Category{}
+	category.ID = uint(id)
 
-	err = model.DB.Model(&model.Category{}).First(&req).Error
+	err = model.DB.Model(&model.Category{}).First(&category).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	json.NewEncoder(w).Encode(req)
+	render.JSON(w, http.StatusOK, category)
 }
