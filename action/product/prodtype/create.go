@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Type body productType true "Type object"
-// @Success 200 {object} model.ProductType
+// @Success 201 {object} model.ProductType
 // @Failure 400 {array} string
 // @Router /products/{id}/type [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -41,5 +41,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, productType)
+	util.Render(w, http.StatusCreated, productType)
 }

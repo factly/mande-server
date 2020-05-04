@@ -18,7 +18,7 @@ func InvalidID(w http.ResponseWriter, r *http.Request) {
 func RecordNotFound(w http.ResponseWriter, r *http.Request) {
 	var msg []string
 	msg = append(msg, "Record not found")
-	util.Render(w, http.StatusBadRequest, msg)
+	util.Render(w, http.StatusNotFound, msg)
 }
 
 // ValidErrors - errors from validator

@@ -20,7 +20,7 @@ import (
 // @Produce  json
 // @Param order_id path string true "Order ID"
 // @Param OrderItem body orderItem true "Order item object"
-// @Success 200 {object} model.OrderItem
+// @Success 201 {object} model.OrderItem
 // @Router /orders/{order_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
@@ -43,5 +43,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
 
-	util.Render(w, http.StatusOK, orderItem)
+	util.Render(w, http.StatusCreated, orderItem)
 }

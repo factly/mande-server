@@ -20,7 +20,7 @@ import (
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param CartItem body cartItem true "CartItem object"
-// @Success 200 {object} model.CartItem
+// @Success 201 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -46,5 +46,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
 	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 
-	util.Render(w, http.StatusOK, cartItem)
+	util.Render(w, http.StatusCreated, cartItem)
 }

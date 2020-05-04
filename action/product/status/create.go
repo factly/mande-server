@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Status body status true "Status object"
-// @Success 200 {object} model.Status
+// @Success 201 {object} model.Status
 // @Failure 400 {array} string
 // @Router /products/{id}/status [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -41,5 +41,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, productStatus)
+	util.Render(w, http.StatusCreated, productStatus)
 }

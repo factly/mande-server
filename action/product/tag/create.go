@@ -22,7 +22,7 @@ import (
 // @Produce  json
 // @Param id path string true "Product ID"
 // @Param ProductTag body productTags true "ProductTag object"
-// @Success 200 {object} model.ProductTag
+// @Success 201 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -55,5 +55,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, productTag)
+	util.Render(w, http.StatusCreated, productTag)
 }

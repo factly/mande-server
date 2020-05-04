@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Cart body cart true "Cart object"
-// @Success 200 {object} model.Cart
+// @Success 201 {object} model.Cart
 // @Failure 400 {array} string
 // @Router /carts [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, cart)
+	util.Render(w, http.StatusCreated, cart)
 }

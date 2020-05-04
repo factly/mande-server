@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Currency body currency true "Currency object"
-// @Success 200 {object} model.Currency
+// @Success 201 {object} model.Currency
 // @Failure 400 {array} string
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, currency)
+	util.Render(w, http.StatusCreated, currency)
 }

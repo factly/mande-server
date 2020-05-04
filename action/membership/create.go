@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Membership body membership true "Membership object"
-// @Success 200 {object} model.Membership
+// @Success 201 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -45,5 +45,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
 	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
 
-	util.Render(w, http.StatusOK, membership)
+	util.Render(w, http.StatusCreated, membership)
 }

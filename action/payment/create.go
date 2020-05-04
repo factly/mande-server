@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Payment body payment true "Payment object"
-// @Success 200 {object} model.Payment
+// @Success 201 {object} model.Payment
 // @Failure 400 {array} string
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
 
-	util.Render(w, http.StatusOK, payment)
+	util.Render(w, http.StatusCreated, payment)
 }

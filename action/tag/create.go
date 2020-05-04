@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Tag body tag true "Tag object"
-// @Success 200 {object} model.Tag
+// @Success 201 {object} model.Tag
 // @Failure 400 {array} string
 // @Router /tags [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -41,5 +41,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, tag)
+	util.Render(w, http.StatusCreated, tag)
 }

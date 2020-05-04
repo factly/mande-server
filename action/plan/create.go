@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Plan body plan true "Plan object"
-// @Success 200 {object} model.Plan
+// @Success 201 {object} model.Plan
 // @Router /plans [post]
 func Create(w http.ResponseWriter, r *http.Request) {
 
@@ -41,5 +41,5 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, plan)
+	util.Render(w, http.StatusCreated, plan)
 }

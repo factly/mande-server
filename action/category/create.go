@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Category body category true "Category object"
-// @Success 200 {object} model.Category
+// @Success 201 {object} model.Category
 // @Failure 400 {array} string
 // @Router /categories [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	util.Render(w, http.StatusOK, category)
+	util.Render(w, http.StatusCreated, category)
 }

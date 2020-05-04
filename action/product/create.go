@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Product body product true "Product object"
-// @Success 200 {object} model.Product
+// @Success 201 {object} model.Product
 // @Failure 400 {array} string
 // @Router /products [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -44,5 +44,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
 	model.DB.Model(&product).Association("Status").Find(&product.Status)
 
-	util.Render(w, http.StatusOK, product)
+	util.Render(w, http.StatusCreated, product)
 }

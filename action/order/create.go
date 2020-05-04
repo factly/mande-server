@@ -19,7 +19,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param Order body order true "Order object"
-// @Success 200 {object} model.Order
+// @Success 201 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -43,5 +43,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order)
 
-	util.Render(w, http.StatusOK, order)
+	util.Render(w, http.StatusCreated, order)
 }
