@@ -2,10 +2,12 @@ package item
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/render"
+	"github.com/go-chi/chi"
 )
 
 // list response
@@ -27,11 +29,14 @@ type paging struct {
 // @Router /carts/{cart_id}/items [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
+	cartID := chi.URLParam(r, "cart_id")
+	id, _ := strconv.Atoi(cartID)
+
 	data := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Where(&model.CartItem{CartID: uint(id)}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
 
 	render.JSON(w, http.StatusOK, data)
 }
