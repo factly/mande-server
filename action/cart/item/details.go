@@ -22,6 +22,10 @@ import (
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items/{item_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
+
+	cartID := chi.URLParam(r, "cart_id")
+	cid, _ := strconv.Atoi(cartID)
+
 	cartItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(cartItemID)
 
@@ -32,6 +36,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	cartItem := &model.CartItem{}
 	cartItem.ID = uint(id)
+	cartItem.CartID = uint(cid)
 
 	err = model.DB.Model(&model.CartItem{}).First(&cartItem).Error
 	if err != nil {
