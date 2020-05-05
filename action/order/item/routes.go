@@ -6,7 +6,6 @@ import "github.com/go-chi/chi"
 type orderItem struct {
 	ExtraInfo string `json:"extra_info"`
 	ProductID uint   `json:"product_id"`
-	OrderID   uint   `json:"order_id"`
 }
 
 // Router - Group of currency router

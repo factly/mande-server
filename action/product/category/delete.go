@@ -22,8 +22,8 @@ import (
 // @Failure 400 {array} string
 // @Router /products/{id}/category/{cid} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
-	categoryID := chi.URLParam(r, "cid")
-	cid, err := strconv.Atoi(categoryID)
+	productCategoryID := chi.URLParam(r, "cid")
+	cid, err := strconv.Atoi(productCategoryID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
@@ -38,10 +38,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productCategory := &model.ProductCategory{
-		CategoryID: uint(cid),
-		ProductID:  uint(pid),
-	}
+	productCategory := &model.ProductCategory{}
+	productCategory.ID = uint(cid)
+	productCategory.ProductID = uint(pid)
 
 	// check record exists or not
 	err = model.DB.First(&productCategory).Error

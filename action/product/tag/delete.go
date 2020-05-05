@@ -23,8 +23,8 @@ import (
 // @Router /products/{id}/tag/{tid} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	tagID := chi.URLParam(r, "tid")
-	tid, err := strconv.Atoi(tagID)
+	productTagID := chi.URLParam(r, "tid")
+	tid, err := strconv.Atoi(productTagID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
@@ -39,10 +39,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productTags := &model.ProductTag{
-		TagID:     uint(tid),
-		ProductID: uint(pid),
-	}
+	productTags := &model.ProductTag{}
+	productTags.ID = uint(tid)
+	productTags.ProductID = uint(pid)
 
 	// check record exists or not
 	err = model.DB.First(&productTags).Error

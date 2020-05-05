@@ -57,10 +57,6 @@ definitions:
     type: object
   item.cartItem:
     properties:
-      cart_id:
-        type: integer
-      is_deleted:
-        type: boolean
       product_id:
         type: integer
     type: object
@@ -68,8 +64,6 @@ definitions:
     properties:
       extra_info:
         type: string
-      order_id:
-        type: integer
       product_id:
         type: integer
     type: object
@@ -77,7 +71,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.OrderItem'
+          $ref: '#/definitions/model.CartItem'
         type: array
       total:
         type: integer
@@ -116,8 +110,6 @@ definitions:
     properties:
       cart_id:
         type: integer
-      is_deleted:
-        type: boolean
       product:
         $ref: '#/definitions/model.Product'
         type: object
@@ -2001,7 +1993,7 @@ paths:
       - Type
   /tags:
     get:
-      description: Get all tags created
+      description: Get all tags
       operationId: get-all-tags
       parameters:
       - description: limt per page

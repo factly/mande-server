@@ -2260,7 +2260,7 @@
         },
         "/tags": {
             "get": {
-                "description": "Get all tags created",
+                "description": "Get all tags",
                 "produces": [
                     "application/json"
                 ],
@@ -2723,12 +2723,6 @@
         "item.cartItem": {
             "type": "object",
             "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
-                "is_deleted": {
-                    "type": "boolean"
-                },
                 "product_id": {
                     "type": "integer"
                 }
@@ -2739,9 +2733,6 @@
             "properties": {
                 "extra_info": {
                     "type": "string"
-                },
-                "order_id": {
-                    "type": "integer"
                 },
                 "product_id": {
                     "type": "integer"
@@ -2754,7 +2745,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.OrderItem"
+                        "$ref": "#/definitions/model.CartItem"
                     }
                 },
                 "total": {
@@ -2817,9 +2808,6 @@
             "properties": {
                 "cart_id": {
                     "type": "integer"
-                },
-                "is_deleted": {
-                    "type": "boolean"
                 },
                 "product": {
                     "type": "object",

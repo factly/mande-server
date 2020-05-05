@@ -26,6 +26,9 @@ import (
 // @Router /orders/{order_id}/items/{item_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
+	orderID := chi.URLParam(r, "order_id")
+	oid, _ := strconv.Atoi(orderID)
+
 	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
@@ -37,6 +40,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	req := &model.OrderItem{}
 	orderItem := &model.OrderItem{}
 	orderItem.ID = uint(id)
+	orderItem.OrderID = uint(oid)
 
 	json.NewDecoder(r.Body).Decode(&req)
 

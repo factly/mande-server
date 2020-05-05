@@ -4,8 +4,6 @@ import "github.com/go-chi/chi"
 
 // CartItem request body
 type cartItem struct {
-	IsDeleted bool `json:"is_deleted"`
-	CartID    uint `json:"cart_id"`
 	ProductID uint `json:"product_id"`
 }
 

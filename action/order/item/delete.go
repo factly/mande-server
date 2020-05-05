@@ -23,6 +23,9 @@ import (
 // @Router /orders/{order_id}/items/{item_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
+	orderID := chi.URLParam(r, "order_id")
+	oid, _ := strconv.Atoi(orderID)
+
 	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
@@ -31,17 +34,18 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderItems := &model.OrderItem{}
-	orderItems.ID = uint(id)
+	orderItem := &model.OrderItem{}
+	orderItem.ID = uint(id)
+	orderItem.OrderID = uint(oid)
 
 	// check record exists or not
-	err = model.DB.First(&orderItems).Error
+	err = model.DB.First(&orderItem).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Delete(&orderItems)
+	model.DB.Delete(&orderItem)
 
 	render.JSON(w, http.StatusOK, nil)
 }
