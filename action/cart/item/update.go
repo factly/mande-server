@@ -42,7 +42,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&cartItem).Updates(model.CartItem{
 		IsDeleted: req.IsDeleted,
-		CartID:    req.CartID,
 		ProductID: req.ProductID,
 	})
 	model.DB.First(&cartItem)

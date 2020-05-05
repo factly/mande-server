@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -25,7 +27,11 @@ import (
 // @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
+	cartID := chi.URLParam(r, "cart_id")
+	id, _ := strconv.Atoi(cartID)
+
 	cartItem := &model.CartItem{}
+	cartItem.CartID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&cartItem)
 

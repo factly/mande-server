@@ -57,8 +57,6 @@ definitions:
     type: object
   item.cartItem:
     properties:
-      cart_id:
-        type: integer
       is_deleted:
         type: boolean
       product_id:
@@ -2001,7 +1999,7 @@ paths:
       - Type
   /tags:
     get:
-      description: Get all tags created
+      description: Get all tags
       operationId: get-all-tags
       parameters:
       - description: limt per page

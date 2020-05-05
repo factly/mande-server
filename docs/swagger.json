@@ -2260,7 +2260,7 @@
         },
         "/tags": {
             "get": {
-                "description": "Get all tags created",
+                "description": "Get all tags",
                 "produces": [
                     "application/json"
                 ],
@@ -2723,9 +2723,6 @@
         "item.cartItem": {
             "type": "object",
             "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
                 "is_deleted": {
                     "type": "boolean"
                 },
