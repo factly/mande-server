@@ -23,6 +23,9 @@ import (
 // @Router /orders/{order_id}/items/{item_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
+	orderID := chi.URLParam(r, "order_id")
+	oid, _ := strconv.Atoi(orderID)
+
 	orderItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(orderItemID)
 
@@ -33,6 +36,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	orderItem := &model.OrderItem{}
 	orderItem.ID = uint(id)
+	orderItem.OrderID = uint(oid)
 
 	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem).Error
 
