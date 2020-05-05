@@ -41,7 +41,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&req)
 
 	model.DB.Model(&cartItem).Updates(model.CartItem{
-		IsDeleted: req.IsDeleted,
 		ProductID: req.ProductID,
 	})
 	model.DB.First(&cartItem)

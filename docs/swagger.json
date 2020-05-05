@@ -2723,9 +2723,6 @@
         "item.cartItem": {
             "type": "object",
             "properties": {
-                "is_deleted": {
-                    "type": "boolean"
-                },
                 "product_id": {
                     "type": "integer"
                 }
@@ -2811,9 +2808,6 @@
             "properties": {
                 "cart_id": {
                     "type": "integer"
-                },
-                "is_deleted": {
-                    "type": "boolean"
                 },
                 "product": {
                     "type": "object",

@@ -57,8 +57,6 @@ definitions:
     type: object
   item.cartItem:
     properties:
-      is_deleted:
-        type: boolean
       product_id:
         type: integer
     type: object
@@ -112,8 +110,6 @@ definitions:
     properties:
       cart_id:
         type: integer
-      is_deleted:
-        type: boolean
       product:
         $ref: '#/definitions/model.Product'
         type: object
