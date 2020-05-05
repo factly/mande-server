@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -24,7 +26,11 @@ import (
 // @Router /orders/{order_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
+	orderID := chi.URLParam(r, "order_id")
+	id, _ := strconv.Atoi(orderID)
+
 	orderItem := &model.OrderItem{}
+	orderItem.OrderID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&orderItem)
 

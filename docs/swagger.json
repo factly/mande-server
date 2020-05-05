@@ -2737,9 +2737,6 @@
                 "extra_info": {
                     "type": "string"
                 },
-                "order_id": {
-                    "type": "integer"
-                },
                 "product_id": {
                     "type": "integer"
                 }
@@ -2751,7 +2748,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.OrderItem"
+                        "$ref": "#/definitions/model.CartItem"
                     }
                 },
                 "total": {
