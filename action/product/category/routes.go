@@ -12,7 +12,7 @@ func Router() chi.Router {
 	r := chi.NewRouter()
 	r.Post("/", create)
 
-	r.Route("/{cid}", func(r chi.Router) {
+	r.Route("/{category_id}", func(r chi.Router) {
 		r.Delete("/", delete)
 	})
 

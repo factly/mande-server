@@ -446,7 +446,7 @@ definitions:
       total:
         type: integer
     type: object
-  tag.productTags:
+  tag.productTag:
     properties:
       tag_id:
         type: integer
@@ -1700,14 +1700,14 @@ paths:
       summary: Create product
       tags:
       - Product
-  /products/{id}:
+  /products/{product_id}:
     delete:
       description: Delete product by ID
       operationId: delete-product-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       responses:
@@ -1727,7 +1727,7 @@ paths:
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       produces:
@@ -1752,7 +1752,7 @@ paths:
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: Product
@@ -1776,14 +1776,14 @@ paths:
       summary: Update a product by id
       tags:
       - Product
-  /products/{id}/category:
+  /products/{product_id}/category:
     post:
       description: create productCategory
       operationId: add-productCategory
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductCategory object
@@ -1808,19 +1808,19 @@ paths:
       summary: Create productCategory
       tags:
       - ProductCategory
-  /products/{id}/category/{cid}:
+  /products/{product_id}/category/{category_id}:
     delete:
       description: Delete productCategory by ID
       operationId: delete-productCategory-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: Category ID
         in: path
-        name: cid
+        name: category_id
         required: true
         type: string
       responses:
@@ -1834,7 +1834,7 @@ paths:
       summary: Delete a productCategory
       tags:
       - ProductCategory
-  /products/{id}/status:
+  /products/{product_id}/status:
     get:
       description: Get all statuses
       operationId: get-all-statuses
@@ -1883,14 +1883,14 @@ paths:
       summary: Create status
       tags:
       - Status
-  /products/{id}/tag:
+  /products/{product_id}/tag:
     post:
       description: create productTags
       operationId: add-productTags
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductTag object
@@ -1898,7 +1898,7 @@ paths:
         name: ProductTag
         required: true
         schema:
-          $ref: '#/definitions/tag.productTags'
+          $ref: '#/definitions/tag.productTag'
       produces:
       - application/json
       responses:
@@ -1915,19 +1915,19 @@ paths:
       summary: Create productTags
       tags:
       - ProductTag
-  /products/{id}/tag/{tid}:
+  /products/{product_id}/tag/{tag_id}:
     delete:
       description: Delete productTags by ID
       operationId: delete-productTags-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductTag ID
         in: path
-        name: tid
+        name: tag_id
         required: true
         type: string
       responses:
@@ -1941,7 +1941,7 @@ paths:
       summary: Delete a productTags
       tags:
       - ProductTag
-  /products/{id}/type:
+  /products/{product_id}/type:
     get:
       description: Get all productTypes
       operationId: get-all-productTypes

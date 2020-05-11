@@ -1825,7 +1825,7 @@
                 }
             }
         },
-        "/products/{id}": {
+        "/products/{product_id}": {
             "get": {
                 "description": "Get product by ID",
                 "produces": [
@@ -1840,7 +1840,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     }
@@ -1877,7 +1877,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -1919,7 +1919,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     }
@@ -1938,7 +1938,7 @@
                 }
             }
         },
-        "/products/{id}/category": {
+        "/products/{product_id}/category": {
             "post": {
                 "description": "create productCategory",
                 "produces": [
@@ -1953,7 +1953,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -1986,7 +1986,7 @@
                 }
             }
         },
-        "/products/{id}/category/{cid}": {
+        "/products/{product_id}/category/{category_id}": {
             "delete": {
                 "description": "Delete productCategory by ID",
                 "tags": [
@@ -1998,14 +1998,14 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Category ID",
-                        "name": "cid",
+                        "name": "category_id",
                         "in": "path",
                         "required": true
                     }
@@ -2024,7 +2024,7 @@
                 }
             }
         },
-        "/products/{id}/status": {
+        "/products/{product_id}/status": {
             "get": {
                 "description": "Get all statuses",
                 "produces": [
@@ -2098,7 +2098,7 @@
                 }
             }
         },
-        "/products/{id}/tag": {
+        "/products/{product_id}/tag": {
             "post": {
                 "description": "create productTags",
                 "produces": [
@@ -2113,7 +2113,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -2123,7 +2123,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tag.productTags"
+                            "$ref": "#/definitions/tag.productTag"
                         }
                     }
                 ],
@@ -2146,7 +2146,7 @@
                 }
             }
         },
-        "/products/{id}/tag/{tid}": {
+        "/products/{product_id}/tag/{tag_id}": {
             "delete": {
                 "description": "Delete productTags by ID",
                 "tags": [
@@ -2158,14 +2158,14 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "ProductTag ID",
-                        "name": "tid",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2184,7 +2184,7 @@
                 }
             }
         },
-        "/products/{id}/type": {
+        "/products/{product_id}/type": {
             "get": {
                 "description": "Get all productTypes",
                 "produces": [
@@ -3304,7 +3304,7 @@
                 }
             }
         },
-        "tag.productTags": {
+        "tag.productTag": {
             "type": "object",
             "properties": {
                 "tag_id": {

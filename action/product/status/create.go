@@ -21,7 +21,7 @@ import (
 // @Param Status body status true "Status object"
 // @Success 201 {object} model.Status
 // @Failure 400 {array} string
-// @Router /products/{id}/status [post]
+// @Router /products/{product_id}/status [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
 	productStatus := &model.Status{}
