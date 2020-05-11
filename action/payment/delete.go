@@ -16,13 +16,13 @@ import (
 // @Tags Payment
 // @ID delete-payment-by-id
 // @Consume  json
-// @Param id path string true "Payment ID"
+// @Param payment_id path string true "Payment ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /payments/{id} [delete]
+// @Router /payments/{payment_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	paymentID := chi.URLParam(r, "id")
+	paymentID := chi.URLParam(r, "payment_id")
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {

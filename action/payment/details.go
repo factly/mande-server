@@ -16,13 +16,13 @@ import (
 // @Tags Payment
 // @ID get-payment-by-id
 // @Produce  json
-// @Param id path string true "Payment ID"
+// @Param payment_id path string true "Payment ID"
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
-// @Router /payments/{id} [get]
+// @Router /payments/{payment_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
-	paymentID := chi.URLParam(r, "id")
+	paymentID := chi.URLParam(r, "payment_id")
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {

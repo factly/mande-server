@@ -1460,7 +1460,7 @@
                 }
             }
         },
-        "/payments/{id}": {
+        "/payments/{payment_id}": {
             "get": {
                 "description": "Get payment by ID",
                 "produces": [
@@ -1475,7 +1475,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     }
@@ -1512,7 +1512,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     },
@@ -1554,7 +1554,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     }
@@ -1638,7 +1638,7 @@
                 }
             }
         },
-        "/plans/{id}": {
+        "/plans/{plan_id}": {
             "get": {
                 "description": "Get plan by ID",
                 "produces": [
@@ -1653,7 +1653,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     }
@@ -1690,7 +1690,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     },
@@ -1732,7 +1732,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     }
@@ -2332,7 +2332,7 @@
                 }
             }
         },
-        "/tags/{id}": {
+        "/tags/{tag_id}": {
             "get": {
                 "description": "Get tag by ID",
                 "produces": [
@@ -2347,7 +2347,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2384,7 +2384,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     },
@@ -2426,7 +2426,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2519,7 +2519,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/users/{user_id}": {
             "get": {
                 "description": "Get user by ID",
                 "produces": [
@@ -2534,7 +2534,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }
@@ -2571,7 +2571,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     },
@@ -2613,7 +2613,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }

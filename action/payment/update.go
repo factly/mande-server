@@ -18,14 +18,14 @@ import (
 // @ID update-payment-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Payment ID"
+// @Param payment_id path string true "Payment ID"
 // @Param Payment body payment false "Payment"
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string
-// @Router /payments/{id} [put]
+// @Router /payments/{payment_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
-	paymentID := chi.URLParam(r, "id")
+	paymentID := chi.URLParam(r, "payment_id")
 	id, err := strconv.Atoi(paymentID)
 
 	if err != nil {

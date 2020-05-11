@@ -16,10 +16,10 @@ func Router() chi.Router {
 	r.Get("/", list)    // GET /plans - return list of plans
 	r.Post("/", Create) // POST /plans - create a new plan and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /plans/{id} - read a single plan by :id
-		r.Put("/", update)    // PUT /plans/{id} - update a single plan by :id
-		r.Delete("/", delete) // DELETE /plans/{id} - delete a single plan by :id
+	r.Route("/{plan_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /plans/{plan_id} - read a single plan by :plan_id
+		r.Put("/", update)    // PUT /plans/{plan_id} - update a single plan by :plan_id
+		r.Delete("/", delete) // DELETE /plans/{plan_id} - delete a single plan by :plan_id
 	})
 
 	return r

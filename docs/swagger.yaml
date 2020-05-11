@@ -1456,14 +1456,14 @@ paths:
       summary: Create payment
       tags:
       - Payment
-  /payments/{id}:
+  /payments/{payment_id}:
     delete:
       description: Delete payment by ID
       operationId: delete-payment-by-id
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       responses:
@@ -1483,7 +1483,7 @@ paths:
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       produces:
@@ -1508,7 +1508,7 @@ paths:
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       - description: Payment
@@ -1575,14 +1575,14 @@ paths:
       summary: Create plan
       tags:
       - Plan
-  /plans/{id}:
+  /plans/{plan_id}:
     delete:
       description: Delete plan by ID
       operationId: delete-plan-by-id
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       responses:
@@ -1602,7 +1602,7 @@ paths:
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       produces:
@@ -1627,7 +1627,7 @@ paths:
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       - description: Plan
@@ -2039,14 +2039,14 @@ paths:
       summary: Create tag
       tags:
       - Tag
-  /tags/{id}:
+  /tags/{tag_id}:
     delete:
       description: Delete tag by ID
       operationId: delete-tag-by-id
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       responses:
@@ -2066,7 +2066,7 @@ paths:
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       produces:
@@ -2091,7 +2091,7 @@ paths:
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       - description: Tag
@@ -2164,14 +2164,14 @@ paths:
       summary: Create user
       tags:
       - User
-  /users/{id}:
+  /users/{user_id}:
     delete:
       description: Delete user by ID
       operationId: delete-user-by-id
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       responses:
@@ -2191,7 +2191,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       produces:
@@ -2216,7 +2216,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       - description: User

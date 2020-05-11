@@ -16,13 +16,13 @@ import (
 // @Tags Tag
 // @ID get-tag-by-id
 // @Produce  json
-// @Param id path string true "Tag ID"
+// @Param tag_id path string true "Tag ID"
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string
-// @Router /tags/{id} [get]
+// @Router /tags/{tag_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
-	tagID := chi.URLParam(r, "id")
+	tagID := chi.URLParam(r, "tag_id")
 	id, err := strconv.Atoi(tagID)
 	if err != nil {
 		validation.InvalidID(w, r)

@@ -16,13 +16,13 @@ import (
 // @Tags Plan
 // @ID delete-plan-by-id
 // @Consume  json
-// @Param id path string true "Plan ID"
+// @Param plan_id path string true "Plan ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /plans/{id} [delete]
+// @Router /plans/{plan_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	planID := chi.URLParam(r, "id")
+	planID := chi.URLParam(r, "plan_id")
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {
