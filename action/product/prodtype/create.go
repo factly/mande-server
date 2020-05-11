@@ -24,7 +24,7 @@ import (
 // @Router /products/{id}/type [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	productType := &model.ProductType{}
+	productType := &productType{}
 	json.NewDecoder(r.Body).Decode(&productType)
 
 	validate := validator.New()
@@ -35,11 +35,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.ProductType{}).Create(&productType).Error
+	result := &model.ProductType{
+		Name: productType.Name,
+	}
+
+	err = model.DB.Model(&model.ProductType{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, productType)
+	render.JSON(w, http.StatusCreated, result)
 }

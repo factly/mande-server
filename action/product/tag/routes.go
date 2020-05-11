@@ -3,7 +3,7 @@ package tag
 import "github.com/go-chi/chi"
 
 // ProductTag request body
-type productTags struct {
+type productTag struct {
 	TagID uint `json:"tag_id"`
 }
 

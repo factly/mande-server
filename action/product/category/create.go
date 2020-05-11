@@ -35,9 +35,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productCategory := &model.ProductCategory{
-		ProductID: uint(id),
-	}
+	productCategory := &productCategory{}
+	result := &model.ProductCategory{}
 
 	json.NewDecoder(r.Body).Decode(&productCategory)
 
@@ -48,11 +47,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
+
+	result.ProductID = uint(id)
+	result.CategoryID = productCategory.CategoryID
+
+	err = model.DB.Model(&model.ProductCategory{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, productCategory)
+	render.JSON(w, http.StatusCreated, result)
 }

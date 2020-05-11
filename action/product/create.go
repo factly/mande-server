@@ -24,7 +24,7 @@ import (
 // @Router /products [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	product := &model.Product{}
+	product := &product{}
 	json.NewDecoder(r.Body).Decode(&product)
 
 	validate := validator.New()
@@ -35,14 +35,23 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Product{}).Create(&product).Error
+	result := &model.Product{
+		Title:         product.Title,
+		Slug:          product.Slug,
+		Price:         product.Price,
+		ProductTypeID: product.ProductTypeID,
+		StatusID:      product.StatusID,
+		CurrencyID:    product.CurrencyID,
+	}
+
+	err = model.DB.Model(&model.Product{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
+	model.DB.Model(&result).Association("ProductType").Find(&result.ProductType)
+	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
+	model.DB.Model(&result).Association("Status").Find(&result.Status)
 
-	render.JSON(w, http.StatusCreated, product)
+	render.JSON(w, http.StatusCreated, result)
 }
