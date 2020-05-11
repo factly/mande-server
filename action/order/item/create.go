@@ -29,8 +29,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 	orderID := chi.URLParam(r, "order_id")
 	id, _ := strconv.Atoi(orderID)
 
-	orderItem := &model.OrderItem{}
-	orderItem.OrderID = uint(id)
+	orderItem := &orderItem{}
+	result := &model.OrderItem{}
 
 	json.NewDecoder(r.Body).Decode(&orderItem)
 
@@ -42,12 +42,16 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.OrderItem{}).Create(&orderItem).Error
+	result.OrderID = uint(id)
+	result.ExtraInfo = orderItem.ExtraInfo
+	result.ProductID = orderItem.ProductID
+
+	err = model.DB.Model(&model.OrderItem{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
+	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result)
 
-	render.JSON(w, http.StatusCreated, orderItem)
+	render.JSON(w, http.StatusCreated, result)
 }
