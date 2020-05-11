@@ -30,27 +30,33 @@ func create(w http.ResponseWriter, r *http.Request) {
 	cartID := chi.URLParam(r, "cart_id")
 	id, _ := strconv.Atoi(cartID)
 
-	cartItem := &model.CartItem{}
-	cartItem.CartID = uint(id)
+	cartItem := &cartItem{}
+	result := &model.CartItem{}
 
 	json.NewDecoder(r.Body).Decode(&cartItem)
 
 	validate := validator.New()
 	err := validate.StructExcept(cartItem, "Product")
+
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.CartItem{}).Create(&cartItem).Error
+
+	result.CartID = uint(id)
+	result.ProductID = cartItem.ProductID
+
+	err = model.DB.Model(&model.CartItem{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
-	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
-	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
-	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 
-	render.JSON(w, http.StatusCreated, cartItem)
+	model.DB.Model(&result).Association("Product").Find(&result.Product)
+	model.DB.Model(&result.Product).Association("Status").Find(&result.Product.Status)
+	model.DB.Model(&result.Product).Association("ProductType").Find(&result.Product.ProductType)
+	model.DB.Model(&result.Product).Association("Currency").Find(&result.Product.Currency)
+
+	render.JSON(w, http.StatusCreated, result)
 }
