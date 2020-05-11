@@ -24,7 +24,7 @@ import (
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	currency := &model.Currency{}
+	currency := &currency{}
 
 	json.NewDecoder(r.Body).Decode(&currency)
 
@@ -36,11 +36,16 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Currency{}).Create(&currency).Error
+	result := &model.Currency{
+		Name:    currency.IsoCode,
+		IsoCode: currency.Name,
+	}
+
+	err = model.DB.Model(&model.Currency{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, currency)
+	render.JSON(w, http.StatusCreated, result)
 }
