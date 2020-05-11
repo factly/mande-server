@@ -16,13 +16,13 @@ import (
 // @Tags Category
 // @ID get-category-by-id
 // @Produce  json
-// @Param id path string true "Category ID"
+// @Param category_id path string true "Category ID"
 // @Success 200 {object} model.Category
 // @Failure 400 {array} string
-// @Router /categories/{id} [get]
+// @Router /categories/{category_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
-	categoryID := chi.URLParam(r, "id")
+	categoryID := chi.URLParam(r, "category_id")
 	id, err := strconv.Atoi(categoryID)
 
 	if err != nil {

@@ -18,14 +18,14 @@ import (
 // @ID update-category-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Category ID"
+// @Param category_id path string true "Category ID"
 // @Param Category body category false "Category"
 // @Success 200 {object} model.Category
 // @Failure 400 {array} string
-// @Router /categories/{id} [put]
+// @Router /categories/{category_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
-	categoryID := chi.URLParam(r, "id")
+	categoryID := chi.URLParam(r, "category_id")
 	id, err := strconv.Atoi(categoryID)
 
 	if err != nil {

@@ -71,7 +71,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.CartItem'
+          $ref: '#/definitions/model.OrderItem'
         type: array
       total:
         type: integer
@@ -128,7 +128,6 @@ definitions:
       title:
         type: string
     required:
-    - parent_id
     - slug
     - title
     type: object
@@ -814,14 +813,14 @@ paths:
       summary: Create category
       tags:
       - Category
-  /categories/{id}:
+  /categories/{category_id}:
     delete:
       description: Delete category by ID
       operationId: delete-category-by-id
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       responses:
@@ -841,7 +840,7 @@ paths:
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       produces:
@@ -866,7 +865,7 @@ paths:
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       - description: Category
@@ -939,14 +938,14 @@ paths:
       summary: Create currency
       tags:
       - Currency
-  /currencies/{id}:
+  /currencies/{currency_id}:
     delete:
       description: Delete currency by ID
       operationId: delete-currency-by-id
       parameters:
       - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         required: true
         type: string
       responses:
@@ -966,7 +965,7 @@ paths:
       parameters:
       - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         type: string
       produces:
       - application/json
@@ -988,9 +987,9 @@ paths:
       description: Update currency by ID
       operationId: update-currency-by-id
       parameters:
-      - description: Currecny ID
+      - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         required: true
         type: string
       - description: Currency
@@ -1063,14 +1062,14 @@ paths:
       summary: Create membership
       tags:
       - Membership
-  /memberships/{id}:
+  /memberships/{membership_id}:
     delete:
       description: Delete membership by ID
       operationId: delete-membership-by-id
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       responses:
@@ -1090,7 +1089,7 @@ paths:
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       produces:
@@ -1115,7 +1114,7 @@ paths:
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       - description: Membership

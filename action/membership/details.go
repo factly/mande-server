@@ -16,13 +16,13 @@ import (
 // @Tags Membership
 // @ID get-membership-by-id
 // @Produce  json
-// @Param id path string true "Membership ID"
+// @Param membership_id path string true "Membership ID"
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
-// @Router /memberships/{id} [get]
+// @Router /memberships/{membership_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
-	membershipID := chi.URLParam(r, "id")
+	membershipID := chi.URLParam(r, "membership_id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
 		validation.InvalidID(w, r)
