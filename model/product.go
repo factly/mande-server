@@ -2,7 +2,7 @@ package model
 
 // Product model
 type Product struct {
-	BaseModel
+	Base
 	Title         string      `gorm:"column:title" json:"title" validate:"required"`
 	Slug          string      `gorm:"column:slug" json:"slug" validate:"required"`
 	Price         int         `gorm:"column:price" json:"price" validate:"required"`
@@ -16,14 +16,14 @@ type Product struct {
 
 // ProductCategory model
 type ProductCategory struct {
-	BaseModel
+	Base
 	CategoryID uint `gorm:"column:category_id" json:"category_id" validate:"required"`
 	ProductID  uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }
 
 // ProductTag model
 type ProductTag struct {
-	BaseModel
+	Base
 	TagID     uint `gorm:"column:tag_id" json:"tag_id" validate:"required"`
 	ProductID uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }

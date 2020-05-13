@@ -2,6 +2,6 @@ package model
 
 //Status model
 type Status struct {
-	BaseModel
+	Base
 	Name string `gorm:"column:name" json:"name" validate:"required"`
 }
