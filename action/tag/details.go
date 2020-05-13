@@ -29,15 +29,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tag := &model.Tag{}
-	tag.ID = uint(id)
+	result := &model.Tag{}
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Tag{}).First(&tag).Error
+	err = model.DB.Model(&model.Tag{}).First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	render.JSON(w, http.StatusOK, tag)
+	render.JSON(w, http.StatusOK, result)
 }

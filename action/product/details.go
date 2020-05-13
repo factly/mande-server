@@ -30,20 +30,20 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &model.Product{}
+	result := &model.Product{}
 
-	product.ID = uint(id)
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Product{}).First(&product).Error
+	err = model.DB.Model(&model.Product{}).First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
+	model.DB.Model(&result).Association("ProductType").Find(&result.ProductType)
+	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
+	model.DB.Model(&result).Association("Status").Find(&result.Status)
 
-	render.JSON(w, http.StatusOK, product)
+	render.JSON(w, http.StatusOK, result)
 }
