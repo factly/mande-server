@@ -9,7 +9,7 @@ type category struct {
 	ParentID uint   `json:"parent_id"`
 }
 
-// Router - Group of currency router
+// Router - Group of category router
 func Router() chi.Router {
 	r := chi.NewRouter()
 

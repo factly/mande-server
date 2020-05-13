@@ -9,7 +9,7 @@ type user struct {
 	LastName  string `json:"last_name"`
 }
 
-// Router - Group of currency router
+// Router - Group of user router
 func Router() chi.Router {
 	r := chi.NewRouter()
 

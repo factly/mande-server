@@ -11,7 +11,7 @@ type cart struct {
 	UserID uint   `json:"user_id"`
 }
 
-// Router - Group of currency router
+// Router - Group of cart router
 func Router() chi.Router {
 	r := chi.NewRouter()
 

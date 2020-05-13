@@ -21,14 +21,14 @@ type product struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", create)
-	r.Get("/", list)
+	r.Post("/", create) // POST /products - create a new product
+	r.Get("/", list)    // GET /products - return list of products
 	r.Route("/{product_id}", func(r chi.Router) {
-		r.Get("/", details)
-		r.Delete("/", delete)
-		r.Put("/", update)
+		r.Get("/", details)                     // GET /products/{product_id} - read a single product by :payment_id
+		r.Delete("/", delete)                   // DELETE /products/{product_id} - delete a single product by :product_id
+		r.Put("/", update)                      // PUT /products/{product_id} - update a single product by :product_id
 		r.Mount("/type", prodtype.Router())     // product-type router
-		r.Mount("/status", status.Router())     // product-type router
+		r.Mount("/status", status.Router())     // product-status router
 		r.Mount("/tag", tag.Router())           // product-tag router
 		r.Mount("/category", category.Router()) // product-category router
 	})

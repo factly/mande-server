@@ -9,7 +9,7 @@ type plan struct {
 	Status   string `json:"status"`
 }
 
-// Router - Group of currency router
+// Router - Group of plan router
 func Router() chi.Router {
 	r := chi.NewRouter()
 

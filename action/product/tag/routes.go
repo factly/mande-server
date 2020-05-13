@@ -7,7 +7,7 @@ type productTag struct {
 	TagID uint `json:"tag_id"`
 }
 
-// Router - Group of product category router
+// Router - Group of product-tag router
 func Router() chi.Router {
 	r := chi.NewRouter()
 	r.Post("/", create)

@@ -7,7 +7,7 @@ type status struct {
 	Name string `json:"name"`
 }
 
-// Router - Group of product category router
+// Router - Group of product-status router
 func Router() chi.Router {
 	r := chi.NewRouter()
 	r.Post("/", create)
