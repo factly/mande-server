@@ -11,7 +11,7 @@ type cartItem struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /carts/{cart_id}/carts/{cart_id}/cart-items - return list of cart items
+	r.Get("/", list)    // GET /carts/{cart_id}/cart-items - return list of cart items
 	r.Post("/", create) // POST /carts/{cart_id}/cart-items - create a new cart item and persist it
 
 	r.Route("/{item_id}", func(r chi.Router) {
