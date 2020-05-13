@@ -38,20 +38,20 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &cartItem{}
-	cartItem := &model.CartItem{}
-	cartItem.ID = uint(id)
-	cartItem.CartID = uint(cid)
+	result := &model.CartItem{}
+	result.ID = uint(id)
+	result.CartID = uint(cid)
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	model.DB.Model(&cartItem).Updates(model.CartItem{
+	model.DB.Model(&result).Updates(model.CartItem{
 		ProductID: req.ProductID,
 	})
-	model.DB.First(&cartItem)
-	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
-	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
-	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
-	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
+	model.DB.First(&result)
+	model.DB.Model(&result).Association("Product").Find(&result.Product)
+	model.DB.Model(&result.Product).Association("Status").Find(&result.Product.Status)
+	model.DB.Model(&result.Product).Association("ProductType").Find(&result.Product.ProductType)
+	model.DB.Model(&result.Product).Association("Currency").Find(&result.Product.Currency)
 
-	render.JSON(w, http.StatusOK, cartItem)
+	render.JSON(w, http.StatusOK, result)
 }
