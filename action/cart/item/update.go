@@ -37,15 +37,15 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &cartItem{}
+	cartItem := &cartItem{}
+	json.NewDecoder(r.Body).Decode(&cartItem)
+
 	result := &model.CartItem{}
 	result.ID = uint(id)
 	result.CartID = uint(cid)
 
-	json.NewDecoder(r.Body).Decode(&req)
-
 	model.DB.Model(&result).Updates(model.CartItem{
-		ProductID: req.ProductID,
+		ProductID: cartItem.ProductID,
 	})
 	model.DB.First(&result)
 	model.DB.Model(&result).Association("Product").Find(&result.Product)
