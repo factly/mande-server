@@ -16,13 +16,13 @@ import (
 // @Tags Category
 // @ID delete-category-by-id
 // @Consume  json
-// @Param id path string true "Category ID"
+// @Param category_id path string true "Category ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /categories/{id} [delete]
+// @Router /categories/{category_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	categoryID := chi.URLParam(r, "id")
+	categoryID := chi.URLParam(r, "category_id")
 	id, err := strconv.Atoi(categoryID)
 
 	if err != nil {

@@ -16,12 +16,12 @@ import (
 // @Tags Currency
 // @ID delete-currency-by-id
 // @Consume  json
-// @Param id path string true "Currency ID"
+// @Param currency_id path string true "Currency ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /currencies/{id} [delete]
+// @Router /currencies/{currency_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
-	currencyID := chi.URLParam(r, "id")
+	currencyID := chi.URLParam(r, "currency_id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
 		validation.InvalidID(w, r)

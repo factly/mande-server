@@ -11,7 +11,7 @@ type cart struct {
 	UserID uint   `json:"user_id"`
 }
 
-// Router - Group of currency router
+// Router - Group of cart router
 func Router() chi.Router {
 	r := chi.NewRouter()
 
@@ -19,9 +19,9 @@ func Router() chi.Router {
 	r.Post("/", create) // POST /carts - create a new cart and persist it
 
 	r.Route("/{cart_id}", func(r chi.Router) {
-		r.Get("/", details)              // GET /carts/{cart_id} - read a single cart by :id
-		r.Put("/", update)               // PUT /carts/{cart_id} - update a single cart by :id
-		r.Delete("/", delete)            // DELETE /carts/{cart_id} - delete a single cart by :id
+		r.Get("/", details)              // GET /carts/{cart_id} - read a single cart by :cart_id
+		r.Put("/", update)               // PUT /carts/{cart_id} - update a single cart by :cart_id
+		r.Delete("/", delete)            // DELETE /carts/{cart_id} - delete a single cart by :cart_id
 		r.Mount("/items", item.Router()) // cart-item router
 	})
 

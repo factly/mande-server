@@ -16,13 +16,13 @@ import (
 // @Tags ProductCategory
 // @ID delete-productCategory-by-id
 // @Consume  json
-// @Param id path string true "Product ID"
-// @Param cid path string true "Category ID"
+// @Param product_id path string true "Product ID"
+// @Param category_id path string true "Category ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /products/{id}/category/{cid} [delete]
+// @Router /products/{product_id}/category/{category_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
-	productCategoryID := chi.URLParam(r, "cid")
+	productCategoryID := chi.URLParam(r, "category_id")
 	cid, err := strconv.Atoi(productCategoryID)
 
 	if err != nil {
@@ -30,7 +30,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productID := chi.URLParam(r, "id")
+	productID := chi.URLParam(r, "product_id")
 	pid, err := strconv.Atoi(productID)
 
 	if err != nil {

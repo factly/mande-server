@@ -500,7 +500,7 @@
                 }
             }
         },
-        "/categories/{id}": {
+        "/categories/{category_id}": {
             "get": {
                 "description": "Get category by ID",
                 "produces": [
@@ -515,7 +515,7 @@
                     {
                         "type": "string",
                         "description": "Category ID",
-                        "name": "id",
+                        "name": "category_id",
                         "in": "path",
                         "required": true
                     }
@@ -552,7 +552,7 @@
                     {
                         "type": "string",
                         "description": "Category ID",
-                        "name": "id",
+                        "name": "category_id",
                         "in": "path",
                         "required": true
                     },
@@ -594,7 +594,7 @@
                     {
                         "type": "string",
                         "description": "Category ID",
-                        "name": "id",
+                        "name": "category_id",
                         "in": "path",
                         "required": true
                     }
@@ -687,7 +687,7 @@
                 }
             }
         },
-        "/currencies/{id}": {
+        "/currencies/{currency_id}": {
             "get": {
                 "description": "get currency by ID",
                 "produces": [
@@ -702,7 +702,7 @@
                     {
                         "type": "string",
                         "description": "Currency ID",
-                        "name": "id",
+                        "name": "currency_id",
                         "in": "path"
                     }
                 ],
@@ -737,8 +737,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Currecny ID",
-                        "name": "id",
+                        "description": "Currency ID",
+                        "name": "currency_id",
                         "in": "path",
                         "required": true
                     },
@@ -780,7 +780,7 @@
                     {
                         "type": "string",
                         "description": "Currency ID",
-                        "name": "id",
+                        "name": "currency_id",
                         "in": "path",
                         "required": true
                     }
@@ -873,7 +873,7 @@
                 }
             }
         },
-        "/memberships/{id}": {
+        "/memberships/{membership_id}": {
             "get": {
                 "description": "Get membership by ID",
                 "produces": [
@@ -888,7 +888,7 @@
                     {
                         "type": "string",
                         "description": "Membership ID",
-                        "name": "id",
+                        "name": "membership_id",
                         "in": "path",
                         "required": true
                     }
@@ -925,7 +925,7 @@
                     {
                         "type": "string",
                         "description": "Membership ID",
-                        "name": "id",
+                        "name": "membership_id",
                         "in": "path",
                         "required": true
                     },
@@ -967,7 +967,7 @@
                     {
                         "type": "string",
                         "description": "Membership ID",
-                        "name": "id",
+                        "name": "membership_id",
                         "in": "path",
                         "required": true
                     }
@@ -1460,7 +1460,7 @@
                 }
             }
         },
-        "/payments/{id}": {
+        "/payments/{payment_id}": {
             "get": {
                 "description": "Get payment by ID",
                 "produces": [
@@ -1475,7 +1475,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     }
@@ -1512,7 +1512,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     },
@@ -1554,7 +1554,7 @@
                     {
                         "type": "string",
                         "description": "Payment ID",
-                        "name": "id",
+                        "name": "payment_id",
                         "in": "path",
                         "required": true
                     }
@@ -1638,7 +1638,7 @@
                 }
             }
         },
-        "/plans/{id}": {
+        "/plans/{plan_id}": {
             "get": {
                 "description": "Get plan by ID",
                 "produces": [
@@ -1653,7 +1653,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     }
@@ -1690,7 +1690,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     },
@@ -1732,7 +1732,7 @@
                     {
                         "type": "string",
                         "description": "Plan ID",
-                        "name": "id",
+                        "name": "plan_id",
                         "in": "path",
                         "required": true
                     }
@@ -1825,7 +1825,7 @@
                 }
             }
         },
-        "/products/{id}": {
+        "/products/{product_id}": {
             "get": {
                 "description": "Get product by ID",
                 "produces": [
@@ -1840,7 +1840,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     }
@@ -1877,7 +1877,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -1919,7 +1919,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     }
@@ -1938,7 +1938,7 @@
                 }
             }
         },
-        "/products/{id}/category": {
+        "/products/{product_id}/category": {
             "post": {
                 "description": "create productCategory",
                 "produces": [
@@ -1953,7 +1953,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -1986,7 +1986,7 @@
                 }
             }
         },
-        "/products/{id}/category/{cid}": {
+        "/products/{product_id}/category/{category_id}": {
             "delete": {
                 "description": "Delete productCategory by ID",
                 "tags": [
@@ -1998,14 +1998,14 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "Category ID",
-                        "name": "cid",
+                        "name": "category_id",
                         "in": "path",
                         "required": true
                     }
@@ -2024,7 +2024,7 @@
                 }
             }
         },
-        "/products/{id}/status": {
+        "/products/{product_id}/status": {
             "get": {
                 "description": "Get all statuses",
                 "produces": [
@@ -2098,7 +2098,7 @@
                 }
             }
         },
-        "/products/{id}/tag": {
+        "/products/{product_id}/tag": {
             "post": {
                 "description": "create productTags",
                 "produces": [
@@ -2113,7 +2113,7 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
@@ -2123,7 +2123,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tag.productTags"
+                            "$ref": "#/definitions/tag.productTag"
                         }
                     }
                 ],
@@ -2146,7 +2146,7 @@
                 }
             }
         },
-        "/products/{id}/tag/{tid}": {
+        "/products/{product_id}/tag/{tag_id}": {
             "delete": {
                 "description": "Delete productTags by ID",
                 "tags": [
@@ -2158,14 +2158,14 @@
                     {
                         "type": "string",
                         "description": "Product ID",
-                        "name": "id",
+                        "name": "product_id",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "ProductTag ID",
-                        "name": "tid",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2184,7 +2184,7 @@
                 }
             }
         },
-        "/products/{id}/type": {
+        "/products/{product_id}/type": {
             "get": {
                 "description": "Get all productTypes",
                 "produces": [
@@ -2332,7 +2332,7 @@
                 }
             }
         },
-        "/tags/{id}": {
+        "/tags/{tag_id}": {
             "get": {
                 "description": "Get tag by ID",
                 "produces": [
@@ -2347,7 +2347,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2384,7 +2384,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     },
@@ -2426,7 +2426,7 @@
                     {
                         "type": "string",
                         "description": "Tag ID",
-                        "name": "id",
+                        "name": "tag_id",
                         "in": "path",
                         "required": true
                     }
@@ -2519,7 +2519,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/users/{user_id}": {
             "get": {
                 "description": "Get user by ID",
                 "produces": [
@@ -2534,7 +2534,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }
@@ -2571,7 +2571,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     },
@@ -2613,7 +2613,7 @@
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }
@@ -2745,7 +2745,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.CartItem"
+                        "$ref": "#/definitions/model.OrderItem"
                     }
                 },
                 "total": {
@@ -2821,7 +2821,6 @@
         "model.Category": {
             "type": "object",
             "required": [
-                "parent_id",
                 "slug",
                 "title"
             ],
@@ -3305,7 +3304,7 @@
                 }
             }
         },
-        "tag.productTags": {
+        "tag.productTag": {
             "type": "object",
             "properties": {
                 "tag_id": {

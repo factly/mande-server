@@ -7,7 +7,7 @@ type productType struct {
 	Name string `json:"name"`
 }
 
-// Router - Group of product category router
+// Router - Group of product-type router
 func Router() chi.Router {
 	r := chi.NewRouter()
 	r.Post("/", create)
