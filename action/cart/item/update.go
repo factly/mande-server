@@ -46,8 +46,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&result).Updates(model.CartItem{
 		ProductID: cartItem.ProductID,
-	})
-	model.DB.First(&result)
+	}).First(&result)
+
 	model.DB.Model(&result).Association("Product").Find(&result.Product)
 	model.DB.Model(&result.Product).Association("Status").Find(&result.Product.Status)
 	model.DB.Model(&result.Product).Association("ProductType").Find(&result.Product.ProductType)

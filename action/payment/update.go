@@ -45,9 +45,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Gateway:    payment.Gateway,
 		Status:     payment.Status,
 		CurrencyID: payment.CurrencyID,
-	})
-	model.DB.First(&result)
-	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
+	}).First(&result).Association("Currency").Find(&result.Currency)
 
 	render.JSON(w, http.StatusOK, result)
 }

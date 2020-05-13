@@ -43,8 +43,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
-	})
-	model.DB.First(&result)
+	}).First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

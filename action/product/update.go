@@ -46,8 +46,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Title:         product.Title,
 		Price:         product.Price,
 		Slug:          product.Slug,
-	})
-	model.DB.First(&result).First(&result)
+	}).First(&result)
+
 	model.DB.Model(&result).Association("ProductType").Find(&result.ProductType)
 	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
 	model.DB.Model(&result).Association("Status").Find(&result.Status)

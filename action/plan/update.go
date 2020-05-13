@@ -43,8 +43,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		PlanName: plan.PlanName,
 		PlanInfo: plan.PlanInfo,
 		Status:   plan.Status,
-	})
-	model.DB.First(&result)
+	}).First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

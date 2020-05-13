@@ -42,8 +42,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&result).Update(&model.Tag{
 		Title: tag.Title,
 		Slug:  tag.Slug,
-	})
-	model.DB.First(&result)
+	}).First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

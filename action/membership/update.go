@@ -43,9 +43,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		PaymentID: membership.PaymentID,
 		PlanID:    membership.PlanID,
 		Status:    membership.Status,
-	})
+	}).First(&result)
 
-	model.DB.First(&result)
 	model.DB.Model(&result).Association("User").Find(&result.User)
 	model.DB.Model(&result).Association("Plan").Find(&result.Plan)
 	model.DB.Model(&result).Association("Payment").Find(&result.Payment)

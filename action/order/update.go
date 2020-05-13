@@ -45,8 +45,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		PaymentID: order.PaymentID,
 		Status:    order.Status,
 		CartID:    order.CartID,
-	})
-	model.DB.Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result)
+	}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

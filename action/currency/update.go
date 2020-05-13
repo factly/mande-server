@@ -41,8 +41,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&result).Updates(model.Currency{
 		IsoCode: currency.IsoCode,
 		Name:    currency.Name,
-	})
-	model.DB.First(&result)
+	}).First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }
