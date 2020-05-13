@@ -30,15 +30,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	category := &model.Category{}
-	category.ID = uint(id)
+	result := &model.Category{}
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Category{}).First(&category).Error
+	err = model.DB.Model(&model.Category{}).First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	render.JSON(w, http.StatusOK, category)
+	render.JSON(w, http.StatusOK, result)
 }

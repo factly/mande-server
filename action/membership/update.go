@@ -32,24 +32,24 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &membership{}
-	membership := &model.Membership{}
-	membership.ID = uint(id)
+	membership := &membership{}
+	result := &model.Membership{}
+	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&membership)
 
-	model.DB.Model(&membership).Updates(model.Membership{
-		UserID:    req.UserID,
-		PaymentID: req.PaymentID,
-		PlanID:    req.PlanID,
-		Status:    req.Status,
+	model.DB.Model(&result).Updates(model.Membership{
+		UserID:    membership.UserID,
+		PaymentID: membership.PaymentID,
+		PlanID:    membership.PlanID,
+		Status:    membership.Status,
 	})
 
-	model.DB.First(&membership)
-	model.DB.Model(&membership).Association("User").Find(&membership.User)
-	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
-	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
-	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
+	model.DB.First(&result)
+	model.DB.Model(&result).Association("User").Find(&result.User)
+	model.DB.Model(&result).Association("Plan").Find(&result.Plan)
+	model.DB.Model(&result).Association("Payment").Find(&result.Payment)
+	model.DB.Model(&result.Payment).Association("Currency").Find(&result.Payment.Currency)
 
-	render.JSON(w, http.StatusOK, membership)
+	render.JSON(w, http.StatusOK, result)
 }

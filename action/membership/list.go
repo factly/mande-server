@@ -26,11 +26,11 @@ type paging struct {
 // @Router /memberships [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	data := paging{}
+	result := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
+	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
-	render.JSON(w, http.StatusOK, data)
+	render.JSON(w, http.StatusOK, result)
 }
