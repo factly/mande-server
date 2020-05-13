@@ -30,18 +30,18 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	plan := &model.Plan{}
+	result := &model.Plan{}
 
-	plan.ID = uint(id)
+	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&plan).Error
+	err = model.DB.First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Delete(&plan)
+	model.DB.Delete(&result)
 
 	render.JSON(w, http.StatusOK, nil)
 }

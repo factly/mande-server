@@ -33,18 +33,18 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &plan{}
-	plan := &model.Plan{}
-	plan.ID = uint(id)
+	plan := &plan{}
+	result := &model.Plan{}
+	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&plan)
 
-	model.DB.Model(&plan).Updates(model.Plan{
-		PlanName: req.PlanName,
-		PlanInfo: req.PlanInfo,
-		Status:   req.Status,
+	model.DB.Model(&result).Updates(model.Plan{
+		PlanName: plan.PlanName,
+		PlanInfo: plan.PlanInfo,
+		Status:   plan.Status,
 	})
-	model.DB.First(&plan)
+	model.DB.First(&result)
 
-	render.JSON(w, http.StatusOK, plan)
+	render.JSON(w, http.StatusOK, result)
 }
