@@ -37,7 +37,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.CartItem{}
+	req := &cartItem{}
 	cartItem := &model.CartItem{}
 	cartItem.ID = uint(id)
 	cartItem.CartID = uint(cid)

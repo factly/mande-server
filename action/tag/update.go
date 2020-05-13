@@ -32,13 +32,16 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Tag{}
+	req := &tag{}
 	tag := &model.Tag{}
 	tag.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&req)
 
-	model.DB.Model(&tag).Update(&model.Tag{Title: req.Title, Slug: req.Slug})
+	model.DB.Model(&tag).Update(&model.Tag{
+		Title: req.Title,
+		Slug:  req.Slug,
+	})
 	model.DB.First(&tag)
 
 	render.JSON(w, http.StatusOK, tag)

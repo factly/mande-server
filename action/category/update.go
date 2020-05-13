@@ -33,7 +33,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Category{}
+	req := &category{}
 	category := &model.Category{}
 	category.ID = uint(id)
 

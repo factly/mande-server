@@ -33,7 +33,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Plan{}
+	req := &plan{}
 	plan := &model.Plan{}
 	plan.ID = uint(id)
 

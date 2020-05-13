@@ -33,7 +33,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Order{}
+	req := &order{}
 	order := &model.Order{}
 	order.ID = uint(id)
 

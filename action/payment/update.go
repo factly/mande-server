@@ -33,10 +33,10 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	req := &payment{}
+
 	payment := &model.Payment{}
 	payment.ID = uint(id)
-
-	req := &model.Payment{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 

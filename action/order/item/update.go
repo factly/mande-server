@@ -37,7 +37,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.OrderItem{}
+	req := &orderItem{}
 	orderItem := &model.OrderItem{}
 	orderItem.ID = uint(id)
 	orderItem.OrderID = uint(oid)
@@ -47,7 +47,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&orderItem).Updates(model.OrderItem{
 		ExtraInfo: req.ExtraInfo,
 		ProductID: req.ProductID,
-		OrderID:   req.OrderID,
 	})
 	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem)
 

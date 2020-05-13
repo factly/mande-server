@@ -32,7 +32,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.User{}
+	req := &user{}
 
 	json.NewDecoder(r.Body).Decode(&req)
 	user := &model.User{}
