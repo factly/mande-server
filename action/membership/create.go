@@ -47,10 +47,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&result).Association("User").Find(&result.User)
-	model.DB.Model(&result).Association("Plan").Find(&result.Plan)
-	model.DB.Model(&result).Association("Payment").Find(&result.Payment)
-	model.DB.Model(&result.Payment).Association("Currency").Find(&result.Payment.Currency)
+	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
 	render.JSON(w, http.StatusCreated, result)
 }

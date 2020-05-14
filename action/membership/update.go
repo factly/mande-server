@@ -43,12 +43,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		PaymentID: membership.PaymentID,
 		PlanID:    membership.PlanID,
 		Status:    membership.Status,
-	}).First(&result)
-
-	model.DB.Model(&result).Association("User").Find(&result.User)
-	model.DB.Model(&result).Association("Plan").Find(&result.Plan)
-	model.DB.Model(&result).Association("Payment").Find(&result.Payment)
-	model.DB.Model(&result.Payment).Association("Currency").Find(&result.Payment.Currency)
+	}).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

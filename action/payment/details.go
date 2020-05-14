@@ -40,7 +40,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
+	model.DB.Model(&result).Preload("Currency").Find(&result.Currency)
 
 	render.JSON(w, http.StatusOK, result)
 }

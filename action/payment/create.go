@@ -47,7 +47,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
+	model.DB.Model(&result).Preload("Currency").Find(&result.Currency)
 
 	render.JSON(w, http.StatusCreated, result)
 }

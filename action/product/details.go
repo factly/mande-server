@@ -41,9 +41,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Association("ProductType").Find(&result.ProductType)
-	model.DB.Model(&result).Association("Currency").Find(&result.Currency)
-	model.DB.Model(&result).Association("Status").Find(&result.Status)
+	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }
