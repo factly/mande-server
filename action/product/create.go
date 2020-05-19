@@ -34,8 +34,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-
-	result := &model.Product{
+	result := &productData{}
+	result.Product = model.Product{
 		Title:         product.Title,
 		Slug:          product.Slug,
 		Price:         product.Price,
@@ -44,13 +44,43 @@ func create(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:    product.CurrencyID,
 	}
 
-	err = model.DB.Model(&model.Product{}).Create(&result).Error
+	err = model.DB.Model(&model.Product{}).Create(&result.Product).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result)
+	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
+
+	for _, id := range product.CategoryIDS {
+		productCategory := &model.ProductCategory{}
+
+		productCategory.CategoryID = uint(id)
+		productCategory.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		model.DB.Model(&model.ProductCategory{}).Preload("Category").First(&productCategory)
+		result.Categories = append(result.Categories, productCategory.Category)
+	}
+
+	for _, id := range product.TagIDS {
+		productTag := &model.ProductTag{}
+
+		productTag.TagID = uint(id)
+		productTag.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
+		result.Tags = append(result.Tags, productTag.Tag)
+	}
 
 	render.JSON(w, http.StatusCreated, result)
 }

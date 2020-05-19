@@ -17,13 +17,15 @@ type Product struct {
 // ProductCategory model
 type ProductCategory struct {
 	Base
-	CategoryID uint `gorm:"column:category_id" json:"category_id" validate:"required"`
-	ProductID  uint `gorm:"column:product_id" json:"product_id" validate:"required"`
+	CategoryID uint     `gorm:"column:category_id" json:"category_id" validate:"required"`
+	Category   Category `gorm:"foreignkey:category_id;association_foreignkey:id"`
+	ProductID  uint     `gorm:"column:product_id" json:"product_id" validate:"required"`
 }
 
 // ProductTag model
 type ProductTag struct {
 	Base
 	TagID     uint `gorm:"column:tag_id" json:"tag_id" validate:"required"`
+	Tag       Tag  `gorm:"foreignkey:tag_id;association_foreignkey:id"`
 	ProductID uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }

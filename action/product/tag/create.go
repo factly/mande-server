@@ -21,7 +21,7 @@ import (
 // @Consume json
 // @Produce  json
 // @Param id path string true "Product ID"
-// @Param ProductTag body productTags true "ProductTag object"
+// @Param ProductTag body productTag true "ProductTag object"
 // @Success 201 {object} model.ProductTag
 // @Failure 400 {array} string
 // @Router /products/{id}/tag [post]
