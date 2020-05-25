@@ -152,7 +152,6 @@ definitions:
       updated_at:
         type: string
     required:
-    - parent_id
     - slug
     - title
     type: object
@@ -1003,14 +1002,14 @@ paths:
       summary: Create category
       tags:
       - Category
-  /categories/{id}:
+  /categories/{category_id}:
     delete:
       description: Delete category by ID
       operationId: delete-category-by-id
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       responses:
@@ -1030,7 +1029,7 @@ paths:
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       produces:
@@ -1055,7 +1054,7 @@ paths:
       parameters:
       - description: Category ID
         in: path
-        name: id
+        name: category_id
         required: true
         type: string
       - description: Category
@@ -1128,14 +1127,14 @@ paths:
       summary: Create currency
       tags:
       - Currency
-  /currencies/{id}:
+  /currencies/{currency_id}:
     delete:
       description: Delete currency by ID
       operationId: delete-currency-by-id
       parameters:
       - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         required: true
         type: string
       responses:
@@ -1155,7 +1154,7 @@ paths:
       parameters:
       - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         type: string
       produces:
       - application/json
@@ -1177,9 +1176,9 @@ paths:
       description: Update currency by ID
       operationId: update-currency-by-id
       parameters:
-      - description: Currecny ID
+      - description: Currency ID
         in: path
-        name: id
+        name: currency_id
         required: true
         type: string
       - description: Currency
@@ -1252,14 +1251,14 @@ paths:
       summary: Create membership
       tags:
       - Membership
-  /memberships/{id}:
+  /memberships/{membership_id}:
     delete:
       description: Delete membership by ID
       operationId: delete-membership-by-id
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       responses:
@@ -1279,7 +1278,7 @@ paths:
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       produces:
@@ -1304,7 +1303,7 @@ paths:
       parameters:
       - description: Membership ID
         in: path
-        name: id
+        name: membership_id
         required: true
         type: string
       - description: Membership
@@ -1646,14 +1645,14 @@ paths:
       summary: Create payment
       tags:
       - Payment
-  /payments/{id}:
+  /payments/{payment_id}:
     delete:
       description: Delete payment by ID
       operationId: delete-payment-by-id
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       responses:
@@ -1673,7 +1672,7 @@ paths:
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       produces:
@@ -1698,7 +1697,7 @@ paths:
       parameters:
       - description: Payment ID
         in: path
-        name: id
+        name: payment_id
         required: true
         type: string
       - description: Payment
@@ -1765,14 +1764,14 @@ paths:
       summary: Create plan
       tags:
       - Plan
-  /plans/{id}:
+  /plans/{plan_id}:
     delete:
       description: Delete plan by ID
       operationId: delete-plan-by-id
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       responses:
@@ -1792,7 +1791,7 @@ paths:
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       produces:
@@ -1817,7 +1816,7 @@ paths:
       parameters:
       - description: Plan ID
         in: path
-        name: id
+        name: plan_id
         required: true
         type: string
       - description: Plan
@@ -1890,14 +1889,14 @@ paths:
       summary: Create product
       tags:
       - Product
-  /products/{id}:
+  /products/{product_id}:
     delete:
       description: Delete product by ID
       operationId: delete-product-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       responses:
@@ -1917,7 +1916,7 @@ paths:
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       produces:
@@ -1942,7 +1941,7 @@ paths:
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: Product
@@ -1966,14 +1965,14 @@ paths:
       summary: Update a product by id
       tags:
       - Product
-  /products/{id}/category:
+  /products/{product_id}/category:
     post:
       description: create productCategory
       operationId: add-productCategory
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductCategory object
@@ -1998,19 +1997,19 @@ paths:
       summary: Create productCategory
       tags:
       - ProductCategory
-  /products/{id}/category/{cid}:
+  /products/{product_id}/category/{category_id}:
     delete:
       description: Delete productCategory by ID
       operationId: delete-productCategory-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: Category ID
         in: path
-        name: cid
+        name: category_id
         required: true
         type: string
       responses:
@@ -2024,7 +2023,7 @@ paths:
       summary: Delete a productCategory
       tags:
       - ProductCategory
-  /products/{id}/status:
+  /products/{product_id}/status:
     get:
       description: Get all statuses
       operationId: get-all-statuses
@@ -2073,14 +2072,14 @@ paths:
       summary: Create status
       tags:
       - Status
-  /products/{id}/tag:
+  /products/{product_id}/tag:
     post:
       description: create productTags
       operationId: add-productTags
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductTag object
@@ -2105,19 +2104,19 @@ paths:
       summary: Create productTags
       tags:
       - ProductTag
-  /products/{id}/tag/{tid}:
+  /products/{product_id}/tag/{tag_id}:
     delete:
       description: Delete productTags by ID
       operationId: delete-productTags-by-id
       parameters:
       - description: Product ID
         in: path
-        name: id
+        name: product_id
         required: true
         type: string
       - description: ProductTag ID
         in: path
-        name: tid
+        name: tag_id
         required: true
         type: string
       responses:
@@ -2131,7 +2130,7 @@ paths:
       summary: Delete a productTags
       tags:
       - ProductTag
-  /products/{id}/type:
+  /products/{product_id}/type:
     get:
       description: Get all productTypes
       operationId: get-all-productTypes
@@ -2229,14 +2228,14 @@ paths:
       summary: Create tag
       tags:
       - Tag
-  /tags/{id}:
+  /tags/{tag_id}:
     delete:
       description: Delete tag by ID
       operationId: delete-tag-by-id
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       responses:
@@ -2256,7 +2255,7 @@ paths:
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       produces:
@@ -2281,7 +2280,7 @@ paths:
       parameters:
       - description: Tag ID
         in: path
-        name: id
+        name: tag_id
         required: true
         type: string
       - description: Tag
@@ -2354,14 +2353,14 @@ paths:
       summary: Create user
       tags:
       - User
-  /users/{id}:
+  /users/{user_id}:
     delete:
       description: Delete user by ID
       operationId: delete-user-by-id
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       responses:
@@ -2381,7 +2380,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       produces:
@@ -2406,7 +2405,7 @@ paths:
       parameters:
       - description: User ID
         in: path
-        name: id
+        name: user_id
         required: true
         type: string
       - description: User

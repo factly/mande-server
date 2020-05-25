@@ -18,14 +18,14 @@ import (
 // @ID update-plan-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Plan ID"
+// @Param plan_id path string true "Plan ID"
 // @Param Plan body plan false "Plan"
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string
-// @Router /plans/{id} [put]
+// @Router /plans/{plan_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
-	planID := chi.URLParam(r, "id")
+	planID := chi.URLParam(r, "plan_id")
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {

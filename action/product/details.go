@@ -16,16 +16,16 @@ import (
 // @Tags Product
 // @ID get-product-by-id
 // @Produce  json
-// @Param id path string true "Product ID"
+// @Param product_id path string true "Product ID"
 // @Success 200 {object} model.Product
 // @Failure 400 {array} string
-// @Router /products/{id} [get]
+// @Router /products/{product_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
 	var categories []model.ProductCategory
 	var tags []model.ProductTag
 
-	productID := chi.URLParam(r, "id")
+	productID := chi.URLParam(r, "product_id")
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {

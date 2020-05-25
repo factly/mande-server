@@ -16,13 +16,13 @@ import (
 // @Tags Membership
 // @ID delete-membership-by-id
 // @Consume  json
-// @Param id path string true "Membership ID"
+// @Param membership_id path string true "Membership ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /memberships/{id} [delete]
+// @Router /memberships/{membership_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	membershipID := chi.URLParam(r, "id")
+	membershipID := chi.URLParam(r, "membership_id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
 		validation.InvalidID(w, r)

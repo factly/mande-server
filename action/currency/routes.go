@@ -15,10 +15,10 @@ func Router() chi.Router {
 	r.Get("/", list)    // GET /currencies - return list of currencies
 	r.Post("/", create) // POST /currencies - create a new currency and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /currencies/{id} - read a single currency by :id
-		r.Put("/", update)    // PUT /currencies/{id} - update a single currency by :id
-		r.Delete("/", delete) // DELETE /currencies/{id} - delete a single currency by :id
+	r.Route("/{currency_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /currencies/{currency_id} - read a single currency by :currency_id
+		r.Put("/", update)    // PUT /currencies/{currency_id} - update a single currency by :currency_id
+		r.Delete("/", delete) // DELETE /currencies/{currency_id} - delete a single currency by :currency_id
 	})
 
 	return r

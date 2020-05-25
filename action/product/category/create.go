@@ -20,14 +20,14 @@ import (
 // @ID add-productCategory
 // @Consume json
 // @Produce  json
-// @Param id path string true "Product ID"
+// @Param product_id path string true "Product ID"
 // @Param ProductCategory body productCategory true "ProductCategory object"
 // @Success 201 {object} model.ProductCategory
 // @Failure 400 {array} string
-// @Router /products/{id}/category [post]
+// @Router /products/{product_id}/category [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	productID := chi.URLParam(r, "id")
+	productID := chi.URLParam(r, "product_id")
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {

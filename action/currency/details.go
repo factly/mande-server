@@ -16,12 +16,12 @@ import (
 // @Tags Currency
 // @ID get-currency-by-id
 // @Produce  json
-// @Param id path string false "Currency ID"
+// @Param currency_id path string false "Currency ID"
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
-// @Router /currencies/{id} [get]
+// @Router /currencies/{currency_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
-	currencyID := chi.URLParam(r, "id")
+	currencyID := chi.URLParam(r, "currency_id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
 		validation.InvalidID(w, r)

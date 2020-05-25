@@ -16,13 +16,13 @@ import (
 // @Tags User
 // @ID delete-user-by-id
 // @Consume  json
-// @Param id path string true "User ID"
+// @Param user_id path string true "User ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /users/{id} [delete]
+// @Router /users/{user_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	userID := chi.URLParam(r, "id")
+	userID := chi.URLParam(r, "user_id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
 		validation.InvalidID(w, r)

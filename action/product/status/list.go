@@ -23,7 +23,7 @@ type paging struct {
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
-// @Router /products/{id}/status [get]
+// @Router /products/{product_id}/status [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}

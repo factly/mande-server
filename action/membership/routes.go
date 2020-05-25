@@ -17,10 +17,10 @@ func Router() chi.Router {
 	r.Get("/", list)    // GET /memberships - return list of memberships
 	r.Post("/", create) // POST /memberships - create a new membership and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /memberships/{id} - read a single membership by :id
-		r.Put("/", update)    // PUT /memberships/{id} - update a single membership by :id
-		r.Delete("/", delete) // DELETE /memberships/{id} - delete a single membership by :id
+	r.Route("/{membership_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /memberships/{membership_id} - read a single membership by :membership_id
+		r.Put("/", update)    // PUT /memberships/{membership_id} - update a single membership by :membership_id
+		r.Delete("/", delete) // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
 	})
 
 	return r

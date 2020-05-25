@@ -18,14 +18,14 @@ import (
 // @ID update-product-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Product ID"
+// @Param product_id path string true "Product ID"
 // @Param Product body product false "Product"
 // @Success 200 {object} model.Product
 // @Failure 400 {array} string
-// @Router /products/{id} [put]
+// @Router /products/{product_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
 
-	productID := chi.URLParam(r, "id")
+	productID := chi.URLParam(r, "product_id")
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {

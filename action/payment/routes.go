@@ -17,10 +17,10 @@ func Router() chi.Router {
 	r.Get("/", list)    // GET /payments - return list of payments
 	r.Post("/", create) // POST /payments - create a new payment and persist it
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /payments/{id} - read a single payment by :id
-		r.Put("/", update)    // PUT /payments/{id} - update a single payment by :id
-		r.Delete("/", delete) // DELETE /payments/{id} - delete a single payment by :id
+	r.Route("/{payment_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /payments/{payment_id} - read a single payment by :payment_id
+		r.Put("/", update)    // PUT /payments/{payment_id} - update a single payment by :payment_id
+		r.Delete("/", delete) // DELETE /payments/{payment_id} - delete a single payment by :payment_id
 	})
 
 	return r

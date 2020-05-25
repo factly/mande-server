@@ -18,13 +18,13 @@ import (
 // @ID update-currency-by-id
 // @Produce json
 // @Consume json
-// @Param id path string true "Currecny ID"
+// @Param currency_id path string true "Currency ID"
 // @Param Currency body currency false "Currency"
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string
-// @Router /currencies/{id} [put]
+// @Router /currencies/{currency_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
-	currencyID := chi.URLParam(r, "id")
+	currencyID := chi.URLParam(r, "currency_id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
 		validation.InvalidID(w, r)
