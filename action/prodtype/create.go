@@ -21,7 +21,7 @@ import (
 // @Param Type body productType true "Type object"
 // @Success 201 {object} model.ProductType
 // @Failure 400 {array} string
-// @Router /products/{product_id}/type [post]
+// @Router /types [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
 	productType := &productType{}

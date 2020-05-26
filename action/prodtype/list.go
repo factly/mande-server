@@ -14,16 +14,16 @@ type paging struct {
 	Nodes []model.ProductType `json:"nodes"`
 }
 
-// list - Get all productTypes
-// @Summary Show all productTypes
-// @Description Get all productTypes
+// list - Get all product types
+// @Summary Show all product types
+// @Description Get all product types
 // @Tags Type
-// @ID get-all-productTypes
+// @ID get-all-product-types
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
-// @Router /products/{product_id}/type [get]
+// @Router /types [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}

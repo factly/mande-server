@@ -66,7 +66,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.OrderItem'
+          $ref: '#/definitions/model.CartItem'
         type: array
       total:
         type: integer
@@ -1878,55 +1878,6 @@ paths:
       summary: Update a product by id
       tags:
       - Product
-  /products/{product_id}/type:
-    get:
-      description: Get all productTypes
-      operationId: get-all-productTypes
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/prodtype.paging'
-      summary: Show all productTypes
-      tags:
-      - Type
-    post:
-      description: Create product type
-      operationId: add-type
-      parameters:
-      - description: Type object
-        in: body
-        name: Type
-        required: true
-        schema:
-          $ref: '#/definitions/prodtype.productType'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.ProductType'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create product type
-      tags:
-      - Type
   /tags:
     get:
       description: Get all tags
@@ -2052,6 +2003,131 @@ paths:
       summary: Update a tag by id
       tags:
       - Tag
+  /types:
+    get:
+      description: Get all product types
+      operationId: get-all-product-types
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/prodtype.paging'
+      summary: Show all product types
+      tags:
+      - Type
+    post:
+      description: Create product type
+      operationId: add-type
+      parameters:
+      - description: Type object
+        in: body
+        name: Type
+        required: true
+        schema:
+          $ref: '#/definitions/prodtype.productType'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create product type
+      tags:
+      - Type
+  /types/{type_id}:
+    delete:
+      description: Delete product type by ID
+      operationId: delete-product-type-by-id
+      parameters:
+      - description: Product Type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a product type
+      tags:
+      - Type
+    get:
+      description: Get product type by ID
+      operationId: get-product-type-by-id
+      parameters:
+      - description: Type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a product type by id
+      tags:
+      - Type
+    put:
+      description: Update product type by ID
+      operationId: update-product-type-by-id
+      parameters:
+      - description: Product type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      - description: Product type
+        in: body
+        name: type
+        schema:
+          $ref: '#/definitions/prodtype.productType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a product type by id
+      tags:
+      - Type
   /users:
     get:
       description: Get all users
