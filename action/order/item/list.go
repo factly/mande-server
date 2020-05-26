@@ -32,11 +32,11 @@ func list(w http.ResponseWriter, r *http.Request) {
 	orderID := chi.URLParam(r, "order_id")
 	id, _ := strconv.Atoi(orderID)
 
-	data := paging{}
+	result := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Where(&model.OrderItem{OrderID: uint(id)}).Offset(offset).Limit(limit).Count(&data.Total).Find(&data.Nodes)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Where(&model.OrderItem{OrderID: uint(id)}).Offset(offset).Limit(limit).Count(&result.Total).Find(&result.Nodes)
 
-	render.JSON(w, http.StatusOK, data)
+	render.JSON(w, http.StatusOK, result)
 }

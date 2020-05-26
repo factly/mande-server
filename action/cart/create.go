@@ -24,7 +24,7 @@ import (
 // @Router /carts [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	cart := &model.Cart{}
+	cart := &cart{}
 
 	json.NewDecoder(r.Body).Decode(&cart)
 
@@ -36,11 +36,16 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Cart{}).Create(&cart).Error
+	result := &model.Cart{
+		Status: cart.Status,
+		UserID: cart.UserID,
+	}
+
+	err = model.DB.Model(&model.Cart{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, cart)
+	render.JSON(w, http.StatusCreated, result)
 }

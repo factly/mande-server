@@ -28,17 +28,17 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency := &model.Currency{}
-	currency.ID = uint(id)
+	result := &model.Currency{}
+	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&currency).Error
+	err = model.DB.First(&result).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Delete(&currency)
+	model.DB.Delete(&result)
 
 	render.JSON(w, http.StatusOK, nil)
 }

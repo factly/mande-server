@@ -35,9 +35,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productTag := &model.ProductTag{
-		ProductID: uint(id),
-	}
+	productTag := &productTag{}
+
+	result := &model.ProductTag{}
 
 	json.NewDecoder(r.Body).Decode(&productTag)
 
@@ -49,11 +49,14 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
+	result.ProductID = uint(id)
+	result.TagID = productTag.TagID
+
+	err = model.DB.Model(&model.ProductTag{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, productTag)
+	render.JSON(w, http.StatusCreated, result)
 }

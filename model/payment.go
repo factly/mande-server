@@ -1,12 +1,8 @@
 package model
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 // Payment model
 type Payment struct {
-	gorm.Model
+	Base
 	Amount     int      `gorm:"column:amount" json:"amount" validate:"required"`
 	Gateway    string   `gorm:"column:gateway" json:"gateway" validate:"required"`
 	CurrencyID uint     `gorm:"column:currency_id" json:"currency_id" validate:"required"`

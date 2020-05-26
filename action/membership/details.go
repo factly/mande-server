@@ -29,20 +29,17 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	membership := &model.Membership{}
-	membership.ID = uint(id)
+	result := &model.Membership{}
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Membership{}).First(&membership).Error
+	err = model.DB.Model(&model.Membership{}).First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	model.DB.Model(&membership).Association("User").Find(&membership.User)
-	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
-	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
-	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
+	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
-	render.JSON(w, http.StatusOK, membership)
+	render.JSON(w, http.StatusOK, result)
 }

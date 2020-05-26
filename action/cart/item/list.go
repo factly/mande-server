@@ -32,11 +32,11 @@ func list(w http.ResponseWriter, r *http.Request) {
 	cartID := chi.URLParam(r, "cart_id")
 	id, _ := strconv.Atoi(cartID)
 
-	data := paging{}
+	result := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Where(&model.CartItem{CartID: uint(id)}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.CartItem{}).Where(&model.CartItem{CartID: uint(id)}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
-	render.JSON(w, http.StatusOK, data)
+	render.JSON(w, http.StatusOK, result)
 }

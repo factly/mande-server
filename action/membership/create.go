@@ -24,7 +24,7 @@ import (
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	membership := &model.Membership{}
+	membership := &membership{}
 	json.NewDecoder(r.Body).Decode(&membership)
 
 	validate := validator.New()
@@ -35,15 +35,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Membership{}).Create(&membership).Error
+	result := &model.Membership{
+		Status:    membership.Status,
+		UserID:    membership.UserID,
+		PaymentID: membership.PaymentID,
+		PlanID:    membership.PlanID,
+	}
+
+	err = model.DB.Model(&model.Membership{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&membership).Association("User").Find(&membership.User)
-	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
-	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
-	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
+	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
-	render.JSON(w, http.StatusCreated, membership)
+	render.JSON(w, http.StatusCreated, result)
 }

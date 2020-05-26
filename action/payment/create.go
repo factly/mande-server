@@ -24,7 +24,7 @@ import (
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	payment := &model.Payment{}
+	payment := &payment{}
 	json.NewDecoder(r.Body).Decode(&payment)
 
 	validate := validator.New()
@@ -35,12 +35,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Payment{}).Create(&payment).Error
+	result := &model.Payment{
+		Amount:     payment.Amount,
+		Gateway:    payment.Gateway,
+		CurrencyID: payment.CurrencyID,
+		Status:     payment.Status,
+	}
+
+	err = model.DB.Model(&model.Payment{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+	model.DB.Model(&result).Preload("Currency").Find(&result.Currency)
 
-	render.JSON(w, http.StatusCreated, payment)
+	render.JSON(w, http.StatusCreated, result)
 }

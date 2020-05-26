@@ -28,15 +28,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency := &model.Currency{}
-	currency.ID = uint(id)
+	result := &model.Currency{}
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Currency{}).First(&currency).Error
+	err = model.DB.Model(&model.Currency{}).First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	render.JSON(w, http.StatusOK, currency)
+	render.JSON(w, http.StatusOK, result)
 }

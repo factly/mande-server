@@ -22,6 +22,9 @@ import (
 // @Router /products/{product_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
+	var categories []model.ProductCategory
+	var tags []model.ProductTag
+
 	productID := chi.URLParam(r, "product_id")
 	id, err := strconv.Atoi(productID)
 
@@ -32,6 +35,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	product := &model.Product{}
 
+	result := &productData{}
+
 	product.ID = uint(id)
 
 	err = model.DB.Model(&model.Product{}).First(&product).Error
@@ -41,9 +46,23 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
+	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
 
-	render.JSON(w, http.StatusOK, product)
+	model.DB.Model(&model.ProductCategory{}).Where(&model.ProductCategory{
+		ProductID: uint(id),
+	}).Preload("Category").Find(&categories)
+
+	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
+		ProductID: uint(id),
+	}).Preload("Tag").Find(&tags)
+
+	for _, c := range categories {
+		result.Categories = append(result.Categories, c.Category)
+	}
+
+	for _, t := range tags {
+		result.Tags = append(result.Tags, t.Tag)
+	}
+
+	render.JSON(w, http.StatusOK, result)
 }

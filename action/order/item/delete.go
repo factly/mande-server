@@ -34,18 +34,18 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderItem := &model.OrderItem{}
-	orderItem.ID = uint(id)
-	orderItem.OrderID = uint(oid)
+	result := &model.OrderItem{}
+	result.ID = uint(id)
+	result.OrderID = uint(oid)
 
 	// check record exists or not
-	err = model.DB.First(&orderItem).Error
+	err = model.DB.First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Delete(&orderItem)
+	model.DB.Delete(&result)
 
 	render.JSON(w, http.StatusOK, nil)
 }

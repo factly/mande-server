@@ -25,11 +25,11 @@ type paging struct {
 // @Router /tags [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	data := paging{}
+	result := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Model(&model.Tag{}).Count(&data.Total).Offset(offset).Limit(limit).Find(&data.Nodes)
+	model.DB.Model(&model.Tag{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
-	render.JSON(w, http.StatusOK, data)
+	render.JSON(w, http.StatusOK, result)
 }

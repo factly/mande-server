@@ -1,12 +1,8 @@
 package model
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 // Product model
 type Product struct {
-	gorm.Model
+	Base
 	Title         string      `gorm:"column:title" json:"title" validate:"required"`
 	Slug          string      `gorm:"column:slug" json:"slug" validate:"required"`
 	Price         int         `gorm:"column:price" json:"price" validate:"required"`
@@ -20,14 +16,16 @@ type Product struct {
 
 // ProductCategory model
 type ProductCategory struct {
-	gorm.Model
-	CategoryID uint `gorm:"column:category_id" json:"category_id" validate:"required"`
-	ProductID  uint `gorm:"column:product_id" json:"product_id" validate:"required"`
+	Base
+	CategoryID uint     `gorm:"column:category_id" json:"category_id" validate:"required"`
+	Category   Category `gorm:"foreignkey:category_id;association_foreignkey:id"`
+	ProductID  uint     `gorm:"column:product_id" json:"product_id" validate:"required"`
 }
 
 // ProductTag model
 type ProductTag struct {
-	gorm.Model
+	Base
 	TagID     uint `gorm:"column:tag_id" json:"tag_id" validate:"required"`
+	Tag       Tag  `gorm:"foreignkey:tag_id;association_foreignkey:id"`
 	ProductID uint `gorm:"column:product_id" json:"product_id" validate:"required"`
 }

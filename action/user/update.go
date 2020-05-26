@@ -32,19 +32,18 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.User{}
+	user := &user{}
 
-	json.NewDecoder(r.Body).Decode(&req)
-	user := &model.User{}
+	json.NewDecoder(r.Body).Decode(&user)
+	result := &model.User{}
 
-	user.ID = uint(id)
+	result.ID = uint(id)
 
-	model.DB.Model(&user).Updates(&model.User{
-		Email:     req.Email,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-	})
-	model.DB.First(&user)
+	model.DB.Model(&result).Updates(&model.User{
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+	}).First(&result)
 
-	render.JSON(w, http.StatusOK, user)
+	render.JSON(w, http.StatusOK, result)
 }

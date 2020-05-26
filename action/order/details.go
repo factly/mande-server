@@ -30,15 +30,15 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order := &model.Order{}
-	order.ID = uint(id)
+	result := &model.Order{}
+	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order).Error
+	err = model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	render.JSON(w, http.StatusOK, order)
+	render.JSON(w, http.StatusOK, result)
 }

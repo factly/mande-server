@@ -23,7 +23,7 @@ import (
 // @Router /plans [post]
 func Create(w http.ResponseWriter, r *http.Request) {
 
-	plan := &model.Plan{}
+	plan := &plan{}
 
 	json.NewDecoder(r.Body).Decode(&plan)
 
@@ -35,11 +35,17 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Plan{}).Create(&plan).Error
+	result := &model.Plan{
+		PlanInfo: plan.PlanInfo,
+		PlanName: plan.PlanName,
+		Status:   plan.Status,
+	}
+
+	err = model.DB.Model(&model.Plan{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, plan)
+	render.JSON(w, http.StatusCreated, result)
 }

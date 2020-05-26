@@ -24,7 +24,7 @@ import (
 // @Router /users [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	user := &model.User{}
+	user := &user{}
 	json.NewDecoder(r.Body).Decode(&user)
 
 	validate := validator.New()
@@ -34,11 +34,18 @@ func create(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
-	err = model.DB.Model(&model.User{}).Create(&user).Error
+
+	result := &model.User{
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+	}
+
+	err = model.DB.Model(&model.User{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, user)
+	render.JSON(w, http.StatusCreated, result)
 }

@@ -24,7 +24,7 @@ import (
 // @Router /orders [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	order := &model.Order{}
+	order := &order{}
 
 	json.NewDecoder(r.Body).Decode(&order)
 
@@ -36,12 +36,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Order{}).Create(&order).Error
+	result := &model.Order{
+		UserID:    order.UserID,
+		Status:    order.Status,
+		PaymentID: order.PaymentID,
+		CartID:    order.CartID,
+	}
+
+	err = model.DB.Model(&model.Order{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&order)
+	model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result)
 
-	render.JSON(w, http.StatusCreated, order)
+	render.JSON(w, http.StatusCreated, result)
 }

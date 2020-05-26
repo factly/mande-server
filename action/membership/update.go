@@ -32,24 +32,18 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	membership := &model.Membership{}
-	membership.ID = uint(id)
-	req := &model.Membership{}
+	membership := &membership{}
+	result := &model.Membership{}
+	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&membership)
 
-	model.DB.Model(&membership).Updates(model.Membership{
-		UserID:    req.UserID,
-		PaymentID: req.PaymentID,
-		PlanID:    req.PlanID,
-		Status:    req.Status,
-	})
+	model.DB.Model(&result).Updates(model.Membership{
+		UserID:    membership.UserID,
+		PaymentID: membership.PaymentID,
+		PlanID:    membership.PlanID,
+		Status:    membership.Status,
+	}).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
-	model.DB.First(&membership)
-	model.DB.Model(&membership).Association("User").Find(&membership.User)
-	model.DB.Model(&membership).Association("Plan").Find(&membership.Plan)
-	model.DB.Model(&membership).Association("Payment").Find(&membership.Payment)
-	model.DB.Model(&membership.Payment).Association("Currency").Find(&membership.Payment.Currency)
-
-	render.JSON(w, http.StatusOK, membership)
+	render.JSON(w, http.StatusOK, result)
 }

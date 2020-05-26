@@ -33,21 +33,19 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payment := &model.Payment{}
-	payment.ID = uint(id)
+	payment := &payment{}
 
-	req := &model.Payment{}
+	json.NewDecoder(r.Body).Decode(&payment)
 
-	json.NewDecoder(r.Body).Decode(&req)
+	result := &model.Payment{}
+	result.ID = uint(id)
 
-	model.DB.Model(&payment).Updates(&model.Payment{
-		Amount:     req.Amount,
-		Gateway:    req.Gateway,
-		Status:     req.Status,
-		CurrencyID: req.CurrencyID,
-	})
-	model.DB.First(&payment)
-	model.DB.Model(&payment).Association("Currency").Find(&payment.Currency)
+	model.DB.Model(&result).Updates(&model.Payment{
+		Amount:     payment.Amount,
+		Gateway:    payment.Gateway,
+		Status:     payment.Status,
+		CurrencyID: payment.CurrencyID,
+	}).First(&result).Preload("Currency").Find(&result.Currency)
 
-	render.JSON(w, http.StatusOK, payment)
+	render.JSON(w, http.StatusOK, result)
 }

@@ -24,7 +24,7 @@ import (
 // @Router /categories [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	category := &model.Category{}
+	category := category{}
 
 	json.NewDecoder(r.Body).Decode(&category)
 
@@ -36,11 +36,17 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Category{}).Create(&category).Error
+	result := &model.Category{
+		Title:    category.Title,
+		Slug:     category.Slug,
+		ParentID: category.ParentID,
+	}
+
+	err = model.DB.Model(&model.Category{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, category)
+	render.JSON(w, http.StatusCreated, result)
 }

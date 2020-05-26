@@ -34,16 +34,16 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderItem := &model.OrderItem{}
-	orderItem.ID = uint(id)
-	orderItem.OrderID = uint(oid)
+	result := &model.OrderItem{}
+	result.ID = uint(id)
+	result.OrderID = uint(oid)
 
-	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&orderItem).Error
+	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
 
-	render.JSON(w, http.StatusOK, orderItem)
+	render.JSON(w, http.StatusOK, result)
 }

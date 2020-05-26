@@ -33,25 +33,20 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &model.Product{}
+	product := &product{}
+	json.NewDecoder(r.Body).Decode(&product)
 
-	product.ID = uint(id)
+	result := &model.Product{}
+	result.ID = uint(id)
 
-	req := &model.Product{}
-	json.NewDecoder(r.Body).Decode(&req)
+	model.DB.Model(&result).Updates(&model.Product{
+		CurrencyID:    product.CurrencyID,
+		ProductTypeID: product.ProductTypeID,
+		StatusID:      product.StatusID,
+		Title:         product.Title,
+		Price:         product.Price,
+		Slug:          product.Slug,
+	}).Preload("ProductType").Preload("Status").Preload("Currency").First(&result)
 
-	model.DB.Model(&product).Updates(&model.Product{
-		CurrencyID:    req.CurrencyID,
-		ProductTypeID: req.ProductTypeID,
-		StatusID:      req.StatusID,
-		Title:         req.Title,
-		Price:         req.Price,
-		Slug:          req.Slug,
-	})
-	model.DB.First(&product).First(&product)
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
-
-	render.JSON(w, http.StatusOK, product)
+	render.JSON(w, http.StatusOK, result)
 }

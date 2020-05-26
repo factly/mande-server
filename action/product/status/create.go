@@ -24,7 +24,7 @@ import (
 // @Router /products/{product_id}/status [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	productStatus := &model.Status{}
+	productStatus := &status{}
 	json.NewDecoder(r.Body).Decode(&productStatus)
 
 	validate := validator.New()
@@ -35,11 +35,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Status{}).Create(&productStatus).Error
+	result := &model.Status{
+		Name: productStatus.Name,
+	}
+
+	err = model.DB.Model(&model.Status{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, productStatus)
+	render.JSON(w, http.StatusCreated, result)
 }

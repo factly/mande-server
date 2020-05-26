@@ -34,19 +34,17 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cartItem := &model.CartItem{}
-	cartItem.ID = uint(id)
-	cartItem.CartID = uint(cid)
+	result := &model.CartItem{}
+	result.ID = uint(id)
+	result.CartID = uint(cid)
 
-	err = model.DB.Model(&model.CartItem{}).First(&cartItem).Error
+	err = model.DB.Model(&model.CartItem{}).First(&result).Error
 	if err != nil {
 		validation.RecordNotFound(w, r)
 		return
 	}
-	model.DB.Model(&cartItem).Association("Product").Find(&cartItem.Product)
-	model.DB.Model(&cartItem.Product).Association("Status").Find(&cartItem.Product.Status)
-	model.DB.Model(&cartItem.Product).Association("ProductType").Find(&cartItem.Product.ProductType)
-	model.DB.Model(&cartItem.Product).Association("Currency").Find(&cartItem.Product.Currency)
 
-	render.JSON(w, http.StatusOK, cartItem)
+	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
+
+	render.JSON(w, http.StatusOK, result)
 }

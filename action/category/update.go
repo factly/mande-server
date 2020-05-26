@@ -33,17 +33,16 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Category{}
-	category := &model.Category{}
-	category.ID = uint(id)
+	category := &category{}
+	result := &model.Category{}
+	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&category)
 
-	model.DB.Model(&category).Updates(model.Category{
-		Title: req.Title,
-		Slug:  req.Slug,
-	})
-	model.DB.First(&category)
+	model.DB.Model(&result).Updates(model.Category{
+		Title: category.Title,
+		Slug:  category.Slug,
+	}).First(&result)
 
-	render.JSON(w, http.StatusOK, category)
+	render.JSON(w, http.StatusOK, result)
 }

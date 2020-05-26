@@ -32,17 +32,17 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &model.Cart{}
-	cart := &model.Cart{}
-	cart.ID = uint(id)
+	cart := &cart{}
 
-	json.NewDecoder(r.Body).Decode(&req)
+	json.NewDecoder(r.Body).Decode(&cart)
 
-	model.DB.Model(&cart).Updates(model.Cart{
-		Status: req.Status,
-		UserID: req.UserID,
-	})
-	model.DB.First(&cart)
+	result := &model.Cart{}
+	result.ID = uint(id)
 
-	render.JSON(w, http.StatusOK, cart)
+	model.DB.Model(&result).Updates(model.Cart{
+		Status: cart.Status,
+		UserID: cart.UserID,
+	}).First(&result)
+
+	render.JSON(w, http.StatusOK, result)
 }

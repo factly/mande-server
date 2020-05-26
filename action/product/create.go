@@ -24,7 +24,7 @@ import (
 // @Router /products [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	product := &model.Product{}
+	product := &product{}
 	json.NewDecoder(r.Body).Decode(&product)
 
 	validate := validator.New()
@@ -34,15 +34,53 @@ func create(w http.ResponseWriter, r *http.Request) {
 		validation.ValidErrors(w, r, msg)
 		return
 	}
+	result := &productData{}
+	result.Product = model.Product{
+		Title:         product.Title,
+		Slug:          product.Slug,
+		Price:         product.Price,
+		ProductTypeID: product.ProductTypeID,
+		StatusID:      product.StatusID,
+		CurrencyID:    product.CurrencyID,
+	}
 
-	err = model.DB.Model(&model.Product{}).Create(&product).Error
+	err = model.DB.Model(&model.Product{}).Create(&result.Product).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&product).Association("ProductType").Find(&product.ProductType)
-	model.DB.Model(&product).Association("Currency").Find(&product.Currency)
-	model.DB.Model(&product).Association("Status").Find(&product.Status)
 
-	render.JSON(w, http.StatusCreated, product)
+	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
+
+	for _, id := range product.CategoryIDS {
+		productCategory := &model.ProductCategory{}
+
+		productCategory.CategoryID = uint(id)
+		productCategory.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		model.DB.Model(&model.ProductCategory{}).Preload("Category").First(&productCategory)
+		result.Categories = append(result.Categories, productCategory.Category)
+	}
+
+	for _, id := range product.TagIDS {
+		productTag := &model.ProductTag{}
+
+		productTag.TagID = uint(id)
+		productTag.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
+		result.Tags = append(result.Tags, productTag.Tag)
+	}
+
+	render.JSON(w, http.StatusCreated, result)
 }

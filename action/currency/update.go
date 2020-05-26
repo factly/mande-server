@@ -31,13 +31,17 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currency := &model.Currency{}
-	currency.ID = uint(id)
-	req := &model.Currency{}
+	currency := &currency{}
 
-	json.NewDecoder(r.Body).Decode(&req)
-	model.DB.Model(&currency).Updates(model.Currency{IsoCode: req.IsoCode, Name: req.Name})
-	model.DB.First(&currency)
+	json.NewDecoder(r.Body).Decode(&currency)
 
-	render.JSON(w, http.StatusOK, currency)
+	result := &model.Currency{}
+	result.ID = uint(id)
+
+	model.DB.Model(&result).Updates(model.Currency{
+		IsoCode: currency.IsoCode,
+		Name:    currency.Name,
+	}).First(&result)
+
+	render.JSON(w, http.StatusOK, result)
 }
