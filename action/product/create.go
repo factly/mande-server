@@ -28,7 +28,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&product)
 
 	validate := validator.New()
-	err := validate.StructExcept(product, "ProductType", "Status", "Currency")
+	err := validate.StructExcept(product, "ProductType", "Currency")
 	if err != nil {
 		msg := err.Error()
 		validation.ValidErrors(w, r, msg)
@@ -40,7 +40,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Slug:          product.Slug,
 		Price:         product.Price,
 		ProductTypeID: product.ProductTypeID,
-		StatusID:      product.StatusID,
+		Status:        product.Status,
 		CurrencyID:    product.CurrencyID,
 	}
 
@@ -50,7 +50,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
+	model.DB.Preload("ProductType").Preload("Currency").First(&result.Product)
 
 	for _, id := range product.CategoryIDs {
 		productCategory := &model.ProductCategory{}

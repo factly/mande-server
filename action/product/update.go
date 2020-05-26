@@ -44,7 +44,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&result.Product).Updates(&model.Product{
 		CurrencyID:    product.CurrencyID,
 		ProductTypeID: product.ProductTypeID,
-		StatusID:      product.StatusID,
+		Status:        product.Status,
 		Title:         product.Title,
 		Price:         product.Price,
 		Slug:          product.Slug,
