@@ -16,8 +16,8 @@ type product struct {
 	ProductTypeID uint   `json:"product_type_id"`
 	StatusID      uint   `json:"status_id"`
 	CurrencyID    uint   `json:"currency_id"`
-	CategoryIDS   []int  `json:"category_ids"`
-	TagIDS        []int  `json:"tag_ids"`
+	CategoryIDs   []uint `json:"category_ids"`
+	TagIDs        []uint `json:"tag_ids"`
 }
 
 type productData struct {

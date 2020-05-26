@@ -52,7 +52,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
 
-	for _, id := range product.CategoryIDS {
+	for _, id := range product.CategoryIDs {
 		productCategory := &model.ProductCategory{}
 
 		productCategory.CategoryID = uint(id)
@@ -67,7 +67,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		result.Categories = append(result.Categories, productCategory.Category)
 	}
 
-	for _, id := range product.TagIDS {
+	for _, id := range product.TagIDs {
 		productTag := &model.ProductTag{}
 
 		productTag.TagID = uint(id)
