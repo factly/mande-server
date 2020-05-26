@@ -32,7 +32,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("Currency").Preload("Status").Preload("ProductType").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
+	model.DB.Preload("Currency").Preload("ProductType").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
 
 	for _, product := range products {
 		var categories []model.ProductCategory

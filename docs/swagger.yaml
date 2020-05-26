@@ -34,11 +34,6 @@ definitions:
       total:
         type: integer
     type: object
-  category.productCategory:
-    properties:
-      category_id:
-        type: integer
-    type: object
   currency.currency:
     properties:
       iso_code:
@@ -71,7 +66,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.OrderItem'
+          $ref: '#/definitions/model.CartItem'
         type: array
       total:
         type: integer
@@ -334,10 +329,7 @@ definitions:
       slug:
         type: string
       status:
-        $ref: '#/definitions/model.Status'
-        type: object
-      status_id:
-        type: integer
+        type: string
       title:
         type: string
       updated_at:
@@ -347,67 +339,10 @@ definitions:
     - price
     - product_type_id
     - slug
-    - status_id
+    - status
     - title
     type: object
-  model.ProductCategory:
-    properties:
-      category:
-        $ref: '#/definitions/model.Category'
-        type: object
-      category_id:
-        type: integer
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      product_id:
-        type: integer
-      updated_at:
-        type: string
-    required:
-    - category_id
-    - product_id
-    type: object
-  model.ProductTag:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      product_id:
-        type: integer
-      tag:
-        $ref: '#/definitions/model.Tag'
-        type: object
-      tag_id:
-        type: integer
-      updated_at:
-        type: string
-    required:
-    - product_id
-    - tag_id
-    type: object
   model.ProductType:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - name
-    type: object
-  model.Status:
     properties:
       created_at:
         type: string
@@ -556,8 +491,8 @@ definitions:
         type: integer
       slug:
         type: string
-      status_id:
-        type: integer
+      status:
+        type: string
       tag_ids:
         items:
           type: integer
@@ -592,10 +527,7 @@ definitions:
       slug:
         type: string
       status:
-        $ref: '#/definitions/model.Status'
-        type: object
-      status_id:
-        type: integer
+        type: string
       tags:
         items:
           $ref: '#/definitions/model.Tag'
@@ -609,22 +541,8 @@ definitions:
     - price
     - product_type_id
     - slug
-    - status_id
+    - status
     - title
-    type: object
-  status.paging:
-    properties:
-      nodes:
-        items:
-          $ref: '#/definitions/model.Status'
-        type: array
-      total:
-        type: integer
-    type: object
-  status.status:
-    properties:
-      name:
-        type: string
     type: object
   tag.paging:
     properties:
@@ -633,11 +551,6 @@ definitions:
           $ref: '#/definitions/model.Tag'
         type: array
       total:
-        type: integer
-    type: object
-  tag.productTag:
-    properties:
-      tag_id:
         type: integer
     type: object
   tag.tag:
@@ -1965,220 +1878,6 @@ paths:
       summary: Update a product by id
       tags:
       - Product
-  /products/{product_id}/category:
-    post:
-      description: create productCategory
-      operationId: add-productCategory
-      parameters:
-      - description: Product ID
-        in: path
-        name: product_id
-        required: true
-        type: string
-      - description: ProductCategory object
-        in: body
-        name: ProductCategory
-        required: true
-        schema:
-          $ref: '#/definitions/category.productCategory'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.ProductCategory'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create productCategory
-      tags:
-      - ProductCategory
-  /products/{product_id}/category/{category_id}:
-    delete:
-      description: Delete productCategory by ID
-      operationId: delete-productCategory-by-id
-      parameters:
-      - description: Product ID
-        in: path
-        name: product_id
-        required: true
-        type: string
-      - description: Category ID
-        in: path
-        name: category_id
-        required: true
-        type: string
-      responses:
-        "200": {}
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a productCategory
-      tags:
-      - ProductCategory
-  /products/{product_id}/status:
-    get:
-      description: Get all statuses
-      operationId: get-all-statuses
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/status.paging'
-      summary: Show all statuses
-      tags:
-      - Status
-    post:
-      description: Create status
-      operationId: add-status
-      parameters:
-      - description: Status object
-        in: body
-        name: Status
-        required: true
-        schema:
-          $ref: '#/definitions/status.status'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.Status'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create status
-      tags:
-      - Status
-  /products/{product_id}/tag:
-    post:
-      description: create productTags
-      operationId: add-productTags
-      parameters:
-      - description: Product ID
-        in: path
-        name: product_id
-        required: true
-        type: string
-      - description: ProductTag object
-        in: body
-        name: ProductTag
-        required: true
-        schema:
-          $ref: '#/definitions/tag.productTag'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.ProductTag'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create productTags
-      tags:
-      - ProductTag
-  /products/{product_id}/tag/{tag_id}:
-    delete:
-      description: Delete productTags by ID
-      operationId: delete-productTags-by-id
-      parameters:
-      - description: Product ID
-        in: path
-        name: product_id
-        required: true
-        type: string
-      - description: ProductTag ID
-        in: path
-        name: tag_id
-        required: true
-        type: string
-      responses:
-        "200": {}
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a productTags
-      tags:
-      - ProductTag
-  /products/{product_id}/type:
-    get:
-      description: Get all productTypes
-      operationId: get-all-productTypes
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/prodtype.paging'
-      summary: Show all productTypes
-      tags:
-      - Type
-    post:
-      description: Create product type
-      operationId: add-type
-      parameters:
-      - description: Type object
-        in: body
-        name: Type
-        required: true
-        schema:
-          $ref: '#/definitions/prodtype.productType'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.ProductType'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create product type
-      tags:
-      - Type
   /tags:
     get:
       description: Get all tags
@@ -2304,6 +2003,131 @@ paths:
       summary: Update a tag by id
       tags:
       - Tag
+  /types:
+    get:
+      description: Get all product types
+      operationId: get-all-product-types
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/prodtype.paging'
+      summary: Show all product types
+      tags:
+      - Type
+    post:
+      description: Create product type
+      operationId: add-type
+      parameters:
+      - description: Type object
+        in: body
+        name: Type
+        required: true
+        schema:
+          $ref: '#/definitions/prodtype.productType'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create product type
+      tags:
+      - Type
+  /types/{type_id}:
+    delete:
+      description: Delete product type by ID
+      operationId: delete-product-type-by-id
+      parameters:
+      - description: Product Type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a product type
+      tags:
+      - Type
+    get:
+      description: Get product type by ID
+      operationId: get-product-type-by-id
+      parameters:
+      - description: Type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a product type by id
+      tags:
+      - Type
+    put:
+      description: Update product type by ID
+      operationId: update-product-type-by-id
+      parameters:
+      - description: Product type ID
+        in: path
+        name: type_id
+        required: true
+        type: string
+      - description: Product type
+        in: body
+        name: type
+        schema:
+          $ref: '#/definitions/prodtype.productType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProductType'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a product type by id
+      tags:
+      - Type
   /users:
     get:
       description: Get all users

@@ -55,7 +55,6 @@ func SetupDB() {
 		&User{},
 		&Product{},
 		&ProductType{},
-		&Status{},
 		&Tag{},
 		&ProductTag{},
 		&Category{},
@@ -72,7 +71,6 @@ func SetupDB() {
 	DB.Model(&Membership{}).AddForeignKey("plan_id", "dp_plan(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Membership{}).AddForeignKey("payment_id", "dp_payment(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Product{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
-	DB.Model(&Product{}).AddForeignKey("status_id", "dp_status(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Product{}).AddForeignKey("product_type_id", "dp_product_type(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&ProductTag{}).AddForeignKey("tag_id", "dp_tag(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&ProductTag{}).AddForeignKey("product_id", "dp_product(id)", "RESTRICT", "RESTRICT")

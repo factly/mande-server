@@ -1,4 +1,4 @@
-package status
+package prodtype
 
 import (
 	"net/http"
@@ -10,27 +10,27 @@ import (
 
 // list response
 type paging struct {
-	Total int            `json:"total"`
-	Nodes []model.Status `json:"nodes"`
+	Total int                 `json:"total"`
+	Nodes []model.ProductType `json:"nodes"`
 }
 
-// list - Get all statuses
-// @Summary Show all statuses
-// @Description Get all statuses
-// @Tags Status
-// @ID get-all-statuses
+// list - Get all product types
+// @Summary Show all product types
+// @Description Get all product types
+// @Tags Type
+// @ID get-all-product-types
 // @Produce  json
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
-// @Router /products/{product_id}/status [get]
+// @Router /types [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Model(&model.Status{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Model(&model.ProductType{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	render.JSON(w, http.StatusOK, result)
 }

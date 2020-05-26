@@ -8,8 +8,7 @@ type Product struct {
 	Price         int         `gorm:"column:price" json:"price" validate:"required"`
 	ProductTypeID uint        `gorm:"column:product_type_id" json:"product_type_id" validate:"required"`
 	ProductType   ProductType `gorm:"foreignkey:product_type_id;association_foreignkey:id"`
-	StatusID      uint        `gorm:"column:status_id" json:"status_id" validate:"required"`
-	Status        Status      `gorm:"foreignkey:status_id;association_foreignkey:id"`
+	Status        string      `gorm:"column:status" json:"status" validate:"required"`
 	CurrencyID    uint        `gorm:"column:currency_id" json:"currency_id" validate:"required"`
 	Currency      Currency    `gorm:"foreignkey:currency_id;association_foreignkey:id"`
 }
