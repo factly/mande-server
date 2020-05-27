@@ -133,3 +133,5 @@ n
 .idea
 main
 /tmp
+
+.env
