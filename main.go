@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -26,16 +25,7 @@ import (
 // @BasePath /
 
 func main() {
-
-	env := os.Getenv("ENVIRONMENT")
-	if "" == env {
-		env = "local"
-	}
-	envFileName := ".env." + env
-	err := godotenv.Load(envFileName)
-	if err != nil {
-		log.Fatal("error loading .env.local file")
-	}
+	godotenv.Load()
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {

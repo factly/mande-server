@@ -7,7 +7,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // postgres
-	"github.com/joho/godotenv"
 )
 
 // DB - gorm DB
@@ -15,28 +14,18 @@ var DB *gorm.DB
 
 // SetupDB is database setup
 func SetupDB() {
-	env := os.Getenv("ENVIRONMENT")
-	if "" == env {
-		env = "local"
-	}
-	envFileName := ".env." + env
-	err := godotenv.Load(envFileName)
-	if err != nil {
-		log.Fatal("error loading .env.local file")
-	}
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbHost := os.Getenv("DB_HOST")
+	DSN := os.Getenv("DSN")
 
-	connStr := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbUser, dbName, dbPassword) //Build connection string
-	//connStr := "user=postgres dbname=data_portal host=localhost sslmode=disable password=postgres"
-
-	DB, err = gorm.Open("postgres", connStr)
+	var err error
+	DB, err = gorm.Open("postgres", DSN)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Query log
+	DB.LogMode(true)
+
 	fmt.Println("connected to database ...")
 
 	DB.SingularTable(true)
