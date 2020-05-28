@@ -12,5 +12,5 @@ type CartItem struct {
 	Base
 	CartID    uint    `gorm:"column:cart_id" json:"cart_id" validate:"required"`
 	ProductID uint    `gorm:"column:product_id" json:"product_id" validate:"required"`
-	Product   Product `gorm:"foreignkey:product_id;association_foreignkey:id"`
+	Product   Product `gorm:"foreignkey:product_id;association_foreignkey:id" json:"product"`
 }
