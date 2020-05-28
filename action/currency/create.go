@@ -37,8 +37,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Currency{
-		Name:    currency.IsoCode,
-		IsoCode: currency.Name,
+		Name:    currency.Name,
+		IsoCode: currency.IsoCode,
 	}
 
 	err = model.DB.Model(&model.Currency{}).Create(&result).Error
