@@ -321,11 +321,11 @@ definitions:
         type: integer
       price:
         type: integer
-      product_type_id:
-        type: integer
-      productType:
+      product_type:
         $ref: '#/definitions/model.ProductType'
         type: object
+      product_type_id:
+        type: integer
       slug:
         type: string
       status:
@@ -519,11 +519,11 @@ definitions:
         type: integer
       price:
         type: integer
-      product_type_id:
-        type: integer
-      productType:
+      product_type:
         $ref: '#/definitions/model.ProductType'
         type: object
+      product_type_id:
+        type: integer
       slug:
         type: string
       status:

@@ -2987,7 +2987,7 @@
                 "price": {
                     "type": "integer"
                 },
-                "productType": {
+                "product_type": {
                     "type": "object",
                     "$ref": "#/definitions/model.ProductType"
                 },
@@ -3286,7 +3286,7 @@
                 "price": {
                     "type": "integer"
                 },
-                "productType": {
+                "product_type": {
                     "type": "object",
                     "$ref": "#/definitions/model.ProductType"
                 },

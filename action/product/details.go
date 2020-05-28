@@ -33,13 +33,11 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := &model.Product{}
-
 	result := &productData{}
 
-	product.ID = uint(id)
+	result.Product.ID = uint(id)
 
-	err = model.DB.Model(&model.Product{}).First(&product).Error
+	err = model.DB.Model(&model.Product{}).First(&result.Product).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)

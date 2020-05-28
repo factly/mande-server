@@ -44,7 +44,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
+	model.DB.Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

@@ -71,5 +71,4 @@ func SetupDB() {
 	DB.Model(&Order{}).AddForeignKey("payment_id", "dp_payment(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Order{}).AddForeignKey("cart_id", "dp_cart(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&OrderItem{}).AddForeignKey("product_id", "dp_product(id)", "RESTRICT", "RESTRICT")
-	DB.Model(&OrderItem{}).AddForeignKey("order_id", "dp_order(id)", "RESTRICT", "RESTRICT")
 }
