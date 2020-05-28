@@ -48,7 +48,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&result).Updates(model.OrderItem{
 		ExtraInfo: orderItem.ExtraInfo,
 		ProductID: orderItem.ProductID,
-	}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result)
+	}).Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result)
 
 	render.JSON(w, http.StatusOK, result)
 }

@@ -38,7 +38,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.OrderID = uint(oid)
 
-	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result).Error
+	err = model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").First(&result).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)

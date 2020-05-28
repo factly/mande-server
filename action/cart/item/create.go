@@ -53,7 +53,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	model.DB.Preload("Product").Preload("Product.Status").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
+	model.DB.Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
 
 	render.JSON(w, http.StatusCreated, result)
 }
