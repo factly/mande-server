@@ -36,7 +36,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := util.Paging(r.URL.Query())
 
-	model.DB.Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").Preload("Order").Model(&model.OrderItem{}).Where(&model.OrderItem{OrderID: uint(id)}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").Model(&model.OrderItem{}).Where(&model.OrderItem{OrderID: uint(id)}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	render.JSON(w, http.StatusOK, result)
 }

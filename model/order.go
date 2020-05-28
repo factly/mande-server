@@ -18,5 +18,4 @@ type OrderItem struct {
 	ProductID uint    `gorm:"column:product_id" json:"product_id" validate:"required"`
 	Product   Product `gorm:"foreignkey:product_id;association_foreignkey:id"  json:"product"`
 	OrderID   uint    `gorm:"column:order_id" json:"order_id" validate:"required"`
-	Order     Order   `gorm:"foreignkey:order_id;association_foreignkey:id"  json:"order"`
 }
