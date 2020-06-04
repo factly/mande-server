@@ -2,7 +2,6 @@ package validation
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/go-playground/validator/v10"
@@ -20,12 +19,6 @@ func RecordNotFound(w http.ResponseWriter, r *http.Request) {
 	var msg []string
 	msg = append(msg, "Record not found")
 	render.JSON(w, http.StatusNotFound, msg)
-}
-
-// ValidErrors - errors from validator
-func ValidErrors(w http.ResponseWriter, r *http.Request, msg string) {
-	err := strings.Split(msg, "\n")
-	render.JSON(w, http.StatusBadRequest, err)
 }
 
 // ValidatorErrors - errors from validator

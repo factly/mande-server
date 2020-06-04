@@ -8,7 +8,6 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
-	"github.com/go-playground/validator/v10"
 )
 
 // create - Create user
@@ -27,11 +26,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	user := &user{}
 	json.NewDecoder(r.Body).Decode(&user)
 
-	validate := validator.New()
-	err := validate.Struct(user)
+	err := validation.Validator.Struct(user)
 	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+		validation.ValidatorErrors(w, r, err)
 		return
 	}
 

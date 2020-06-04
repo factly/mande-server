@@ -8,7 +8,6 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
-	"github.com/go-playground/validator/v10"
 )
 
 // create - Create currency
@@ -28,11 +27,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&currency)
 
-	validate := validator.New()
-	err := validate.Struct(currency)
+	err := validation.Validator.Struct(currency)
 	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+		validation.ValidatorErrors(w, r, err)
 		return
 	}
 

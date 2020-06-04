@@ -10,7 +10,6 @@ import (
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
-	"github.com/go-playground/validator/v10"
 )
 
 // create - create order items
@@ -34,11 +33,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&orderItem)
 
-	validate := validator.New()
-	err := validate.StructExcept(orderItem, "Product", "Order")
+	err := validation.Validator.Struct(orderItem)
 	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+		validation.ValidatorErrors(w, r, err)
 		return
 	}
 

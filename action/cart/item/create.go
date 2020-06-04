@@ -10,7 +10,6 @@ import (
 	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/go-chi/chi"
-	"github.com/go-playground/validator/v10"
 )
 
 // create - create cartItem
@@ -35,12 +34,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&cartItem)
 
-	validate := validator.New()
-	err := validate.StructExcept(cartItem, "Product")
+	err := validation.Validator.StructExcept(cartItem, "Product")
 
 	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+		validation.ValidatorErrors(w, r, err)
 		return
 	}
 
