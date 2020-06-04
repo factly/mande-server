@@ -6,6 +6,9 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - status
+    - user_id
     type: object
   cart.paging:
     properties:
@@ -24,6 +27,9 @@ definitions:
         type: string
       title:
         type: string
+    required:
+    - slug
+    - title
     type: object
   category.paging:
     properties:
@@ -40,6 +46,9 @@ definitions:
         type: string
       name:
         type: string
+    required:
+    - iso_code
+    - name
     type: object
   currency.paging:
     properties:
@@ -54,6 +63,8 @@ definitions:
     properties:
       product_id:
         type: integer
+    required:
+    - product_id
     type: object
   item.orderItem:
     properties:
@@ -61,12 +72,15 @@ definitions:
         type: string
       product_id:
         type: integer
+    required:
+    - extra_info
+    - product_id
     type: object
   item.paging:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.CartItem'
+          $ref: '#/definitions/model.OrderItem'
         type: array
       total:
         type: integer
@@ -81,6 +95,11 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - payment_id
+    - plan_id
+    - status
+    - user_id
     type: object
   membership.paging:
     properties:
@@ -105,9 +124,6 @@ definitions:
         type: string
       user_id:
         type: integer
-    required:
-    - status
-    - user_id
     type: object
   model.CartItem:
     properties:
@@ -126,9 +142,6 @@ definitions:
         type: integer
       updated_at:
         type: string
-    required:
-    - cart_id
-    - product_id
     type: object
   model.Category:
     properties:
@@ -146,9 +159,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - slug
-    - title
     type: object
   model.Currency:
     properties:
@@ -164,9 +174,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - iso_code
-    - name
     type: object
   model.Membership:
     properties:
@@ -195,11 +202,6 @@ definitions:
         type: object
       user_id:
         type: integer
-    required:
-    - payment_id
-    - plan_id
-    - status
-    - user_id
     type: object
   model.Order:
     properties:
@@ -225,11 +227,6 @@ definitions:
         type: string
       user_id:
         type: integer
-    required:
-    - cart_id
-    - payment_id
-    - status
-    - user_id
     type: object
   model.OrderItem:
     properties:
@@ -241,9 +238,6 @@ definitions:
         type: string
       id:
         type: integer
-      order:
-        $ref: '#/definitions/model.Order'
-        type: object
       order_id:
         type: integer
       product:
@@ -253,10 +247,6 @@ definitions:
         type: integer
       updated_at:
         type: string
-    required:
-    - extra_info
-    - order_id
-    - product_id
     type: object
   model.Payment:
     properties:
@@ -279,11 +269,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - amount
-    - currency_id
-    - gateway
-    - status
     type: object
   model.Plan:
     properties:
@@ -301,10 +286,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - plan_info
-    - plan_name
-    - status
     type: object
   model.Product:
     properties:
@@ -334,13 +315,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - currency_id
-    - price
-    - product_type_id
-    - slug
-    - status
-    - title
     type: object
   model.ProductType:
     properties:
@@ -354,8 +328,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - name
     type: object
   model.Tag:
     properties:
@@ -371,9 +343,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - slug
-    - title
     type: object
   model.User:
     properties:
@@ -391,10 +360,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - email
-    - first_name
-    - last_name
     type: object
   order.order:
     properties:
@@ -406,6 +371,11 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - cart_id
+    - payment_id
+    - status
+    - user_id
     type: object
   order.paging:
     properties:
@@ -435,6 +405,11 @@ definitions:
         type: string
       status:
         type: string
+    required:
+    - amount
+    - currency_id
+    - gateway
+    - status
     type: object
   plan.paging:
     properties:
@@ -453,6 +428,10 @@ definitions:
         type: string
       status:
         type: string
+    required:
+    - plan_info
+    - plan_name
+    - status
     type: object
   prodtype.paging:
     properties:
@@ -467,6 +446,8 @@ definitions:
     properties:
       name:
         type: string
+    required:
+    - name
     type: object
   product.paging:
     properties:
@@ -499,6 +480,13 @@ definitions:
         type: array
       title:
         type: string
+    required:
+    - currency_id
+    - price
+    - product_type_id
+    - slug
+    - status
+    - title
     type: object
   product.productData:
     properties:
@@ -536,13 +524,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - currency_id
-    - price
-    - product_type_id
-    - slug
-    - status
-    - title
     type: object
   tag.paging:
     properties:
@@ -559,6 +540,9 @@ definitions:
         type: string
       title:
         type: string
+    required:
+    - slug
+    - title
     type: object
   user.paging:
     properties:
@@ -577,6 +561,10 @@ definitions:
         type: string
       last_name:
         type: string
+    required:
+    - email
+    - first_name
+    - last_name
     type: object
 host: localhost:7720
 info:

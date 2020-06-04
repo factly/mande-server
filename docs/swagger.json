@@ -2503,6 +2503,10 @@
     "definitions": {
         "cart.cart": {
             "type": "object",
+            "required": [
+                "status",
+                "user_id"
+            ],
             "properties": {
                 "status": {
                     "type": "string"
@@ -2528,6 +2532,10 @@
         },
         "category.category": {
             "type": "object",
+            "required": [
+                "slug",
+                "title"
+            ],
             "properties": {
                 "parent_id": {
                     "type": "integer"
@@ -2556,6 +2564,10 @@
         },
         "currency.currency": {
             "type": "object",
+            "required": [
+                "iso_code",
+                "name"
+            ],
             "properties": {
                 "iso_code": {
                     "type": "string"
@@ -2581,6 +2593,9 @@
         },
         "item.cartItem": {
             "type": "object",
+            "required": [
+                "product_id"
+            ],
             "properties": {
                 "product_id": {
                     "type": "integer"
@@ -2589,6 +2604,10 @@
         },
         "item.orderItem": {
             "type": "object",
+            "required": [
+                "extra_info",
+                "product_id"
+            ],
             "properties": {
                 "extra_info": {
                     "type": "string"
@@ -2604,7 +2623,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.CartItem"
+                        "$ref": "#/definitions/model.OrderItem"
                     }
                 },
                 "total": {
@@ -2614,6 +2633,12 @@
         },
         "membership.membership": {
             "type": "object",
+            "required": [
+                "payment_id",
+                "plan_id",
+                "status",
+                "user_id"
+            ],
             "properties": {
                 "payment_id": {
                     "type": "integer"
@@ -2645,10 +2670,6 @@
         },
         "model.Cart": {
             "type": "object",
-            "required": [
-                "status",
-                "user_id"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2672,10 +2693,6 @@
         },
         "model.CartItem": {
             "type": "object",
-            "required": [
-                "cart_id",
-                "product_id"
-            ],
             "properties": {
                 "cart_id": {
                     "type": "integer"
@@ -2703,10 +2720,6 @@
         },
         "model.Category": {
             "type": "object",
-            "required": [
-                "slug",
-                "title"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2733,10 +2746,6 @@
         },
         "model.Currency": {
             "type": "object",
-            "required": [
-                "iso_code",
-                "name"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2760,12 +2769,6 @@
         },
         "model.Membership": {
             "type": "object",
-            "required": [
-                "payment_id",
-                "plan_id",
-                "status",
-                "user_id"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2807,12 +2810,6 @@
         },
         "model.Order": {
             "type": "object",
-            "required": [
-                "cart_id",
-                "payment_id",
-                "status",
-                "user_id"
-            ],
             "properties": {
                 "cart": {
                     "type": "object",
@@ -2850,11 +2847,6 @@
         },
         "model.OrderItem": {
             "type": "object",
-            "required": [
-                "extra_info",
-                "order_id",
-                "product_id"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2867,10 +2859,6 @@
                 },
                 "id": {
                     "type": "integer"
-                },
-                "order": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Order"
                 },
                 "order_id": {
                     "type": "integer"
@@ -2889,12 +2877,6 @@
         },
         "model.Payment": {
             "type": "object",
-            "required": [
-                "amount",
-                "currency_id",
-                "gateway",
-                "status"
-            ],
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -2928,11 +2910,6 @@
         },
         "model.Plan": {
             "type": "object",
-            "required": [
-                "plan_info",
-                "plan_name",
-                "status"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -2959,14 +2936,6 @@
         },
         "model.Product": {
             "type": "object",
-            "required": [
-                "currency_id",
-                "price",
-                "product_type_id",
-                "slug",
-                "status",
-                "title"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -3010,9 +2979,6 @@
         },
         "model.ProductType": {
             "type": "object",
-            "required": [
-                "name"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -3033,10 +2999,6 @@
         },
         "model.Tag": {
             "type": "object",
-            "required": [
-                "slug",
-                "title"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -3060,11 +3022,6 @@
         },
         "model.User": {
             "type": "object",
-            "required": [
-                "email",
-                "first_name",
-                "last_name"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -3091,6 +3048,12 @@
         },
         "order.order": {
             "type": "object",
+            "required": [
+                "cart_id",
+                "payment_id",
+                "status",
+                "user_id"
+            ],
             "properties": {
                 "cart_id": {
                     "type": "integer"
@@ -3136,6 +3099,12 @@
         },
         "payment.payment": {
             "type": "object",
+            "required": [
+                "amount",
+                "currency_id",
+                "gateway",
+                "status"
+            ],
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -3167,6 +3136,11 @@
         },
         "plan.plan": {
             "type": "object",
+            "required": [
+                "plan_info",
+                "plan_name",
+                "status"
+            ],
             "properties": {
                 "plan_info": {
                     "type": "string"
@@ -3195,6 +3169,9 @@
         },
         "prodtype.productType": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "name": {
                     "type": "string"
@@ -3217,6 +3194,14 @@
         },
         "product.product": {
             "type": "object",
+            "required": [
+                "currency_id",
+                "price",
+                "product_type_id",
+                "slug",
+                "status",
+                "title"
+            ],
             "properties": {
                 "category_ids": {
                     "type": "array",
@@ -3252,14 +3237,6 @@
         },
         "product.productData": {
             "type": "object",
-            "required": [
-                "currency_id",
-                "price",
-                "product_type_id",
-                "slug",
-                "status",
-                "title"
-            ],
             "properties": {
                 "categories": {
                     "type": "array",
@@ -3329,6 +3306,10 @@
         },
         "tag.tag": {
             "type": "object",
+            "required": [
+                "slug",
+                "title"
+            ],
             "properties": {
                 "slug": {
                     "type": "string"
@@ -3354,6 +3335,11 @@
         },
         "user.user": {
             "type": "object",
+            "required": [
+                "email",
+                "first_name",
+                "last_name"
+            ],
             "properties": {
                 "email": {
                     "type": "string"

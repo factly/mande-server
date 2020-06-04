@@ -6,8 +6,8 @@ import (
 
 // tag request body
 type tag struct {
-	Title string `json:"title"`
-	Slug  string `json:"slug"`
+	Title string `json:"title" validate:"required"`
+	Slug  string `json:"slug" validate:"required"`
 }
 
 // Router - Group of tag router

@@ -6,12 +6,12 @@ import (
 )
 
 type product struct {
-	Title         string `json:"title"`
-	Slug          string `json:"slug"`
-	Price         int    `json:"price"`
-	ProductTypeID uint   `json:"product_type_id"`
-	Status        string `json:"status"`
-	CurrencyID    uint   `json:"currency_id"`
+	Title         string `json:"title" validate:"required"`
+	Slug          string `json:"slug" validate:"required"`
+	Price         int    `json:"price" validate:"required"`
+	ProductTypeID uint   `json:"product_type_id" validate:"required"`
+	Status        string `json:"status" validate:"required"`
+	CurrencyID    uint   `json:"currency_id" validate:"required"`
 	CategoryIDs   []uint `json:"category_ids"`
 	TagIDs        []uint `json:"tag_ids"`
 }

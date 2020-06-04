@@ -7,8 +7,8 @@ import (
 
 // Cart request body
 type cart struct {
-	Status string `json:"status"`
-	UserID uint   `json:"user_id"`
+	Status string `json:"status" validate:"required"`
+	UserID uint   `json:"user_id" validate:"required"`
 }
 
 // Router - Group of cart router

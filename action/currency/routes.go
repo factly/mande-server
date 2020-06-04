@@ -4,8 +4,8 @@ import "github.com/go-chi/chi"
 
 // currency request body
 type currency struct {
-	IsoCode string `json:"iso_code"`
-	Name    string `json:"name"`
+	IsoCode string `json:"iso_code" validate:"required"`
+	Name    string `json:"name" validate:"required"`
 }
 
 // Router - Group of currency router
