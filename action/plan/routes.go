@@ -4,9 +4,9 @@ import "github.com/go-chi/chi"
 
 // Plan request body
 type plan struct {
-	PlanName string `json:"plan_name"`
-	PlanInfo string `json:"plan_info"`
-	Status   string `json:"status"`
+	PlanName string `json:"plan_name" validate:"required"`
+	PlanInfo string `json:"plan_info" validate:"required"`
+	Status   string `json:"status" validate:"required"`
 }
 
 // Router - Group of plan router

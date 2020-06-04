@@ -7,6 +7,7 @@ import (
 
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/validation"
 	"github.com/joho/godotenv"
 )
 
@@ -38,6 +39,9 @@ func main() {
 
 	// register routes
 	r := action.RegisterRoutes()
+
+	// Initialize validator
+	validation.InitializeValidator()
 
 	fmt.Println("swagger-ui http://localhost:7720/swagger/index.html")
 	http.ListenAndServe(port, r)
