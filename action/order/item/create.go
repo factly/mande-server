@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 )
@@ -53,5 +53,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
 
-	render.JSON(w, http.StatusCreated, result)
+	renderx.JSON(w, http.StatusCreated, result)
 }

@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -49,5 +49,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
-	render.JSON(w, http.StatusCreated, result)
+	renderx.JSON(w, http.StatusCreated, result)
 }

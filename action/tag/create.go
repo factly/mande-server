@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -41,5 +41,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, tag)
+	renderx.JSON(w, http.StatusCreated, tag)
 }
