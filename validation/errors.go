@@ -23,9 +23,13 @@ func RecordNotFound(w http.ResponseWriter, r *http.Request) {
 
 // ValidatorErrors - errors from validator
 func ValidatorErrors(w http.ResponseWriter, r *http.Request, err error) {
-	msg := make(map[string]string)
+	var arr []interface{}
 	for _, e := range err.(validator.ValidationErrors) {
-		msg[e.Field()] = e.Translate(Trans)
+		arr = append(arr, map[string]string{
+			"field":   e.Field(),
+			"message": e.Translate(Trans),
+		})
+
 	}
-	render.JSON(w, http.StatusBadRequest, msg)
+	render.JSON(w, http.StatusBadRequest, arr)
 }

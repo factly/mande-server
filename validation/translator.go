@@ -2,6 +2,8 @@ package validation
 
 import (
 	"log"
+	"reflect"
+	"strings"
 
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
@@ -36,6 +38,18 @@ func InitializeValidator() {
 	}, func(ut ut.Translator, fe validator.FieldError) string {
 		t, _ := ut.T("required", fe.Field())
 		return t
+	})
+
+	/**
+	 **	Register a custom name mapper to be in lower case error message
+	 **	Ex- FirstName - first_name
+	 **/
+	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
 	})
 
 	Validator = v
