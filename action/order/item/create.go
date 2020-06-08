@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
@@ -36,7 +35,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(orderItem)
 	if validationError != nil {
-		validation.ValidatorErrors(w, r, validationError)
+		renderx.JSON(w, http.StatusBadRequest, validationError)
 		return
 	}
 
