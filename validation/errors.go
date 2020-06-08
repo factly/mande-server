@@ -19,8 +19,3 @@ func RecordNotFound(w http.ResponseWriter, r *http.Request) {
 	msg = append(msg, "Record not found")
 	renderx.JSON(w, http.StatusNotFound, msg)
 }
-
-// ValidatorErrors - errors from validator
-func ValidatorErrors(w http.ResponseWriter, r *http.Request, err interface{}) {
-	renderx.JSON(w, http.StatusBadRequest, err)
-}

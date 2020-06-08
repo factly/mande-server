@@ -20,27 +20,20 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
-	"github.com/sirupsen/logrus"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // RegisterRoutes - register routes
 func RegisterRoutes() http.Handler {
-	logger := logrus.New()
-	logger.Formatter = &logrus.TextFormatter{}
-
-	logger.Out = os.Stdout
 
 	file, err := os.OpenFile("logrus.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err == nil {
-		logger.Out = file
-	} else {
-		logger.Info("Failed to log to file, using default stderr")
-	}
+
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
-	r.Use(loggerx.NewStructuredLogger(logger))
+	if err == nil {
+		r.Use(loggerx.NewLogger(file))
+	}
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Heartbeat("/ping"))
