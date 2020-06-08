@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/validationx"
 )
 
 // create - create orders
@@ -28,11 +28,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&order)
 
-	validate := validator.New()
-	err := validate.StructExcept(order, "Payment", "Cart")
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(order)
+	if validationError != nil {
+		validation.ValidatorErrors(w, r, validationError)
 		return
 	}
 
@@ -43,7 +41,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		CartID:    order.CartID,
 	}
 
-	err = model.DB.Model(&model.Order{}).Create(&result).Error
+	err := model.DB.Model(&model.Order{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)

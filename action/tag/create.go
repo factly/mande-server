@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/validationx"
 )
 
 // create - Create tag
@@ -28,14 +28,13 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&tag)
 
-	validate := validator.New()
-	err := validate.Struct(tag)
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(tag)
+	if validationError != nil {
+		validation.ValidatorErrors(w, r, validationError)
 		return
 	}
-	err = model.DB.Model(&model.Tag{}).Create(&tag).Error
+
+	err := model.DB.Model(&model.Tag{}).Create(&tag).Error
 
 	if err != nil {
 		log.Fatal(err)

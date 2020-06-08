@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/validationx"
 )
 
 // create - Create payment
@@ -27,11 +27,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	payment := &payment{}
 	json.NewDecoder(r.Body).Decode(&payment)
 
-	validate := validator.New()
-	err := validate.StructExcept(payment, "Currency")
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(payment)
+	if validationError != nil {
+		validation.ValidatorErrors(w, r, validationError)
 		return
 	}
 
@@ -42,7 +40,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Status:     payment.Status,
 	}
 
-	err = model.DB.Model(&model.Payment{}).Create(&result).Error
+	err := model.DB.Model(&model.Payment{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)

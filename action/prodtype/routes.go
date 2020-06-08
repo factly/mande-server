@@ -4,7 +4,7 @@ import "github.com/go-chi/chi"
 
 // productType request body
 type productType struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required"`
 }
 
 // Router - Group of product-type router

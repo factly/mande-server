@@ -5,7 +5,7 @@ import "github.com/go-chi/chi"
 // OrderItem request body
 type orderItem struct {
 	ExtraInfo string `json:"extra_info"`
-	ProductID uint   `json:"product_id"`
+	ProductID uint   `json:"product_id" validate:"required"`
 }
 
 // Router - Group of order-item router

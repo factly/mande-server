@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/validationx"
 )
 
 // create - Create membership
@@ -27,11 +27,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	membership := &membership{}
 	json.NewDecoder(r.Body).Decode(&membership)
 
-	validate := validator.New()
-	err := validate.StructExcept(membership, "User", "Plan", "Payment")
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(membership)
+	if validationError != nil {
+		validation.ValidatorErrors(w, r, validationError)
 		return
 	}
 
@@ -42,7 +40,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PlanID:    membership.PlanID,
 	}
 
-	err = model.DB.Model(&model.Membership{}).Create(&result).Error
+	err := model.DB.Model(&model.Membership{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)

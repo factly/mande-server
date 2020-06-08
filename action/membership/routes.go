@@ -5,9 +5,9 @@ import "github.com/go-chi/chi"
 // membership request body
 type membership struct {
 	Status    string `json:"status"`
-	UserID    uint   `json:"user_id"`
-	PaymentID uint   `json:"payment_id"`
-	PlanID    uint   `json:"plan_id"`
+	UserID    uint   `json:"user_id" validate:"required"`
+	PaymentID uint   `json:"payment_id" validate:"required"`
+	PlanID    uint   `json:"plan_id" validate:"required"`
 }
 
 // Router - Group of membership router

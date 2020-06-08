@@ -2,7 +2,6 @@ package validation
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/factly/x/renderx"
 )
@@ -21,8 +20,7 @@ func RecordNotFound(w http.ResponseWriter, r *http.Request) {
 	renderx.JSON(w, http.StatusNotFound, msg)
 }
 
-// ValidErrors - errors from validator
-func ValidErrors(w http.ResponseWriter, r *http.Request, msg string) {
-	err := strings.Split(msg, "\n")
+// ValidatorErrors - errors from validator
+func ValidatorErrors(w http.ResponseWriter, r *http.Request, err interface{}) {
 	renderx.JSON(w, http.StatusBadRequest, err)
 }

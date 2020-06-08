@@ -8,7 +8,7 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/validation"
 	"github.com/factly/x/renderx"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/validationx"
 )
 
 // create - Create product
@@ -27,13 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 	product := &product{}
 	json.NewDecoder(r.Body).Decode(&product)
 
-	validate := validator.New()
-	err := validate.StructExcept(product, "ProductType", "Currency")
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(product)
+	if validationError != nil {
+		validation.ValidatorErrors(w, r, validationError)
 		return
 	}
+
 	result := &productData{}
 	result.Product = model.Product{
 		Title:         product.Title,
@@ -44,7 +43,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:    product.CurrencyID,
 	}
 
-	err = model.DB.Model(&model.Product{}).Create(&result.Product).Error
+	err := model.DB.Model(&model.Product{}).Create(&result.Product).Error
 
 	if err != nil {
 		log.Fatal(err)
