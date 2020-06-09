@@ -137,4 +137,4 @@ main
 .env
 
 # Logs
-*.log*
+*.log

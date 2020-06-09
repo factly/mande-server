@@ -26,7 +26,7 @@ import (
 // RegisterRoutes - register routes
 func RegisterRoutes() http.Handler {
 
-	file, err := os.OpenFile("logrus.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 
 	r := chi.NewRouter()
 
