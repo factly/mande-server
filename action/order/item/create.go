@@ -7,10 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
-	"github.com/go-playground/validator/v10"
 )
 
 // create - create order items
@@ -34,11 +33,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&orderItem)
 
-	validate := validator.New()
-	err := validate.StructExcept(orderItem, "Product", "Order")
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(orderItem)
+	if validationError != nil {
+		renderx.JSON(w, http.StatusBadRequest, validationError)
 		return
 	}
 
@@ -46,12 +43,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.ExtraInfo = orderItem.ExtraInfo
 	result.ProductID = orderItem.ProductID
 
-	err = model.DB.Model(&model.OrderItem{}).Create(&result).Error
+	err := model.DB.Model(&model.OrderItem{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
 
-	render.JSON(w, http.StatusCreated, result)
+	renderx.JSON(w, http.StatusCreated, result)
 }

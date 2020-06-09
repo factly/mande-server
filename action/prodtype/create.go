@@ -6,9 +6,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
-	"github.com/factly/data-portal-server/validation"
-	"github.com/go-playground/validator/v10"
+	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 )
 
 // create - Create product type
@@ -27,11 +26,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	productType := &productType{}
 	json.NewDecoder(r.Body).Decode(&productType)
 
-	validate := validator.New()
-	err := validate.Struct(productType)
-	if err != nil {
-		msg := err.Error()
-		validation.ValidErrors(w, r, msg)
+	validationError := validationx.Check(productType)
+	if validationError != nil {
+		renderx.JSON(w, http.StatusBadRequest, validationError)
 		return
 	}
 
@@ -39,11 +36,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Name: productType.Name,
 	}
 
-	err = model.DB.Model(&model.ProductType{}).Create(&result).Error
+	err := model.DB.Model(&model.ProductType{}).Create(&result).Error
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	render.JSON(w, http.StatusCreated, result)
+	renderx.JSON(w, http.StatusCreated, result)
 }

@@ -4,9 +4,9 @@ import "github.com/go-chi/chi"
 
 // payment request body
 type payment struct {
-	Amount     int    `json:"amount"`
-	Gateway    string `json:"gateway"`
-	CurrencyID uint   `json:"currency_id"`
+	Amount     int    `json:"amount" validate:"required"`
+	Gateway    string `json:"gateway" `
+	CurrencyID uint   `json:"currency_id" validate:"required"`
 	Status     string `json:"status"`
 }
 

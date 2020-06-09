@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
 
@@ -41,5 +41,5 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
-	render.JSON(w, http.StatusOK, result)
+	renderx.JSON(w, http.StatusOK, result)
 }

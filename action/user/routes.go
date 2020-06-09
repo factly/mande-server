@@ -4,8 +4,8 @@ import "github.com/go-chi/chi"
 
 // user request body
 type user struct {
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
+	Email     string `json:"email" validate:"required"`
+	FirstName string `json:"first_name" validate:"required"`
 	LastName  string `json:"last_name"`
 }
 

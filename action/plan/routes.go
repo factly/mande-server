@@ -4,7 +4,7 @@ import "github.com/go-chi/chi"
 
 // Plan request body
 type plan struct {
-	PlanName string `json:"plan_name"`
+	PlanName string `json:"plan_name" validate:"required"`
 	PlanInfo string `json:"plan_info"`
 	Status   string `json:"status"`
 }

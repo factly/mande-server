@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/render"
 	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
 
@@ -43,5 +43,5 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 	model.DB.Delete(&result)
 
-	render.JSON(w, http.StatusOK, nil)
+	renderx.JSON(w, http.StatusOK, nil)
 }

@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/render"
+	"github.com/factly/x/paginationx"
+	"github.com/factly/x/renderx"
 )
 
 // list response
@@ -28,9 +28,9 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
 
-	offset, limit := util.Paging(r.URL.Query())
+	offset, limit := paginationx.Parse(r.URL.Query())
 
 	model.DB.Model(&model.Cart{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
-	render.JSON(w, http.StatusOK, result)
+	renderx.JSON(w, http.StatusOK, result)
 }

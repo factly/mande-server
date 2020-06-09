@@ -4,7 +4,7 @@ import "github.com/go-chi/chi"
 
 // CartItem request body
 type cartItem struct {
-	ProductID uint `json:"product_id"`
+	ProductID uint `json:"product_id" validate:"required"`
 }
 
 // Router - Group of cart-item router

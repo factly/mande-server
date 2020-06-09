@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/render"
+	"github.com/factly/x/paginationx"
+	"github.com/factly/x/renderx"
 )
 
 // list response
@@ -30,7 +30,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	var products []model.Product
 	result := &paging{}
 
-	offset, limit := util.Paging(r.URL.Query())
+	offset, limit := paginationx.Parse(r.URL.Query())
 
 	model.DB.Preload("Currency").Preload("ProductType").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
 
@@ -60,5 +60,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 	}
 	result.Nodes = nodes
 
-	render.JSON(w, http.StatusOK, result)
+	renderx.JSON(w, http.StatusOK, result)
 }
