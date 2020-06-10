@@ -38,8 +38,8 @@ func list(w http.ResponseWriter, r *http.Request) {
 		var products []model.CatalogProduct
 		data := &catalogData{}
 
-		model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
-			ProductID: uint(catalog.ID),
+		model.DB.Model(&model.CatalogProduct{}).Where(&model.CatalogProduct{
+			CatalogID: uint(catalog.ID),
 		}).Preload("Product").Find(&products)
 
 		for _, t := range products {

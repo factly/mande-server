@@ -80,17 +80,17 @@ func update(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if present == false {
-			productTag := &model.CatalogProduct{}
-			productTag.ProductID = uint(id)
-			productTag.ProductID = result.ID
+			catalogProduct := &model.CatalogProduct{}
+			catalogProduct.ProductID = uint(id)
+			catalogProduct.ProductID = result.ID
 
-			err = model.DB.Model(&model.CatalogProduct{}).Create(&productTag).Error
+			err = model.DB.Model(&model.CatalogProduct{}).Create(&catalogProduct).Error
 
 			if err != nil {
 				return
 			}
-			model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&productTag)
-			result.Products = append(result.Products, productTag.Product)
+			model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&catalogProduct)
+			result.Products = append(result.Products, catalogProduct.Product)
 		}
 	}
 
