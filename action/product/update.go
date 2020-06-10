@@ -42,13 +42,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	model.DB.Model(&result.Product).Updates(&model.Product{
-		CurrencyID:    product.CurrencyID,
-		ProductTypeID: product.ProductTypeID,
-		Status:        product.Status,
-		Title:         product.Title,
-		Price:         product.Price,
-		Slug:          product.Slug,
-	}).Preload("ProductType").Preload("Status").Preload("Currency").First(&result.Product)
+		CurrencyID: product.CurrencyID,
+		Status:     product.Status,
+		Title:      product.Title,
+		Price:      product.Price,
+		Slug:       product.Slug,
+	}).Preload("Status").Preload("Currency").First(&result.Product)
 
 	// fetch all categories
 	model.DB.Model(&model.ProductCategory{}).Where(&model.ProductCategory{

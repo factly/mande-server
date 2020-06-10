@@ -799,6 +799,468 @@
                 }
             }
         },
+        "/datasets": {
+            "get": {
+                "description": "Get all datsets",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Show all datsets",
+                "operationId": "get-all-datsets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dataset.paging"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create dataset",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Create dataset",
+                "operationId": "add-dataset",
+                "parameters": [
+                    {
+                        "description": "Dataset object",
+                        "name": "Dataset",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dataset.dataset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dataset"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/datasets/{dataset_id}": {
+            "put": {
+                "description": "Update dataset by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Update a dataset by id",
+                "operationId": "update-dataset-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Dataset",
+                        "name": "Dataset",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/dataset.dataset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dataset"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete dataset by ID",
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Delete a dataset",
+                "operationId": "delete-dataset-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/datasets/{dataset_id}/": {
+            "get": {
+                "description": "Get dataset by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Show a dataset by id",
+                "operationId": "get-dataset-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dataset"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/datasets/{dataset_id}/format": {
+            "post": {
+                "description": "Create dataset format",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset Format"
+                ],
+                "summary": "Create dataset format",
+                "operationId": "add-dataset-format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Dataset Format object",
+                        "name": "DatasetFormat",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/format.datasetFormat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.DatasetFormat"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/datasets/{dataset_id}/format/{format_id}": {
+            "delete": {
+                "description": "Delete dataset format by ID",
+                "tags": [
+                    "Dataset Format"
+                ],
+                "summary": "Delete a dataset format",
+                "operationId": "delete-dataset-format-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Dataset Format ID",
+                        "name": "format_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/formats": {
+            "get": {
+                "description": "Get all formats",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Show all formats",
+                "operationId": "get-all-formats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limit per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/format.paging"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create format",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Create format",
+                "operationId": "add-format",
+                "parameters": [
+                    {
+                        "description": "Format object",
+                        "name": "Format",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/format.format"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Format"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/formats/{format_id}": {
+            "get": {
+                "description": "Get format by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Show a format by id",
+                "operationId": "get-format-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "format ID",
+                        "name": "format_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Format"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update format by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Update a format by id",
+                "operationId": "update-format-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Format ID",
+                        "name": "format_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Format",
+                        "name": "format",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/format.format"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Format"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete format by ID",
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Delete a format",
+                "operationId": "delete-format-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Format ID",
+                        "name": "format_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/memberships": {
             "get": {
                 "description": "Get all memberships",
@@ -2125,193 +2587,6 @@
                 }
             }
         },
-        "/types": {
-            "get": {
-                "description": "Get all product types",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Type"
-                ],
-                "summary": "Show all product types",
-                "operationId": "get-all-product-types",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/prodtype.paging"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create product type",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Type"
-                ],
-                "summary": "Create product type",
-                "operationId": "add-type",
-                "parameters": [
-                    {
-                        "description": "Type object",
-                        "name": "Type",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/prodtype.productType"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.ProductType"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/types/{type_id}": {
-            "get": {
-                "description": "Get product type by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Type"
-                ],
-                "summary": "Show a product type by id",
-                "operationId": "get-product-type-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Type ID",
-                        "name": "type_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.ProductType"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update product type by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Type"
-                ],
-                "summary": "Update a product type by id",
-                "operationId": "update-product-type-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product type ID",
-                        "name": "type_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Product type",
-                        "name": "type",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/prodtype.productType"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.ProductType"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete product type by ID",
-                "tags": [
-                    "Type"
-                ],
-                "summary": "Delete a product type",
-                "operationId": "delete-product-type-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product Type ID",
-                        "name": "type_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {},
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/users": {
             "get": {
                 "description": "Get all users",
@@ -2503,6 +2778,9 @@
     "definitions": {
         "cart.cart": {
             "type": "object",
+            "required": [
+                "user_id"
+            ],
             "properties": {
                 "status": {
                     "type": "string"
@@ -2528,6 +2806,10 @@
         },
         "category.category": {
             "type": "object",
+            "required": [
+                "slug",
+                "title"
+            ],
             "properties": {
                 "parent_id": {
                     "type": "integer"
@@ -2556,6 +2838,10 @@
         },
         "currency.currency": {
             "type": "object",
+            "required": [
+                "iso_code",
+                "name"
+            ],
             "properties": {
                 "iso_code": {
                     "type": "string"
@@ -2579,8 +2865,186 @@
                 }
             }
         },
+        "dataset.dataset": {
+            "type": "object",
+            "properties": {
+                "contact_email": {
+                    "type": "string"
+                },
+                "contact_name": {
+                    "type": "string"
+                },
+                "data_standard": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "featured_media_id": {
+                    "type": "integer"
+                },
+                "format": {
+                    "type": "integer"
+                },
+                "format_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "frequency": {
+                    "type": "string"
+                },
+                "granularity": {
+                    "type": "string"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "related_articles": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "temporal_coverage": {
+                    "type": "string"
+                },
+                "time_saved": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dataset.datasetData": {
+            "type": "object",
+            "properties": {
+                "contact_email": {
+                    "type": "string"
+                },
+                "contact_name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "data_standard": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "format": {
+                    "type": "integer"
+                },
+                "formats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Format"
+                    }
+                },
+                "frequency": {
+                    "type": "string"
+                },
+                "granularity": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "related_articles": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "temporal_coverage": {
+                    "type": "string"
+                },
+                "time_saved": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dataset.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dataset.datasetData"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "format.datasetFormat": {
+            "type": "object",
+            "required": [
+                "format_id",
+                "url"
+            ],
+            "properties": {
+                "format_id": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "format.format": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "is_default": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "format.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Format"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "item.cartItem": {
             "type": "object",
+            "required": [
+                "product_id"
+            ],
             "properties": {
                 "product_id": {
                     "type": "integer"
@@ -2589,6 +3053,9 @@
         },
         "item.orderItem": {
             "type": "object",
+            "required": [
+                "product_id"
+            ],
             "properties": {
                 "extra_info": {
                     "type": "string"
@@ -2614,6 +3081,11 @@
         },
         "membership.membership": {
             "type": "object",
+            "required": [
+                "payment_id",
+                "plan_id",
+                "user_id"
+            ],
             "properties": {
                 "payment_id": {
                     "type": "integer"
@@ -2758,6 +3230,118 @@
                 }
             }
         },
+        "model.Dataset": {
+            "type": "object",
+            "properties": {
+                "contact_email": {
+                    "type": "string"
+                },
+                "contact_name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "data_standard": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "format": {
+                    "type": "integer"
+                },
+                "frequency": {
+                    "type": "string"
+                },
+                "granularity": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "related_articles": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "temporal_coverage": {
+                    "type": "string"
+                },
+                "time_saved": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.DatasetFormat": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "dataset_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "format": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Format"
+                },
+                "format_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Format": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_default": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Membership": {
             "type": "object",
             "required": [
@@ -2868,10 +3452,6 @@
                 "id": {
                     "type": "integer"
                 },
-                "order": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Order"
-                },
                 "order_id": {
                     "type": "integer"
                 },
@@ -2962,7 +3542,6 @@
             "required": [
                 "currency_id",
                 "price",
-                "product_type_id",
                 "slug",
                 "status",
                 "title"
@@ -2987,13 +3566,6 @@
                 "price": {
                     "type": "integer"
                 },
-                "product_type": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.ProductType"
-                },
-                "product_type_id": {
-                    "type": "integer"
-                },
                 "slug": {
                     "type": "string"
                 },
@@ -3001,29 +3573,6 @@
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.ProductType": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3091,6 +3640,11 @@
         },
         "order.order": {
             "type": "object",
+            "required": [
+                "cart_id",
+                "payment_id",
+                "user_id"
+            ],
             "properties": {
                 "cart_id": {
                     "type": "integer"
@@ -3136,6 +3690,10 @@
         },
         "payment.payment": {
             "type": "object",
+            "required": [
+                "amount",
+                "currency_id"
+            ],
             "properties": {
                 "amount": {
                     "type": "integer"
@@ -3167,6 +3725,9 @@
         },
         "plan.plan": {
             "type": "object",
+            "required": [
+                "plan_name"
+            ],
             "properties": {
                 "plan_info": {
                     "type": "string"
@@ -3175,28 +3736,6 @@
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "prodtype.paging": {
-            "type": "object",
-            "properties": {
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.ProductType"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "prodtype.productType": {
-            "type": "object",
-            "properties": {
-                "name": {
                     "type": "string"
                 }
             }
@@ -3217,6 +3756,11 @@
         },
         "product.product": {
             "type": "object",
+            "required": [
+                "price",
+                "slug",
+                "title"
+            ],
             "properties": {
                 "category_ids": {
                     "type": "array",
@@ -3228,9 +3772,6 @@
                     "type": "integer"
                 },
                 "price": {
-                    "type": "integer"
-                },
-                "product_type_id": {
                     "type": "integer"
                 },
                 "slug": {
@@ -3255,7 +3796,6 @@
             "required": [
                 "currency_id",
                 "price",
-                "product_type_id",
                 "slug",
                 "status",
                 "title"
@@ -3284,13 +3824,6 @@
                     "type": "integer"
                 },
                 "price": {
-                    "type": "integer"
-                },
-                "product_type": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.ProductType"
-                },
-                "product_type_id": {
                     "type": "integer"
                 },
                 "slug": {
@@ -3329,6 +3862,10 @@
         },
         "tag.tag": {
             "type": "object",
+            "required": [
+                "slug",
+                "title"
+            ],
             "properties": {
                 "slug": {
                     "type": "string"
@@ -3354,6 +3891,10 @@
         },
         "user.user": {
             "type": "object",
+            "required": [
+                "email",
+                "first_name"
+            ],
             "properties": {
                 "email": {
                     "type": "string"

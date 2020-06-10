@@ -34,12 +34,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	result := &productData{}
 	result.Product = model.Product{
-		Title:         product.Title,
-		Slug:          product.Slug,
-		Price:         product.Price,
-		ProductTypeID: product.ProductTypeID,
-		Status:        product.Status,
-		CurrencyID:    product.CurrencyID,
+		Title:      product.Title,
+		Slug:       product.Slug,
+		Price:      product.Price,
+		Status:     product.Status,
+		CurrencyID: product.CurrencyID,
 	}
 
 	err := model.DB.Model(&model.Product{}).Create(&result.Product).Error
@@ -48,7 +47,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	model.DB.Preload("ProductType").Preload("Currency").First(&result.Product)
+	model.DB.Preload("Currency").First(&result.Product)
 
 	for _, id := range product.CategoryIDs {
 		productCategory := &model.ProductCategory{}

@@ -7,11 +7,12 @@ import (
 	"github.com/factly/data-portal-server/action/cart"
 	"github.com/factly/data-portal-server/action/category"
 	"github.com/factly/data-portal-server/action/currency"
+	"github.com/factly/data-portal-server/action/dataset"
+	"github.com/factly/data-portal-server/action/format"
 	"github.com/factly/data-portal-server/action/membership"
 	"github.com/factly/data-portal-server/action/order"
 	"github.com/factly/data-portal-server/action/payment"
 	"github.com/factly/data-portal-server/action/plan"
-	"github.com/factly/data-portal-server/action/prodtype"
 	"github.com/factly/data-portal-server/action/product"
 	"github.com/factly/data-portal-server/action/tag"
 	"github.com/factly/data-portal-server/action/user"
@@ -59,10 +60,11 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/payments", payment.Router())
 	r.Mount("/products", product.Router())
 	r.Mount("/tags", tag.Router())
-	r.Mount("/types", prodtype.Router())
+	r.Mount("/formats", format.Router())
 	r.Mount("/categories", category.Router())
 	r.Mount("/carts", cart.Router())
 	r.Mount("/orders", order.Router())
+	r.Mount("/datasets", dataset.Router())
 
 	return r
 }
