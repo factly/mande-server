@@ -3,12 +3,12 @@ package model
 // Product model
 type Product struct {
 	Base
-	Title      string   `gorm:"column:title" json:"title" validate:"required"`
-	Slug       string   `gorm:"column:slug" json:"slug" validate:"required"`
-	Price      int      `gorm:"column:price" json:"price" validate:"required"`
-	Status     string   `gorm:"column:status" json:"status" validate:"required"`
-	CurrencyID uint     `gorm:"column:currency_id" json:"currency_id" validate:"required"`
-	Currency   Currency `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
+	Title      string    `gorm:"column:title" json:"title" validate:"required"`
+	Slug       string    `gorm:"column:slug" json:"slug" validate:"required"`
+	Price      int       `gorm:"column:price" json:"price" validate:"required"`
+	Status     string    `gorm:"column:status" json:"status" validate:"required"`
+	CurrencyID uint      `gorm:"column:currency_id" json:"currency_id" validate:"required"`
+	Currency   *Currency `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
 }
 
 // ProductDataset model

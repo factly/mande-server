@@ -40,7 +40,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 		model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
 			ProductID: uint(catalog.ID),
-		}).Preload("Tag").Find(&products)
+		}).Preload("Product").Find(&products)
 
 		for _, t := range products {
 			data.Products = append(data.Products, t.Product)
