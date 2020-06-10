@@ -1,4 +1,4 @@
-package prodtype
+package format
 
 import (
 	"net/http"
@@ -10,27 +10,27 @@ import (
 
 // list response
 type paging struct {
-	Total int                 `json:"total"`
-	Nodes []model.ProductType `json:"nodes"`
+	Total int            `json:"total"`
+	Nodes []model.Format `json:"nodes"`
 }
 
-// list - Get all product types
-// @Summary Show all product types
-// @Description Get all product types
-// @Tags Type
-// @ID get-all-product-types
+// list - Get all formats
+// @Summary Show all formats
+// @Description Get all formats
+// @Tags Format
+// @ID get-all-formats
 // @Produce  json
-// @Param limit query string false "limt per page"
+// @Param limit query string false "limit per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
-// @Router /types [get]
+// @Router /formats [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Model(&model.ProductType{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Model(&model.Format{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

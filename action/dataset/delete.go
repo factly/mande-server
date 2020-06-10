@@ -1,4 +1,4 @@
-package prodtype
+package dataset
 
 import (
 	"net/http"
@@ -10,28 +10,27 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// delete - Delete product type by id
-// @Summary Delete a product type
-// @Description Delete product type by ID
-// @Tags Type
-// @ID delete-product-type-by-id
+// delete - Delete dataset by id
+// @Summary Delete a dataset
+// @Description Delete dataset by ID
+// @Tags Dataset
+// @ID delete-dataset-by-id
 // @Consume  json
-// @Param type_id path string true "Product Type ID"
+// @Param dataset_id path string true "Dataset ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /types/{type_id} [delete]
+// @Router /datasets/{dataset_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	productTypeID := chi.URLParam(r, "type_id")
-	id, err := strconv.Atoi(productTypeID)
+	datasetID := chi.URLParam(r, "dataset_id")
+	id, err := strconv.Atoi(datasetID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
 		return
 	}
 
-	result := &model.ProductType{}
-
+	result := &model.Dataset{}
 	result.ID = uint(id)
 
 	// check record exists or not

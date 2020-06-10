@@ -6,6 +6,8 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - user_id
     type: object
   cart.paging:
     properties:
@@ -24,6 +26,9 @@ definitions:
         type: string
       title:
         type: string
+    required:
+    - slug
+    - title
     type: object
   category.paging:
     properties:
@@ -40,6 +45,9 @@ definitions:
         type: string
       name:
         type: string
+    required:
+    - iso_code
+    - name
     type: object
   currency.paging:
     properties:
@@ -50,10 +58,127 @@ definitions:
       total:
         type: integer
     type: object
+  dataset.dataset:
+    properties:
+      contact_email:
+        type: string
+      contact_name:
+        type: string
+      data_standard:
+        type: string
+      description:
+        type: string
+      featured_media_id:
+        type: integer
+      format:
+        type: integer
+      format_ids:
+        items:
+          type: integer
+        type: array
+      frequency:
+        type: string
+      granularity:
+        type: string
+      license:
+        type: string
+      related_articles:
+        type: string
+      source:
+        type: string
+      temporal_coverage:
+        type: string
+      time_saved:
+        type: integer
+      title:
+        type: string
+    type: object
+  dataset.datasetData:
+    properties:
+      contact_email:
+        type: string
+      contact_name:
+        type: string
+      created_at:
+        type: string
+      data_standard:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      format:
+        type: integer
+      formats:
+        items:
+          $ref: '#/definitions/model.Format'
+        type: array
+      frequency:
+        type: string
+      granularity:
+        type: string
+      id:
+        type: integer
+      license:
+        type: string
+      related_articles:
+        type: string
+      source:
+        type: string
+      temporal_coverage:
+        type: string
+      time_saved:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dataset.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/dataset.datasetData'
+        type: array
+      total:
+        type: integer
+    type: object
+  format.datasetFormat:
+    properties:
+      format_id:
+        type: integer
+      url:
+        type: string
+    required:
+    - format_id
+    - url
+    type: object
+  format.format:
+    properties:
+      description:
+        type: string
+      is_default:
+        type: boolean
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  format.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Format'
+        type: array
+      total:
+        type: integer
+    type: object
   item.cartItem:
     properties:
       product_id:
         type: integer
+    required:
+    - product_id
     type: object
   item.orderItem:
     properties:
@@ -61,6 +186,8 @@ definitions:
         type: string
       product_id:
         type: integer
+    required:
+    - product_id
     type: object
   item.paging:
     properties:
@@ -81,6 +208,10 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - payment_id
+    - plan_id
+    - user_id
     type: object
   membership.paging:
     properties:
@@ -168,6 +299,80 @@ definitions:
     - iso_code
     - name
     type: object
+  model.Dataset:
+    properties:
+      contact_email:
+        type: string
+      contact_name:
+        type: string
+      created_at:
+        type: string
+      data_standard:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      format:
+        type: integer
+      frequency:
+        type: string
+      granularity:
+        type: string
+      id:
+        type: integer
+      license:
+        type: string
+      related_articles:
+        type: string
+      source:
+        type: string
+      temporal_coverage:
+        type: string
+      time_saved:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.DatasetFormat:
+    properties:
+      created_at:
+        type: string
+      dataset_id:
+        type: integer
+      deleted_at:
+        type: string
+      format:
+        $ref: '#/definitions/model.Format'
+        type: object
+      format_id:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: string
+      url:
+        type: string
+    type: object
+  model.Format:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_default:
+        type: boolean
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
   model.Membership:
     properties:
       created_at:
@@ -241,9 +446,6 @@ definitions:
         type: string
       id:
         type: integer
-      order:
-        $ref: '#/definitions/model.Order'
-        type: object
       order_id:
         type: integer
       product:
@@ -321,11 +523,6 @@ definitions:
         type: integer
       price:
         type: integer
-      product_type:
-        $ref: '#/definitions/model.ProductType'
-        type: object
-      product_type_id:
-        type: integer
       slug:
         type: string
       status:
@@ -337,25 +534,9 @@ definitions:
     required:
     - currency_id
     - price
-    - product_type_id
     - slug
     - status
     - title
-    type: object
-  model.ProductType:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - name
     type: object
   model.Tag:
     properties:
@@ -406,6 +587,10 @@ definitions:
         type: string
       user_id:
         type: integer
+    required:
+    - cart_id
+    - payment_id
+    - user_id
     type: object
   order.paging:
     properties:
@@ -435,6 +620,9 @@ definitions:
         type: string
       status:
         type: string
+    required:
+    - amount
+    - currency_id
     type: object
   plan.paging:
     properties:
@@ -453,20 +641,8 @@ definitions:
         type: string
       status:
         type: string
-    type: object
-  prodtype.paging:
-    properties:
-      nodes:
-        items:
-          $ref: '#/definitions/model.ProductType'
-        type: array
-      total:
-        type: integer
-    type: object
-  prodtype.productType:
-    properties:
-      name:
-        type: string
+    required:
+    - plan_name
     type: object
   product.paging:
     properties:
@@ -487,8 +663,6 @@ definitions:
         type: integer
       price:
         type: integer
-      product_type_id:
-        type: integer
       slug:
         type: string
       status:
@@ -499,6 +673,10 @@ definitions:
         type: array
       title:
         type: string
+    required:
+    - price
+    - slug
+    - title
     type: object
   product.productData:
     properties:
@@ -519,11 +697,6 @@ definitions:
         type: integer
       price:
         type: integer
-      product_type:
-        $ref: '#/definitions/model.ProductType'
-        type: object
-      product_type_id:
-        type: integer
       slug:
         type: string
       status:
@@ -539,7 +712,6 @@ definitions:
     required:
     - currency_id
     - price
-    - product_type_id
     - slug
     - status
     - title
@@ -559,6 +731,9 @@ definitions:
         type: string
       title:
         type: string
+    required:
+    - slug
+    - title
     type: object
   user.paging:
     properties:
@@ -577,6 +752,9 @@ definitions:
         type: string
       last_name:
         type: string
+    required:
+    - email
+    - first_name
     type: object
 host: localhost:7720
 info:
@@ -1115,6 +1293,315 @@ paths:
       summary: Update a currency by id
       tags:
       - Currency
+  /datasets:
+    get:
+      description: Get all datsets
+      operationId: get-all-datsets
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dataset.paging'
+      summary: Show all datsets
+      tags:
+      - Dataset
+    post:
+      description: create dataset
+      operationId: add-dataset
+      parameters:
+      - description: Dataset object
+        in: body
+        name: Dataset
+        required: true
+        schema:
+          $ref: '#/definitions/dataset.dataset'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Dataset'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create dataset
+      tags:
+      - Dataset
+  /datasets/{dataset_id}:
+    delete:
+      description: Delete dataset by ID
+      operationId: delete-dataset-by-id
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a dataset
+      tags:
+      - Dataset
+    put:
+      description: Update dataset by ID
+      operationId: update-dataset-by-id
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      - description: Dataset
+        in: body
+        name: Dataset
+        schema:
+          $ref: '#/definitions/dataset.dataset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Dataset'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a dataset by id
+      tags:
+      - Dataset
+  /datasets/{dataset_id}/:
+    get:
+      description: Get dataset by ID
+      operationId: get-dataset-by-id
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Dataset'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a dataset by id
+      tags:
+      - Dataset
+  /datasets/{dataset_id}/format:
+    post:
+      description: Create dataset format
+      operationId: add-dataset-format
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      - description: Dataset Format object
+        in: body
+        name: DatasetFormat
+        required: true
+        schema:
+          $ref: '#/definitions/format.datasetFormat'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.DatasetFormat'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create dataset format
+      tags:
+      - Dataset Format
+  /datasets/{dataset_id}/format/{format_id}:
+    delete:
+      description: Delete dataset format by ID
+      operationId: delete-dataset-format-by-id
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      - description: Dataset Format ID
+        in: path
+        name: format_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a dataset format
+      tags:
+      - Dataset Format
+  /formats:
+    get:
+      description: Get all formats
+      operationId: get-all-formats
+      parameters:
+      - description: limit per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/format.paging'
+      summary: Show all formats
+      tags:
+      - Format
+    post:
+      description: Create format
+      operationId: add-format
+      parameters:
+      - description: Format object
+        in: body
+        name: Format
+        required: true
+        schema:
+          $ref: '#/definitions/format.format'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Format'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create format
+      tags:
+      - Format
+  /formats/{format_id}:
+    delete:
+      description: Delete format by ID
+      operationId: delete-format-by-id
+      parameters:
+      - description: Format ID
+        in: path
+        name: format_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a format
+      tags:
+      - Format
+    get:
+      description: Get format by ID
+      operationId: get-format-by-id
+      parameters:
+      - description: format ID
+        in: path
+        name: format_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Format'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a format by id
+      tags:
+      - Format
+    put:
+      description: Update format by ID
+      operationId: update-format-by-id
+      parameters:
+      - description: Format ID
+        in: path
+        name: format_id
+        required: true
+        type: string
+      - description: Format
+        in: body
+        name: format
+        schema:
+          $ref: '#/definitions/format.format'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Format'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a format by id
+      tags:
+      - Format
   /memberships:
     get:
       description: Get all memberships
@@ -2003,131 +2490,6 @@ paths:
       summary: Update a tag by id
       tags:
       - Tag
-  /types:
-    get:
-      description: Get all product types
-      operationId: get-all-product-types
-      parameters:
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/prodtype.paging'
-      summary: Show all product types
-      tags:
-      - Type
-    post:
-      description: Create product type
-      operationId: add-type
-      parameters:
-      - description: Type object
-        in: body
-        name: Type
-        required: true
-        schema:
-          $ref: '#/definitions/prodtype.productType'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.ProductType'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Create product type
-      tags:
-      - Type
-  /types/{type_id}:
-    delete:
-      description: Delete product type by ID
-      operationId: delete-product-type-by-id
-      parameters:
-      - description: Product Type ID
-        in: path
-        name: type_id
-        required: true
-        type: string
-      responses:
-        "200": {}
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a product type
-      tags:
-      - Type
-    get:
-      description: Get product type by ID
-      operationId: get-product-type-by-id
-      parameters:
-      - description: Type ID
-        in: path
-        name: type_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.ProductType'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a product type by id
-      tags:
-      - Type
-    put:
-      description: Update product type by ID
-      operationId: update-product-type-by-id
-      parameters:
-      - description: Product type ID
-        in: path
-        name: type_id
-        required: true
-        type: string
-      - description: Product type
-        in: body
-        name: type
-        schema:
-          $ref: '#/definitions/prodtype.productType'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.ProductType'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a product type by id
-      tags:
-      - Type
   /users:
     get:
       description: Get all users

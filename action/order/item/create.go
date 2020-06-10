@@ -48,7 +48,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.ProductType").Preload("Product.Currency").First(&result)
+	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
