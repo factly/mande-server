@@ -49,19 +49,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Currency").First(&result.Product)
 
-	for _, id := range product.CategoryIDs {
-		productCategory := &model.ProductCategory{}
+	for _, id := range product.DatasetIDs {
+		productDataset := &model.ProductDataset{}
 
-		productCategory.CategoryID = uint(id)
-		productCategory.ProductID = result.ID
+		productDataset.DatasetID = uint(id)
+		productDataset.ProductID = result.ID
 
-		err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
+		err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
 
 		if err != nil {
 			log.Fatal(err)
 		}
-		model.DB.Model(&model.ProductCategory{}).Preload("Category").First(&productCategory)
-		result.Categories = append(result.Categories, productCategory.Category)
+		model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
+		result.Datasets = append(result.Datasets, productDataset.Dataset)
 	}
 
 	for _, id := range product.TagIDs {

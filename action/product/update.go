@@ -34,7 +34,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	product := &product{}
-	categories := []model.ProductCategory{}
+	datasets := []model.ProductDataset{}
 	tags := []model.ProductTag{}
 	json.NewDecoder(r.Body).Decode(&product)
 
@@ -49,10 +49,10 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Slug:       product.Slug,
 	}).Preload("Status").Preload("Currency").First(&result.Product)
 
-	// fetch all categories
-	model.DB.Model(&model.ProductCategory{}).Where(&model.ProductCategory{
+	// fetch all datasets
+	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 		ProductID: uint(id),
-	}).Preload("Category").Find(&categories)
+	}).Preload("Dataset").Find(&datasets)
 
 	// fetch all tags
 	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
@@ -99,44 +99,44 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// delete categories
-	for _, c := range categories {
+	// delete datasets
+	for _, d := range datasets {
 		present := false
-		for _, id := range product.CategoryIDs {
-			if c.CategoryID == id {
+		for _, id := range product.DatasetIDs {
+			if d.DatasetID == id {
 				present = true
 			}
 		}
 		if present == false {
-			model.DB.Where(&model.ProductCategory{
-				CategoryID: c.CategoryID,
-				ProductID:  uint(id),
-			}).Delete(model.ProductCategory{})
+			model.DB.Where(&model.ProductDataset{
+				DatasetID: d.DatasetID,
+				ProductID: uint(id),
+			}).Delete(model.ProductDataset{})
 		}
 	}
 
-	// creating new categories
-	for _, id := range product.CategoryIDs {
+	// creating new datasets
+	for _, id := range product.DatasetIDs {
 		present := false
-		for _, c := range categories {
-			if c.CategoryID == id {
+		for _, d := range datasets {
+			if d.DatasetID == id {
 				present = true
-				result.Categories = append(result.Categories, c.Category)
+				result.Datasets = append(result.Datasets, d.Dataset)
 			}
 		}
 		if present == false {
-			productCategory := &model.ProductCategory{}
-			productCategory.CategoryID = uint(id)
-			productCategory.ProductID = result.ID
+			productDataset := &model.ProductDataset{}
+			productDataset.DatasetID = uint(id)
+			productDataset.ProductID = result.ID
 
-			err = model.DB.Model(&model.ProductCategory{}).Create(&productCategory).Error
+			err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
 
 			if err != nil {
 				return
 			}
 
-			model.DB.Model(&model.ProductCategory{}).Preload("Category").First(&productCategory)
-			result.Categories = append(result.Categories, productCategory.Category)
+			model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
+			result.Datasets = append(result.Datasets, productDataset.Dataset)
 		}
 	}
 

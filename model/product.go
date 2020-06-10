@@ -11,12 +11,12 @@ type Product struct {
 	Currency   Currency `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
 }
 
-// ProductCategory model
-type ProductCategory struct {
+// ProductDataset model
+type ProductDataset struct {
 	Base
-	CategoryID uint     `gorm:"column:category_id" json:"category_id" validate:"required"`
-	Category   Category `gorm:"foreignkey:category_id;association_foreignkey:id"  json:"category"`
-	ProductID  uint     `gorm:"column:product_id" json:"product_id" validate:"required"`
+	DatasetID uint    `gorm:"column:dataset_id" json:"dataset_id" validate:"required"`
+	Dataset   Dataset `gorm:"foreignkey:dataset_id;association_foreignkey:id"  json:"dataset"`
+	ProductID uint    `gorm:"column:product_id" json:"product_id" validate:"required"`
 }
 
 // ProductTag model

@@ -15,7 +15,6 @@ type Dataset struct {
 	ContactEmail     string         `gorm:"column:contact_email" json:"contact_email"`
 	License          string         `gorm:"column:license" json:"license"`
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
-	Format           uint           `gorm:"column:format" json:"format"`
 	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
 }
