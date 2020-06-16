@@ -35,19 +35,20 @@ func list(w http.ResponseWriter, r *http.Request) {
 	model.DB.Preload("Currency").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
 
 	for _, product := range products {
-		var categories []model.ProductCategory
+		var datasets []model.ProductDataset
 		var tags []model.ProductTag
 		data := &productData{}
-		model.DB.Model(&model.ProductCategory{}).Where(&model.ProductCategory{
+
+		model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 			ProductID: uint(product.ID),
-		}).Preload("Category").Find(&categories)
+		}).Preload("Dataset").Find(&datasets)
 
 		model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
 			ProductID: uint(product.ID),
 		}).Preload("Tag").Find(&tags)
 
-		for _, c := range categories {
-			data.Categories = append(data.Categories, c.Category)
+		for _, d := range datasets {
+			data.Datasets = append(data.Datasets, d.Dataset)
 		}
 
 		for _, t := range tags {

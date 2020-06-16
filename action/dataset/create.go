@@ -51,6 +51,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		renderx.JSON(w, http.StatusBadRequest, err)
+		return
 	}
 
 	renderx.JSON(w, http.StatusCreated, result)

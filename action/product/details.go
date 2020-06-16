@@ -22,7 +22,7 @@ import (
 // @Router /products/{product_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
-	var categories []model.ProductCategory
+	var datasets []model.ProductDataset
 	var tags []model.ProductTag
 
 	productID := chi.URLParam(r, "product_id")
@@ -46,16 +46,16 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("Currency").First(&result.Product)
 
-	model.DB.Model(&model.ProductCategory{}).Where(&model.ProductCategory{
+	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 		ProductID: uint(id),
-	}).Preload("Category").Find(&categories)
+	}).Preload("Dataset").Find(&datasets)
 
 	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
 		ProductID: uint(id),
 	}).Preload("Tag").Find(&tags)
 
-	for _, c := range categories {
-		result.Categories = append(result.Categories, c.Category)
+	for _, d := range datasets {
+		result.Datasets = append(result.Datasets, d.Dataset)
 	}
 
 	for _, t := range tags {

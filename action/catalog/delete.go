@@ -1,4 +1,4 @@
-package category
+package catalog
 
 import (
 	"net/http"
@@ -10,27 +10,27 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// delete - Delete category by id
-// @Summary Delete a category
-// @Description Delete category by ID
-// @Tags Category
-// @ID delete-category-by-id
+// delete - Delete catalog by id
+// @Summary Delete a catalog
+// @Description Delete catalog by ID
+// @Tags Catalog
+// @ID delete-catalog-by-id
 // @Consume  json
-// @Param category_id path string true "Category ID"
+// @Param catalog_id path string true "Catalog ID"
 // @Success 200
 // @Failure 400 {array} string
-// @Router /categories/{category_id} [delete]
+// @Router /catalogs/{catalog_id} [delete]
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	categoryID := chi.URLParam(r, "category_id")
-	id, err := strconv.Atoi(categoryID)
+	catalogID := chi.URLParam(r, "catalog_id")
+	id, err := strconv.Atoi(catalogID)
 
 	if err != nil {
 		validation.InvalidID(w, r)
 		return
 	}
 
-	result := &model.Category{}
+	result := &model.Catalog{}
 	result.ID = uint(id)
 
 	// check record exists or not

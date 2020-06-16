@@ -18,23 +18,57 @@ definitions:
       total:
         type: integer
     type: object
-  category.category:
+  catalog.catalog:
     properties:
-      parent_id:
+      description:
+        type: string
+      featured_media_id:
         type: integer
-      slug:
+      price:
+        type: integer
+      product_ids:
+        items:
+          type: integer
+        type: array
+      published_date:
         type: string
       title:
         type: string
     required:
-    - slug
+    - price
+    - published_date
     - title
     type: object
-  category.paging:
+  catalog.catalogData:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      featured_media_id:
+        type: integer
+      id:
+        type: integer
+      price:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+      published_date:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  catalog.paging:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.Category'
+          $ref: '#/definitions/catalog.catalogData'
         type: array
       total:
         type: integer
@@ -193,7 +227,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.CartItem'
+          $ref: '#/definitions/model.OrderItem'
         type: array
       total:
         type: integer
@@ -261,25 +295,26 @@ definitions:
     - cart_id
     - product_id
     type: object
-  model.Category:
+  model.Catalog:
     properties:
       created_at:
         type: string
       deleted_at:
         type: string
+      description:
+        type: string
+      featured_media_id:
+        type: integer
       id:
         type: integer
-      parent_id:
+      price:
         type: integer
-      slug:
+      published_date:
         type: string
       title:
         type: string
       updated_at:
         type: string
-    required:
-    - slug
-    - title
     type: object
   model.Currency:
     properties:
@@ -655,12 +690,12 @@ definitions:
     type: object
   product.product:
     properties:
-      category_ids:
+      currency_id:
+        type: integer
+      dataset_ids:
         items:
           type: integer
         type: array
-      currency_id:
-        type: integer
       price:
         type: integer
       slug:
@@ -680,10 +715,6 @@ definitions:
     type: object
   product.productData:
     properties:
-      categories:
-        items:
-          $ref: '#/definitions/model.Category'
-        type: array
       created_at:
         type: string
       currency:
@@ -691,6 +722,10 @@ definitions:
         type: object
       currency_id:
         type: integer
+      datasets:
+        items:
+          $ref: '#/definitions/model.Dataset'
+        type: array
       deleted_at:
         type: string
       id:
@@ -1044,10 +1079,10 @@ paths:
       summary: Update a cartItem by id
       tags:
       - CartItem
-  /categories:
+  /catalogs:
     get:
-      description: Get all categories
-      operationId: get-all-categories
+      description: Get all catalogs
+      operationId: get-all-catalogs
       parameters:
       - description: limt per page
         in: query
@@ -1063,44 +1098,44 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/category.paging'
-      summary: Show all categories
+            $ref: '#/definitions/catalog.paging'
+      summary: Show all catalogs
       tags:
-      - Category
+      - Catalog
     post:
-      description: create category
-      operationId: add-category
+      description: create catalog
+      operationId: add-catalog
       parameters:
-      - description: Category object
+      - description: Catalog object
         in: body
-        name: Category
+        name: Catalog
         required: true
         schema:
-          $ref: '#/definitions/category.category'
+          $ref: '#/definitions/catalog.catalog'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.Category'
+            $ref: '#/definitions/model.Catalog'
         "400":
           description: Bad Request
           schema:
             items:
               type: string
             type: array
-      summary: Create category
+      summary: Create catalog
       tags:
-      - Category
-  /categories/{category_id}:
+      - Catalog
+  /catalogs/{catalog_id}:
     delete:
-      description: Delete category by ID
-      operationId: delete-category-by-id
+      description: Delete catalog by ID
+      operationId: delete-catalog-by-id
       parameters:
-      - description: Category ID
+      - description: Catalog ID
         in: path
-        name: category_id
+        name: catalog_id
         required: true
         type: string
       responses:
@@ -1111,16 +1146,16 @@ paths:
             items:
               type: string
             type: array
-      summary: Delete a category
+      summary: Delete a catalog
       tags:
-      - Category
+      - Catalog
     get:
-      description: Get category by ID
-      operationId: get-category-by-id
+      description: Get catalog by ID
+      operationId: get-catalog-by-id
       parameters:
-      - description: Category ID
+      - description: Catalog ID
         in: path
-        name: category_id
+        name: catalog_id
         required: true
         type: string
       produces:
@@ -1129,46 +1164,46 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Category'
+            $ref: '#/definitions/model.Catalog'
         "400":
           description: Bad Request
           schema:
             items:
               type: string
             type: array
-      summary: Show a category by id
+      summary: Show a catalog by id
       tags:
-      - Category
+      - Catalog
     put:
-      description: Update category by ID
-      operationId: update-category-by-id
+      description: Update catalog by ID
+      operationId: update-catalog-by-id
       parameters:
-      - description: Category ID
+      - description: Catalog ID
         in: path
-        name: category_id
+        name: catalog_id
         required: true
         type: string
-      - description: Category
+      - description: Catalog
         in: body
-        name: Category
+        name: Catalog
         schema:
-          $ref: '#/definitions/category.category'
+          $ref: '#/definitions/catalog.catalog'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Category'
+            $ref: '#/definitions/model.Catalog'
         "400":
           description: Bad Request
           schema:
             items:
               type: string
             type: array
-      summary: Update a category by id
+      summary: Update a catalog by id
       tags:
-      - Category
+      - Catalog
   /currencies:
     get:
       description: Get all currencies
