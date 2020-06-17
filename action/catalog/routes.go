@@ -29,10 +29,10 @@ func Router() chi.Router {
 	r.Get("/", list)    // GET /catalogs - return list of catalogs
 	r.Post("/", create) // POST /catalogs - create a new catalog and persist it
 
-	r.Route("/{category_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /catalogs/{category_id} - read a single catalog by :category_id
-		r.Put("/", update)    // PUT /catalogs/{category_id} - update a single catalog by :category_id
-		r.Delete("/", delete) // DELETE /catalogs/{category_id} - delete a single catalog by :category_id
+	r.Route("/{catalog_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /catalogs/{catalog_id} - read a single catalog by :catalog_id
+		r.Put("/", update)    // PUT /catalogs/{catalog_id} - update a single catalog by :catalog_id
+		r.Delete("/", delete) // DELETE /catalogs/{catalog_id} - delete a single catalog by :catalog_id
 	})
 
 	return r
