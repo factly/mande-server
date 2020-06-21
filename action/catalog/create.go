@@ -48,6 +48,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	model.DB.Preload("FeaturedMedia").First(&result.Catalog)
+
 	for _, id := range catalog.ProductIDs {
 		catalogProduct := &model.CatalogProduct{}
 

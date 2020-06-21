@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action/currency"
 	"github.com/factly/data-portal-server/action/dataset"
 	"github.com/factly/data-portal-server/action/format"
+	"github.com/factly/data-portal-server/action/medium"
 	"github.com/factly/data-portal-server/action/membership"
 	"github.com/factly/data-portal-server/action/order"
 	"github.com/factly/data-portal-server/action/payment"
@@ -65,6 +66,7 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/carts", cart.Router())
 	r.Mount("/orders", order.Router())
 	r.Mount("/datasets", dataset.Router())
+	r.Mount("/media", medium.Router())
 
 	return r
 }

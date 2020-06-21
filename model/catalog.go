@@ -8,7 +8,8 @@ type Catalog struct {
 	Title           string    `gorm:"column:title" json:"title"`
 	Description     string    `gorm:"column:description" json:"description"`
 	Price           int       `gorm:"column:price" json:"price"`
-	FeaturedMediaID uint      `gorm:"column:featured_media_id" json:"featured_media_id"`
+	FeaturedMediaID uint      `gorm:"column:featured_media_id" json:"featured_media_id" sql:"DEFAULT:NULL"`
+	FeaturedMedia   *Medium   `gorm:"foreignkey:featured_media_id;association_foreignkey:id"  json:"featured_media"`
 	PublishedDate   time.Time `gorm:"column:published_date" json:"published_date"`
 }
 

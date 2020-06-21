@@ -6,13 +6,14 @@ import (
 )
 
 type product struct {
-	Title      string `json:"title" validate:"required"`
-	Slug       string `json:"slug" validate:"required"`
-	Price      int    `json:"price" validate:"required"`
-	Status     string `json:"status"`
-	CurrencyID uint   `json:"currency_id"`
-	DatasetIDs []uint `json:"dataset_ids"`
-	TagIDs     []uint `json:"tag_ids"`
+	Title           string `json:"title" validate:"required"`
+	Slug            string `json:"slug" validate:"required"`
+	Price           int    `json:"price" validate:"required"`
+	Status          string `json:"status"`
+	CurrencyID      uint   `json:"currency_id"`
+	FeaturedMediaID uint   `json:"featured_media_id"`
+	DatasetIDs      []uint `json:"dataset_ids"`
+	TagIDs          []uint `json:"tag_ids"`
 }
 
 type productData struct {
