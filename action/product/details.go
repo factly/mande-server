@@ -34,6 +34,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &productData{}
+	result.Tags = make([]model.Tag, 0)
+	result.Datasets = make([]model.Dataset, 0)
 
 	result.Product.ID = uint(id)
 

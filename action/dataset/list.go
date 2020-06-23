@@ -27,6 +27,7 @@ type paging struct {
 func list(w http.ResponseWriter, r *http.Request) {
 	nodes := []datasetData{}
 	result := paging{}
+	result.Nodes = make([]datasetData, 0)
 	datasets := []model.Dataset{}
 
 	offset, limit := paginationx.Parse(r.URL.Query())
@@ -37,6 +38,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		var formats []model.DatasetFormat
 
 		data := &datasetData{}
+		data.Formats = make([]model.Format, 0)
 		model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 			DatasetID: uint(dataset.ID),
 		}).Preload("Format").Find(&formats)

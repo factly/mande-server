@@ -40,6 +40,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	result := &productData{}
 	result.ID = uint(id)
+	result.Tags = make([]model.Tag, 0)
+	result.Datasets = make([]model.Dataset, 0)
 
 	model.DB.Model(&result.Product).Updates(&model.Product{
 		CurrencyID: product.CurrencyID,

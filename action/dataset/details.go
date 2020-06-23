@@ -34,6 +34,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	result := &datasetData{}
 	result.ID = uint(id)
+	result.Formats = make([]model.Format, 0)
 
 	err = model.DB.Model(&model.Dataset{}).First(&result.Dataset).Error
 

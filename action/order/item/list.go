@@ -33,6 +33,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(orderID)
 
 	result := paging{}
+	result.Nodes = make([]model.OrderItem, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 

@@ -37,6 +37,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	formats := []model.DatasetFormat{}
 	result := &datasetData{}
 	result.ID = uint(id)
+	result.Formats = make([]model.Format, 0)
 
 	json.NewDecoder(r.Body).Decode(&dataset)
 

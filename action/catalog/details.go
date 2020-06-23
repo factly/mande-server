@@ -33,6 +33,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	result := &catalogData{}
 	result.ID = uint(id)
+	result.Products = make([]model.Product, 0)
 
 	err = model.DB.Model(&model.Catalog{}).First(&result.Catalog).Error
 

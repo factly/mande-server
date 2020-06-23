@@ -29,6 +29,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	var nodes []productData
 	var products []model.Product
 	result := &paging{}
+	result.Nodes = make([]productData, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
@@ -38,6 +39,8 @@ func list(w http.ResponseWriter, r *http.Request) {
 		var datasets []model.ProductDataset
 		var tags []model.ProductTag
 		data := &productData{}
+		data.Tags = make([]model.Tag, 0)
+		data.Datasets = make([]model.Dataset, 0)
 
 		model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 			ProductID: uint(product.ID),
