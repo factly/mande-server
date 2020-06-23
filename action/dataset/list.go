@@ -38,13 +38,13 @@ func list(w http.ResponseWriter, r *http.Request) {
 		var formats []model.DatasetFormat
 
 		data := &datasetData{}
-		data.Formats = make([]model.Format, 0)
+		data.Formats = make([]model.DatasetFormat, 0)
 		model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 			DatasetID: uint(dataset.ID),
 		}).Preload("Format").Find(&formats)
 
-		for _, f := range formats {
-			data.Formats = append(data.Formats, f.Format)
+		for _, format := range formats {
+			data.Formats = append(data.Formats, format)
 		}
 
 		data.Dataset = dataset

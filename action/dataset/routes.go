@@ -29,7 +29,7 @@ type dataset struct {
 // Dataset detail
 type datasetData struct {
 	model.Dataset
-	Formats []model.Format `json:"formats"`
+	Formats []model.DatasetFormat `json:"formats"`
 }
 
 // Router - Group of dataset router
