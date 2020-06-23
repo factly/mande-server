@@ -1,0 +1,35 @@
+package medium
+
+import (
+	"github.com/go-chi/chi"
+)
+
+// medium request body
+type medium struct {
+	Name        string `json:"name" validate:"required"`
+	Slug        string `json:"slug"`
+	Type        string `json:"type"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Caption     string `json:"caption"`
+	AltText     string `json:"alt_text"`
+	FileSize    int    `json:"file_size" validate:"required"`
+	URL         string `json:"url"`
+	Dimensions  string `json:"dimensions"`
+}
+
+// Router - Group of medium router
+func Router() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list)    // GET /media - return list of media
+	r.Post("/", create) // POST /media - create a new medium and persist it
+
+	r.Route("/{medium_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /media/{medium_id} - read a single medium by :medium_id
+		r.Put("/", update)    // PUT /media/{medium_id} - update a single medium by :medium_id
+		r.Delete("/", delete) // DELETE /media/{medium_id} - delete a single medium by :medium_id
+	})
+
+	return r
+}

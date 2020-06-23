@@ -47,7 +47,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Title:      product.Title,
 		Price:      product.Price,
 		Slug:       product.Slug,
-	}).Preload("Status").Preload("Currency").First(&result.Product)
+	}).Preload("Currency").Preload("FeaturedMedia").First(&result.Product)
 
 	// fetch all datasets
 	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{

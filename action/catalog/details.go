@@ -34,7 +34,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &catalogData{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Catalog{}).First(&result.Catalog).Error
+	err = model.DB.Model(&model.Catalog{}).Preload("FeaturedMedia").First(&result.Catalog).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)
