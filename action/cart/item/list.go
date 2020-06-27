@@ -33,6 +33,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(cartID)
 
 	result := paging{}
+	result.Nodes = make([]model.CartItem, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 

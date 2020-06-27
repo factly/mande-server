@@ -34,9 +34,9 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dataset := &dataset{}
-	formats := []model.DatasetFormat{}
 	result := &datasetData{}
 	result.ID = uint(id)
+	result.Formats = make([]model.DatasetFormat, 0)
 
 	json.NewDecoder(r.Body).Decode(&dataset)
 
@@ -57,11 +57,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
-	}).Preload("Format").Find(&formats)
-
-	for _, f := range formats {
-		result.Formats = append(result.Formats, f.Format)
-	}
+	}).Preload("Format").Find(&result.Formats)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

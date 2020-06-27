@@ -19,13 +19,11 @@ import (
 // @Param dataset_id path string true "Dataset ID"
 // @Success 200 {object} model.Dataset
 // @Failure 400 {array} string
-// @Router /datasets/{dataset_id}/ [get]
+// @Router /datasets/{dataset_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
 
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
-
-	formats := []model.DatasetFormat{}
 
 	if err != nil {
 		validation.InvalidID(w, r)
@@ -34,6 +32,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	result := &datasetData{}
 	result.ID = uint(id)
+	result.Formats = make([]model.DatasetFormat, 0)
 
 	err = model.DB.Model(&model.Dataset{}).First(&result.Dataset).Error
 
@@ -44,11 +43,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
-	}).Preload("Format").Find(&formats)
-
-	for _, f := range formats {
-		result.Formats = append(result.Formats, f.Format)
-	}
+	}).Preload("Format").Find(&result.Formats)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

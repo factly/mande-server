@@ -24,6 +24,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	catalog := catalog{}
 	result := catalogData{}
+	result.Products = make([]model.Product, 0)
 
 	json.NewDecoder(r.Body).Decode(&catalog)
 

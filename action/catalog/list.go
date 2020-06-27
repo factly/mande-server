@@ -27,6 +27,7 @@ type paging struct {
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
+	result.Nodes = make([]catalogData, 0)
 	nodes := []catalogData{}
 	catalogs := []model.Catalog{}
 
@@ -37,6 +38,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	for _, catalog := range catalogs {
 		var products []model.CatalogProduct
 		data := &catalogData{}
+		data.Products = make([]model.Product, 0)
 
 		model.DB.Model(&model.CatalogProduct{}).Where(&model.CatalogProduct{
 			CatalogID: uint(catalog.ID),
