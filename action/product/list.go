@@ -26,8 +26,8 @@ type paging struct {
 // @Router /products [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var nodes []productData
-	var products []model.Product
+	nodes := make([]productData, 0)
+	products := make([]model.Product, 0)
 	result := &paging{}
 	result.Nodes = make([]productData, 0)
 

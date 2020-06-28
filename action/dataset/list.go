@@ -25,10 +25,10 @@ type paging struct {
 // @Success 200 {object} paging
 // @Router /datasets [get]
 func list(w http.ResponseWriter, r *http.Request) {
-	nodes := []datasetData{}
+	nodes := make([]datasetData, 0)
 	result := paging{}
 	result.Nodes = make([]datasetData, 0)
-	datasets := []model.Dataset{}
+	datasets := make([]model.Dataset, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 

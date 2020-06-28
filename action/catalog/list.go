@@ -28,7 +28,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
 	result.Nodes = make([]catalogData, 0)
-	nodes := []catalogData{}
+	nodes := make([]catalogData, 0)
 	catalogs := []model.Catalog{}
 
 	offset, limit := paginationx.Parse(r.URL.Query())
