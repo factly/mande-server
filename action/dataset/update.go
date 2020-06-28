@@ -40,7 +40,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&dataset)
 
-	model.DB.Model(&result).Updates(model.Dataset{
+	model.DB.Model(&result.Dataset).Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -53,7 +53,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		DataStandard:     dataset.DataStandard,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
-	}).First(&result)
+		FeaturedMediaID:  dataset.FeaturedMediaID,
+	}).Preload("FeaturedMedia").First(&result.Dataset)
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),

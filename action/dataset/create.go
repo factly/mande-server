@@ -45,6 +45,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		DataStandard:     dataset.DataStandard,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
+		FeaturedMediaID:  dataset.FeaturedMediaID,
 	}
 
 	err := model.DB.Model(&model.Dataset{}).Create(&result).Error
@@ -53,6 +54,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		renderx.JSON(w, http.StatusBadRequest, err)
 		return
 	}
+
+	model.DB.Preload("FeaturedMedia").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
