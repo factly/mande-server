@@ -9,12 +9,12 @@ import (
 
 // Catalog request body
 type catalog struct {
-	Title           string    `json:"title" validate:"required"`
-	Description     string    `json:"description" `
-	Price           int       `json:"price" validate:"required"`
-	FeaturedMediaID uint      `json:"featured_media_id"`
-	PublishedDate   time.Time `json:"published_date" validate:"required"`
-	ProductIDs      []uint    `json:"product_ids"`
+	Title            string    `json:"title" validate:"required"`
+	Description      string    `json:"description" `
+	Price            int       `json:"price" validate:"required"`
+	FeaturedMediumID uint      `json:"featured_medium_id"`
+	PublishedDate    time.Time `json:"published_date" validate:"required"`
+	ProductIDs       []uint    `json:"product_ids"`
 }
 
 type catalogData struct {

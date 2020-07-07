@@ -46,7 +46,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("Currency").Preload("FeaturedMedia").First(&result.Product)
+	model.DB.Preload("Currency").Preload("FeaturedMedium").First(&result.Product)
 
 	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 		ProductID: uint(id),

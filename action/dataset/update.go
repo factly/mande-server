@@ -53,8 +53,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		DataStandard:     dataset.DataStandard,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
-		FeaturedMediaID:  dataset.FeaturedMediaID,
-	}).Preload("FeaturedMedia").First(&result.Dataset)
+		FeaturedMediumID: dataset.FeaturedMediumID,
+	}).Preload("FeaturedMedium").First(&result.Dataset)
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),

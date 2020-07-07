@@ -17,8 +17,8 @@ type Dataset struct {
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
 	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
-	FeaturedMediaID  uint           `gorm:"column:featured_media_id" json:"featured_media_id" sql:"DEFAULT:NULL"`
-	FeaturedMedia    *Medium        `gorm:"foreignkey:featured_media_id;association_foreignkey:id"  json:"featured_media"`
+	FeaturedMediumID uint           `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
+	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 }
 
 // DatasetFormat model

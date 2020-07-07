@@ -5,12 +5,12 @@ import "time"
 // Catalog model
 type Catalog struct {
 	Base
-	Title           string    `gorm:"column:title" json:"title"`
-	Description     string    `gorm:"column:description" json:"description"`
-	Price           int       `gorm:"column:price" json:"price"`
-	FeaturedMediaID uint      `gorm:"column:featured_media_id" json:"featured_media_id" sql:"DEFAULT:NULL"`
-	FeaturedMedia   *Medium   `gorm:"foreignkey:featured_media_id;association_foreignkey:id"  json:"featured_media"`
-	PublishedDate   time.Time `gorm:"column:published_date" json:"published_date"`
+	Title            string    `gorm:"column:title" json:"title"`
+	Description      string    `gorm:"column:description" json:"description"`
+	Price            int       `gorm:"column:price" json:"price"`
+	FeaturedMediumID uint      `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
+	FeaturedMedium   *Medium   `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
+	PublishedDate    time.Time `gorm:"column:published_date" json:"published_date"`
 }
 
 // CatalogProduct model

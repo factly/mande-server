@@ -43,12 +43,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&catalog)
 
 	model.DB.Model(&result.Catalog).Updates(model.Catalog{
-		Title:           catalog.Title,
-		Description:     catalog.Description,
-		FeaturedMediaID: catalog.FeaturedMediaID,
-		Price:           catalog.Price,
-		PublishedDate:   catalog.PublishedDate,
-	}).Preload("FeaturedMedia").First(&result.Catalog)
+		Title:            catalog.Title,
+		Description:      catalog.Description,
+		FeaturedMediumID: catalog.FeaturedMediumID,
+		Price:            catalog.Price,
+		PublishedDate:    catalog.PublishedDate,
+	}).Preload("FeaturedMedium").First(&result.Catalog)
 
 	// fetch all products
 	model.DB.Model(&model.CatalogProduct{}).Where(&model.CatalogProduct{
