@@ -36,12 +36,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
 	result.Product = model.Product{
-		Title:           product.Title,
-		Slug:            product.Slug,
-		Price:           product.Price,
-		Status:          product.Status,
-		CurrencyID:      product.CurrencyID,
-		FeaturedMediaID: product.FeaturedMediaID,
+		Title:            product.Title,
+		Slug:             product.Slug,
+		Price:            product.Price,
+		Status:           product.Status,
+		CurrencyID:       product.CurrencyID,
+		FeaturedMediumID: product.FeaturedMediumID,
 	}
 
 	err := model.DB.Model(&model.Product{}).Create(&result.Product).Error
@@ -50,7 +50,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	model.DB.Preload("Currency").Preload("FeaturedMedia").First(&result.Product)
+	model.DB.Preload("Currency").Preload("FeaturedMedium").First(&result.Product)
 
 	for _, id := range product.DatasetIDs {
 		productDataset := &model.ProductDataset{}

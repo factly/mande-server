@@ -64,7 +64,7 @@ func SetupDB() {
 	DB.Model(&Membership{}).AddForeignKey("plan_id", "dp_plan(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Membership{}).AddForeignKey("payment_id", "dp_payment(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Product{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
-	DB.Model(&Product{}).AddForeignKey("featured_media_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Product{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&ProductTag{}).AddForeignKey("tag_id", "dp_tag(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&ProductDataset{}).AddForeignKey("dataset_id", "dp_dataset(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&CatalogProduct{}).AddForeignKey("product_id", "dp_product(id)", "RESTRICT", "RESTRICT")
@@ -75,5 +75,6 @@ func SetupDB() {
 	DB.Model(&Order{}).AddForeignKey("cart_id", "dp_cart(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&OrderItem{}).AddForeignKey("product_id", "dp_product(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&DatasetFormat{}).AddForeignKey("format_id", "dp_format(id)", "RESTRICT", "RESTRICT")
-	DB.Model(&Catalog{}).AddForeignKey("featured_media_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Catalog{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Dataset{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
 }

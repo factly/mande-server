@@ -35,11 +35,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result.Catalog = model.Catalog{
-		Title:           catalog.Title,
-		Description:     catalog.Description,
-		FeaturedMediaID: catalog.FeaturedMediaID,
-		Price:           catalog.Price,
-		PublishedDate:   catalog.PublishedDate,
+		Title:            catalog.Title,
+		Description:      catalog.Description,
+		FeaturedMediumID: catalog.FeaturedMediumID,
+		Price:            catalog.Price,
+		PublishedDate:    catalog.PublishedDate,
 	}
 
 	err := model.DB.Model(&model.Catalog{}).Create(&result.Catalog).Error
@@ -49,7 +49,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("FeaturedMedia").First(&result.Catalog)
+	model.DB.Preload("FeaturedMedium").First(&result.Catalog)
 
 	for _, id := range catalog.ProductIDs {
 		catalogProduct := &model.CatalogProduct{}

@@ -28,12 +28,12 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
 	result.Nodes = make([]catalogData, 0)
-	nodes := []catalogData{}
+	nodes := make([]catalogData, 0)
 	catalogs := []model.Catalog{}
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("FeaturedMedia").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&catalogs)
+	model.DB.Preload("FeaturedMedium").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&catalogs)
 
 	for _, catalog := range catalogs {
 		var products []model.CatalogProduct

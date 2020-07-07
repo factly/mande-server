@@ -26,14 +26,14 @@ type paging struct {
 // @Router /products [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	var nodes []productData
-	var products []model.Product
+	nodes := make([]productData, 0)
+	products := make([]model.Product, 0)
 	result := &paging{}
 	result.Nodes = make([]productData, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("Currency").Preload("FeaturedMedia").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
+	model.DB.Preload("Currency").Preload("FeaturedMedium").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
 
 	for _, product := range products {
 		var datasets []model.ProductDataset

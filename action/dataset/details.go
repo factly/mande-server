@@ -34,7 +34,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
 
-	err = model.DB.Model(&model.Dataset{}).First(&result.Dataset).Error
+	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").First(&result.Dataset).Error
 
 	if err != nil {
 		validation.RecordNotFound(w, r)

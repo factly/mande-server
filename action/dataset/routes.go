@@ -19,10 +19,9 @@ type dataset struct {
 	ContactEmail     string         `json:"contact_email"`
 	License          string         `json:"license"`
 	DataStandard     string         `json:"data_standard"`
-	Format           uint           `json:"format"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles"`
 	TimeSaved        int            `json:"time_saved"`
-	FeaturedMediaID  uint           `json:"featured_media_id"`
+	FeaturedMediumID uint           `json:"featured_medium_id"`
 	FormatIDs        []uint         `json:"format_ids"`
 }
 
