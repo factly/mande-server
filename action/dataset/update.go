@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/array"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
@@ -37,6 +38,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &datasetData{}
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
+	datasetTags := []model.DatasetTag{}
 
 	json.NewDecoder(r.Body).Decode(&dataset)
 
@@ -59,6 +61,57 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
 	}).Preload("Format").Find(&result.Formats)
+
+	// fetch existing dataset tags
+	model.DB.Model(&model.DatasetTag{}).Where(&model.DatasetTag{
+		DatasetID: uint(id),
+	}).Preload("Tag").Find(&datasetTags)
+
+	prevTagIDs := make([]uint, 0)
+	datasetTagIDs := make([]uint, 0)
+	// key as tag_id & value as dataset_tag
+	mapperDatasetTag := map[uint]model.DatasetTag{}
+
+	for _, datasetTag := range datasetTags {
+		mapperDatasetTag[datasetTag.TagID] = datasetTag
+		prevTagIDs = append(prevTagIDs, datasetTag.TagID)
+	}
+
+	toCreateIDs, toDeleteIDs := array.Difference(prevTagIDs, dataset.TagIDs)
+
+	// map dataset tag ids
+	for _, id := range toDeleteIDs {
+		datasetTagIDs = append(datasetTagIDs, mapperDatasetTag[id].ID)
+	}
+
+	// delete dataset tags
+	if len(datasetTagIDs) > 0 {
+		model.DB.Where(datasetTagIDs).Delete(model.DatasetTag{})
+	}
+
+	// create dataset tags
+	for _, id := range toCreateIDs {
+		datasetTag := &model.DatasetTag{}
+		datasetTag.TagID = uint(id)
+		datasetTag.DatasetID = result.ID
+
+		err = model.DB.Model(&model.DatasetTag{}).Create(&datasetTag).Error
+		if err != nil {
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+	}
+
+	// fetch updated dataset tags
+	updatedDatasetTags := []model.DatasetTag{}
+	model.DB.Model(&model.DatasetTag{}).Where(&model.DatasetTag{
+		DatasetID: uint(id),
+	}).Preload("Tag").Find(&updatedDatasetTags)
+
+	// appending previous dataset tags to result
+	for _, datasetTag := range updatedDatasetTags {
+		result.Tags = append(result.Tags, datasetTag.Tag)
+	}
 
 	renderx.JSON(w, http.StatusOK, result)
 }

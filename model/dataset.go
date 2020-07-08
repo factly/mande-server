@@ -29,3 +29,11 @@ type DatasetFormat struct {
 	DatasetID uint   `gorm:"column:dataset_id" json:"dataset_id"`
 	URL       string `gorm:"column:url" json:"url"`
 }
+
+// DatasetTag model
+type DatasetTag struct {
+	Base
+	TagID     uint `gorm:"column:tag_id" json:"tag_id"`
+	Tag       Tag  `gorm:"foreignkey:format_id;association_foreignkey:id"  json:"tag"`
+	DatasetID uint `gorm:"column:dataset_id" json:"dataset_id"`
+}

@@ -55,33 +55,48 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	for _, id := range product.DatasetIDs {
 		productDataset := &model.ProductDataset{}
-
 		productDataset.DatasetID = uint(id)
 		productDataset.ProductID = result.ID
 
 		err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
-
 		if err != nil {
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
 		model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
+	}
+
+	// fetch all product datasets
+	productDatasets := []model.ProductDataset{}
+	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
+		ProductID: result.Product.ID,
+	}).Preload("Dataset").Find(&productDatasets)
+
+	// appending product datasets to result
+	for _, productDataset := range productDatasets {
 		result.Datasets = append(result.Datasets, productDataset.Dataset)
 	}
 
 	for _, id := range product.TagIDs {
 		productTag := &model.ProductTag{}
-
 		productTag.TagID = uint(id)
 		productTag.ProductID = result.ID
 
 		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
-
 		if err != nil {
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
-		model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
+	}
+
+	// fetch all product tags
+	productTags := []model.ProductTag{}
+	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
+		ProductID: result.Product.ID,
+	}).Preload("Tag").Find(&productTags)
+
+	// appending product tags to result
+	for _, productTag := range productTags {
 		result.Tags = append(result.Tags, productTag.Tag)
 	}
 

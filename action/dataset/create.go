@@ -33,7 +33,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := &model.Dataset{
+	result := &datasetData{}
+	result.Tags = make([]model.Tag, 0)
+	result.Dataset = model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -49,14 +51,37 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: dataset.FeaturedMediumID,
 	}
 
-	err := model.DB.Model(&model.Dataset{}).Create(&result).Error
-
+	err := model.DB.Model(&model.Dataset{}).Create(&result.Dataset).Error
 	if err != nil {
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").First(&result)
+	model.DB.Preload("FeaturedMedium").First(&result.Dataset)
+
+	// creating new dataset tags
+	for _, id := range dataset.TagIDs {
+		datasetTag := &model.DatasetTag{}
+		datasetTag.TagID = uint(id)
+		datasetTag.DatasetID = result.ID
+
+		err = model.DB.Model(&model.DatasetTag{}).Create(&datasetTag).Error
+		if err != nil {
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+	}
+
+	// fetch all dataset tags
+	datasetTags := []model.DatasetTag{}
+	model.DB.Model(&model.DatasetTag{}).Where(&model.DatasetTag{
+		DatasetID: result.Dataset.ID,
+	}).Preload("Tag").Find(&datasetTags)
+
+	// appending dataset tags to result
+	for _, datasetTag := range datasetTags {
+		result.Tags = append(result.Tags, datasetTag.Tag)
+	}
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

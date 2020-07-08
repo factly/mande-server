@@ -23,12 +23,14 @@ type dataset struct {
 	TimeSaved        int            `json:"time_saved"`
 	FeaturedMediumID uint           `json:"featured_medium_id"`
 	FormatIDs        []uint         `json:"format_ids"`
+	TagIDs           []uint         `json:"tag_ids"`
 }
 
 // Dataset detail
 type datasetData struct {
 	model.Dataset
 	Formats []model.DatasetFormat `json:"formats"`
+	Tags    []model.Tag           `json:"tags"`
 }
 
 // Router - Group of dataset router

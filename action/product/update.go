@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/array"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
@@ -34,8 +35,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	product := &product{}
-	datasets := []model.ProductDataset{}
-	tags := []model.ProductTag{}
+	productDatasets := []model.ProductDataset{}
+	productTags := []model.ProductTag{}
 	json.NewDecoder(r.Body).Decode(&product)
 
 	result := &productData{}
@@ -54,93 +55,99 @@ func update(w http.ResponseWriter, r *http.Request) {
 	// fetch all datasets
 	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
 		ProductID: uint(id),
-	}).Preload("Dataset").Find(&datasets)
+	}).Preload("Dataset").Find(&productDatasets)
 
 	// fetch all tags
 	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
 		ProductID: uint(id),
-	}).Preload("Tag").Find(&tags)
+	}).Preload("Tag").Find(&productTags)
 
-	// delete tags
-	for _, t := range tags {
-		present := false
-		for _, id := range product.TagIDs {
-			if t.TagID == id {
-				present = true
-			}
-		}
-		if present == false {
-			model.DB.Where(&model.ProductTag{
-				TagID:     t.TagID,
-				ProductID: uint(id),
-			}).Delete(model.ProductTag{})
+	prevTagIDs := make([]uint, 0)
+	productTagIDs := make([]uint, 0)
+	mapperProductTag := map[uint]model.ProductTag{}
+
+	for _, productTag := range productTags {
+		mapperProductTag[productTag.TagID] = productTag
+		prevTagIDs = append(prevTagIDs, productTag.TagID)
+	}
+
+	toCreateIDs, toDeleteIDs := array.Difference(prevTagIDs, product.TagIDs)
+
+	// map product tag ids
+	for _, id := range toDeleteIDs {
+		productTagIDs = append(productTagIDs, mapperProductTag[id].ID)
+	}
+
+	// delete product tags
+	if len(productTagIDs) > 0 {
+		model.DB.Where(productTagIDs).Delete(model.ProductTag{})
+	}
+
+	// create product tags
+	for _, id := range toCreateIDs {
+		productTag := &model.ProductTag{}
+		productTag.TagID = uint(id)
+		productTag.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
+		if err != nil {
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
 		}
 	}
 
-	// creating new tags
-	for _, id := range product.TagIDs {
-		present := false
-		for _, t := range tags {
-			if t.TagID == id {
-				present = true
-				result.Tags = append(result.Tags, t.Tag)
-			}
-		}
-		if present == false {
-			productTag := &model.ProductTag{}
-			productTag.TagID = uint(id)
-			productTag.ProductID = result.ID
+	// fetch updated product tags
+	updatedProductTags := []model.ProductTag{}
+	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
+		ProductID: uint(id),
+	}).Preload("Tag").Find(&updatedProductTags)
 
-			err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
-
-			if err != nil {
-				return
-			}
-			model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
-			result.Tags = append(result.Tags, productTag.Tag)
-		}
+	// appending previous product tags to result
+	for _, productTag := range updatedProductTags {
+		result.Tags = append(result.Tags, productTag.Tag)
 	}
 
-	// delete datasets
-	for _, d := range datasets {
-		present := false
-		for _, id := range product.DatasetIDs {
-			if d.DatasetID == id {
-				present = true
-			}
-		}
-		if present == false {
-			model.DB.Where(&model.ProductDataset{
-				DatasetID: d.DatasetID,
-				ProductID: uint(id),
-			}).Delete(model.ProductDataset{})
-		}
+	prevDatasetIDs := make([]uint, 0)
+	productDatasetIDs := make([]uint, 0)
+	mapperProductDataset := map[uint]model.ProductDataset{}
+
+	for _, productDataset := range productDatasets {
+		mapperProductDataset[productDataset.DatasetID] = productDataset
+		prevDatasetIDs = append(prevDatasetIDs, productDataset.DatasetID)
+	}
+
+	toCreateIDs, toDeleteIDs = array.Difference(prevDatasetIDs, product.DatasetIDs)
+
+	// map product datasets ids
+	for _, id := range toDeleteIDs {
+		productDatasetIDs = append(productDatasetIDs, mapperProductDataset[id].ID)
+	}
+
+	// delete product datasets
+	if len(productDatasetIDs) > 0 {
+		model.DB.Where(productDatasetIDs).Delete(model.ProductDataset{})
 	}
 
 	// creating new datasets
 	for _, id := range product.DatasetIDs {
-		present := false
-		for _, d := range datasets {
-			if d.DatasetID == id {
-				present = true
-				result.Datasets = append(result.Datasets, d.Dataset)
-			}
+		productDataset := &model.ProductDataset{}
+		productDataset.DatasetID = uint(id)
+		productDataset.ProductID = result.ID
+
+		err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
+		if err != nil {
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
 		}
-		if present == false {
-			productDataset := &model.ProductDataset{}
-			productDataset.DatasetID = uint(id)
-			productDataset.ProductID = result.ID
+	}
 
-			err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
+	// fetch updated product datasets
+	updatedProductDatasets := []model.ProductDataset{}
+	model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&updatedProductDatasets)
 
-			if err != nil {
-				errorx.Render(w, errorx.Parser(errorx.DBError()))
-				return
-			}
-
-			model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
-			result.Datasets = append(result.Datasets, productDataset.Dataset)
-		}
+	// appending previous product datasets to result
+	for _, productDataset := range updatedProductDatasets {
+		result.Datasets = append(result.Datasets, productDataset.Dataset)
 	}
 
 	renderx.JSON(w, http.StatusOK, result)
