@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
@@ -28,13 +29,18 @@ func create(w http.ResponseWriter, r *http.Request) {
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
 
+	if err != nil {
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
+
 	datasetFormat := &datasetFormat{}
 
 	json.NewDecoder(r.Body).Decode(&datasetFormat)
 
 	validationError := validationx.Check(datasetFormat)
 	if validationError != nil {
-		renderx.JSON(w, http.StatusBadRequest, validationError)
+		errorx.Render(w, validationError)
 		return
 	}
 
@@ -47,7 +53,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.DatasetFormat{}).Create(&result).Error
 
 	if err != nil {
-		renderx.JSON(w, http.StatusBadRequest, err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	model.DB.Model(&model.DatasetFormat{}).Preload("Format").First(&result)

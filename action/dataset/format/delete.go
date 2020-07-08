@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -26,11 +26,16 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
 
+	if err != nil {
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
+
 	formatID := chi.URLParam(r, "format_id")
 	fID, err := strconv.Atoi(formatID)
 
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
@@ -41,7 +46,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = model.DB.First(&result).Error
 	if err != nil {
-		validation.RecordNotFound(w, r)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 

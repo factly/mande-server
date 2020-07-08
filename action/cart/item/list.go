@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/paginationx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
@@ -30,7 +31,12 @@ type paging struct {
 func list(w http.ResponseWriter, r *http.Request) {
 
 	cartID := chi.URLParam(r, "cart_id")
-	id, _ := strconv.Atoi(cartID)
+	id, err := strconv.Atoi(cartID)
+
+	if err != nil {
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	result := paging{}
 	result.Nodes = make([]model.CartItem, 0)

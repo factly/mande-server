@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -25,7 +25,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "user_id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
@@ -36,7 +36,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.User{}).First(&result).Error
 
 	if err != nil {
-		validation.RecordNotFound(w, r)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 

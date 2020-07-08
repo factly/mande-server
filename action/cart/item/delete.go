@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -24,13 +24,18 @@ import (
 func delete(w http.ResponseWriter, r *http.Request) {
 
 	cartID := chi.URLParam(r, "cart_id")
-	cid, _ := strconv.Atoi(cartID)
+	cid, err := strconv.Atoi(cartID)
+
+	if err != nil {
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	cartItemID := chi.URLParam(r, "item_id")
 	id, err := strconv.Atoi(cartItemID)
 
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
@@ -42,7 +47,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.First(&result).Error
 
 	if err != nil {
-		validation.RecordNotFound(w, r)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 	model.DB.Delete(&result)

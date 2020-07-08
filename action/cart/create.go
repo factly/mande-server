@@ -2,10 +2,10 @@ package cart
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -29,7 +29,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(cart)
 	if validationError != nil {
-		renderx.JSON(w, http.StatusBadRequest, validationError)
+		errorx.Render(w, validationError)
 		return
 	}
 
@@ -41,7 +41,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err := model.DB.Model(&model.Cart{}).Create(&result).Error
 
 	if err != nil {
-		log.Fatal(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	renderx.JSON(w, http.StatusCreated, result)

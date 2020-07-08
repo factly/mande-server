@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -28,13 +28,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	catalogID := chi.URLParam(r, "catalog_id")
 	id, err := strconv.Atoi(catalogID)
 
-	products := []model.CatalogProduct{}
-
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
+	products := []model.CatalogProduct{}
 	catalog := &catalog{}
 	result := &catalogData{}
 	result.ID = uint(id)
@@ -88,6 +87,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 			err = model.DB.Model(&model.CatalogProduct{}).Create(&catalogProduct).Error
 
 			if err != nil {
+				errorx.Render(w, errorx.Parser(errorx.DBError()))
 				return
 			}
 			model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&catalogProduct)
