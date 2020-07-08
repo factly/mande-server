@@ -2,11 +2,11 @@ package item
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
@@ -35,7 +35,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(orderItem)
 	if validationError != nil {
-		renderx.JSON(w, http.StatusBadRequest, validationError)
+		errorx.Render(w, validationError)
 		return
 	}
 
@@ -46,7 +46,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err := model.DB.Model(&model.OrderItem{}).Create(&result).Error
 
 	if err != nil {
-		log.Fatal(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 	model.DB.Model(&model.OrderItem{}).Preload("Product").Preload("Product.Currency").First(&result)
 

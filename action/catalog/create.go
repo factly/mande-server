@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -30,7 +31,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(catalog)
 	if validationError != nil {
-		renderx.JSON(w, http.StatusBadRequest, validationError)
+		errorx.Render(w, validationError)
 		return
 	}
 
@@ -45,7 +46,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err := model.DB.Model(&model.Catalog{}).Create(&result.Catalog).Error
 
 	if err != nil {
-		renderx.JSON(w, http.StatusBadRequest, err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
@@ -60,7 +61,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		err = model.DB.Model(&model.CatalogProduct{}).Create(&catalogProduct).Error
 
 		if err != nil {
-			renderx.JSON(w, http.StatusBadRequest, err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
 		model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&catalogProduct)

@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -27,7 +27,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(catalogID)
 
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
@@ -38,7 +38,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.Catalog{}).Preload("FeaturedMedium").First(&result.Catalog).Error
 
 	if err != nil {
-		validation.RecordNotFound(w, r)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 

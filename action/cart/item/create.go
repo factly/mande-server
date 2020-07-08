@@ -2,11 +2,11 @@ package item
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
@@ -27,7 +27,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	cartID := chi.URLParam(r, "cart_id")
-	id, _ := strconv.Atoi(cartID)
+	id, err := strconv.Atoi(cartID)
+
+	if err != nil {
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	cartItem := &cartItem{}
 	result := &model.CartItem{}
@@ -36,17 +41,18 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(cartItem)
 	if validationError != nil {
-		renderx.JSON(w, http.StatusBadRequest, validationError)
+		errorx.Render(w, validationError)
 		return
 	}
 
 	result.CartID = uint(id)
 	result.ProductID = cartItem.ProductID
 
-	err := model.DB.Model(&model.CartItem{}).Create(&result).Error
+	err = model.DB.Model(&model.CartItem{}).Create(&result).Error
 
 	if err != nil {
-		log.Fatal(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	model.DB.Preload("Product").Preload("Product.Currency").First(&result)

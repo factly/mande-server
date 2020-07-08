@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/validation"
+	"github.com/factly/x/errorx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -29,7 +29,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(orderID)
 
 	if err != nil {
-		validation.InvalidID(w, r)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
 
