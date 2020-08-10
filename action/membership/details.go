@@ -6,6 +6,7 @@ import (
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -25,6 +26,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	membershipID := chi.URLParam(r, "membership_id")
 	id, err := strconv.Atoi(membershipID)
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -35,6 +37,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.Membership{}).First(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}

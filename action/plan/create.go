@@ -2,10 +2,12 @@ package plan
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -28,6 +30,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(plan)
 	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
@@ -41,6 +44,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	err := model.DB.Model(&model.Plan{}).Create(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}

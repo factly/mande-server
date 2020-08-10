@@ -2,7 +2,6 @@ package action
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/factly/data-portal-server/action/cart"
 	"github.com/factly/data-portal-server/action/catalog"
@@ -28,14 +27,10 @@ import (
 // RegisterRoutes - register routes
 func RegisterRoutes() http.Handler {
 
-	file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
-	if err == nil {
-		r.Use(loggerx.NewLogger(file))
-	}
+	r.Use(loggerx.Init())
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Heartbeat("/ping"))
