@@ -2,8 +2,11 @@ package item
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
+
+	"github.com/factly/x/loggerx"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
@@ -30,6 +33,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartID)
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -41,6 +45,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(cartItem)
 	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
@@ -51,6 +56,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.CartItem{}).Create(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
