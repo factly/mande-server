@@ -19,6 +19,7 @@ type Dataset struct {
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
 	FeaturedMediumID uint           `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
 	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
+	Products         []Product      `gorm:"many2many:product_dataset;" json:"products"`
 }
 
 // DatasetFormat model

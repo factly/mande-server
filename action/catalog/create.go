@@ -48,7 +48,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
 
-	err := model.DB.Model(&model.Catalog{}).Create(&result).Error
+	err := model.DB.Model(&model.Catalog{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

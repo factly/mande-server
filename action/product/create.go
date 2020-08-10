@@ -35,10 +35,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := &productData{}
+	result := model.Product{}
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
-	result.Product = model.Product{
+	result = model.Product{
 		Title:            product.Title,
 		Slug:             product.Slug,
 		Price:            product.Price,
@@ -47,7 +47,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: product.FeaturedMediumID,
 	}
 
-	err := model.DB.Model(&model.Product{}).Create(&result.Product).Error
+	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)
+	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
+
+	err := model.DB.Model(&model.Product{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -55,39 +58,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("Currency").Preload("FeaturedMedium").First(&result.Product)
-
-	for _, id := range product.DatasetIDs {
-		productDataset := &model.ProductDataset{}
-
-		productDataset.DatasetID = uint(id)
-		productDataset.ProductID = result.ID
-
-		err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
-
-		if err != nil {
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-		model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
-		result.Datasets = append(result.Datasets, productDataset.Dataset)
-	}
-
-	for _, id := range product.TagIDs {
-		productTag := &model.ProductTag{}
-
-		productTag.TagID = uint(id)
-		productTag.ProductID = result.ID
-
-		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
-
-		if err != nil {
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-		model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
-		result.Tags = append(result.Tags, productTag.Tag)
-	}
+	model.DB.Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

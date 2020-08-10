@@ -37,12 +37,15 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Tags").Preload("Datasets").First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	model.DB.Model(&result).Association("Tags").Delete(result.Tags)
+	model.DB.Model(&result).Association("Datasets").Delete(result.Datasets)
 
 	model.DB.Delete(&result)
 
