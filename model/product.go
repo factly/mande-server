@@ -11,6 +11,7 @@ type Product struct {
 	FeaturedMedium   *Medium   `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	CurrencyID       uint      `gorm:"column:currency_id" json:"currency_id" validate:"required"`
 	Currency         *Currency `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
+	Catalogs         []Catalog `gorm:"many2many:catalog_product;" json:"catalogs"`
 }
 
 // ProductDataset model

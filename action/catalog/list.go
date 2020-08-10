@@ -10,8 +10,8 @@ import (
 
 // list response
 type paging struct {
-	Total int           `json:"total"`
-	Nodes []catalogData `json:"nodes"`
+	Total int             `json:"total"`
+	Nodes []model.Catalog `json:"nodes"`
 }
 
 // list - Get all catalogs
@@ -27,32 +27,10 @@ type paging struct {
 func list(w http.ResponseWriter, r *http.Request) {
 
 	result := paging{}
-	result.Nodes = make([]catalogData, 0)
-	nodes := make([]catalogData, 0)
-	catalogs := []model.Catalog{}
-
+	result.Nodes = make([]model.Catalog, 0)
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("FeaturedMedium").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&catalogs)
-
-	for _, catalog := range catalogs {
-		var products []model.CatalogProduct
-		data := &catalogData{}
-		data.Products = make([]model.Product, 0)
-
-		model.DB.Model(&model.CatalogProduct{}).Where(&model.CatalogProduct{
-			CatalogID: uint(catalog.ID),
-		}).Preload("Product").Find(&products)
-
-		for _, t := range products {
-			data.Products = append(data.Products, t.Product)
-		}
-
-		data.Catalog = catalog
-
-		nodes = append(nodes, *data)
-	}
-	result.Nodes = nodes
+	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
