@@ -65,6 +65,17 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if product is associated with order
+	model.DB.Model(&model.OrderItem{}).Where(&model.OrderItem{
+		ProductID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("product is associated with order"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	model.DB.Model(&result).Association("Tags").Delete(result.Tags)
 	model.DB.Model(&result).Association("Datasets").Delete(result.Datasets)
 

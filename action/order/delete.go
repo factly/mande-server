@@ -43,6 +43,11 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	model.DB.Where(&model.OrderItem{
+		OrderID: uint(id),
+	}).Delete(&model.OrderItem{})
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)
