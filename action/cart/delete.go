@@ -36,13 +36,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Products").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	// delete associations
+	if len(result.Products) > 0 {
+		model.DB.Model(&result).Association("Products").Delete(&result.Products)
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)

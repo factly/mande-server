@@ -1,7 +1,6 @@
 package product
 
 import (
-	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -14,12 +13,6 @@ type product struct {
 	FeaturedMediumID uint   `json:"featured_medium_id"`
 	DatasetIDs       []uint `json:"dataset_ids"`
 	TagIDs           []uint `json:"tag_ids"`
-}
-
-type productData struct {
-	model.Product
-	Tags     []model.Tag     `json:"tags"`
-	Datasets []model.Dataset `json:"datasets"`
 }
 
 // Router - Group of product router

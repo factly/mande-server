@@ -11,12 +11,5 @@ type Catalog struct {
 	FeaturedMediumID uint      `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
 	FeaturedMedium   *Medium   `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	PublishedDate    time.Time `gorm:"column:published_date" json:"published_date"`
-}
-
-// CatalogProduct model
-type CatalogProduct struct {
-	Base
-	ProductID uint    `gorm:"column:product_id" json:"product_id"`
-	Product   Product `gorm:"foreignkey:product_id;association_foreignkey:id"  json:"product"`
-	CatalogID uint    `gorm:"column:category_id" json:"category_id"`
+	Products         []Product `gorm:"many2many:catalog_product;" json:"products"`
 }

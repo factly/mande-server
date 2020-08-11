@@ -35,7 +35,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &model.Cart{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Cart{}).First(&result).Error
+	err = model.DB.Model(&model.Cart{}).Preload("Products").Preload("Products.Tags").Preload("Products.Datasets").Preload("Products.Currency").First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))

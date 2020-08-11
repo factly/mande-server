@@ -26,7 +26,7 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	catalog := catalog{}
-	result := catalogData{}
+	result := model.Catalog{}
 	result.Products = make([]model.Product, 0)
 
 	json.NewDecoder(r.Body).Decode(&catalog)
@@ -38,7 +38,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result.Catalog = model.Catalog{
+	result = model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: catalog.FeaturedMediumID,
@@ -46,7 +46,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PublishedDate:    catalog.PublishedDate,
 	}
 
-	err := model.DB.Model(&model.Catalog{}).Create(&result.Catalog).Error
+	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
+
+	err := model.DB.Model(&model.Catalog{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -54,23 +56,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").First(&result.Catalog)
-
-	for _, id := range catalog.ProductIDs {
-		catalogProduct := &model.CatalogProduct{}
-
-		catalogProduct.ProductID = uint(id)
-		catalogProduct.CatalogID = result.ID
-
-		err = model.DB.Model(&model.CatalogProduct{}).Create(&catalogProduct).Error
-
-		if err != nil {
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-		model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&catalogProduct)
-		result.Products = append(result.Products, catalogProduct.Product)
-	}
+	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

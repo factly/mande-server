@@ -204,228 +204,6 @@
                 }
             }
         },
-        "/carts/{cart_id}/items": {
-            "get": {
-                "description": "Get all cartItems",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Show all cartItems",
-                "operationId": "get-all-cart-items",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/item.paging"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create cartItem",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Create cartItem",
-                "operationId": "add-cart-item",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "CartItem object",
-                        "name": "CartItem",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/item.cartItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/carts/{cart_id}/items/{item_id}": {
-            "get": {
-                "description": "Get cartItem by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Show a cartItem by id",
-                "operationId": "get-cart-item-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Cart-item ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update cartItem by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Update a cartItem by id",
-                "operationId": "update-cart-item-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Cart-item ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "CartItem",
-                        "name": "CartItem",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/item.cartItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete cartItem by ID",
-                "tags": [
-                    "CartItem"
-                ],
-                "summary": "Delete a cartItem",
-                "operationId": "delete-cart-item-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Cart-item ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {},
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/catalogs": {
             "get": {
                 "description": "Get all catalogs",
@@ -874,6 +652,43 @@
             }
         },
         "/datasets/{dataset_id}": {
+            "get": {
+                "description": "Get dataset by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset"
+                ],
+                "summary": "Show a dataset by id",
+                "operationId": "get-dataset-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Dataset"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Update dataset by ID",
                 "produces": [
@@ -937,45 +752,6 @@
                 ],
                 "responses": {
                     "200": {},
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/datasets/{dataset_id}/": {
-            "get": {
-                "description": "Get dataset by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dataset"
-                ],
-                "summary": "Show a dataset by id",
-                "operationId": "get-dataset-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Dataset ID",
-                        "name": "dataset_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Dataset"
-                        }
-                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1243,6 +1019,193 @@
                         "type": "string",
                         "description": "Format ID",
                         "name": "format_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/media": {
+            "get": {
+                "description": "Get media",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Medium"
+                ],
+                "summary": "Show media",
+                "operationId": "get-media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/medium.paging"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create medium",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Medium"
+                ],
+                "summary": "Create medium",
+                "operationId": "add-medium",
+                "parameters": [
+                    {
+                        "description": "Medium object",
+                        "name": "Medium",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/medium.medium"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Medium"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/media/{medium_id}": {
+            "get": {
+                "description": "Get medium by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Medium"
+                ],
+                "summary": "Show a medium by id",
+                "operationId": "get-medium-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medium ID",
+                        "name": "medium_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Medium"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update medium by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Medium"
+                ],
+                "summary": "Update a medium by id",
+                "operationId": "update-medium-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medium ID",
+                        "name": "medium_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Medium",
+                        "name": "Medium",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/medium.medium"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Medium"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete medium by ID",
+                "tags": [
+                    "Medium"
+                ],
+                "summary": "Delete a medium",
+                "operationId": "delete-medium-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medium ID",
+                        "name": "medium_id",
                         "in": "path",
                         "required": true
                     }
@@ -2782,6 +2745,12 @@
                 "user_id"
             ],
             "properties": {
+                "product_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "status": {
                     "type": "string"
                 },
@@ -2815,7 +2784,7 @@
                 "description": {
                     "type": "string"
                 },
-                "featured_media_id": {
+                "featured_medium_id": {
                     "type": "integer"
                 },
                 "price": {
@@ -2835,51 +2804,13 @@
                 }
             }
         },
-        "catalog.catalogData": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "featured_media_id": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Product"
-                    }
-                },
-                "published_date": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
         "catalog.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/catalog.catalogData"
+                        "$ref": "#/definitions/model.Catalog"
                     }
                 },
                 "total": {
@@ -2931,17 +2862,8 @@
                 "description": {
                     "type": "string"
                 },
-                "featured_media_id": {
+                "featured_medium_id": {
                     "type": "integer"
-                },
-                "format": {
-                    "type": "integer"
-                },
-                "format_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
                 },
                 "frequency": {
                     "type": "string"
@@ -2990,13 +2912,17 @@
                 "description": {
                     "type": "string"
                 },
-                "format": {
+                "featured_medium": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "featured_medium_id": {
                     "type": "integer"
                 },
                 "formats": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Format"
+                        "$ref": "#/definitions/model.DatasetFormat"
                     }
                 },
                 "frequency": {
@@ -3010,6 +2936,12 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
                 },
                 "related_articles": {
                     "type": "string"
@@ -3091,17 +3023,6 @@
                 }
             }
         },
-        "item.cartItem": {
-            "type": "object",
-            "required": [
-                "product_id"
-            ],
-            "properties": {
-                "product_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "item.orderItem": {
             "type": "object",
             "required": [
@@ -3123,6 +3044,59 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.OrderItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "medium.medium": {
+            "type": "object",
+            "required": [
+                "file_size",
+                "name"
+            ],
+            "properties": {
+                "alt_text": {
+                    "type": "string"
+                },
+                "caption": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dimensions": {
+                    "type": "string"
+                },
+                "file_size": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "medium.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Medium"
                     }
                 },
                 "total": {
@@ -3182,6 +3156,12 @@
                 "id": {
                     "type": "integer"
                 },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
+                },
                 "status": {
                     "type": "string"
                 },
@@ -3190,37 +3170,6 @@
                 },
                 "user_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "model.CartItem": {
-            "type": "object",
-            "required": [
-                "cart_id",
-                "product_id"
-            ],
-            "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "product": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Product"
-                },
-                "product_id": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3236,7 +3185,11 @@
                 "description": {
                     "type": "string"
                 },
-                "featured_media_id": {
+                "featured_medium": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "featured_medium_id": {
                     "type": "integer"
                 },
                 "id": {
@@ -3244,6 +3197,12 @@
                 },
                 "price": {
                     "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
                 },
                 "published_date": {
                     "type": "string"
@@ -3304,7 +3263,11 @@
                 "description": {
                     "type": "string"
                 },
-                "format": {
+                "featured_medium": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "featured_medium_id": {
                     "type": "integer"
                 },
                 "frequency": {
@@ -3318,6 +3281,12 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
                 },
                 "related_articles": {
                     "type": "string"
@@ -3391,6 +3360,53 @@
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Medium": {
+            "type": "object",
+            "properties": {
+                "alt_text": {
+                    "type": "string"
+                },
+                "caption": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dimensions": {
+                    "type": "string"
+                },
+                "file_size": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -3600,6 +3616,18 @@
                 "title"
             ],
             "properties": {
+                "carts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Cart"
+                    }
+                },
+                "catalogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Catalog"
+                    }
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -3610,8 +3638,21 @@
                 "currency_id": {
                     "type": "integer"
                 },
+                "datasets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Dataset"
+                    }
+                },
                 "deleted_at": {
                     "type": "string"
+                },
+                "featured_medium": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "featured_medium_id": {
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
@@ -3624,6 +3665,12 @@
                 },
                 "status": {
                     "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Tag"
+                    }
                 },
                 "title": {
                     "type": "string"
@@ -3648,6 +3695,12 @@
                 },
                 "id": {
                     "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
                 },
                 "slug": {
                     "type": "string"
@@ -3799,7 +3852,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/product.productData"
+                        "$ref": "#/definitions/model.Product"
                     }
                 },
                 "total": {
@@ -3824,6 +3877,9 @@
                         "type": "integer"
                     }
                 },
+                "featured_medium_id": {
+                    "type": "integer"
+                },
                 "price": {
                     "type": "integer"
                 },
@@ -3840,61 +3896,6 @@
                     }
                 },
                 "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "product.productData": {
-            "type": "object",
-            "required": [
-                "currency_id",
-                "price",
-                "slug",
-                "status",
-                "title"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "currency": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Currency"
-                },
-                "currency_id": {
-                    "type": "integer"
-                },
-                "datasets": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Dataset"
-                    }
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "integer"
-                },
-                "slug": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Tag"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

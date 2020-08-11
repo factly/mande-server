@@ -35,67 +35,40 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	products := []model.CatalogProduct{}
 	catalog := &catalog{}
-	result := &catalogData{}
+	result := &model.Catalog{}
 	result.ID = uint(id)
 	result.Products = make([]model.Product, 0)
 
 	json.NewDecoder(r.Body).Decode(&catalog)
 
-	model.DB.Model(&result.Catalog).Updates(model.Catalog{
+	// check record exist or not
+	err = model.DB.Model(&model.Catalog{}).Preload("FeaturedMedium").Preload("Products").First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	oldProducts := result.Products
+	newProducts := make([]model.Product, 0)
+	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&newProducts)
+
+	if len(oldProducts) > 0 {
+		model.DB.Model(&result).Association("Products").Delete(oldProducts)
+	}
+	if len(newProducts) == 0 {
+		newProducts = nil
+	}
+
+	model.DB.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: catalog.FeaturedMediumID,
 		Price:            catalog.Price,
 		PublishedDate:    catalog.PublishedDate,
-	}).Preload("FeaturedMedium").First(&result.Catalog)
-
-	// fetch all products
-	model.DB.Model(&model.CatalogProduct{}).Where(&model.CatalogProduct{
-		CatalogID: uint(id),
-	}).Preload("Product").Find(&products)
-
-	// delete products
-	for _, p := range products {
-		present := false
-		for _, id := range catalog.ProductIDs {
-			if p.ProductID == id {
-				present = true
-			}
-		}
-		if present == false {
-			model.DB.Where(&model.CatalogProduct{
-				ProductID: p.ProductID,
-				CatalogID: uint(id),
-			}).Delete(model.CatalogProduct{})
-		}
-	}
-
-	// creating new products
-	for _, id := range catalog.ProductIDs {
-		present := false
-		for _, p := range products {
-			if p.ProductID == id {
-				present = true
-				result.Products = append(result.Products, p.Product)
-			}
-		}
-		if present == false {
-			catalogProduct := &model.CatalogProduct{}
-			catalogProduct.ProductID = uint(id)
-			catalogProduct.ProductID = result.ID
-
-			err = model.DB.Model(&model.CatalogProduct{}).Create(&catalogProduct).Error
-
-			if err != nil {
-				errorx.Render(w, errorx.Parser(errorx.DBError()))
-				return
-			}
-			model.DB.Model(&model.CatalogProduct{}).Preload("Product").First(&catalogProduct)
-			result.Products = append(result.Products, catalogProduct.Product)
-		}
-	}
+		Products:         newProducts,
+	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

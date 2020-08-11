@@ -36,114 +36,52 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	product := &product{}
-	datasets := []model.ProductDataset{}
-	tags := []model.ProductTag{}
 	json.NewDecoder(r.Body).Decode(&product)
 
-	result := &productData{}
+	result := &model.Product{}
 	result.ID = uint(id)
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
 
-	model.DB.Model(&result.Product).Updates(&model.Product{
+	// check record exist or not
+	err = model.DB.Model(&model.Product{}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	oldTags := result.Tags
+	newTags := make([]model.Tag, 0)
+	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&newTags)
+
+	oldDatasets := result.Datasets
+	newDatasets := make([]model.Dataset, 0)
+	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&newDatasets)
+
+	if len(oldTags) > 0 {
+		model.DB.Model(&result).Association("Tags").Delete(oldTags)
+	}
+	if len(oldDatasets) > 0 {
+		model.DB.Model(&result).Association("Datasets").Delete(oldDatasets)
+	}
+
+	if len(newTags) == 0 {
+		newTags = nil
+	}
+	if len(newDatasets) == 0 {
+		newDatasets = nil
+	}
+
+	model.DB.Model(&result).Set("gorm:association_autoupdate", false).Updates(&model.Product{
 		CurrencyID: product.CurrencyID,
 		Status:     product.Status,
 		Title:      product.Title,
 		Price:      product.Price,
 		Slug:       product.Slug,
-	}).Preload("Currency").Preload("FeaturedMedium").First(&result.Product)
-
-	// fetch all datasets
-	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
-		ProductID: uint(id),
-	}).Preload("Dataset").Find(&datasets)
-
-	// fetch all tags
-	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
-		ProductID: uint(id),
-	}).Preload("Tag").Find(&tags)
-
-	// delete tags
-	for _, t := range tags {
-		present := false
-		for _, id := range product.TagIDs {
-			if t.TagID == id {
-				present = true
-			}
-		}
-		if present == false {
-			model.DB.Where(&model.ProductTag{
-				TagID:     t.TagID,
-				ProductID: uint(id),
-			}).Delete(model.ProductTag{})
-		}
-	}
-
-	// creating new tags
-	for _, id := range product.TagIDs {
-		present := false
-		for _, t := range tags {
-			if t.TagID == id {
-				present = true
-				result.Tags = append(result.Tags, t.Tag)
-			}
-		}
-		if present == false {
-			productTag := &model.ProductTag{}
-			productTag.TagID = uint(id)
-			productTag.ProductID = result.ID
-
-			err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
-
-			if err != nil {
-				return
-			}
-			model.DB.Model(&model.ProductTag{}).Preload("Tag").First(&productTag)
-			result.Tags = append(result.Tags, productTag.Tag)
-		}
-	}
-
-	// delete datasets
-	for _, d := range datasets {
-		present := false
-		for _, id := range product.DatasetIDs {
-			if d.DatasetID == id {
-				present = true
-			}
-		}
-		if present == false {
-			model.DB.Where(&model.ProductDataset{
-				DatasetID: d.DatasetID,
-				ProductID: uint(id),
-			}).Delete(model.ProductDataset{})
-		}
-	}
-
-	// creating new datasets
-	for _, id := range product.DatasetIDs {
-		present := false
-		for _, d := range datasets {
-			if d.DatasetID == id {
-				present = true
-				result.Datasets = append(result.Datasets, d.Dataset)
-			}
-		}
-		if present == false {
-			productDataset := &model.ProductDataset{}
-			productDataset.DatasetID = uint(id)
-			productDataset.ProductID = result.ID
-
-			err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
-
-			if err != nil {
-				errorx.Render(w, errorx.Parser(errorx.DBError()))
-				return
-			}
-
-			model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
-			result.Datasets = append(result.Datasets, productDataset.Dataset)
-		}
-	}
+		Tags:       newTags,
+		Datasets:   newDatasets,
+	}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

@@ -10,8 +10,8 @@ import (
 
 // list response
 type paging struct {
-	Total int           `json:"total"`
-	Nodes []productData `json:"nodes"`
+	Total int             `json:"total"`
+	Nodes []model.Product `json:"nodes"`
 }
 
 // list - Get all products
@@ -26,43 +26,12 @@ type paging struct {
 // @Router /products [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	nodes := make([]productData, 0)
-	products := make([]model.Product, 0)
 	result := &paging{}
-	result.Nodes = make([]productData, 0)
+	result.Nodes = make([]model.Product, 0)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("Currency").Preload("FeaturedMedium").Model(&model.Product{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&products)
-
-	for _, product := range products {
-		var datasets []model.ProductDataset
-		var tags []model.ProductTag
-		data := &productData{}
-		data.Tags = make([]model.Tag, 0)
-		data.Datasets = make([]model.Dataset, 0)
-
-		model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
-			ProductID: uint(product.ID),
-		}).Preload("Dataset").Find(&datasets)
-
-		model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
-			ProductID: uint(product.ID),
-		}).Preload("Tag").Find(&tags)
-
-		for _, d := range datasets {
-			data.Datasets = append(data.Datasets, d.Dataset)
-		}
-
-		for _, t := range tags {
-			data.Tags = append(data.Tags, t.Tag)
-		}
-
-		data.Product = product
-
-		nodes = append(nodes, *data)
-	}
-	result.Nodes = nodes
+	model.DB.Model(&model.Product{}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

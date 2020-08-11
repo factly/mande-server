@@ -3,7 +3,6 @@ package catalog
 import (
 	"time"
 
-	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -15,11 +14,6 @@ type catalog struct {
 	FeaturedMediumID uint      `json:"featured_medium_id"`
 	PublishedDate    time.Time `json:"published_date" validate:"required"`
 	ProductIDs       []uint    `json:"product_ids"`
-}
-
-type catalogData struct {
-	model.Catalog
-	Products []model.Product `json:"products"`
 }
 
 // Router - Group of catalog router

@@ -11,20 +11,8 @@ type Product struct {
 	FeaturedMedium   *Medium   `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	CurrencyID       uint      `gorm:"column:currency_id" json:"currency_id" validate:"required"`
 	Currency         *Currency `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
-}
-
-// ProductDataset model
-type ProductDataset struct {
-	Base
-	DatasetID uint    `gorm:"column:dataset_id" json:"dataset_id" validate:"required"`
-	Dataset   Dataset `gorm:"foreignkey:dataset_id;association_foreignkey:id"  json:"dataset"`
-	ProductID uint    `gorm:"column:product_id" json:"product_id" validate:"required"`
-}
-
-// ProductTag model
-type ProductTag struct {
-	Base
-	TagID     uint `gorm:"column:tag_id" json:"tag_id" validate:"required"`
-	Tag       Tag  `gorm:"foreignkey:tag_id;association_foreignkey:id"  json:"tag"`
-	ProductID uint `gorm:"column:product_id" json:"product_id" validate:"required"`
+	Catalogs         []Catalog `gorm:"many2many:catalog_product;" json:"catalogs"`
+	Tags             []Tag     `gorm:"many2many:product_tag;" json:"tags"`
+	Datasets         []Dataset `gorm:"many2many:product_dataset;" json:"datasets"`
+	Carts            []Cart    `gorm:"many2many:cart_item;" json:"carts"`
 }
