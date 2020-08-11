@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -41,6 +42,29 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if payment is associated with order
+	var totAssociated int
+	model.DB.Model(&model.Order{}).Where(&model.Order{
+		PaymentID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("payment is associated with order"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if payment is associated with membership
+	model.DB.Model(&model.Membership{}).Where(&model.Membership{
+		PaymentID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("payment is associated with membership"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

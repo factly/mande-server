@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -44,6 +45,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	// check if plan is associated with membership
+	var totAssociated int
+	model.DB.Model(&model.Membership{}).Where(&model.Membership{
+		PlanID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("plan is associated with membership"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)
