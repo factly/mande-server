@@ -45,7 +45,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// delete associations
-	model.DB.Model(&result).Association("Products").Delete(&result.Products)
+	if len(result.Products) > 0 {
+		model.DB.Model(&result).Association("Products").Delete(&result.Products)
+	}
 
 	model.DB.Delete(&result)
 

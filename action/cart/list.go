@@ -31,7 +31,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Model(&model.Cart{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Model(&model.Cart{}).Preload("Products").Preload("Products.Tags").Preload("Products.Datasets").Preload("Products.Currency").Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

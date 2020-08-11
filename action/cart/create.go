@@ -41,7 +41,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		UserID: cart.UserID,
 	}
 
-	err := model.DB.Model(&model.Cart{}).Create(&result).Error
+	model.DB.Model(&model.Product{}).Preload("Tags").Preload("Datasets").Preload("Currency").Where(cart.ProductIDs).Find(&result.Products)
+
+	err := model.DB.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
