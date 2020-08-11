@@ -14,8 +14,8 @@ import (
 
 // list response
 type paging struct {
-	Total int              `json:"total"`
-	Nodes []model.CartItem `json:"nodes"`
+	Total int             `json:"total"`
+	Nodes []model.Product `json:"nodes"`
 }
 
 // list - Get all cartItems
@@ -41,11 +41,24 @@ func list(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := paging{}
-	result.Nodes = make([]model.CartItem, 0)
+	result.Nodes = make([]model.Product, 0)
+
+	cart := model.Cart{}
+	cart.ID = uint(id)
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("Product").Preload("Product.Currency").Model(&model.CartItem{}).Where(&model.CartItem{CartID: uint(id)}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Preload("Products").Preload("Products.Currency").Model(&model.Cart{}).First(&cart)
+
+	result.Total = len(cart.Products)
+
+	if offset < len(cart.Products) {
+		if (offset + limit) > len(cart.Products) {
+			result.Nodes = cart.Products[offset:]
+		} else {
+			result.Nodes = cart.Products[offset : offset+limit]
+		}
+	}
 
 	renderx.JSON(w, http.StatusOK, result)
 }

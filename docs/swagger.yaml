@@ -22,7 +22,7 @@ definitions:
     properties:
       description:
         type: string
-      featured_media_id:
+      featured_medium_id:
         type: integer
       price:
         type: integer
@@ -39,36 +39,11 @@ definitions:
     - published_date
     - title
     type: object
-  catalog.catalogData:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      description:
-        type: string
-      featured_media_id:
-        type: integer
-      id:
-        type: integer
-      price:
-        type: integer
-      products:
-        items:
-          $ref: '#/definitions/model.Product'
-        type: array
-      published_date:
-        type: string
-      title:
-        type: string
-      updated_at:
-        type: string
-    type: object
   catalog.paging:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/catalog.catalogData'
+          $ref: '#/definitions/model.Catalog'
         type: array
       total:
         type: integer
@@ -102,14 +77,8 @@ definitions:
         type: string
       description:
         type: string
-      featured_media_id:
+      featured_medium_id:
         type: integer
-      format:
-        type: integer
-      format_ids:
-        items:
-          type: integer
-        type: array
       frequency:
         type: string
       granularity:
@@ -141,11 +110,14 @@ definitions:
         type: string
       description:
         type: string
-      format:
+      featured_medium:
+        $ref: '#/definitions/model.Medium'
+        type: object
+      featured_medium_id:
         type: integer
       formats:
         items:
-          $ref: '#/definitions/model.Format'
+          $ref: '#/definitions/model.DatasetFormat'
         type: array
       frequency:
         type: string
@@ -155,6 +127,10 @@ definitions:
         type: integer
       license:
         type: string
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
       related_articles:
         type: string
       source:
@@ -227,7 +203,42 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.OrderItem'
+          $ref: '#/definitions/model.Product'
+        type: array
+      total:
+        type: integer
+    type: object
+  medium.medium:
+    properties:
+      alt_text:
+        type: string
+      caption:
+        type: string
+      description:
+        type: string
+      dimensions:
+        type: string
+      file_size:
+        type: integer
+      name:
+        type: string
+      slug:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      url:
+        type: string
+    required:
+    - file_size
+    - name
+    type: object
+  medium.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Medium'
         type: array
       total:
         type: integer
@@ -264,6 +275,10 @@ definitions:
         type: string
       id:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
       status:
         type: string
       updated_at:
@@ -274,27 +289,6 @@ definitions:
     - status
     - user_id
     type: object
-  model.CartItem:
-    properties:
-      cart_id:
-        type: integer
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      product:
-        $ref: '#/definitions/model.Product'
-        type: object
-      product_id:
-        type: integer
-      updated_at:
-        type: string
-    required:
-    - cart_id
-    - product_id
-    type: object
   model.Catalog:
     properties:
       created_at:
@@ -303,12 +297,19 @@ definitions:
         type: string
       description:
         type: string
-      featured_media_id:
+      featured_medium:
+        $ref: '#/definitions/model.Medium'
+        type: object
+      featured_medium_id:
         type: integer
       id:
         type: integer
       price:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
       published_date:
         type: string
       title:
@@ -348,7 +349,10 @@ definitions:
         type: string
       description:
         type: string
-      format:
+      featured_medium:
+        $ref: '#/definitions/model.Medium'
+        type: object
+      featured_medium_id:
         type: integer
       frequency:
         type: string
@@ -358,6 +362,10 @@ definitions:
         type: integer
       license:
         type: string
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
       related_articles:
         type: string
       source:
@@ -406,6 +414,37 @@ definitions:
       name:
         type: string
       updated_at:
+        type: string
+    type: object
+  model.Medium:
+    properties:
+      alt_text:
+        type: string
+      caption:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      dimensions:
+        type: string
+      file_size:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      slug:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      url:
         type: string
     type: object
   model.Membership:
@@ -545,6 +584,14 @@ definitions:
     type: object
   model.Product:
     properties:
+      carts:
+        items:
+          $ref: '#/definitions/model.Cart'
+        type: array
+      catalogs:
+        items:
+          $ref: '#/definitions/model.Catalog'
+        type: array
       created_at:
         type: string
       currency:
@@ -552,8 +599,17 @@ definitions:
         type: object
       currency_id:
         type: integer
+      datasets:
+        items:
+          $ref: '#/definitions/model.Dataset'
+        type: array
       deleted_at:
         type: string
+      featured_medium:
+        $ref: '#/definitions/model.Medium'
+        type: object
+      featured_medium_id:
+        type: integer
       id:
         type: integer
       price:
@@ -562,6 +618,10 @@ definitions:
         type: string
       status:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
       title:
         type: string
       updated_at:
@@ -581,6 +641,10 @@ definitions:
         type: string
       id:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
       slug:
         type: string
       title:
@@ -683,7 +747,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/product.productData'
+          $ref: '#/definitions/model.Product'
         type: array
       total:
         type: integer
@@ -696,6 +760,8 @@ definitions:
         items:
           type: integer
         type: array
+      featured_medium_id:
+        type: integer
       price:
         type: integer
       slug:
@@ -711,44 +777,6 @@ definitions:
     required:
     - price
     - slug
-    - title
-    type: object
-  product.productData:
-    properties:
-      created_at:
-        type: string
-      currency:
-        $ref: '#/definitions/model.Currency'
-        type: object
-      currency_id:
-        type: integer
-      datasets:
-        items:
-          $ref: '#/definitions/model.Dataset'
-        type: array
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      price:
-        type: integer
-      slug:
-        type: string
-      status:
-        type: string
-      tags:
-        items:
-          $ref: '#/definitions/model.Tag'
-        type: array
-      title:
-        type: string
-      updated_at:
-        type: string
-    required:
-    - currency_id
-    - price
-    - slug
-    - status
     - title
     type: object
   tag.paging:
@@ -978,7 +1006,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.CartItem'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1034,7 +1062,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.CartItem'
+            $ref: '#/definitions/model.Product'
         "400":
           description: Bad Request
           schema:
@@ -1042,41 +1070,6 @@ paths:
               type: string
             type: array
       summary: Show a cartItem by id
-      tags:
-      - CartItem
-    put:
-      description: Update cartItem by ID
-      operationId: update-cart-item-by-id
-      parameters:
-      - description: Cart ID
-        in: path
-        name: cart_id
-        required: true
-        type: string
-      - description: Cart-item ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: CartItem
-        in: body
-        name: CartItem
-        schema:
-          $ref: '#/definitions/item.cartItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.CartItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a cartItem by id
       tags:
       - CartItem
   /catalogs:
@@ -1398,6 +1391,31 @@ paths:
       summary: Delete a dataset
       tags:
       - Dataset
+    get:
+      description: Get dataset by ID
+      operationId: get-dataset-by-id
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Dataset'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a dataset by id
+      tags:
+      - Dataset
     put:
       description: Update dataset by ID
       operationId: update-dataset-by-id
@@ -1426,32 +1444,6 @@ paths:
               type: string
             type: array
       summary: Update a dataset by id
-      tags:
-      - Dataset
-  /datasets/{dataset_id}/:
-    get:
-      description: Get dataset by ID
-      operationId: get-dataset-by-id
-      parameters:
-      - description: Dataset ID
-        in: path
-        name: dataset_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Dataset'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a dataset by id
       tags:
       - Dataset
   /datasets/{dataset_id}/format:
@@ -1637,6 +1629,131 @@ paths:
       summary: Update a format by id
       tags:
       - Format
+  /media:
+    get:
+      description: Get media
+      operationId: get-media
+      parameters:
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/medium.paging'
+      summary: Show media
+      tags:
+      - Medium
+    post:
+      description: Create medium
+      operationId: add-medium
+      parameters:
+      - description: Medium object
+        in: body
+        name: Medium
+        required: true
+        schema:
+          $ref: '#/definitions/medium.medium'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Medium'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create medium
+      tags:
+      - Medium
+  /media/{medium_id}:
+    delete:
+      description: Delete medium by ID
+      operationId: delete-medium-by-id
+      parameters:
+      - description: Medium ID
+        in: path
+        name: medium_id
+        required: true
+        type: string
+      responses:
+        "200": {}
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete a medium
+      tags:
+      - Medium
+    get:
+      description: Get medium by ID
+      operationId: get-medium-by-id
+      parameters:
+      - description: Medium ID
+        in: path
+        name: medium_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Medium'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a medium by id
+      tags:
+      - Medium
+    put:
+      description: Update medium by ID
+      operationId: update-medium-by-id
+      parameters:
+      - description: Medium ID
+        in: path
+        name: medium_id
+        required: true
+        type: string
+      - description: Medium
+        in: body
+        name: Medium
+        schema:
+          $ref: '#/definitions/medium.medium'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Medium'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Update a medium by id
+      tags:
+      - Medium
   /memberships:
     get:
       description: Get all memberships

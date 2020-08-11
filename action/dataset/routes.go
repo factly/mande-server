@@ -22,7 +22,6 @@ type dataset struct {
 	RelatedArticles  postgres.Jsonb `json:"related_articles"`
 	TimeSaved        int            `json:"time_saved"`
 	FeaturedMediumID uint           `json:"featured_medium_id"`
-	FormatIDs        []uint         `json:"format_ids"`
 }
 
 // Dataset detail

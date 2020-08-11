@@ -19,7 +19,7 @@ import (
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param item_id path string true "Cart-item ID"
-// @Success 200 {object} model.CartItem
+// @Success 200 {object} model.Product
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items/{item_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
@@ -42,18 +42,19 @@ func details(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := &model.CartItem{}
+	result := &model.Product{}
 	result.ID = uint(id)
-	result.CartID = uint(cid)
 
-	err = model.DB.Model(&model.CartItem{}).First(&result).Error
+	cart := model.Cart{}
+	cart.ID = uint(cid)
+
+	err = model.DB.Model(&cart).Preload("Currency").Preload("Tags").Preload("Datasets").Association("Products").Find(&result).Error
+
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
-
-	model.DB.Preload("Product").Preload("Product.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

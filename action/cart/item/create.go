@@ -24,7 +24,7 @@ import (
 // @Produce  json
 // @Param cart_id path string true "Cart ID"
 // @Param CartItem body cartItem true "CartItem object"
-// @Success 201 {object} model.CartItem
+// @Success 201 {object} model.Product
 // @Failure 400 {array} string
 // @Router /carts/{cart_id}/items [post]
 func create(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cartItem := &cartItem{}
-	result := &model.CartItem{}
 
 	json.NewDecoder(r.Body).Decode(&cartItem)
 
@@ -50,18 +49,26 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result.CartID = uint(id)
-	result.ProductID = cartItem.ProductID
+	cart := model.Cart{}
+	cart.ID = uint(id)
 
-	err = model.DB.Model(&model.CartItem{}).Create(&result).Error
+	// check if cart exist or not
+	err = model.DB.Model(&model.Cart{}).First(&cart).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
 
+	result := model.Product{}
+	result.ID = cartItem.ProductID
+
+	err = model.DB.Model(&cart).Association("Products").Append(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
-
-	model.DB.Preload("Product").Preload("Product.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
