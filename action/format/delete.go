@@ -1,6 +1,7 @@
 package format
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -44,6 +45,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	// check if format is associated with datasets
+	var totAssociated int
+	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
+		FormatID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("format is associated with dataset"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)

@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -41,6 +42,18 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if cart is associated with order
+	var totAssociated int
+	model.DB.Model(&model.Order{}).Where(&model.Order{
+		CartID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("cart is associated with order"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

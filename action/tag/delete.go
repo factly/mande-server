@@ -1,6 +1,7 @@
 package tag
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -39,6 +40,17 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if tag is associated with products
+	tag := new(model.Tag)
+	tag.ID = uint(id)
+	totAssociated := model.DB.Model(tag).Association("Products").Count()
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("tag is associated with product"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

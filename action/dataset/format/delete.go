@@ -47,7 +47,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.FormatID = uint(fID)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Where(&result).First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
