@@ -1,11 +1,13 @@
 package cart
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -26,6 +28,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartID)
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -34,12 +37,31 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Products").First(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	// check if cart is associated with order
+	var totAssociated int
+	model.DB.Model(&model.Order{}).Where(&model.Order{
+		CartID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("cart is associated with order"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// delete associations
+	if len(result.Products) > 0 {
+		model.DB.Model(&result).Association("Products").Delete(&result.Products)
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)

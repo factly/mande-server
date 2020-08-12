@@ -1,11 +1,13 @@
 package tag
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -25,6 +27,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	tagID := chi.URLParam(r, "tag_id")
 	id, err := strconv.Atoi(tagID)
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -35,7 +38,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = model.DB.First(&result).Error
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if tag is associated with products
+	tag := new(model.Tag)
+	tag.ID = uint(id)
+	totAssociated := model.DB.Model(tag).Association("Products").Count()
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("tag is associated with product"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

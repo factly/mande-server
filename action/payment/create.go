@@ -2,10 +2,12 @@ package payment
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -28,6 +30,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(payment)
 	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
@@ -42,6 +45,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	err := model.DB.Model(&model.Payment{}).Create(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}

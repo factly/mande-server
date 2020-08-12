@@ -1,11 +1,13 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -25,6 +27,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "user_id")
 	id, err := strconv.Atoi(userID)
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -36,7 +39,42 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = model.DB.First(&result).Error
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if user is associated with cart
+	var totAssociated int
+	model.DB.Model(&model.Cart{}).Where(&model.Cart{
+		UserID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("user is associated with cart"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if user is associated with membership
+	model.DB.Model(&model.Membership{}).Where(&model.Membership{
+		UserID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("user is associated with membership"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if user is associated with order
+	model.DB.Model(&model.Order{}).Where(&model.Order{
+		UserID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("user is associated with order"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

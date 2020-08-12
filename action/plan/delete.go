@@ -1,11 +1,13 @@
 package plan
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -26,6 +28,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(planID)
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -38,9 +41,23 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.First(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
+
+	// check if plan is associated with membership
+	var totAssociated int
+	model.DB.Model(&model.Membership{}).Where(&model.Membership{
+		PlanID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("plan is associated with membership"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)

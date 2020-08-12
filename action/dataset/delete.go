@@ -1,11 +1,13 @@
 package dataset
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -26,6 +28,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(datasetID)
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -37,10 +40,37 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.First(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
-	model.DB.Delete(&result)
+
+	// check if dataset is associated with products
+	dataset := new(model.Dataset)
+	dataset.ID = uint(id)
+	totAssociated := model.DB.Model(dataset).Association("Products").Count()
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("dataset is associated with product"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	tx := model.DB.Begin()
+	// delete all associations
+	tx.Where(&model.DatasetFormat{
+		DatasetID: uint(id),
+	}).Delete(&model.DatasetFormat{})
+
+	err = tx.Delete(&result).Error
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, nil)
 }

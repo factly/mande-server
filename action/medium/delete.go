@@ -1,11 +1,13 @@
 package medium
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -25,6 +27,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	mediumID := chi.URLParam(r, "medium_id")
 	id, err := strconv.Atoi(mediumID)
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -35,7 +38,42 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	// check record exists or not
 	err = model.DB.First(&result).Error
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	// check if medium is associated with catalog
+	var totAssociated int
+	model.DB.Model(&model.Catalog{}).Where(&model.Catalog{
+		FeaturedMediumID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("medium is associated with catalog"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if medium is associated with dataset
+	model.DB.Model(&model.Dataset{}).Where(&model.Dataset{
+		FeaturedMediumID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("medium is associated with dataset"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if medium is associated with product
+	model.DB.Model(&model.Product{}).Where(&model.Product{
+		FeaturedMediumID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("medium is associated with product"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}
 

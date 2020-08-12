@@ -7,6 +7,7 @@ import (
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -28,6 +29,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(cartID)
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
 		return
 	}
@@ -38,11 +40,32 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	result := &model.Cart{}
 	result.ID = uint(id)
+	result.Products = make([]model.Product, 0)
 
-	model.DB.Model(&result).Updates(model.Cart{
-		Status: cart.Status,
-		UserID: cart.UserID,
-	}).First(&result)
+	// check record exist or not
+	err = model.DB.Model(&model.Cart{}).Preload("Products").First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	oldProducts := result.Products
+	newProducts := make([]model.Product, 0)
+	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&newProducts)
+
+	if len(oldProducts) > 0 {
+		model.DB.Model(&result).Association("Products").Delete(oldProducts)
+	}
+	if len(newProducts) == 0 {
+		newProducts = nil
+	}
+
+	model.DB.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Cart{
+		Status:   cart.Status,
+		UserID:   cart.UserID,
+		Products: newProducts,
+	}).Preload("Products").Preload("Products.Tags").Preload("Products.Datasets").Preload("Products.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

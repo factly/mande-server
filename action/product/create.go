@@ -2,10 +2,12 @@ package product
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/errorx"
+	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -28,14 +30,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	validationError := validationx.Check(product)
 	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
 
-	result := &productData{}
+	result := model.Product{}
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
-	result.Product = model.Product{
+	result = model.Product{
 		Title:            product.Title,
 		Slug:             product.Slug,
 		Price:            product.Price,
@@ -44,61 +47,18 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: product.FeaturedMediumID,
 	}
 
-	err := model.DB.Model(&model.Product{}).Create(&result.Product).Error
+	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)
+	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
+
+	err := model.DB.Model(&model.Product{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
+		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
-	model.DB.Preload("Currency").Preload("FeaturedMedium").First(&result.Product)
-
-	for _, id := range product.DatasetIDs {
-		productDataset := &model.ProductDataset{}
-		productDataset.DatasetID = uint(id)
-		productDataset.ProductID = result.ID
-
-		err = model.DB.Model(&model.ProductDataset{}).Create(&productDataset).Error
-		if err != nil {
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-		model.DB.Model(&model.ProductDataset{}).Preload("Dataset").First(&productDataset)
-	}
-
-	// fetch all product datasets
-	productDatasets := []model.ProductDataset{}
-	model.DB.Model(&model.ProductDataset{}).Where(&model.ProductDataset{
-		ProductID: result.Product.ID,
-	}).Preload("Dataset").Find(&productDatasets)
-
-	// appending product datasets to result
-	for _, productDataset := range productDatasets {
-		result.Datasets = append(result.Datasets, productDataset.Dataset)
-	}
-
-	for _, id := range product.TagIDs {
-		productTag := &model.ProductTag{}
-		productTag.TagID = uint(id)
-		productTag.ProductID = result.ID
-
-		err = model.DB.Model(&model.ProductTag{}).Create(&productTag).Error
-		if err != nil {
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-	}
-
-	// fetch all product tags
-	productTags := []model.ProductTag{}
-	model.DB.Model(&model.ProductTag{}).Where(&model.ProductTag{
-		ProductID: result.Product.ID,
-	}).Preload("Tag").Find(&productTags)
-
-	// appending product tags to result
-	for _, productTag := range productTags {
-		result.Tags = append(result.Tags, productTag.Tag)
-	}
+	model.DB.Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
