@@ -21,6 +21,8 @@ type dataset struct {
 	DataStandard     string         `json:"data_standard"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles"`
 	TimeSaved        int            `json:"time_saved"`
+	Price            int            `json:"price" validate:"required"`
+	CurrencyID       uint           `json:"currency_id"`
 	FeaturedMediumID uint           `json:"featured_medium_id"`
 	TagIDs           []uint         `json:"tag_ids"`
 }

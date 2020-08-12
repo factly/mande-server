@@ -2781,6 +2781,9 @@
                 "title"
             ],
             "properties": {
+                "currency_id": {
+                    "type": "integer"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -2849,12 +2852,18 @@
         },
         "dataset.dataset": {
             "type": "object",
+            "required": [
+                "price"
+            ],
             "properties": {
                 "contact_email": {
                     "type": "string"
                 },
                 "contact_name": {
                     "type": "string"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "data_standard": {
                     "type": "string"
@@ -2873,6 +2882,9 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "related_articles": {
                     "type": "string"
@@ -2899,6 +2911,10 @@
         },
         "dataset.datasetData": {
             "type": "object",
+            "required": [
+                "currency_id",
+                "price"
+            ],
             "properties": {
                 "contact_email": {
                     "type": "string"
@@ -2908,6 +2924,13 @@
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "data_standard": {
                     "type": "string"
@@ -2942,6 +2965,9 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "products": {
                     "type": "array",
@@ -3187,9 +3213,19 @@
         },
         "model.Catalog": {
             "type": "object",
+            "required": [
+                "currency_id"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3256,6 +3292,10 @@
         },
         "model.Dataset": {
             "type": "object",
+            "required": [
+                "currency_id",
+                "price"
+            ],
             "properties": {
                 "contact_email": {
                     "type": "string"
@@ -3265,6 +3305,13 @@
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "data_standard": {
                     "type": "string"
@@ -3293,6 +3340,9 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "products": {
                     "type": "array",

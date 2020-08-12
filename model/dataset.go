@@ -17,6 +17,9 @@ type Dataset struct {
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
 	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
+	Price            int            `gorm:"column:price" json:"price" validate:"required"`
+	CurrencyID       uint           `gorm:"column:currency_id" json:"currency_id" validate:"required"`
+	Currency         *Currency      `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
 	FeaturedMediumID uint           `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
 	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	Products         []Product      `gorm:"many2many:product_dataset;" json:"products"`

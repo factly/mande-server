@@ -30,7 +30,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 	result.Nodes = make([]model.Catalog, 0)
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Currency").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").Model(&model.Catalog{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
