@@ -36,7 +36,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := &model.Dataset{
+	result := &datasetData{}
+	result.Tags = make([]model.Tag, 0)
+	result.Dataset = model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -52,15 +54,16 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: dataset.FeaturedMediumID,
 	}
 
-	err := model.DB.Model(&model.Dataset{}).Create(&result).Error
+	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
 
+	err := model.DB.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").First(&result)
+	model.DB.Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

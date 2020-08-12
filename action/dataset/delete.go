@@ -37,7 +37,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Tags").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -61,6 +61,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	tx.Where(&model.DatasetFormat{
 		DatasetID: uint(id),
 	}).Delete(&model.DatasetFormat{})
+
+	tx.Model(&result).Association("Tags").Delete(result.Tags)
 
 	err = tx.Delete(&result).Error
 

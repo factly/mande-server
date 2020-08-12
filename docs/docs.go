@@ -2895,6 +2895,12 @@ var doc = `{
                 "source": {
                     "type": "string"
                 },
+                "tag_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "temporal_coverage": {
                     "type": "string"
                 },
@@ -2963,6 +2969,12 @@ var doc = `{
                 },
                 "source": {
                     "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Tag"
+                    }
                 },
                 "temporal_coverage": {
                     "type": "string"
@@ -3308,6 +3320,12 @@ var doc = `{
                 },
                 "source": {
                     "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Tag"
+                    }
                 },
                 "temporal_coverage": {
                     "type": "string"
@@ -3704,6 +3722,12 @@ var doc = `{
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "datasets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Dataset"
+                    }
                 },
                 "deleted_at": {
                     "type": "string"

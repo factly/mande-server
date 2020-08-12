@@ -42,7 +42,26 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&dataset)
 
-	model.DB.Model(&result.Dataset).Updates(model.Dataset{
+	// check record exist or not
+	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	oldTags := result.Tags
+	newTags := make([]model.Tag, 0)
+	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
+
+	if len(oldTags) > 0 {
+		model.DB.Model(&result).Association("Tags").Delete(oldTags)
+	}
+	if len(newTags) == 0 {
+		newTags = nil
+	}
+
+	model.DB.Model(&result.Dataset).Set("gorm:association_autoupdate", false).Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -56,7 +75,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
 		FeaturedMediumID: dataset.FeaturedMediumID,
-	}).Preload("FeaturedMedium").First(&result.Dataset)
+		Tags:             newTags,
+	}).Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset)
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
