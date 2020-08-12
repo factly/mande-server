@@ -44,12 +44,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if tag is associated with products
-	tag := new(model.Tag)
-	tag.ID = uint(id)
-	totAssociated := model.DB.Model(tag).Association("Products").Count()
+	totAssociated := model.DB.Model(result).Association("Products").Count()
 
 	if totAssociated != 0 {
 		loggerx.Error(errors.New("tag is associated with product"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
+	// check if tag is associated with dataset
+	totAssociated = model.DB.Model(result).Association("Datasets").Count()
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("tag is associated with dataset"))
 		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
 		return
 	}

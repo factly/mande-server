@@ -93,6 +93,10 @@ definitions:
         type: string
       source:
         type: string
+      tag_ids:
+        items:
+          type: integer
+        type: array
       temporal_coverage:
         type: string
       time_saved:
@@ -139,6 +143,10 @@ definitions:
         type: string
       source:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
       temporal_coverage:
         type: string
       time_saved:
@@ -367,6 +375,10 @@ definitions:
         type: string
       source:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
       temporal_coverage:
         type: string
       time_saved:
@@ -634,6 +646,10 @@ definitions:
     properties:
       created_at:
         type: string
+      datasets:
+        items:
+          $ref: '#/definitions/model.Dataset'
+        type: array
       deleted_at:
         type: string
       id:

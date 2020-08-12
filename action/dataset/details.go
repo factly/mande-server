@@ -35,9 +35,8 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &datasetData{}
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
-	datasetTags := []model.DatasetTag{}
 
-	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").First(&result.Dataset).Error
+	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -48,14 +47,6 @@ func details(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
 	}).Preload("Format").Find(&result.Formats)
-
-	model.DB.Model(&model.DatasetTag{}).Where(&model.DatasetTag{
-		DatasetID: uint(id),
-	}).Preload("Tag").Find(&datasetTags)
-
-	for _, datasetTag := range datasetTags {
-		result.Tags = append(result.Tags, datasetTag.Tag)
-	}
 
 	renderx.JSON(w, http.StatusOK, result)
 }

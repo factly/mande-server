@@ -32,7 +32,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	model.DB.Preload("FeaturedMedium").Model(&model.Dataset{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&datasets)
+	model.DB.Preload("FeaturedMedium").Preload("Tags").Model(&model.Dataset{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&datasets)
 
 	for _, dataset := range datasets {
 		var formats []model.DatasetFormat

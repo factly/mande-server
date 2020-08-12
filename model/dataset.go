@@ -20,6 +20,7 @@ type Dataset struct {
 	FeaturedMediumID uint           `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
 	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	Products         []Product      `gorm:"many2many:product_dataset;" json:"products"`
+	Tags             []Tag          `gorm:"many2many:dataset_tag;" json:"tags"`
 }
 
 // DatasetFormat model
@@ -29,12 +30,4 @@ type DatasetFormat struct {
 	Format    Format `gorm:"foreignkey:format_id;association_foreignkey:id"  json:"format"`
 	DatasetID uint   `gorm:"column:dataset_id" json:"dataset_id"`
 	URL       string `gorm:"column:url" json:"url"`
-}
-
-// DatasetTag model
-type DatasetTag struct {
-	Base
-	TagID     uint `gorm:"column:tag_id" json:"tag_id"`
-	Tag       Tag  `gorm:"foreignkey:format_id;association_foreignkey:id"  json:"tag"`
-	DatasetID uint `gorm:"column:dataset_id" json:"dataset_id"`
 }
