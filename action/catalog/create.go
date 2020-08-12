@@ -44,6 +44,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: catalog.FeaturedMediumID,
 		Price:            catalog.Price,
 		PublishedDate:    catalog.PublishedDate,
+		CurrencyID:       catalog.CurrencyID,
 	}
 
 	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
@@ -56,7 +57,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").First(&result)
+	model.DB.Preload("FeaturedMedium").Preload("Products").Preload("Currency").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

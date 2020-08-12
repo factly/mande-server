@@ -69,5 +69,7 @@ func SetupDB() {
 	DB.Model(&OrderItem{}).AddForeignKey("product_id", "dp_product(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&DatasetFormat{}).AddForeignKey("format_id", "dp_format(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Catalog{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Catalog{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Dataset{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Dataset{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
 }

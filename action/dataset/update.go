@@ -74,9 +74,11 @@ func update(w http.ResponseWriter, r *http.Request) {
 		DataStandard:     dataset.DataStandard,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
+		Price:            dataset.Price,
+		CurrencyID:       dataset.CurrencyID,
 		FeaturedMediumID: dataset.FeaturedMediumID,
 		Tags:             newTags,
-	}).Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset)
+	}).Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset)
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
