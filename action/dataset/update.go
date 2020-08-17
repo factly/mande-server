@@ -2,6 +2,7 @@ package dataset
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
 )
 
@@ -41,6 +43,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.Formats = make([]model.DatasetFormat, 0)
 
 	json.NewDecoder(r.Body).Decode(&dataset)
+
+	validationError := validationx.Check(dataset)
+	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
+		errorx.Render(w, validationError)
+		return
+	}
 
 	// check record exist or not
 	err = model.DB.Preload("Tags").First(&result.Dataset).Error

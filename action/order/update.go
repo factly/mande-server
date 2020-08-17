@@ -2,6 +2,7 @@ package order
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
 )
 
@@ -38,6 +40,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	order := &order{}
 
 	json.NewDecoder(r.Body).Decode(&order)
+
+	validationError := validationx.Check(order)
+	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
+		errorx.Render(w, validationError)
+		return
+	}
 
 	result := &model.Order{}
 	result.ID = uint(id)
