@@ -43,31 +43,59 @@ func update(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&catalog)
 
 	// check record exist or not
-	err = model.DB.Model(&model.Catalog{}).Preload("FeaturedMedium").Preload("Products").First(&result).Error
+	err = model.DB.Preload("Products").First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 
+	tx := model.DB.Begin()
+
 	oldProducts := result.Products
 	newProducts := make([]model.Product, 0)
 	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&newProducts)
 
 	if len(oldProducts) > 0 {
-		model.DB.Model(&result).Association("Products").Delete(oldProducts)
+		err = tx.Model(&result).Association("Products").Delete(oldProducts).Error
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
 	}
 	if len(newProducts) == 0 {
 		newProducts = nil
 	}
 
-	model.DB.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Catalog{
+	if catalog.FeaturedMediumID == 0 {
+		err = tx.Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result).Error
+		result.FeaturedMediumID = 0
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+	}
+
+	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: catalog.FeaturedMediumID,
 		PublishedDate:    catalog.PublishedDate,
 		Products:         newProducts,
-	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
+	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, result)
 }

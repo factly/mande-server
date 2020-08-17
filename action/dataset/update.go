@@ -43,25 +43,44 @@ func update(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&dataset)
 
 	// check record exist or not
-	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").Preload("Tags").First(&result.Dataset).Error
+	err = model.DB.Preload("Tags").First(&result.Dataset).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 
+	tx := model.DB.Begin()
+
 	oldTags := result.Tags
 	newTags := make([]model.Tag, 0)
 	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
 
 	if len(oldTags) > 0 {
-		model.DB.Model(&result).Association("Tags").Delete(oldTags)
+		err = tx.Model(&result).Association("Tags").Delete(oldTags).Error
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
 	}
 	if len(newTags) == 0 {
 		newTags = nil
 	}
 
-	model.DB.Model(&result.Dataset).Set("gorm:association_autoupdate", false).Updates(model.Dataset{
+	if dataset.FeaturedMediumID == 0 {
+		err = tx.Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result.Dataset).Error
+		result.FeaturedMediumID = 0
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+	}
+
+	err = tx.Model(&result.Dataset).Set("gorm:association_autoupdate", false).Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -78,11 +97,20 @@ func update(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:       dataset.CurrencyID,
 		FeaturedMediumID: dataset.FeaturedMediumID,
 		Tags:             newTags,
-	}).Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset)
+	}).Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset).Error
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
 
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		DatasetID: uint(id),
 	}).Preload("Format").Find(&result.Formats)
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, result)
 }
