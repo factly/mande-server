@@ -65,6 +65,17 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if currency is associated with dataset
+	model.DB.Model(&model.Dataset{}).Where(&model.Dataset{
+		CurrencyID: uint(id),
+	}).Count(&totAssociated)
+
+	if totAssociated != 0 {
+		loggerx.Error(errors.New("currency is associated with dataset"))
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	model.DB.Delete(&result)
 
 	renderx.JSON(w, http.StatusOK, nil)

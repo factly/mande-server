@@ -10,8 +10,6 @@ import (
 type catalog struct {
 	Title            string    `json:"title" validate:"required"`
 	Description      string    `json:"description" `
-	Price            int       `json:"price" validate:"required"`
-	CurrencyID       uint      `json:"currency_id"`
 	FeaturedMediumID uint      `json:"featured_medium_id"`
 	PublishedDate    time.Time `json:"published_date" validate:"required"`
 	ProductIDs       []uint    `json:"product_ids"`

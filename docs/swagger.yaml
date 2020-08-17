@@ -24,13 +24,9 @@ definitions:
     type: object
   catalog.catalog:
     properties:
-      currency_id:
-        type: integer
       description:
         type: string
       featured_medium_id:
-        type: integer
-      price:
         type: integer
       product_ids:
         items:
@@ -41,7 +37,6 @@ definitions:
       title:
         type: string
     required:
-    - price
     - published_date
     - title
     type: object
@@ -316,11 +311,6 @@ definitions:
     properties:
       created_at:
         type: string
-      currency:
-        $ref: '#/definitions/model.Currency'
-        type: object
-      currency_id:
-        type: integer
       deleted_at:
         type: string
       description:
@@ -332,8 +322,6 @@ definitions:
         type: integer
       id:
         type: integer
-      price:
-        type: integer
       products:
         items:
           $ref: '#/definitions/model.Product'
@@ -344,8 +332,6 @@ definitions:
         type: string
       updated_at:
         type: string
-    required:
-    - currency_id
     type: object
   model.Currency:
     properties:
