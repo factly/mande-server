@@ -25,6 +25,18 @@ import (
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
+	// Check if currency already exists
+	var totCurrencies int
+	model.DB.Model(&model.Currency{}).Count(&totCurrencies)
+
+	if totCurrencies > 0 {
+		errorx.Render(w, errorx.Parser(errorx.Message{
+			Message: "Cannot add more than one currency",
+			Code:    422,
+		}))
+		return
+	}
+
 	currency := &currency{}
 
 	json.NewDecoder(r.Body).Decode(&currency)
