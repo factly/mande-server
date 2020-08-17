@@ -2791,21 +2791,14 @@ var doc = `{
         "catalog.catalog": {
             "type": "object",
             "required": [
-                "price",
                 "published_date",
                 "title"
             ],
             "properties": {
-                "currency_id": {
-                    "type": "integer"
-                },
                 "description": {
                     "type": "string"
                 },
                 "featured_medium_id": {
-                    "type": "integer"
-                },
-                "price": {
                     "type": "integer"
                 },
                 "product_ids": {
@@ -3228,19 +3221,9 @@ var doc = `{
         },
         "model.Catalog": {
             "type": "object",
-            "required": [
-                "currency_id"
-            ],
             "properties": {
                 "created_at": {
                     "type": "string"
-                },
-                "currency": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Currency"
-                },
-                "currency_id": {
-                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3256,9 +3239,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
-                },
-                "price": {
                     "type": "integer"
                 },
                 "products": {

@@ -65,11 +65,9 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: catalog.FeaturedMediumID,
-		Price:            catalog.Price,
 		PublishedDate:    catalog.PublishedDate,
-		CurrencyID:       catalog.CurrencyID,
 		Products:         newProducts,
-	}).Preload("FeaturedMedium").Preload("Products").Preload("Currency").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
+	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
