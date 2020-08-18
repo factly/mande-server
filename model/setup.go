@@ -17,7 +17,7 @@ func SetupDB() {
 	DSN := os.Getenv("DSN")
 
 	var err error
-	DB, err = gorm.Open("postgres", DSN)
+	DB, err = gorm.Open("sqlmock", DSN)
 
 	if err != nil {
 		log.Fatal(err)

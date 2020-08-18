@@ -36,7 +36,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := model.DB.Model(&model.Tag{}).Create(&tag).Error
+	err := model.DB.Model(&model.Tag{}).Create(&tag).First(&tag).Error
 
 	if err != nil {
 		loggerx.Error(err)
