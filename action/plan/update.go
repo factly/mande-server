@@ -2,6 +2,7 @@ package plan
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
 )
 
@@ -40,6 +42,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	json.NewDecoder(r.Body).Decode(&plan)
+
+	validationError := validationx.Check(plan)
+	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
+		errorx.Render(w, validationError)
+		return
+	}
 
 	model.DB.Model(&result).Updates(model.Plan{
 		PlanName: plan.PlanName,
