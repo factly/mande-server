@@ -30,6 +30,8 @@ func TestCreateTag(t *testing.T) {
 		"slug":  "test-tag",
 	}
 
+	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
+
 	t.Run("create a tag", func(t *testing.T) {
 
 		mock.ExpectBegin()
@@ -40,7 +42,7 @@ func TestCreateTag(t *testing.T) {
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, createdTag["title"], createdTag["slug"]))
 
 		e.POST("/tags").

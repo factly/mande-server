@@ -25,13 +25,14 @@ func TestDetailTag(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
+	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
 
 	t.Run("get tag by id", func(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, "Test Tag", "test-tag"))
 
 		e.GET("/tags/1").
@@ -49,7 +50,7 @@ func TestDetailTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}))
+			WillReturnRows(sqlmock.NewRows(tagCols))
 
 		e.GET("/tags/1").
 			Expect().

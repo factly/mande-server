@@ -41,7 +41,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		LastName:  user.LastName,
 	}
 
-	err := model.DB.Model(&model.User{}).Create(&result).Error
+	err := model.DB.Model(&model.User{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
