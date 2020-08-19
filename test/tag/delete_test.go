@@ -31,6 +31,7 @@ func TestDeleteTag(t *testing.T) {
 		"slug":  "test-delete-tag",
 	}
 
+	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
 	tagProductQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN "dp_product_tag"`)
 	tagDatasetQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset" INNER JOIN "dp_dataset_tag"`)
@@ -39,7 +40,7 @@ func TestDeleteTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
 
 		mock.ExpectQuery(tagProductQuery).
@@ -68,7 +69,7 @@ func TestDeleteTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}))
+			WillReturnRows(sqlmock.NewRows(tagCols))
 
 		e.DELETE("/tags/1").
 			Expect().
@@ -89,7 +90,7 @@ func TestDeleteTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
 
 		mock.ExpectQuery(tagProductQuery).
@@ -108,7 +109,7 @@ func TestDeleteTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
 
 		mock.ExpectQuery(tagProductQuery).

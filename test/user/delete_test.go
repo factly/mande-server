@@ -31,6 +31,7 @@ func TestDeleteUser(t *testing.T) {
 		"last_name":  "User LName",
 	}
 
+	userCols := []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 	userCartQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_cart`)
 	userMembershipQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_membership`)
@@ -40,7 +41,7 @@ func TestDeleteUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedUser["email"], deletedUser["first_name"], deletedUser["last_name"]))
 
 		mock.ExpectQuery(userCartQuery).
@@ -73,7 +74,7 @@ func TestDeleteUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}))
+			WillReturnRows(sqlmock.NewRows(userCols))
 
 		e.DELETE("/users/1").
 			Expect().
@@ -92,7 +93,7 @@ func TestDeleteUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedUser["email"], deletedUser["first_name"], deletedUser["last_name"]))
 
 		mock.ExpectQuery(userCartQuery).
@@ -109,7 +110,7 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("user associated with membership", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedUser["email"], deletedUser["first_name"], deletedUser["last_name"]))
 
 		mock.ExpectQuery(userCartQuery).
@@ -130,7 +131,7 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("user associated with order", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, deletedUser["email"], deletedUser["first_name"], deletedUser["last_name"]))
 
 		mock.ExpectQuery(userCartQuery).

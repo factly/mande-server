@@ -37,6 +37,7 @@ func TestListUser(t *testing.T) {
 		},
 	}
 
+	userCols := []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
 	countQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_user"`)
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 
@@ -46,7 +47,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}))
+			WillReturnRows(sqlmock.NewRows(userCols))
 
 		e.GET("/users").
 			Expect().
@@ -64,7 +65,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(userlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, userlist[0]["email"], userlist[0]["first_name"], userlist[0]["last_name"]).
 				AddRow(2, time.Now(), time.Now(), nil, userlist[1]["email"], userlist[1]["first_name"], userlist[1]["last_name"]))
 
@@ -90,7 +91,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(userlist)))
 
 		mock.ExpectQuery(`SELECT \* FROM "dp_user" (.+) LIMIT 1 OFFSET 1`).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(2, time.Now(), time.Now(), nil, userlist[1]["email"], userlist[1]["first_name"], userlist[1]["last_name"]))
 
 		e.GET("/users").

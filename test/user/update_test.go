@@ -30,13 +30,14 @@ func TestUpdateUser(t *testing.T) {
 		"last_name":  "Updated User LName",
 	}
 
+	userCols := []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 
 	t.Run("update user", func(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, "user@mail.com", "User Fname", "User Lname"))
 
 		mock.ExpectBegin()
@@ -47,7 +48,7 @@ func TestUpdateUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, updatedUser["email"], updatedUser["first_name"], updatedUser["last_name"]))
 
 		e.PUT("/users/1").
@@ -65,7 +66,7 @@ func TestUpdateUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}))
+			WillReturnRows(sqlmock.NewRows(userCols))
 
 		e.PUT("/users/1").
 			WithJSON(updatedUser).

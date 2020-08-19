@@ -25,18 +25,19 @@ func TestDetailUser(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 	user := map[string]interface{}{
 		"email":      "user@mail.com",
 		"first_name": "User Fname",
 		"last_name":  "User LName",
 	}
+	userCols := []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
+	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 
 	t.Run("get user by id", func(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
+			WillReturnRows(sqlmock.NewRows(userCols).
 				AddRow(1, time.Now(), time.Now(), nil, user["email"], user["first_name"], user["last_name"]))
 
 		e.GET("/users/1").
@@ -53,7 +54,7 @@ func TestDetailUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}))
+			WillReturnRows(sqlmock.NewRows(userCols))
 
 		e.GET("/users/1").
 			Expect().

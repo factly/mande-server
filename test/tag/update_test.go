@@ -28,13 +28,15 @@ func TestUpdateTag(t *testing.T) {
 		"title": "Test Updated Tag",
 		"slug":  "test-updated-tag",
 	}
+
+	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
 	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
 
 	t.Run("update tag", func(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, "Original Tag", "original-tag"))
 
 		mock.ExpectBegin()
@@ -45,7 +47,7 @@ func TestUpdateTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+			WillReturnRows(sqlmock.NewRows(tagCols).
 				AddRow(1, time.Now(), time.Now(), nil, updatedTag["title"], updatedTag["slug"]))
 
 		e.PUT("/tags/1").
@@ -63,7 +65,7 @@ func TestUpdateTag(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}))
+			WillReturnRows(sqlmock.NewRows(tagCols))
 
 		e.PUT("/tags/1").
 			WithJSON(updatedTag).
