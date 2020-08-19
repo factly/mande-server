@@ -1,0 +1,33 @@
+name: CI
+on:
+  pull_request:
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Go
+        uses: actions/setup-go@v2
+        id: setup_go
+        with:
+          go-version: '1.13'
+      - name: Cache go-modules
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.setup_go.outputs.GOCACHE }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+      - run: go mod download
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v1
+        with:
+          golangci_lint_flags: "--config=.github/.golangci.yml"
+      - run: go test -coverprofile=coverage.out ./...
+      - name: Upload Test Coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage.out
