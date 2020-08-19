@@ -30,26 +30,50 @@ func TestCreateTag(t *testing.T) {
 		"slug":  "test-tag",
 	}
 
-	// DB
-	mock.ExpectBegin()
-	mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, createdTag["title"], createdTag["slug"]).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-	mock.ExpectCommit()
+	t.Run("create a tag", func(t *testing.T) {
 
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
-			AddRow(1, time.Now(), time.Now(), nil, createdTag["title"], createdTag["slug"]))
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, createdTag["title"], createdTag["slug"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectCommit()
 
-	e.POST("/tags").
-		WithJSON(createdTag).
-		Expect().
-		Status(http.StatusCreated).
-		JSON().
-		Object().
-		ContainsMap(createdTag)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+				AddRow(1, time.Now(), time.Now(), nil, createdTag["title"], createdTag["slug"]))
 
-	mock.ExpectationsWereMet()
+		e.POST("/tags").
+			WithJSON(createdTag).
+			Expect().
+			Status(http.StatusCreated).
+			JSON().
+			Object().
+			ContainsMap(createdTag)
+
+		mock.ExpectationsWereMet()
+	})
+
+	t.Run("unprocessable tag body", func(t *testing.T) {
+
+		invalidTag := map[string]interface{}{
+			"titl": "Test",
+			"slg":  "test",
+		}
+
+		e.POST("/tags").
+			WithJSON(invalidTag).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+
+	})
+
+	t.Run("empty tag body", func(t *testing.T) {
+
+		e.POST("/tags").
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+
+	})
 
 }

@@ -13,7 +13,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestGetTagDetail(t *testing.T) {
+func TestDetailTag(t *testing.T) {
 
 	// Setup DB
 	mock := test.SetupMockDB()
@@ -25,20 +25,45 @@ func TestGetTagDetail(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	// DB
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
-			AddRow(1, time.Now(), time.Now(), nil, "Test Tag", "test-tag"))
+	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
 
-	// Request
-	e.GET("/tags/1").
-		Expect().
-		Status(http.StatusOK).
-		JSON().
-		Object().
-		Keys().
-		Contains("id", "created_at", "updated_at", "deleted_at", "title", "slug")
+	t.Run("get tag by id", func(t *testing.T) {
 
-	mock.ExpectationsWereMet()
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
+				AddRow(1, time.Now(), time.Now(), nil, "Test Tag", "test-tag"))
+
+		e.GET("/tags/1").
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			Keys().
+			Contains("id", "created_at", "updated_at", "deleted_at", "title", "slug")
+
+		mock.ExpectationsWereMet()
+	})
+
+	t.Run("tag record not found", func(t *testing.T) {
+
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}))
+
+		e.GET("/tags/1").
+			Expect().
+			Status(http.StatusNotFound)
+
+		mock.ExpectationsWereMet()
+	})
+
+	t.Run("invalid tag id", func(t *testing.T) {
+
+		e.GET("/tags/abc").
+			Expect().
+			Status(http.StatusNotFound)
+
+	})
+
 }
