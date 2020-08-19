@@ -43,12 +43,13 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Type:        medium.Type,
 		Description: medium.Description,
 		Caption:     medium.Caption,
+		AltText:     medium.AltText,
 		FileSize:    medium.FileSize,
 		URL:         medium.URL,
 		Dimensions:  medium.Dimensions,
 	}
 
-	err := model.DB.Model(&model.Medium{}).Create(&result).Error
+	err := model.DB.Model(&model.Medium{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
