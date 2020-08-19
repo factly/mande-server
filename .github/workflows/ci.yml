@@ -25,6 +25,7 @@ jobs:
         uses: reviewdog/action-golangci-lint@v1
         with:
           golangci_lint_flags: "--config=.github/.golangci.yml"
+          fail_on_error: true
       - run: go test -coverprofile=coverage.out ./...
       - name: Upload Test Coverage
         uses: actions/upload-artifact@v1
