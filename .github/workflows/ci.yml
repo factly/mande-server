@@ -18,7 +18,7 @@ jobs:
       - name: Cache go-modules
         uses: actions/cache@v1
         with:
-          path: ${{ steps.setup_go.outputs.GOCACHE }}
+          path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: go mod download
       - name: golangci-lint
