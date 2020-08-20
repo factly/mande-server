@@ -38,8 +38,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	plan := &plan{}
-	result := &model.Plan{}
-	result.ID = uint(id)
 
 	err = json.NewDecoder(r.Body).Decode(&plan)
 	if err != nil {
@@ -52,6 +50,16 @@ func update(w http.ResponseWriter, r *http.Request) {
 	if validationError != nil {
 		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
+		return
+	}
+
+	result := &model.Plan{}
+	result.ID = uint(id)
+
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
 

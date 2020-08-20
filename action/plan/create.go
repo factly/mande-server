@@ -46,7 +46,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Status:   plan.Status,
 	}
 
-	err = model.DB.Model(&model.Plan{}).Create(&result).Error
+	err = model.DB.Model(&model.Plan{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
