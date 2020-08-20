@@ -24,30 +24,12 @@ func TestDeleteMedium(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	deletedMedium := map[string]interface{}{
-		"name":        "Test Medium",
-		"slug":        "test-medium",
-		"type":        "testtype",
-		"title":       "Test Title",
-		"description": "Test Description",
-		"caption":     "Test Caption",
-		"alt_text":    "Test alt text",
-		"file_size":   100,
-		"url":         "http:/testurl.com",
-		"dimensions":  "testdims",
-	}
-	mediumCols := []string{"id", "created_at", "updated_at", "deleted_at", "name", "slug", "type", "title", "description", "caption", "alt_text", "file_size", "url", "dimensions"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_medium"`)
-	mediumCatalogQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_catalog`)
-	mediumDatasetQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset`)
-	mediumProductQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_product`)
-
 	t.Run("delete medium", func(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedMedium["name"], deletedMedium["slug"], deletedMedium["type"], deletedMedium["title"], deletedMedium["description"], deletedMedium["caption"], deletedMedium["alt_text"], deletedMedium["file_size"], deletedMedium["url"], deletedMedium["dimensions"]))
+				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
 
 		mock.ExpectQuery(mediumCatalogQuery).
 			WithArgs(1).
@@ -67,7 +49,7 @@ func TestDeleteMedium(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		e.DELETE("/media/1").
+		e.DELETE(pathId).
 			Expect().
 			Status(http.StatusOK)
 
@@ -79,7 +61,7 @@ func TestDeleteMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols))
 
-		e.DELETE("/media/1").
+		e.DELETE(pathId).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -87,7 +69,7 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("invalid medium id", func(t *testing.T) {
-		e.DELETE("/media/abc").
+		e.DELETE(pathInvalidId).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -96,13 +78,13 @@ func TestDeleteMedium(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedMedium["name"], deletedMedium["slug"], deletedMedium["type"], deletedMedium["title"], deletedMedium["description"], deletedMedium["caption"], deletedMedium["alt_text"], deletedMedium["file_size"], deletedMedium["url"], deletedMedium["dimensions"]))
+				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
 
 		mock.ExpectQuery(mediumCatalogQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
 
-		e.DELETE("/media/1").
+		e.DELETE(pathId).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -113,7 +95,7 @@ func TestDeleteMedium(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedMedium["name"], deletedMedium["slug"], deletedMedium["type"], deletedMedium["title"], deletedMedium["description"], deletedMedium["caption"], deletedMedium["alt_text"], deletedMedium["file_size"], deletedMedium["url"], deletedMedium["dimensions"]))
+				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
 
 		mock.ExpectQuery(mediumCatalogQuery).
 			WithArgs(1).
@@ -123,7 +105,7 @@ func TestDeleteMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
 
-		e.DELETE("/media/1").
+		e.DELETE(pathId).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -134,7 +116,7 @@ func TestDeleteMedium(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedMedium["name"], deletedMedium["slug"], deletedMedium["type"], deletedMedium["title"], deletedMedium["description"], deletedMedium["caption"], deletedMedium["alt_text"], deletedMedium["file_size"], deletedMedium["url"], deletedMedium["dimensions"]))
+				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
 
 		mock.ExpectQuery(mediumCatalogQuery).
 			WithArgs(1).
@@ -148,7 +130,7 @@ func TestDeleteMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
 
-		e.DELETE("/media/1").
+		e.DELETE(pathId).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 

@@ -3,7 +3,6 @@ package medium
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 	"time"
 
@@ -24,23 +23,7 @@ func TestUpdateMedium(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	updatedMedium := map[string]interface{}{
-		"name":        "Test Medium",
-		"slug":        "test-medium",
-		"type":        "testtype",
-		"title":       "Test Title",
-		"description": "Test Description",
-		"caption":     "Test Caption",
-		"alt_text":    "Test alt text",
-		"file_size":   100,
-		"url":         "http:/testurl.com",
-		"dimensions":  "testdims",
-	}
-	mediumCols := []string{"id", "created_at", "updated_at", "deleted_at", "name", "slug", "type", "title", "description", "caption", "alt_text", "file_size", "url", "dimensions"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_medium"`)
-
 	t.Run("update medium", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
@@ -48,35 +31,33 @@ func TestUpdateMedium(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
-			WithArgs(updatedMedium["alt_text"], updatedMedium["caption"], updatedMedium["description"], updatedMedium["dimensions"], updatedMedium["file_size"], updatedMedium["name"], updatedMedium["slug"], updatedMedium["title"], updatedMedium["type"], test.AnyTime{}, updatedMedium["url"], 1).
+			WithArgs(medium["alt_text"], medium["caption"], medium["description"], medium["dimensions"], medium["file_size"], medium["name"], medium["slug"], medium["title"], medium["type"], test.AnyTime{}, medium["url"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, updatedMedium["name"], updatedMedium["slug"], updatedMedium["type"], updatedMedium["title"], updatedMedium["description"], updatedMedium["caption"], updatedMedium["alt_text"], updatedMedium["file_size"], updatedMedium["url"], updatedMedium["dimensions"]))
+				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
 
-		e.PUT("/media/1").
-			WithJSON(updatedMedium).
+		e.PUT(pathId).
+			WithJSON(medium).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(updatedMedium)
+			ContainsMap(medium)
 
 		mock.ExpectationsWereMet()
-
 	})
 
 	t.Run("medium record not found", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols))
 
-		e.PUT("/media/1").
-			WithJSON(updatedMedium).
+		e.PUT(pathId).
+			WithJSON(medium).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -84,27 +65,14 @@ func TestUpdateMedium(t *testing.T) {
 	})
 
 	t.Run("invalid medium id", func(t *testing.T) {
-		e.PUT("/media/abc").
-			WithJSON(updatedMedium).
+		e.PUT(pathInvalidId).
+			WithJSON(medium).
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
 	t.Run("unprocessable medium body", func(t *testing.T) {
-		invalidMedium := map[string]interface{}{
-			"nam":         "Test Medium",
-			"slug":        "test-medium",
-			"type":        "testtype",
-			"title":       "Test Title",
-			"description": "Test Description",
-			"caption":     "Test Caption",
-			"alt_text":    "Test alt text",
-			"filesize":    100,
-			"url":         "http:/testurl.com",
-			"dimensions":  "testdims",
-		}
-
-		e.PUT("/media/1").
+		e.PUT(pathId).
 			WithJSON(invalidMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
