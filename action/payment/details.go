@@ -35,15 +35,13 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &model.Payment{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Payment{}).First(&result).Error
+	err = model.DB.Model(&model.Payment{}).Preload("Currency").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
 		return
 	}
-
-	model.DB.Model(&result).Preload("Currency").Find(&result.Currency)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
