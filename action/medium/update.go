@@ -38,7 +38,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	medium := &medium{}
 
-	json.NewDecoder(r.Body).Decode(&medium)
+	err = json.NewDecoder(r.Body).Decode(&medium)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(medium)
 	if validationError != nil {
@@ -50,6 +55,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &model.Medium{}
 	result.ID = uint(id)
 
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
 	model.DB.Model(&result).Update(&model.Medium{
 		Name:        medium.Name,
 		Slug:        medium.Slug,
@@ -57,6 +69,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Type:        medium.Type,
 		Description: medium.Description,
 		Caption:     medium.Caption,
+		AltText:     medium.AltText,
 		FileSize:    medium.FileSize,
 		URL:         medium.URL,
 		Dimensions:  medium.Dimensions,

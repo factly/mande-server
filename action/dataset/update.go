@@ -42,7 +42,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
 
-	json.NewDecoder(r.Body).Decode(&dataset)
+	err = json.NewDecoder(r.Body).Decode(&dataset)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(dataset)
 	if validationError != nil {

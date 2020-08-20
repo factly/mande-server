@@ -39,8 +39,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	payment := &payment{}
 
-	json.NewDecoder(r.Body).Decode(&payment)
-
+	err = json.NewDecoder(r.Body).Decode(&payment)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 	validationError := validationx.Check(payment)
 	if validationError != nil {
 		loggerx.Error(errors.New("validation error"))

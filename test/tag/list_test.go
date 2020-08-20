@@ -1,60 +1,23 @@
 package tag
 
 import (
-	"database/sql/driver"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"regexp"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/factly/data-portal-server/test"
+
 	"github.com/factly/data-portal-server/action"
-	"github.com/factly/data-portal-server/model"
 	"github.com/gavv/httpexpect"
 )
 
-type AnyTime struct{}
-
-// Match satisfies sqlmock.Argument interface
-func (a AnyTime) Match(v driver.Value) bool {
-	_, ok := v.(time.Time)
-	return ok
-}
-
-func SetupTestDB() sqlmock.Sqlmock {
-	DSN := "sqlmock_db_0"
-	_, mock, err := sqlmock.NewWithDSN(DSN)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	os.Setenv("DSN", DSN)
-
-	model.SetupDB()
-
-	// model.DB, err = gorm.Open("postgres", db)
-
-	// model.DB.LogMode(true)
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	return mock
-}
-
-func TestGetTagList(t *testing.T) {
+func TestListTag(t *testing.T) {
 
 	// Setup DB
-	// model.SetupDB()
-	mock := SetupTestDB()
-
-	// gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-	// 	return "dp_" + defaultTableName
-	// }
+	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
 	router := action.RegisterRoutes()
@@ -63,73 +26,73 @@ func TestGetTagList(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	// DB
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_tags"`)).
-		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+	t.Run("get empty list of tags", func(t *testing.T) {
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tags"`)).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}))
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
+			WillReturnRows(sqlmock.NewRows(tagCols))
 
-	// Request
-	e.GET("/tags").
-		Expect().
-		Status(http.StatusOK).
-		JSON().
-		Object().
-		ContainsMap(map[string]interface{}{"total": 0})
+		e.GET(basePath).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(map[string]interface{}{"total": 0})
 
-	//CREATE TAG
-	createdTag := map[string]interface{}{
-		"title": "Test Tag",
-		"slug":  "test-tag",
-	}
+		test.ExpectationsMet(t, mock)
+	})
 
-	// DB
-	const sqlInsert = `
-	INSERT INTO "dp_tags"
-	`
-	mock.ExpectBegin()
-	mock.ExpectQuery(sqlInsert).
-		WithArgs(AnyTime{}, AnyTime{}, nil, createdTag["title"], createdTag["slug"]).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-	mock.ExpectCommit()
+	t.Run("get non-empty list of tags", func(t *testing.T) {
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(taglist)))
 
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tags"`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}).
-			AddRow(1, time.Now(), time.Now(), nil, createdTag["title"], createdTag["slug"]))
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
+			WillReturnRows(sqlmock.NewRows(tagCols).
+				AddRow(1, time.Now(), time.Now(), nil, taglist[0]["title"], taglist[0]["slug"]).
+				AddRow(2, time.Now(), time.Now(), nil, taglist[1]["title"], taglist[1]["slug"]))
 
-	e.POST("/tags").
-		WithJSON(createdTag).
-		Expect().
-		Status(http.StatusCreated).
-		JSON().
-		Object().
-		ContainsMap(createdTag)
+		e.GET(basePath).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(map[string]interface{}{"total": len(taglist)}).
+			Value("nodes").
+			Array().
+			Element(0).
+			Object().
+			ContainsMap(taglist[0])
 
-	mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
+	})
 
-	// id := strconv.Itoa(int(res.Value("id").Number().Raw()))
+	t.Run("get list of tags with paiganation", func(t *testing.T) {
 
-	// e.GET("/tags/" + id).
-	// 	Expect().
-	// 	Status(http.StatusOK).
-	// 	JSON().
-	// 	Object().
-	// 	ContainsMap(createdTag)
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(taglist)))
 
-	// updatedTag := map[string]interface{}{
-	// 	"title": "Test Tag Updated",
-	// 	"slug":  "test-tag-updated",
-	// }
+		mock.ExpectQuery(`SELECT \* FROM "dp_tag" (.+) LIMIT 1 OFFSET 1`).
+			WillReturnRows(sqlmock.NewRows(tagCols).
+				AddRow(2, time.Now(), time.Now(), nil, taglist[1]["title"], taglist[1]["slug"]))
 
-	// e.PUT("/tags/" + id).
-	// 	WithJSON(updatedTag).
-	// 	Expect().
-	// 	Status(http.StatusOK).
-	// 	JSON().
-	// 	Object().
-	// 	ContainsMap(updatedTag)
+		e.GET(basePath).
+			WithQueryObject(map[string]interface{}{
+				"limit": "1",
+				"page":  "2",
+			}).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(map[string]interface{}{"total": len(taglist)}).
+			Value("nodes").
+			Array().
+			Element(0).
+			Object().
+			ContainsMap(taglist[1])
 
-	// model.DB.Delete(&model.Tag{})
+		test.ExpectationsMet(t, mock)
+	})
+
 }

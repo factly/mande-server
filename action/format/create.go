@@ -26,7 +26,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	format := &format{}
-	json.NewDecoder(r.Body).Decode(&format)
+	err := json.NewDecoder(r.Body).Decode(&format)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(format)
 	if validationError != nil {
@@ -41,7 +46,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsDefault:   format.IsDefault,
 	}
 
-	err := model.DB.Model(&model.Format{}).Create(&result).Error
+	err = model.DB.Model(&model.Format{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

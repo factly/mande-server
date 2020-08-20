@@ -38,7 +38,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	user := &user{}
 
-	json.NewDecoder(r.Body).Decode(&user)
+	err = json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(user)
 	if validationError != nil {
@@ -49,6 +54,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	result := &model.User{}
 	result.ID = uint(id)
+
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
 
 	model.DB.Model(&result).Updates(&model.User{
 		Email:     user.Email,

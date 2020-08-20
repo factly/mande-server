@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -25,7 +26,10 @@ import (
 // @BasePath /
 
 func main() {
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
@@ -40,5 +44,8 @@ func main() {
 	r := action.RegisterRoutes()
 
 	fmt.Println("swagger-ui http://localhost:7720/swagger/index.html")
-	http.ListenAndServe(port, r)
+	err = http.ListenAndServe(port, r)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
