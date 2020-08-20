@@ -1,4 +1,4 @@
-package user
+package medium
 
 import (
 	"net/http"
@@ -11,7 +11,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestCreateMedium(t *testing.T) {
 	// Setup DB
 	mock := test.SetupMockDB()
 
@@ -22,38 +22,36 @@ func TestCreateUser(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("create a user", func(t *testing.T) {
-
+	t.Run("create medium", func(t *testing.T) {
 		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_user"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, user["email"], user["first_name"], user["last_name"]).
+		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		userSelectMock(mock)
+		mediumSelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(user).
+			WithJSON(medium).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(user)
+			ContainsMap(medium)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("unprocessable user body", func(t *testing.T) {
+	t.Run("unprocessable medium body", func(t *testing.T) {
 		e.POST(basePath).
-			WithJSON(invalidUser).
+			WithJSON(invalidMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("empty user body", func(t *testing.T) {
+	t.Run("empty medium body", func(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
-
 }

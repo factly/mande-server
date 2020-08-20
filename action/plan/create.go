@@ -26,7 +26,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	plan := &plan{}
 
-	json.NewDecoder(r.Body).Decode(&plan)
+	err := json.NewDecoder(r.Body).Decode(&plan)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(plan)
 	if validationError != nil {
@@ -41,7 +46,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Status:   plan.Status,
 	}
 
-	err := model.DB.Model(&model.Plan{}).Create(&result).Error
+	err = model.DB.Model(&model.Plan{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

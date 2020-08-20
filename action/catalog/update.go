@@ -42,7 +42,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.Products = make([]model.Product, 0)
 
-	json.NewDecoder(r.Body).Decode(&catalog)
+	err = json.NewDecoder(r.Body).Decode(&catalog)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(catalog)
 	if validationError != nil {

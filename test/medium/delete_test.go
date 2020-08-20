@@ -1,4 +1,4 @@
-package user
+package medium
 
 import (
 	"net/http"
@@ -12,8 +12,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestDeleteUser(t *testing.T) {
-
+func TestDeleteMedium(t *testing.T) {
 	// Setup DB
 	mock := test.SetupMockDB()
 
@@ -24,92 +23,91 @@ func TestDeleteUser(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("delete user", func(t *testing.T) {
-		userSelectMock(mock)
+	t.Run("delete medium", func(t *testing.T) {
+		mediumSelectMock(mock)
 
-		userCartExpect(mock, 0)
+		mediumCatalogExpect(mock, 0)
 
-		userMembershipExpect(mock, 0)
+		mediumDatasetExpect(mock, 0)
 
-		userOrderExpect(mock, 0)
+		mediumProductExpect(mock, 0)
 
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_user" SET "deleted_at"=`)).
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_medium" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
 		e.DELETE(path).
-			WithPath("user_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusOK)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("user record not found", func(t *testing.T) {
+	t.Run("medium record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols))
+			WillReturnRows(sqlmock.NewRows(mediumCols))
 
 		e.DELETE(path).
-			WithPath("user_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid user id", func(t *testing.T) {
+	t.Run("invalid medium id", func(t *testing.T) {
 		e.DELETE(path).
-			WithPath("user_id", "abc").
+			WithPath("media_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("user associated with cart", func(t *testing.T) {
-		userSelectMock(mock)
+	t.Run("medium is associated with catalog", func(t *testing.T) {
+		mediumSelectMock(mock)
 
-		userCartExpect(mock, 1)
+		mediumCatalogExpect(mock, 1)
 
 		e.DELETE(path).
-			WithPath("user_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("user associated with membership", func(t *testing.T) {
-		userSelectMock(mock)
+	t.Run("medium is associated with dataset", func(t *testing.T) {
+		mediumSelectMock(mock)
 
-		userCartExpect(mock, 0)
+		mediumCatalogExpect(mock, 0)
 
-		userMembershipExpect(mock, 1)
+		mediumDatasetExpect(mock, 1)
 
 		e.DELETE(path).
-			WithPath("user_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("user associated with order", func(t *testing.T) {
-		userSelectMock(mock)
+	t.Run("medium is associated with product", func(t *testing.T) {
+		mediumSelectMock(mock)
 
-		userCartExpect(mock, 0)
+		mediumCatalogExpect(mock, 0)
 
-		userMembershipExpect(mock, 0)
+		mediumDatasetExpect(mock, 0)
 
-		userOrderExpect(mock, 1)
+		mediumProductExpect(mock, 1)
 
 		e.DELETE(path).
-			WithPath("user_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
 		test.ExpectationsMet(t, mock)
 	})
-
 }

@@ -26,7 +26,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	user := &user{}
-	json.NewDecoder(r.Body).Decode(&user)
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(user)
 	if validationError != nil {
@@ -41,7 +46,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		LastName:  user.LastName,
 	}
 
-	err := model.DB.Model(&model.User{}).Create(&result).First(&result).Error
+	err = model.DB.Model(&model.User{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

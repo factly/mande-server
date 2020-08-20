@@ -39,7 +39,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	currency := &currency{}
 
-	json.NewDecoder(r.Body).Decode(&currency)
+	err := json.NewDecoder(r.Body).Decode(&currency)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(currency)
 	if validationError != nil {
@@ -53,7 +58,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsoCode: currency.IsoCode,
 	}
 
-	err := model.DB.Model(&model.Currency{}).Create(&result).Error
+	err = model.DB.Model(&model.Currency{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

@@ -1,4 +1,4 @@
-package tag
+package medium
 
 import (
 	"net/http"
@@ -11,8 +11,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestDetailTag(t *testing.T) {
-
+func TestDetailMedium(t *testing.T) {
 	// Setup DB
 	mock := test.SetupMockDB()
 
@@ -23,39 +22,37 @@ func TestDetailTag(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("get tag by id", func(t *testing.T) {
-		tagSelectMock(mock)
+	t.Run("get medium by id", func(t *testing.T) {
+		mediumSelectMock(mock)
 
 		e.GET(path).
-			WithPath("tag_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			Keys().
-			Contains("id", "created_at", "updated_at", "deleted_at", "title", "slug")
+			ContainsMap(medium)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("tag record not found", func(t *testing.T) {
+	t.Run("medium record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols))
+			WillReturnRows(sqlmock.NewRows(mediumCols))
 
 		e.GET(path).
-			WithPath("tag_id", "1").
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid tag id", func(t *testing.T) {
+	t.Run("invalid id", func(t *testing.T) {
 		e.GET(path).
-			WithPath("tag_id", "abc").
+			WithPath("media_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
-
 }

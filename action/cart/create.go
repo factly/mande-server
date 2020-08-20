@@ -27,7 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	cart := &cart{}
 
-	json.NewDecoder(r.Body).Decode(&cart)
+	err := json.NewDecoder(r.Body).Decode(&cart)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(cart)
 	if validationError != nil {
@@ -43,7 +48,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Product{}).Preload("Tags").Preload("Datasets").Preload("Currency").Where(cart.ProductIDs).Find(&result.Products)
 
-	err := model.DB.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = model.DB.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

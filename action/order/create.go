@@ -27,7 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	order := &order{}
 
-	json.NewDecoder(r.Body).Decode(&order)
+	err := json.NewDecoder(r.Body).Decode(&order)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(order)
 	if validationError != nil {
@@ -43,7 +48,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		CartID:    order.CartID,
 	}
 
-	err := model.DB.Model(&model.Order{}).Create(&result).Error
+	err = model.DB.Model(&model.Order{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

@@ -27,7 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	tag := &model.Tag{}
 
-	json.NewDecoder(r.Body).Decode(&tag)
+	err := json.NewDecoder(r.Body).Decode(&tag)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(tag)
 	if validationError != nil {
@@ -36,7 +41,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := model.DB.Model(&model.Tag{}).Create(&tag).First(&tag).Error
+	err = model.DB.Model(&model.Tag{}).Create(&tag).First(&tag).Error
 
 	if err != nil {
 		loggerx.Error(err)

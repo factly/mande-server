@@ -41,7 +41,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &model.Plan{}
 	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&plan)
+	err = json.NewDecoder(r.Body).Decode(&plan)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(plan)
 	if validationError != nil {
