@@ -3,9 +3,7 @@ package user
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -24,52 +22,36 @@ func TestCreateUser(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	createdUser := map[string]interface{}{
-		"email":      "user@mail.com",
-		"first_name": "User Fname",
-		"last_name":  "User LName",
-	}
-
 	t.Run("create a user", func(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_user"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, createdUser["email"], createdUser["first_name"], createdUser["last_name"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, user["email"], user["first_name"], user["last_name"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_user"`)).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}).
-				AddRow(1, time.Now(), time.Now(), nil, createdUser["email"], createdUser["first_name"], createdUser["last_name"]))
+		userSelectMock(mock)
 
-		e.POST("/users").
-			WithJSON(createdUser).
+		e.POST(basePath).
+			WithJSON(user).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(createdUser)
+			ContainsMap(user)
 
 		mock.ExpectationsWereMet()
-
 	})
 
 	t.Run("unprocessable user body", func(t *testing.T) {
-		invalidUser := map[string]interface{}{
-			"emil":      "user@mail.com",
-			"firs_name": "User Fname",
-			"lst_name":  "User LName",
-		}
-
-		e.POST("/users").
+		e.POST(basePath).
 			WithJSON(invalidUser).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty user body", func(t *testing.T) {
-		e.POST("/users").
+		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})

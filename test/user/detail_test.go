@@ -3,9 +3,7 @@ package user
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -25,22 +23,11 @@ func TestDetailUser(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	user := map[string]interface{}{
-		"email":      "user@mail.com",
-		"first_name": "User Fname",
-		"last_name":  "User LName",
-	}
-	userCols := []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
-
 	t.Run("get user by id", func(t *testing.T) {
+		userSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols).
-				AddRow(1, time.Now(), time.Now(), nil, user["email"], user["first_name"], user["last_name"]))
-
-		e.GET("/users/1").
+		e.GET(path).
+			WithPath("user_id", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -56,7 +43,8 @@ func TestDetailUser(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(userCols))
 
-		e.GET("/users/1").
+		e.GET(path).
+			WithPath("user_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -65,7 +53,8 @@ func TestDetailUser(t *testing.T) {
 	})
 
 	t.Run("invalid user id", func(t *testing.T) {
-		e.GET("/users/abc").
+		e.GET(path).
+			WithPath("user_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
