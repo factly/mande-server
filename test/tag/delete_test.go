@@ -5,7 +5,6 @@ import (
 	"net/http/httptest"
 	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -25,31 +24,12 @@ func TestDeleteTag(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	// Test objects
-	deletedTag := map[string]interface{}{
-		"title": "Test Delete Tag",
-		"slug":  "test-delete-tag",
-	}
-
-	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
-	tagProductQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN "dp_product_tag"`)
-	tagDatasetQuery := regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset" INNER JOIN "dp_dataset_tag"`)
-
 	t.Run("delete tag", func(t *testing.T) {
+		tagSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
+		tagProductExpect(mock, 0)
 
-		mock.ExpectQuery(tagProductQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
-
-		mock.ExpectQuery(tagDatasetQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		tagDatasetExpect(mock, 0)
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_tag" SET "deleted_at"=`)).
@@ -57,21 +37,21 @@ func TestDeleteTag(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		e.DELETE("/tags/1").
+		e.DELETE(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusOK)
 
 		mock.ExpectationsWereMet()
-
 	})
 
 	t.Run("tag not found", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(tagCols))
 
-		e.DELETE("/tags/1").
+		e.DELETE(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -79,52 +59,37 @@ func TestDeleteTag(t *testing.T) {
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {
-
-		e.DELETE("/tags/abc").
+		e.DELETE(path).
+			WithPath("tag_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
-
 	})
 
 	t.Run("tag associated with product", func(t *testing.T) {
+		tagSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
+		tagProductExpect(mock, 1)
 
-		mock.ExpectQuery(tagProductQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
-
-		e.DELETE("/tags/1").
+		e.DELETE(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
 		mock.ExpectationsWereMet()
-
 	})
 
 	t.Run("tag associated with dataset", func(t *testing.T) {
+		tagSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
-				AddRow(1, time.Now(), time.Now(), nil, deletedTag["title"], deletedTag["slug"]))
+		tagProductExpect(mock, 0)
 
-		mock.ExpectQuery(tagProductQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		tagDatasetExpect(mock, 1)
 
-		mock.ExpectQuery(tagDatasetQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
-
-		e.DELETE("/tags/1").
+		e.DELETE(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
 		mock.ExpectationsWereMet()
-
 	})
 }

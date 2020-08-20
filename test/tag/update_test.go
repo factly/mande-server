@@ -3,7 +3,6 @@ package tag
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 	"time"
 
@@ -24,16 +23,7 @@ func TestUpdateTag(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	updatedTag := map[string]interface{}{
-		"title": "Test Updated Tag",
-		"slug":  "test-updated-tag",
-	}
-
-	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
-
 	t.Run("update tag", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(tagCols).
@@ -41,34 +31,32 @@ func TestUpdateTag(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_tag\" SET (.+)  WHERE (.+) \"dp_tag\".\"id\" = `).
-			WithArgs(updatedTag["slug"], updatedTag["title"], test.AnyTime{}, 1).
+			WithArgs(tag["slug"], tag["title"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
-				AddRow(1, time.Now(), time.Now(), nil, updatedTag["title"], updatedTag["slug"]))
+		tagSelectMock(mock)
 
-		e.PUT("/tags/1").
-			WithJSON(updatedTag).
+		e.PUT(path).
+			WithPath("tag_id", "1").
+			WithJSON(tag).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(updatedTag)
+			ContainsMap(tag)
 
 		mock.ExpectationsWereMet()
 	})
 
 	t.Run("tag not found", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(tagCols))
 
-		e.PUT("/tags/1").
-			WithJSON(updatedTag).
+		e.PUT(path).
+			WithPath("tag_id", "1").
+			WithJSON(tag).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -76,26 +64,19 @@ func TestUpdateTag(t *testing.T) {
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {
-
-		e.PUT("/tags/abc").
-			WithJSON(updatedTag).
+		e.PUT(path).
+			WithPath("tag_id", "abc").
+			WithJSON(tag).
 			Expect().
 			Status(http.StatusNotFound)
-
 	})
 
 	t.Run("unprocessable tag body", func(t *testing.T) {
-
-		invalidTag := map[string]interface{}{
-			"titl": "Test",
-			"slg":  "test",
-		}
-
-		e.POST("/tags").
+		e.PUT(path).
+			WithPath("tag_id", "1").
 			WithJSON(invalidTag).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
-
 	})
 
 }

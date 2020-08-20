@@ -3,9 +3,7 @@ package tag
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -25,17 +23,11 @@ func TestDetailTag(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	tagCols := []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
-	selectQuery := regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
-
 	t.Run("get tag by id", func(t *testing.T) {
+		tagSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
-				AddRow(1, time.Now(), time.Now(), nil, "Test Tag", "test-tag"))
-
-		e.GET("/tags/1").
+		e.GET(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -47,12 +39,12 @@ func TestDetailTag(t *testing.T) {
 	})
 
 	t.Run("tag record not found", func(t *testing.T) {
-
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(tagCols))
 
-		e.GET("/tags/1").
+		e.GET(path).
+			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -60,11 +52,10 @@ func TestDetailTag(t *testing.T) {
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {
-
-		e.GET("/tags/abc").
+		e.GET(path).
+			WithPath("tag_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
-
 	})
 
 }

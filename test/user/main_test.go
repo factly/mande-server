@@ -36,8 +36,8 @@ var userCols []string = []string{"id", "created_at", "updated_at", "deleted_at",
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_user"`)
 
-var basePath string = "/users"
-var path string = "/users/{user_id}"
+const basePath string = "/users"
+const path string = "/users/{user_id}"
 
 func userSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
