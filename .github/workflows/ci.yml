@@ -21,8 +21,6 @@ jobs:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
       - run: go mod download
-      - name: golangci-lint
-        uses: reviewdog/action-golangci-lint@v1
-        with:
-          golangci_lint_flags: "--enable-all --exclude-use-default=false"
+      - run: go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.30.0
+      - run: golangci-lint run  ./...
       - run: go test ./...
