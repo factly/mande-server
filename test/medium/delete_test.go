@@ -5,7 +5,6 @@ import (
 	"net/http/httptest"
 	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -25,23 +24,13 @@ func TestDeleteMedium(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete medium", func(t *testing.T) {
+		mediumSelectMock(mock)
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumCatalogExpect(mock, 0)
 
-		mock.ExpectQuery(mediumCatalogQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		mediumDatasetExpect(mock, 0)
 
-		mock.ExpectQuery(mediumDatasetQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
-
-		mock.ExpectQuery(mediumProductQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		mediumProductExpect(mock, 0)
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_medium" SET "deleted_at"=`)).
@@ -49,7 +38,8 @@ func TestDeleteMedium(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		e.DELETE(pathId).
+		e.DELETE(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusOK)
 
@@ -61,7 +51,8 @@ func TestDeleteMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols))
 
-		e.DELETE(pathId).
+		e.DELETE(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -69,22 +60,19 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("invalid medium id", func(t *testing.T) {
-		e.DELETE(pathInvalidId).
+		e.DELETE(path).
+			WithPath("media_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
 	t.Run("medium is associated with catalog", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		mock.ExpectQuery(mediumCatalogQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
+		mediumCatalogExpect(mock, 1)
 
-		e.DELETE(pathId).
+		e.DELETE(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -92,20 +80,14 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("medium is associated with dataset", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		mock.ExpectQuery(mediumCatalogQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		mediumCatalogExpect(mock, 0)
 
-		mock.ExpectQuery(mediumDatasetQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
+		mediumDatasetExpect(mock, 1)
 
-		e.DELETE(pathId).
+		e.DELETE(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -113,24 +95,16 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("medium is associated with product", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		mock.ExpectQuery(mediumCatalogQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		mediumCatalogExpect(mock, 0)
 
-		mock.ExpectQuery(mediumDatasetQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+		mediumDatasetExpect(mock, 0)
 
-		mock.ExpectQuery(mediumProductQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
+		mediumProductExpect(mock, 1)
 
-		e.DELETE(pathId).
+		e.DELETE(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 

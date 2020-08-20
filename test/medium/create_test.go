@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -30,12 +29,9 @@ func TestCreateMedium(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		e.POST(path).
+		e.POST(basePath).
 			WithJSON(medium).
 			Expect().
 			Status(http.StatusCreated).
@@ -47,14 +43,14 @@ func TestCreateMedium(t *testing.T) {
 	})
 
 	t.Run("unprocessable medium body", func(t *testing.T) {
-		e.POST(path).
+		e.POST(basePath).
 			WithJSON(invalidMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty medium body", func(t *testing.T) {
-		e.POST(path).
+		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})

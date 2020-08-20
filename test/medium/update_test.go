@@ -35,12 +35,10 @@ func TestUpdateMedium(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		e.PUT(pathId).
+		e.PUT(path).
+			WithPath("media_id", "1").
 			WithJSON(medium).
 			Expect().
 			Status(http.StatusOK).
@@ -56,7 +54,8 @@ func TestUpdateMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols))
 
-		e.PUT(pathId).
+		e.PUT(path).
+			WithPath("media_id", "1").
 			WithJSON(medium).
 			Expect().
 			Status(http.StatusNotFound)
@@ -65,14 +64,16 @@ func TestUpdateMedium(t *testing.T) {
 	})
 
 	t.Run("invalid medium id", func(t *testing.T) {
-		e.PUT(pathInvalidId).
+		e.PUT(path).
+			WithPath("media_id", "abc").
 			WithJSON(medium).
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
 	t.Run("unprocessable medium body", func(t *testing.T) {
-		e.PUT(pathId).
+		e.PUT(path).
+			WithPath("media_id", "1").
 			WithJSON(invalidMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)

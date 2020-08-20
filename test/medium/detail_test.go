@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -24,12 +23,10 @@ func TestDetailMedium(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get medium by id", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		mediumSelectMock(mock)
 
-		e.GET(pathId).
+		e.GET(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -44,7 +41,8 @@ func TestDetailMedium(t *testing.T) {
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(mediumCols))
 
-		e.GET(pathId).
+		e.GET(path).
+			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -52,7 +50,8 @@ func TestDetailMedium(t *testing.T) {
 	})
 
 	t.Run("invalid id", func(t *testing.T) {
-		e.GET(pathInvalidId).
+		e.GET(path).
+			WithPath("media_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
