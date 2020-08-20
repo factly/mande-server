@@ -34,7 +34,7 @@ func TestDetailUser(t *testing.T) {
 			Object().
 			ContainsMap(user)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("user record not found", func(t *testing.T) {
@@ -48,8 +48,7 @@ func TestDetailUser(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
-
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid user id", func(t *testing.T) {

@@ -40,7 +40,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &model.Membership{}
 	result.ID = uint(id)
 
-	json.NewDecoder(r.Body).Decode(&membership)
+	err = json.NewDecoder(r.Body).Decode(&membership)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(membership)
 	if validationError != nil {

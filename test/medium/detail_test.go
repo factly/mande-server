@@ -33,7 +33,7 @@ func TestDetailMedium(t *testing.T) {
 			Object().
 			ContainsMap(medium)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium record not found", func(t *testing.T) {
@@ -46,7 +46,7 @@ func TestDetailMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid id", func(t *testing.T) {

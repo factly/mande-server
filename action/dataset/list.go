@@ -43,9 +43,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 			DatasetID: uint(dataset.ID),
 		}).Preload("Format").Find(&formats)
 
-		for _, format := range formats {
-			data.Formats = append(data.Formats, format)
-		}
+		data.Formats = append(data.Formats, formats...)
 
 		data.Dataset = dataset
 

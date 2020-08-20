@@ -37,7 +37,7 @@ func TestListMedium(t *testing.T) {
 			Object().
 			ContainsMap(map[string]interface{}{"total": 0})
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium list", func(t *testing.T) {
@@ -61,7 +61,7 @@ func TestListMedium(t *testing.T) {
 			Object().
 			ContainsMap(mediumlist[0])
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium list with paiganation", func(t *testing.T) {
@@ -88,7 +88,7 @@ func TestListMedium(t *testing.T) {
 			Object().
 			ContainsMap(mediumlist[1])
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 }

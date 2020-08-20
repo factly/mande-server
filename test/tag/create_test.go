@@ -39,7 +39,7 @@ func TestCreateTag(t *testing.T) {
 			Object().
 			ContainsMap(tag)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("unprocessable tag body", func(t *testing.T) {

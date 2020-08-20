@@ -29,7 +29,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result := model.Catalog{}
 	result.Products = make([]model.Product, 0)
 
-	json.NewDecoder(r.Body).Decode(&catalog)
+	err := json.NewDecoder(r.Body).Decode(&catalog)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(catalog)
 	if validationError != nil {
@@ -47,7 +52,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
 
-	err := model.DB.Model(&model.Catalog{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = model.DB.Model(&model.Catalog{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

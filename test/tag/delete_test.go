@@ -42,7 +42,7 @@ func TestDeleteTag(t *testing.T) {
 			Expect().
 			Status(http.StatusOK)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("tag not found", func(t *testing.T) {
@@ -55,7 +55,7 @@ func TestDeleteTag(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {
@@ -75,7 +75,7 @@ func TestDeleteTag(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("tag associated with dataset", func(t *testing.T) {
@@ -90,6 +90,6 @@ func TestDeleteTag(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 }

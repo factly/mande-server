@@ -44,8 +44,7 @@ func TestDeleteUser(t *testing.T) {
 			Expect().
 			Status(http.StatusOK)
 
-		mock.ExpectationsWereMet()
-
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("user record not found", func(t *testing.T) {
@@ -58,7 +57,7 @@ func TestDeleteUser(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid user id", func(t *testing.T) {
@@ -78,7 +77,7 @@ func TestDeleteUser(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("user associated with membership", func(t *testing.T) {
@@ -93,7 +92,7 @@ func TestDeleteUser(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("user associated with order", func(t *testing.T) {
@@ -110,7 +109,7 @@ func TestDeleteUser(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 }

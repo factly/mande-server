@@ -46,7 +46,7 @@ func TestUpdateTag(t *testing.T) {
 			Object().
 			ContainsMap(tag)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("tag not found", func(t *testing.T) {
@@ -60,7 +60,7 @@ func TestUpdateTag(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {

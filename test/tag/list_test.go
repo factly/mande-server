@@ -40,7 +40,7 @@ func TestListTag(t *testing.T) {
 			Object().
 			ContainsMap(map[string]interface{}{"total": 0})
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("get non-empty list of tags", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestListTag(t *testing.T) {
 			Object().
 			ContainsMap(taglist[0])
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("get list of tags with paiganation", func(t *testing.T) {
@@ -92,7 +92,7 @@ func TestListTag(t *testing.T) {
 			Object().
 			ContainsMap(taglist[1])
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 }

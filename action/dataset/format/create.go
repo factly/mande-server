@@ -39,7 +39,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	datasetFormat := &datasetFormat{}
 
-	json.NewDecoder(r.Body).Decode(&datasetFormat)
+	err = json.NewDecoder(r.Body).Decode(&datasetFormat)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(datasetFormat)
 	if validationError != nil {

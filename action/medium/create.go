@@ -27,7 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	medium := &medium{}
 
-	json.NewDecoder(r.Body).Decode(&medium)
+	err := json.NewDecoder(r.Body).Decode(&medium)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(medium)
 	if validationError != nil {
@@ -49,7 +54,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Dimensions:  medium.Dimensions,
 	}
 
-	err := model.DB.Model(&model.Medium{}).Create(&result).First(&result).Error
+	err = model.DB.Model(&model.Medium{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

@@ -26,7 +26,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	product := &product{}
-	json.NewDecoder(r.Body).Decode(&product)
+	err := json.NewDecoder(r.Body).Decode(&product)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(product)
 	if validationError != nil {
@@ -50,7 +55,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)
 	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
 
-	err := model.DB.Model(&model.Product{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = model.DB.Model(&model.Product{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

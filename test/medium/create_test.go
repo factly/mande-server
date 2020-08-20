@@ -39,7 +39,7 @@ func TestCreateMedium(t *testing.T) {
 			Object().
 			ContainsMap(medium)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("unprocessable medium body", func(t *testing.T) {

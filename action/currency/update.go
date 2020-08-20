@@ -37,7 +37,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	currency := &currency{}
 
-	json.NewDecoder(r.Body).Decode(&currency)
+	err = json.NewDecoder(r.Body).Decode(&currency)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(currency)
 	if validationError != nil {

@@ -49,7 +49,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	orderItem := &orderItem{}
 
-	json.NewDecoder(r.Body).Decode(&orderItem)
+	err = json.NewDecoder(r.Body).Decode(&orderItem)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(orderItem)
 	if validationError != nil {

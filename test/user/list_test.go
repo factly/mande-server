@@ -38,7 +38,7 @@ func TestListUser(t *testing.T) {
 			Object().
 			ContainsMap(map[string]interface{}{"total": 0})
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("list users", func(t *testing.T) {
@@ -63,8 +63,7 @@ func TestListUser(t *testing.T) {
 			Object().
 			ContainsMap(userlist[0])
 
-		mock.ExpectationsWereMet()
-
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("list users paiganation", func(t *testing.T) {
@@ -92,6 +91,6 @@ func TestListUser(t *testing.T) {
 			Object().
 			ContainsMap(userlist[1])
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 }

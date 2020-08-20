@@ -26,7 +26,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	membership := &membership{}
-	json.NewDecoder(r.Body).Decode(&membership)
+	err := json.NewDecoder(r.Body).Decode(&membership)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(membership)
 	if validationError != nil {
@@ -42,7 +47,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PlanID:    membership.PlanID,
 	}
 
-	err := model.DB.Model(&model.Membership{}).Create(&result).Error
+	err = model.DB.Model(&model.Membership{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

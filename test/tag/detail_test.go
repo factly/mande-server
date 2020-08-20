@@ -35,7 +35,7 @@ func TestDetailTag(t *testing.T) {
 			Keys().
 			Contains("id", "created_at", "updated_at", "deleted_at", "title", "slug")
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("tag record not found", func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestDetailTag(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid tag id", func(t *testing.T) {

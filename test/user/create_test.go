@@ -40,7 +40,7 @@ func TestCreateUser(t *testing.T) {
 			Object().
 			ContainsMap(user)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("unprocessable user body", func(t *testing.T) {

@@ -27,7 +27,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	dataset := dataset{}
 
-	json.NewDecoder(r.Body).Decode(&dataset)
+	err := json.NewDecoder(r.Body).Decode(&dataset)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(dataset)
 	if validationError != nil {
@@ -58,7 +63,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
 
-	err := model.DB.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
+	err = model.DB.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))

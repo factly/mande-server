@@ -43,7 +43,7 @@ func TestDeleteMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusOK)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium record not found", func(t *testing.T) {
@@ -56,7 +56,7 @@ func TestDeleteMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("invalid medium id", func(t *testing.T) {
@@ -76,7 +76,7 @@ func TestDeleteMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium is associated with dataset", func(t *testing.T) {
@@ -91,7 +91,7 @@ func TestDeleteMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("medium is associated with product", func(t *testing.T) {
@@ -108,6 +108,6 @@ func TestDeleteMedium(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
-		mock.ExpectationsWereMet()
+		test.ExpectationsMet(t, mock)
 	})
 }

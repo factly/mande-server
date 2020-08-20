@@ -26,7 +26,12 @@ import (
 func create(w http.ResponseWriter, r *http.Request) {
 
 	payment := &payment{}
-	json.NewDecoder(r.Body).Decode(&payment)
+	err := json.NewDecoder(r.Body).Decode(&payment)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
 
 	validationError := validationx.Check(payment)
 	if validationError != nil {
@@ -42,7 +47,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Status:     payment.Status,
 	}
 
-	err := model.DB.Model(&model.Payment{}).Create(&result).Error
+	err = model.DB.Model(&model.Payment{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
