@@ -53,12 +53,6 @@ func PaymentSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]))
 }
 
-// func paymentCurrencyMock(mock sqlmock.Sqlmock) {
-// 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
-// 		WithArgs(1).
-// 		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}).AddRow(1, time.Now(), time.Now(), nil, "iso-code", "name"))
-// }
-
 func paymentOrderExpect(mock sqlmock.Sqlmock, count int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order"  WHERE`)).
 		WithArgs(1).
