@@ -25,19 +25,19 @@ func TestCreateFormat(t *testing.T) {
 	t.Run("create a format", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, format["name"], format["description"], format["is_default"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
-		formatSelectMock(mock)
+		FormatSelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(format).
+			WithJSON(Format).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(format)
+			ContainsMap(Format)
 
 		test.ExpectationsMet(t, mock)
 	})

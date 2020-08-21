@@ -23,7 +23,7 @@ func TestDetailCurrency(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get currency by id", func(t *testing.T) {
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		e.GET(path).
 			WithPath("currency_id", "1").
@@ -31,7 +31,7 @@ func TestDetailCurrency(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(currency)
+			ContainsMap(Currency)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -39,7 +39,7 @@ func TestDetailCurrency(t *testing.T) {
 	t.Run("currency record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(currencyCols))
+			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.GET(path).
 			WithPath("currency_id", "1").

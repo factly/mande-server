@@ -54,12 +54,27 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Updates(model.Membership{
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	err = model.DB.Model(&result).Updates(model.Membership{
 		UserID:    membership.UserID,
 		PaymentID: membership.PaymentID,
 		PlanID:    membership.PlanID,
 		Status:    membership.Status,
-	}).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
+	}).Error
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }

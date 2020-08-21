@@ -28,7 +28,7 @@ func TestListPlan(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(planCols))
+			WillReturnRows(sqlmock.NewRows(PlanCols))
 
 		e.GET(basePath).
 			Expect().
@@ -45,7 +45,7 @@ func TestListPlan(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(planlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(planCols).
+			WillReturnRows(sqlmock.NewRows(PlanCols).
 				AddRow(1, time.Now(), time.Now(), nil, planlist[0]["plan_info"], planlist[0]["plan_name"], planlist[0]["status"]).
 				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["plan_info"], planlist[1]["plan_name"], planlist[1]["status"]))
 
@@ -69,7 +69,7 @@ func TestListPlan(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(planlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(planCols).
+			WillReturnRows(sqlmock.NewRows(PlanCols).
 				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["plan_info"], planlist[1]["plan_name"], planlist[1]["status"]))
 
 		e.GET(basePath).

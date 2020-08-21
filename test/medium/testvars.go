@@ -7,7 +7,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-var medium map[string]interface{} = map[string]interface{}{
+var Medium map[string]interface{} = map[string]interface{}{
 	"name":        "Test Medium",
 	"slug":        "test-medium",
 	"type":        "testtype",
@@ -60,7 +60,7 @@ var mediumlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var mediumCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "slug", "type", "title", "description", "caption", "alt_text", "file_size", "url", "dimensions"}
+var MediumCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "slug", "type", "title", "description", "caption", "alt_text", "file_size", "url", "dimensions"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_medium"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_medium"`)
@@ -68,11 +68,11 @@ var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_medium"`)
 const basePath string = "/media"
 const path string = "/media/{media_id}"
 
-func mediumSelectMock(mock sqlmock.Sqlmock) {
+func MediumSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(mediumCols).
-			AddRow(1, time.Now(), time.Now(), nil, medium["name"], medium["slug"], medium["type"], medium["title"], medium["description"], medium["caption"], medium["alt_text"], medium["file_size"], medium["url"], medium["dimensions"]))
+		WillReturnRows(sqlmock.NewRows(MediumCols).
+			AddRow(1, time.Now(), time.Now(), nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]))
 
 }
 

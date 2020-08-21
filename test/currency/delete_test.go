@@ -25,7 +25,7 @@ func TestDeleteCurrency(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete currency", func(t *testing.T) {
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		currencyPaymentExpect(mock, 0)
 
@@ -50,7 +50,7 @@ func TestDeleteCurrency(t *testing.T) {
 	t.Run("currency record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(currencyCols))
+			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.DELETE(path).
 			WithPath("currency_id", "1").
@@ -68,7 +68,7 @@ func TestDeleteCurrency(t *testing.T) {
 	})
 
 	t.Run("currency associated with payment", func(t *testing.T) {
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		currencyPaymentExpect(mock, 1)
 
@@ -81,7 +81,7 @@ func TestDeleteCurrency(t *testing.T) {
 	})
 
 	t.Run("currency associated with product", func(t *testing.T) {
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		currencyPaymentExpect(mock, 0)
 
@@ -96,7 +96,7 @@ func TestDeleteCurrency(t *testing.T) {
 	})
 
 	t.Run("currency associated with dataset", func(t *testing.T) {
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		currencyPaymentExpect(mock, 0)
 

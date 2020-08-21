@@ -25,7 +25,7 @@ func TestDeleteTag(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete tag", func(t *testing.T) {
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		tagProductExpect(mock, 0)
 
@@ -48,7 +48,7 @@ func TestDeleteTag(t *testing.T) {
 	t.Run("tag not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols))
+			WillReturnRows(sqlmock.NewRows(TagCols))
 
 		e.DELETE(path).
 			WithPath("tag_id", "1").
@@ -66,7 +66,7 @@ func TestDeleteTag(t *testing.T) {
 	})
 
 	t.Run("tag associated with product", func(t *testing.T) {
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		tagProductExpect(mock, 1)
 
@@ -79,7 +79,7 @@ func TestDeleteTag(t *testing.T) {
 	})
 
 	t.Run("tag associated with dataset", func(t *testing.T) {
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		tagProductExpect(mock, 0)
 

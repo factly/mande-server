@@ -7,7 +7,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-var user map[string]interface{} = map[string]interface{}{
+var User map[string]interface{} = map[string]interface{}{
 	"email":      "user@mail.com",
 	"first_name": "User Fname",
 	"last_name":  "User LName",
@@ -31,7 +31,7 @@ var userlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var userCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
+var UserCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "email", "first_name", "last_name"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_user"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_user"`)
@@ -39,11 +39,11 @@ var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_user"`)
 const basePath string = "/users"
 const path string = "/users/{user_id}"
 
-func userSelectMock(mock sqlmock.Sqlmock) {
+func UserSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(userCols).
-			AddRow(1, time.Now(), time.Now(), nil, user["email"], user["first_name"], user["last_name"]))
+		WillReturnRows(sqlmock.NewRows(UserCols).
+			AddRow(1, time.Now(), time.Now(), nil, User["email"], User["first_name"], User["last_name"]))
 }
 
 func userCartExpect(mock sqlmock.Sqlmock, count int) {

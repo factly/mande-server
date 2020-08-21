@@ -8,6 +8,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
 )
 
@@ -25,21 +26,21 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("create a payment", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, payment["amount"], payment["gateway"], payment["currency_id"], payment["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
-		paymentCurrencyMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(payment)
+			ContainsMap(Payment)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -60,12 +61,12 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("currency does not exist", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, payment["amount"], payment["gateway"], payment["currency_id"], payment["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
 			WillReturnError(errPaymentCurrencyFK)
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusInternalServerError)
 

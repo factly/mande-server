@@ -24,7 +24,7 @@ func TestDetailFormat(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get format by id", func(t *testing.T) {
-		formatSelectMock(mock)
+		FormatSelectMock(mock)
 
 		e.GET(path).
 			WithPath("format_id", "1").
@@ -32,7 +32,7 @@ func TestDetailFormat(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(format)
+			ContainsMap(Format)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -40,7 +40,7 @@ func TestDetailFormat(t *testing.T) {
 	t.Run("format record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(formatCols))
+			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.GET(path).
 			WithPath("format_id", "1").

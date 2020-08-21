@@ -23,7 +23,7 @@ func TestDetailMedium(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get medium by id", func(t *testing.T) {
-		mediumSelectMock(mock)
+		MediumSelectMock(mock)
 
 		e.GET(path).
 			WithPath("media_id", "1").
@@ -31,7 +31,7 @@ func TestDetailMedium(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(medium)
+			ContainsMap(Medium)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -39,7 +39,7 @@ func TestDetailMedium(t *testing.T) {
 	t.Run("medium record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols))
+			WillReturnRows(sqlmock.NewRows(MediumCols))
 
 		e.GET(path).
 			WithPath("media_id", "1").

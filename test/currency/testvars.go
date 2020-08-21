@@ -7,7 +7,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-var currency map[string]interface{} = map[string]interface{}{
+var Currency map[string]interface{} = map[string]interface{}{
 	"name":     "Test Name",
 	"iso_code": "Test ISO Code",
 }
@@ -17,7 +17,7 @@ var invalidCurrency map[string]interface{} = map[string]interface{}{
 	"isocode": "Test ISO Code",
 }
 
-var currencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}
+var CurrencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_currency"`)
@@ -25,11 +25,11 @@ var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_currency"`)
 const basePath string = "/currencies"
 const path string = "/currencies/{currency_id}"
 
-func currencySelectMock(mock sqlmock.Sqlmock) {
+func CurrencySelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(currencyCols).
-			AddRow(1, time.Now(), time.Now(), nil, currency["iso_code"], currency["name"]))
+		WillReturnRows(sqlmock.NewRows(CurrencyCols).
+			AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
 }
 
 func currencyPaymentExpect(mock sqlmock.Sqlmock, count int) {

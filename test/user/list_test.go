@@ -29,7 +29,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(userCols))
+			WillReturnRows(sqlmock.NewRows(UserCols))
 
 		e.GET(basePath).
 			Expect().
@@ -47,7 +47,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(userlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(userCols).
+			WillReturnRows(sqlmock.NewRows(UserCols).
 				AddRow(1, time.Now(), time.Now(), nil, userlist[0]["email"], userlist[0]["first_name"], userlist[0]["last_name"]).
 				AddRow(2, time.Now(), time.Now(), nil, userlist[1]["email"], userlist[1]["first_name"], userlist[1]["last_name"]))
 
@@ -72,7 +72,7 @@ func TestListUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(userlist)))
 
 		mock.ExpectQuery(`SELECT \* FROM "dp_user" (.+) LIMIT 1 OFFSET 1`).
-			WillReturnRows(sqlmock.NewRows(userCols).
+			WillReturnRows(sqlmock.NewRows(UserCols).
 				AddRow(2, time.Now(), time.Now(), nil, userlist[1]["email"], userlist[1]["first_name"], userlist[1]["last_name"]))
 
 		e.GET(basePath).

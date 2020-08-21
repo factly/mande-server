@@ -28,19 +28,19 @@ func TestCreateCurrency(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_currency"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, currency["iso_code"], currency["name"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Currency["iso_code"], Currency["name"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(currency).
+			WithJSON(Currency).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(currency)
+			ContainsMap(Currency)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -63,7 +63,7 @@ func TestCreateCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
 
 		e.POST(basePath).
-			WithJSON(currency).
+			WithJSON(Currency).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 

@@ -28,7 +28,7 @@ func TestListMedium(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(mediumCols))
+			WillReturnRows(sqlmock.NewRows(MediumCols))
 
 		e.GET(basePath).
 			Expect().
@@ -45,7 +45,7 @@ func TestListMedium(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(mediumlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
+			WillReturnRows(sqlmock.NewRows(MediumCols).
 				AddRow(1, time.Now(), time.Now(), nil, mediumlist[0]["name"], mediumlist[0]["slug"], mediumlist[0]["type"], mediumlist[0]["title"], mediumlist[0]["description"], mediumlist[0]["caption"], mediumlist[0]["alt_text"], mediumlist[0]["file_size"], mediumlist[0]["url"], mediumlist[0]["dimensions"]).
 				AddRow(2, time.Now(), time.Now(), nil, mediumlist[1]["name"], mediumlist[1]["slug"], mediumlist[1]["type"], mediumlist[1]["title"], mediumlist[1]["description"], mediumlist[1]["caption"], mediumlist[1]["alt_text"], mediumlist[1]["file_size"], mediumlist[1]["url"], mediumlist[1]["dimensions"]))
 
@@ -69,7 +69,7 @@ func TestListMedium(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(mediumlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
+			WillReturnRows(sqlmock.NewRows(MediumCols).
 				AddRow(2, time.Now(), time.Now(), nil, mediumlist[1]["name"], mediumlist[1]["slug"], mediumlist[1]["type"], mediumlist[1]["title"], mediumlist[1]["description"], mediumlist[1]["caption"], mediumlist[1]["alt_text"], mediumlist[1]["file_size"], mediumlist[1]["url"], mediumlist[1]["dimensions"]))
 
 		e.GET(basePath).

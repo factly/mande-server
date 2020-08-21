@@ -9,6 +9,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
 )
 
@@ -29,7 +30,7 @@ func TestListPayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(paymentCols))
+			WillReturnRows(sqlmock.NewRows(PaymentCols))
 
 		e.GET(basePath).
 			Expect().
@@ -46,11 +47,11 @@ func TestListPayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(paymentlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(paymentCols).
+			WillReturnRows(sqlmock.NewRows(PaymentCols).
 				AddRow(1, time.Now(), time.Now(), nil, paymentlist[0]["amount"], paymentlist[0]["gateway"], paymentlist[0]["currency_id"], paymentlist[0]["status"]).
 				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"]))
 
-		paymentCurrencyMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.GET(basePath).
 			Expect().
@@ -72,10 +73,10 @@ func TestListPayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(paymentlist)))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(paymentCols).
+			WillReturnRows(sqlmock.NewRows(PaymentCols).
 				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"]))
 
-		paymentCurrencyMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.GET(basePath).
 			WithQueryObject(map[string]interface{}{
