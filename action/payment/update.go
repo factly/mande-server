@@ -55,12 +55,27 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &model.Payment{}
 	result.ID = uint(id)
 
-	model.DB.Model(&result).Updates(&model.Payment{
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	err = model.DB.Model(&result).Updates(&model.Payment{
 		Amount:     payment.Amount,
 		Gateway:    payment.Gateway,
 		Status:     payment.Status,
 		CurrencyID: payment.CurrencyID,
-	}).First(&result).Preload("Currency").Find(&result.Currency)
+	}).Error
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	model.DB.Preload("Currency").First(&result)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
