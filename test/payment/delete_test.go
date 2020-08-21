@@ -25,7 +25,7 @@ func TestDeletePayment(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete payment", func(t *testing.T) {
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
 		paymentOrderExpect(mock, 0)
 
@@ -48,7 +48,7 @@ func TestDeletePayment(t *testing.T) {
 	t.Run("payment record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(paymentCols))
+			WillReturnRows(sqlmock.NewRows(PaymentCols))
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
@@ -66,7 +66,7 @@ func TestDeletePayment(t *testing.T) {
 	})
 
 	t.Run("payment associated with order", func(t *testing.T) {
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
 		paymentOrderExpect(mock, 1)
 
@@ -77,7 +77,7 @@ func TestDeletePayment(t *testing.T) {
 	})
 
 	t.Run("payment associated with membership", func(t *testing.T) {
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
 		paymentOrderExpect(mock, 0)
 

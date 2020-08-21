@@ -24,7 +24,7 @@ func TestDetailTag(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get tag by id", func(t *testing.T) {
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		e.GET(path).
 			WithPath("tag_id", "1").
@@ -41,7 +41,7 @@ func TestDetailTag(t *testing.T) {
 	t.Run("tag record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols))
+			WillReturnRows(sqlmock.NewRows(TagCols))
 
 		e.GET(path).
 			WithPath("tag_id", "1").

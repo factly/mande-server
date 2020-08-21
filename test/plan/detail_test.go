@@ -23,7 +23,7 @@ func TestDetailPlan(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get plan by id", func(t *testing.T) {
-		planSelectMock(mock)
+		PlanSelectMock(mock)
 
 		e.GET(path).
 			WithPath("plan_id", "1").
@@ -31,7 +31,7 @@ func TestDetailPlan(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(plan)
+			ContainsMap(Plan)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -39,7 +39,7 @@ func TestDetailPlan(t *testing.T) {
 	t.Run("plan record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(planCols))
+			WillReturnRows(sqlmock.NewRows(PlanCols))
 
 		e.GET(path).
 			WithPath("plan_id", "1").

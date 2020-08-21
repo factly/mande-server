@@ -24,7 +24,7 @@ func TestDetailUser(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get user by id", func(t *testing.T) {
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		e.GET(path).
 			WithPath("user_id", "1").
@@ -32,7 +32,7 @@ func TestDetailUser(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(user)
+			ContainsMap(User)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -41,7 +41,7 @@ func TestDetailUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols))
+			WillReturnRows(sqlmock.NewRows(UserCols))
 
 		e.GET(path).
 			WithPath("user_id", "1").

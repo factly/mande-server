@@ -29,7 +29,7 @@ func TestListFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(formatCols))
+			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.GET(basePath).
 			Expect().
@@ -47,7 +47,7 @@ func TestListFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("2"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(formatCols).
+			WillReturnRows(sqlmock.NewRows(FormatCols).
 				AddRow(1, time.Now(), time.Now(), nil, formatlist[0]["name"], formatlist[0]["description"], formatlist[0]["is_default"]).
 				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
@@ -71,7 +71,7 @@ func TestListFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("2"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(formatCols).
+			WillReturnRows(sqlmock.NewRows(FormatCols).
 				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
 		e.GET(basePath).

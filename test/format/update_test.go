@@ -27,25 +27,25 @@ func TestUpdateFormat(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(formatCols).
+			WillReturnRows(sqlmock.NewRows(FormatCols).
 				AddRow(1, time.Now(), time.Now(), nil, "name", "description", true))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_format\" SET (.+)  WHERE (.+) \"dp_format\".\"id\" = `).
-			WithArgs(format["description"], format["is_default"], format["name"], test.AnyTime{}, 1).
+			WithArgs(Format["description"], Format["is_default"], Format["name"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		formatSelectMock(mock)
+		FormatSelectMock(mock)
 
 		e.PUT(path).
 			WithPath("format_id", "1").
-			WithJSON(format).
+			WithJSON(Format).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(format)
+			ContainsMap(Format)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -53,11 +53,11 @@ func TestUpdateFormat(t *testing.T) {
 	t.Run("format record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(formatCols))
+			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.PUT(path).
 			WithPath("format_id", "1").
-			WithJSON(format).
+			WithJSON(Format).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -75,7 +75,7 @@ func TestUpdateFormat(t *testing.T) {
 	t.Run("invalid format id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("format_id", "abc").
-			WithJSON(format).
+			WithJSON(Format).
 			Expect().
 			Status(http.StatusNotFound)
 	})

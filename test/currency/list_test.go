@@ -28,7 +28,7 @@ func TestListCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(currencyCols))
+			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.GET(basePath).
 			Expect().
@@ -45,8 +45,8 @@ func TestListCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("1"))
 
 		mock.ExpectQuery(selectQuery).
-			WillReturnRows(sqlmock.NewRows(currencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, currency["iso_code"], currency["name"]))
+			WillReturnRows(sqlmock.NewRows(CurrencyCols).
+				AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
 
 		e.GET(basePath).
 			Expect().
@@ -58,7 +58,7 @@ func TestListCurrency(t *testing.T) {
 			Array().
 			Element(0).
 			Object().
-			ContainsMap(currency)
+			ContainsMap(Currency)
 
 		test.ExpectationsMet(t, mock)
 	})

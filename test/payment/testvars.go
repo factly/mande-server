@@ -8,7 +8,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-var payment map[string]interface{} = map[string]interface{}{
+var Payment map[string]interface{} = map[string]interface{}{
 	"amount":      100,
 	"gateway":     "testgateway.com",
 	"currency_id": 1,
@@ -37,7 +37,7 @@ var paymentlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var paymentCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "amount", "gateway", "currency_id", "status"}
+var PaymentCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "amount", "gateway", "currency_id", "status"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_payment"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_payment"`)
@@ -46,18 +46,18 @@ var errPaymentCurrencyFK = errors.New("pq: insert or update on table \"dp_paymen
 const basePath string = "/payments"
 const path string = "/payments/{payment_id}"
 
-func paymentSelectMock(mock sqlmock.Sqlmock) {
+func PaymentSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(paymentCols).
-			AddRow(1, time.Now(), time.Now(), nil, payment["amount"], payment["gateway"], payment["currency_id"], payment["status"]))
+		WillReturnRows(sqlmock.NewRows(PaymentCols).
+			AddRow(1, time.Now(), time.Now(), nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]))
 }
 
-func paymentCurrencyMock(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}).AddRow(1, time.Now(), time.Now(), nil, "iso-code", "name"))
-}
+// func paymentCurrencyMock(mock sqlmock.Sqlmock) {
+// 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
+// 		WithArgs(1).
+// 		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}).AddRow(1, time.Now(), time.Now(), nil, "iso-code", "name"))
+// }
 
 func paymentOrderExpect(mock sqlmock.Sqlmock, count int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order"  WHERE`)).

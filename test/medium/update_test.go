@@ -26,25 +26,25 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("update medium", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols).
+			WillReturnRows(sqlmock.NewRows(MediumCols).
 				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
-			WithArgs(medium["alt_text"], medium["caption"], medium["description"], medium["dimensions"], medium["file_size"], medium["name"], medium["slug"], medium["title"], medium["type"], test.AnyTime{}, medium["url"], 1).
+			WithArgs(Medium["alt_text"], Medium["caption"], Medium["description"], Medium["dimensions"], Medium["file_size"], Medium["name"], Medium["slug"], Medium["title"], Medium["type"], test.AnyTime{}, Medium["url"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		mediumSelectMock(mock)
+		MediumSelectMock(mock)
 
 		e.PUT(path).
 			WithPath("media_id", "1").
-			WithJSON(medium).
+			WithJSON(Medium).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(medium)
+			ContainsMap(Medium)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -52,11 +52,11 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("medium record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(mediumCols))
+			WillReturnRows(sqlmock.NewRows(MediumCols))
 
 		e.PUT(path).
 			WithPath("media_id", "1").
-			WithJSON(medium).
+			WithJSON(Medium).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -66,7 +66,7 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("invalid medium id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("media_id", "abc").
-			WithJSON(medium).
+			WithJSON(Medium).
 			Expect().
 			Status(http.StatusNotFound)
 	})

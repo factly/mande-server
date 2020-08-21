@@ -25,7 +25,7 @@ func TestDeleteUser(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete user", func(t *testing.T) {
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		userCartExpect(mock, 0)
 
@@ -50,7 +50,7 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("user record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols))
+			WillReturnRows(sqlmock.NewRows(UserCols))
 
 		e.DELETE(path).
 			WithPath("user_id", "1").
@@ -68,7 +68,7 @@ func TestDeleteUser(t *testing.T) {
 	})
 
 	t.Run("user associated with cart", func(t *testing.T) {
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		userCartExpect(mock, 1)
 
@@ -81,7 +81,7 @@ func TestDeleteUser(t *testing.T) {
 	})
 
 	t.Run("user associated with membership", func(t *testing.T) {
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		userCartExpect(mock, 0)
 
@@ -96,7 +96,7 @@ func TestDeleteUser(t *testing.T) {
 	})
 
 	t.Run("user associated with order", func(t *testing.T) {
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		userCartExpect(mock, 0)
 

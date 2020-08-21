@@ -26,19 +26,19 @@ func TestCreateUser(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_user"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, user["email"], user["first_name"], user["last_name"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, User["email"], User["first_name"], User["last_name"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(user).
+			WithJSON(User).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(user)
+			ContainsMap(User)
 
 		test.ExpectationsMet(t, mock)
 	})

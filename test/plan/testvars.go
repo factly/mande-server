@@ -7,7 +7,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-var plan map[string]interface{} = map[string]interface{}{
+var Plan map[string]interface{} = map[string]interface{}{
 	"plan_name": "Test Plan",
 	"plan_info": "Test Plan Info",
 	"status":    "teststatus",
@@ -32,7 +32,7 @@ var planlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var planCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "plan_info", "plan_name", "status"}
+var PlanCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "plan_info", "plan_name", "status"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_plan"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_plan"`)
@@ -40,11 +40,11 @@ var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_plan"`)
 const basePath string = "/plans"
 const path string = "/plans/{plan_id}"
 
-func planSelectMock(mock sqlmock.Sqlmock) {
+func PlanSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(planCols).
-			AddRow(1, time.Now(), time.Now(), nil, plan["plan_info"], plan["plan_name"], plan["status"]))
+		WillReturnRows(sqlmock.NewRows(PlanCols).
+			AddRow(1, time.Now(), time.Now(), nil, Plan["plan_info"], Plan["plan_name"], Plan["status"]))
 }
 
 func planMembershipExpect(mock sqlmock.Sqlmock, count int) {

@@ -25,19 +25,19 @@ func TestCreatePlan(t *testing.T) {
 	t.Run("create a plan", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, plan["plan_name"], plan["plan_info"], plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		planSelectMock(mock)
+		PlanSelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(plan).
+			WithJSON(Plan).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(plan)
+			ContainsMap(Plan)
 
 		test.ExpectationsMet(t, mock)
 	})

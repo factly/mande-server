@@ -9,6 +9,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
 )
 
@@ -26,27 +27,27 @@ func TestUpdatePayment(t *testing.T) {
 	t.Run("update payment", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(paymentCols).
+			WillReturnRows(sqlmock.NewRows(PaymentCols).
 				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
-			WithArgs(payment["amount"], payment["currency_id"], payment["gateway"], payment["status"], test.AnyTime{}, 1).
+			WithArgs(Payment["amount"], Payment["currency_id"], Payment["gateway"], Payment["status"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
-		paymentCurrencyMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.PUT(path).
 			WithPath("payment_id", "1").
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(payment)
+			ContainsMap(Payment)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -54,11 +55,11 @@ func TestUpdatePayment(t *testing.T) {
 	t.Run("payment record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(paymentCols))
+			WillReturnRows(sqlmock.NewRows(PaymentCols))
 
 		e.PUT(path).
 			WithPath("payment_id", "1").
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -76,7 +77,7 @@ func TestUpdatePayment(t *testing.T) {
 	t.Run("invalid payment id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("payment_id", "abc").
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -84,18 +85,18 @@ func TestUpdatePayment(t *testing.T) {
 	t.Run("new currency does not exist", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(paymentCols).
+			WillReturnRows(sqlmock.NewRows(PaymentCols).
 				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
-			WithArgs(payment["amount"], payment["currency_id"], payment["gateway"], payment["status"], test.AnyTime{}, 1).
+			WithArgs(Payment["amount"], Payment["currency_id"], Payment["gateway"], Payment["status"], test.AnyTime{}, 1).
 			WillReturnError(errPaymentCurrencyFK)
 		mock.ExpectRollback()
 
 		e.PUT(path).
 			WithPath("payment_id", "1").
-			WithJSON(payment).
+			WithJSON(Payment).
 			Expect().
 			Status(http.StatusInternalServerError)
 

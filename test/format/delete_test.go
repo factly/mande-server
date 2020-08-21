@@ -25,7 +25,7 @@ func TestDeleteFormat(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete format", func(t *testing.T) {
-		formatSelectMock(mock)
+		FormatSelectMock(mock)
 
 		formatDatasetExpect(mock, 0)
 
@@ -46,7 +46,7 @@ func TestDeleteFormat(t *testing.T) {
 	t.Run("format record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(formatCols))
+			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.DELETE(path).
 			WithPath("format_id", "1").
@@ -64,7 +64,7 @@ func TestDeleteFormat(t *testing.T) {
 	})
 
 	t.Run("format associated with dataset", func(t *testing.T) {
-		formatSelectMock(mock)
+		FormatSelectMock(mock)
 
 		formatDatasetExpect(mock, 1)
 

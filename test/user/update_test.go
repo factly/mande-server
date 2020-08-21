@@ -26,25 +26,25 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("update user", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols).
+			WillReturnRows(sqlmock.NewRows(UserCols).
 				AddRow(1, time.Now(), time.Now(), nil, "user@mail.com", "User Fname", "User Lname"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_user\" SET (.+)  WHERE (.+) \"dp_user\".\"id\" = `).
-			WithArgs(user["email"], user["first_name"], user["last_name"], test.AnyTime{}, 1).
+			WithArgs(User["email"], User["first_name"], User["last_name"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		userSelectMock(mock)
+		UserSelectMock(mock)
 
 		e.PUT(path).
 			WithPath("user_id", "1").
-			WithJSON(user).
+			WithJSON(User).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(user)
+			ContainsMap(User)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -53,11 +53,11 @@ func TestUpdateUser(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(userCols))
+			WillReturnRows(sqlmock.NewRows(UserCols))
 
 		e.PUT(path).
 			WithPath("user_id", "1").
-			WithJSON(user).
+			WithJSON(User).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -67,7 +67,7 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("invalid user id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("user_id", "abc").
-			WithJSON(user).
+			WithJSON(User).
 			Expect().
 			Status(http.StatusNotFound)
 	})

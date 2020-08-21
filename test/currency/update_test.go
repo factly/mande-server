@@ -26,25 +26,25 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("update currency", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(currencyCols).
+			WillReturnRows(sqlmock.NewRows(CurrencyCols).
 				AddRow(1, time.Now(), time.Now(), nil, "iso_code", "name"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_currency\" SET (.+)  WHERE (.+) \"dp_currency\".\"id\" = `).
-			WithArgs(currency["iso_code"], currency["name"], test.AnyTime{}, 1).
+			WithArgs(Currency["iso_code"], Currency["name"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		currencySelectMock(mock)
+		CurrencySelectMock(mock)
 
 		e.PUT(path).
 			WithPath("currency_id", "1").
-			WithJSON(currency).
+			WithJSON(Currency).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(currency)
+			ContainsMap(Currency)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -52,11 +52,11 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("currency record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(currencyCols))
+			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.PUT(path).
 			WithPath("currency_id", "1").
-			WithJSON(currency).
+			WithJSON(Currency).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -74,7 +74,7 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("invalid currency id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("currency_id", "abc").
-			WithJSON(currency).
+			WithJSON(Currency).
 			Expect().
 			Status(http.StatusNotFound)
 	})

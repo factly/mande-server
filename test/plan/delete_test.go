@@ -25,7 +25,7 @@ func TestDeletePlan(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete plan", func(t *testing.T) {
-		planSelectMock(mock)
+		PlanSelectMock(mock)
 
 		planMembershipExpect(mock, 0)
 
@@ -46,7 +46,7 @@ func TestDeletePlan(t *testing.T) {
 	t.Run("plan record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(planCols))
+			WillReturnRows(sqlmock.NewRows(PlanCols))
 
 		e.DELETE(path).
 			WithPath("plan_id", "1").
@@ -64,7 +64,7 @@ func TestDeletePlan(t *testing.T) {
 	})
 
 	t.Run("plan is associated with membership", func(t *testing.T) {
-		planSelectMock(mock)
+		PlanSelectMock(mock)
 
 		planMembershipExpect(mock, 1)
 

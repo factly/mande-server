@@ -8,6 +8,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
 )
 
@@ -24,9 +25,9 @@ func TestDetailPayment(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get payment by id", func(t *testing.T) {
-		paymentSelectMock(mock)
+		PaymentSelectMock(mock)
 
-		paymentCurrencyMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.GET(path).
 			WithPath("payment_id", "1").
@@ -34,7 +35,7 @@ func TestDetailPayment(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(payment)
+			ContainsMap(Payment)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -42,7 +43,7 @@ func TestDetailPayment(t *testing.T) {
 	t.Run("payment record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(paymentCols))
+			WillReturnRows(sqlmock.NewRows(PaymentCols))
 
 		e.GET(path).
 			WithPath("payment_id", "1").

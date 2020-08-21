@@ -25,19 +25,19 @@ func TestCreateTag(t *testing.T) {
 	t.Run("create a tag", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag["title"], tag["slug"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		e.POST(basePath).
-			WithJSON(tag).
+			WithJSON(Tag).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(tag)
+			ContainsMap(Tag)
 
 		test.ExpectationsMet(t, mock)
 	})

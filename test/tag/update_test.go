@@ -26,25 +26,25 @@ func TestUpdateTag(t *testing.T) {
 	t.Run("update tag", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols).
+			WillReturnRows(sqlmock.NewRows(TagCols).
 				AddRow(1, time.Now(), time.Now(), nil, "Original Tag", "original-tag"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_tag\" SET (.+)  WHERE (.+) \"dp_tag\".\"id\" = `).
-			WithArgs(tag["slug"], tag["title"], test.AnyTime{}, 1).
+			WithArgs(Tag["slug"], Tag["title"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
-		tagSelectMock(mock)
+		TagSelectMock(mock)
 
 		e.PUT(path).
 			WithPath("tag_id", "1").
-			WithJSON(tag).
+			WithJSON(Tag).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(tag)
+			ContainsMap(Tag)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -52,11 +52,11 @@ func TestUpdateTag(t *testing.T) {
 	t.Run("tag not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(tagCols))
+			WillReturnRows(sqlmock.NewRows(TagCols))
 
 		e.PUT(path).
 			WithPath("tag_id", "1").
-			WithJSON(tag).
+			WithJSON(Tag).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -66,7 +66,7 @@ func TestUpdateTag(t *testing.T) {
 	t.Run("invalid tag id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "abc").
-			WithJSON(tag).
+			WithJSON(Tag).
 			Expect().
 			Status(http.StatusNotFound)
 	})
