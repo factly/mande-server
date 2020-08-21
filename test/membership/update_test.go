@@ -94,16 +94,7 @@ func TestUpdateMembership(t *testing.T) {
 	})
 
 	t.Run("new user does not exist", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, "status", 2, 2, 2))
-
-		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_membership\" SET (.+)  WHERE (.+) \"dp_membership\".\"id\" = `).
-			WithArgs(Membership["payment_id"], Membership["plan_id"], Membership["status"], test.AnyTime{}, Membership["user_id"], 1).
-			WillReturnError(errMembershipUserFK)
-		mock.ExpectRollback()
+		updateWithErrorExpect(mock, errMembershipUserFK)
 
 		e.PUT(path).
 			WithPath("membership_id", "1").
@@ -115,16 +106,7 @@ func TestUpdateMembership(t *testing.T) {
 	})
 
 	t.Run("new plan does not exist", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, "status", 2, 2, 2))
-
-		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_membership\" SET (.+)  WHERE (.+) \"dp_membership\".\"id\" = `).
-			WithArgs(Membership["payment_id"], Membership["plan_id"], Membership["status"], test.AnyTime{}, Membership["user_id"], 1).
-			WillReturnError(errMembershipPlanFK)
-		mock.ExpectRollback()
+		updateWithErrorExpect(mock, errMembershipPlanFK)
 
 		e.PUT(path).
 			WithPath("membership_id", "1").
@@ -136,16 +118,7 @@ func TestUpdateMembership(t *testing.T) {
 	})
 
 	t.Run("new payment does not exist", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, "status", 2, 2, 2))
-
-		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_membership\" SET (.+)  WHERE (.+) \"dp_membership\".\"id\" = `).
-			WithArgs(Membership["payment_id"], Membership["plan_id"], Membership["status"], test.AnyTime{}, Membership["user_id"], 1).
-			WillReturnError(errMembershipPaymentFK)
-		mock.ExpectRollback()
+		updateWithErrorExpect(mock, errMembershipPaymentFK)
 
 		e.PUT(path).
 			WithPath("membership_id", "1").

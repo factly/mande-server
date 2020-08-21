@@ -70,11 +70,7 @@ func TestCreateMembership(t *testing.T) {
 	})
 
 	t.Run("user does not exist", func(t *testing.T) {
-		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
-			WillReturnError(errMembershipUserFK)
-		mock.ExpectRollback()
+		insertWithErrorExpect(mock, errMembershipUserFK)
 
 		e.POST(basePath).
 			WithJSON(Membership).
@@ -85,11 +81,7 @@ func TestCreateMembership(t *testing.T) {
 	})
 
 	t.Run("plan does not exist", func(t *testing.T) {
-		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
-			WillReturnError(errMembershipPlanFK)
-		mock.ExpectRollback()
+		insertWithErrorExpect(mock, errMembershipPlanFK)
 
 		e.POST(basePath).
 			WithJSON(Membership).
@@ -100,11 +92,7 @@ func TestCreateMembership(t *testing.T) {
 	})
 
 	t.Run("payment does not exist", func(t *testing.T) {
-		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
-			WillReturnError(errMembershipPaymentFK)
-		mock.ExpectRollback()
+		insertWithErrorExpect(mock, errMembershipPaymentFK)
 
 		e.POST(basePath).
 			WithJSON(Membership).

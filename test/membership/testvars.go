@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
 	"github.com/factly/data-portal-server/test/user"
@@ -57,6 +58,27 @@ func MembershipSelectMock(mock sqlmock.Sqlmock) {
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(MembershipCols).
 			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]))
+}
+
+func updateWithErrorExpect(mock sqlmock.Sqlmock, err error) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(MembershipCols).
+			AddRow(1, time.Now(), time.Now(), nil, "status", 2, 2, 2))
+
+	mock.ExpectBegin()
+	mock.ExpectExec(`UPDATE \"dp_membership\" SET (.+)  WHERE (.+) \"dp_membership\".\"id\" = `).
+		WithArgs(Membership["payment_id"], Membership["plan_id"], Membership["status"], test.AnyTime{}, Membership["user_id"], 1).
+		WillReturnError(err)
+	mock.ExpectRollback()
+}
+
+func insertWithErrorExpect(mock sqlmock.Sqlmock, err error) {
+	mock.ExpectBegin()
+	mock.ExpectQuery(`INSERT INTO "dp_membership"`).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
+		WillReturnError(err)
+	mock.ExpectRollback()
 }
 
 func validateAssociations(result *httpexpect.Object) {
