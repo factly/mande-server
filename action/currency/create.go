@@ -25,18 +25,6 @@ import (
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	// Check if currency already exists
-	var totCurrencies int
-	model.DB.Model(&model.Currency{}).Count(&totCurrencies)
-
-	if totCurrencies > 0 {
-		errorx.Render(w, errorx.Parser(errorx.Message{
-			Message: "Cannot add more than one currency",
-			Code:    422,
-		}))
-		return
-	}
-
 	currency := &currency{}
 
 	err := json.NewDecoder(r.Body).Decode(&currency)
@@ -53,12 +41,24 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if currency already exists
+	var totCurrencies int
+	model.DB.Model(&model.Currency{}).Count(&totCurrencies)
+
+	if totCurrencies > 0 {
+		errorx.Render(w, errorx.Parser(errorx.Message{
+			Message: "Cannot add more than one currency",
+			Code:    422,
+		}))
+		return
+	}
+
 	result := &model.Currency{
 		Name:    currency.Name,
 		IsoCode: currency.IsoCode,
 	}
 
-	err = model.DB.Model(&model.Currency{}).Create(&result).Error
+	err = model.DB.Model(&model.Currency{}).Create(&result).First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

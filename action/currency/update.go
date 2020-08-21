@@ -54,6 +54,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := &model.Currency{}
 	result.ID = uint(id)
 
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
 	model.DB.Model(&result).Updates(model.Currency{
 		IsoCode: currency.IsoCode,
 		Name:    currency.Name,
