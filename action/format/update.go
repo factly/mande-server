@@ -55,6 +55,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = model.DB.First(&result).Error
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
 	model.DB.Model(&result).Updates(model.Format{
 		Name:        format.Name,
 		Description: format.Description,
