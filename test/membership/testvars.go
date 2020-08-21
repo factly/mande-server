@@ -6,6 +6,10 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/factly/data-portal-server/test/payment"
+	"github.com/factly/data-portal-server/test/plan"
+	"github.com/factly/data-portal-server/test/user"
+	"github.com/gavv/httpexpect"
 )
 
 var Membership map[string]interface{} = map[string]interface{}{
@@ -53,4 +57,18 @@ func MembershipSelectMock(mock sqlmock.Sqlmock) {
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(MembershipCols).
 			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]))
+}
+
+func validateAssociations(result *httpexpect.Object) {
+	result.Value("user").
+		Object().
+		ContainsMap(user.User)
+
+	result.Value("plan").
+		Object().
+		ContainsMap(plan.Plan)
+
+	result.Value("payment").
+		Object().
+		ContainsMap(payment.Payment)
 }

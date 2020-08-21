@@ -51,17 +51,7 @@ func TestCreateMembership(t *testing.T) {
 			Object().
 			ContainsMap(Membership)
 
-		result.Value("user").
-			Object().
-			ContainsMap(user.User)
-
-		result.Value("plan").
-			Object().
-			ContainsMap(plan.Plan)
-
-		result.Value("payment").
-			Object().
-			ContainsMap(payment.Payment)
+		validateAssociations(result)
 
 		test.ExpectationsMet(t, mock)
 	})
