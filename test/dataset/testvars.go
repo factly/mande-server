@@ -1,0 +1,173 @@
+package dataset
+
+import (
+	"encoding/json"
+	"errors"
+	"regexp"
+	"time"
+
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/currency"
+	"github.com/factly/data-portal-server/test/format"
+	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/tag"
+	"github.com/gavv/httpexpect"
+	"github.com/jinzhu/gorm/dialects/postgres"
+)
+
+func returnJson() postgres.Jsonb {
+	ba, _ := json.Marshal(nil)
+	return postgres.Jsonb{
+		RawMessage: ba,
+	}
+}
+
+var Dataset map[string]interface{} = map[string]interface{}{
+	"title":              "Test Title",
+	"description":        "Test Description",
+	"source":             "testsource",
+	"frequency":          "testfreq",
+	"temporal_coverage":  "Test coverage",
+	"granularity":        "test",
+	"contact_name":       "Test Name",
+	"contact_email":      "test@mail.com",
+	"license":            "TestLicense",
+	"data_standard":      "Test Datastd",
+	"related_articles":   returnJson(),
+	"time_saved":         10,
+	"price":              100,
+	"currency_id":        1,
+	"featured_medium_id": 1,
+	"tag_ids":            []uint{1},
+}
+
+var DatasetReceive map[string]interface{} = map[string]interface{}{
+	"title":              "Test Title",
+	"description":        "Test Description",
+	"source":             "testsource",
+	"frequency":          "testfreq",
+	"temporal_coverage":  "Test coverage",
+	"granularity":        "test",
+	"contact_name":       "Test Name",
+	"contact_email":      "test@mail.com",
+	"license":            "TestLicense",
+	"data_standard":      "Test Datastd",
+	"related_articles":   nil,
+	"time_saved":         10,
+	"price":              100,
+	"currency_id":        1,
+	"featured_medium_id": 1,
+}
+
+var invalidDataset map[string]interface{} = map[string]interface{}{
+	"tite":               "Test Title",
+	"desciption":         "Test Description",
+	"source":             "testsource",
+	"frequency":          "testfreq",
+	"temporal_coverage":  "Test coverage",
+	"granularity":        "test",
+	"contact_name":       "Test Name",
+	"contact_email":      "test@mail.com",
+	"license":            "TestLicense",
+	"data_standard":      "Test Datastd",
+	"related_articles":   nil,
+	"time_saved":         10,
+	"pric":               100,
+	"currency_id":        1,
+	"featured_medium_id": 1,
+	"tag_ids":            []uint{1},
+}
+
+var datasetlist []map[string]interface{} = []map[string]interface{}{
+	{
+		"title":              "Test Title 1",
+		"description":        "Test Description 1",
+		"source":             "testsource1",
+		"frequency":          "testfreq1",
+		"temporal_coverage":  "Test coverage 1",
+		"granularity":        "test1",
+		"contact_name":       "Test Name 1",
+		"contact_email":      "test1@mail.com",
+		"license":            "TestLicense1",
+		"data_standard":      "Test Datastd 1",
+		"related_articles":   nil,
+		"time_saved":         10,
+		"price":              100,
+		"currency_id":        1,
+		"featured_medium_id": 1,
+		"tag_ids":            []uint{1},
+	},
+	{
+		"title":              "Test Title 2",
+		"description":        "Test Description 2",
+		"source":             "testsource2",
+		"frequency":          "testfreq2",
+		"temporal_coverage":  "Test coverage 2",
+		"granularity":        "test2",
+		"contact_name":       "Test Name 2",
+		"contact_email":      "test2@mail.com",
+		"license":            "TestLicense2",
+		"data_standard":      "Test Datastd 2",
+		"related_articles":   nil,
+		"time_saved":         20,
+		"price":              200,
+		"currency_id":        1,
+		"featured_medium_id": 1,
+		"tag_ids":            []uint{2},
+	},
+}
+
+var DatasetCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "related_articles", "time_saved", "price", "currency_id", "featured_medium_id"}
+
+var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset"`)
+var errDatasetMediumFK = errors.New(`pq: insert or update on table "dp_dataset" violates foreign key constraint "dp_dataset_featured_medium_id_dp_medium_id_foreign"`)
+var errDatasetCurrencyFK = errors.New(`pq: insert or update on table "dp_dataset" violates foreign key constraint "dp_dataset_currency_id_dp_currency_id_foreign"`)
+
+const basePath string = "/datasets"
+const path string = "/datasets/{dataset_id}"
+
+func DatasetSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(DatasetCols).
+			AddRow(1, time.Now(), time.Now(), nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]))
+}
+
+func multiTagSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
+			AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1).
+			AddRow(2, time.Now(), time.Now(), nil, "title2", "slug2", 2, 1))
+}
+
+func datasetFormatSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset_format"`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}).
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, "www.testurl.com"))
+
+	format.FormatSelectMock(mock)
+}
+
+func validateAssociations(result *httpexpect.Object) {
+	result.Value("featured_medium").
+		Object().
+		ContainsMap(medium.Medium)
+
+	result.Value("currency").
+		Object().
+		ContainsMap(currency.Currency)
+}
+
+func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
+	tag.TagSelectMock(mock)
+
+	mock.ExpectBegin()
+	mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
+		WillReturnError(err)
+	mock.ExpectRollback()
+}
