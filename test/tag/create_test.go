@@ -29,8 +29,6 @@ func TestCreateTag(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
-		TagSelectMock(mock)
-
 		e.POST(basePath).
 			WithJSON(Tag).
 			Expect().

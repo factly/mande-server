@@ -32,8 +32,6 @@ func TestCreateCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		CurrencySelectMock(mock)
-
 		e.POST(basePath).
 			WithJSON(Currency).
 			Expect().

@@ -25,7 +25,7 @@ import (
 // @Router /tags [post]
 func create(w http.ResponseWriter, r *http.Request) {
 
-	tag := &model.Tag{}
+	tag := &tag{}
 
 	err := json.NewDecoder(r.Body).Decode(&tag)
 	if err != nil {
@@ -41,7 +41,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&model.Tag{}).Create(&tag).First(&tag).Error
+	result := &model.Tag{
+		Title: tag.Title,
+		Slug:  tag.Slug,
+	}
+
+	err = model.DB.Model(&model.Tag{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -49,5 +54,5 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderx.JSON(w, http.StatusCreated, tag)
+	renderx.JSON(w, http.StatusCreated, result)
 }

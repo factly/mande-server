@@ -30,8 +30,6 @@ func TestCreateUser(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		UserSelectMock(mock)
-
 		e.POST(basePath).
 			WithJSON(User).
 			Expect().

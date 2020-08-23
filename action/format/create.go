@@ -46,7 +46,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsDefault:   format.IsDefault,
 	}
 
-	err = model.DB.Model(&model.Format{}).Create(&result).First(&result).Error
+	err = model.DB.Model(&model.Format{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
