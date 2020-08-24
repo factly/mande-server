@@ -16,7 +16,7 @@ import (
 	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func returnJson() postgres.Jsonb {
+func nilJsonb() postgres.Jsonb {
 	ba, _ := json.Marshal(nil)
 	return postgres.Jsonb{
 		RawMessage: ba,
@@ -34,7 +34,7 @@ var Dataset map[string]interface{} = map[string]interface{}{
 	"contact_email":      "test@mail.com",
 	"license":            "TestLicense",
 	"data_standard":      "Test Datastd",
-	"related_articles":   returnJson(),
+	"related_articles":   nilJsonb(),
 	"time_saved":         10,
 	"price":              100,
 	"currency_id":        1,
@@ -91,7 +91,7 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 		"contact_email":      "test1@mail.com",
 		"license":            "TestLicense1",
 		"data_standard":      "Test Datastd 1",
-		"related_articles":   nil,
+		"related_articles":   nilJsonb(),
 		"time_saved":         10,
 		"price":              100,
 		"currency_id":        1,
@@ -109,12 +109,12 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 		"contact_email":      "test2@mail.com",
 		"license":            "TestLicense2",
 		"data_standard":      "Test Datastd 2",
-		"related_articles":   nil,
+		"related_articles":   nilJsonb(),
 		"time_saved":         20,
 		"price":              200,
 		"currency_id":        1,
 		"featured_medium_id": 1,
-		"tag_ids":            []uint{2},
+		"tag_ids":            []uint{1},
 	},
 }
 
@@ -135,19 +135,18 @@ func DatasetSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]))
 }
 
-func multiTagSelectMock(mock sqlmock.Sqlmock) {
+func tagAssociationSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1).
-			AddRow(2, time.Now(), time.Now(), nil, "title2", "slug2", 2, 1))
+			AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
 }
 
-func datasetFormatSelectMock(mock sqlmock.Sqlmock) {
+func datasetFormatSelectMock(mock sqlmock.Sqlmock, id int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset_format"`)).
-		WithArgs(1).
+		WithArgs(id).
 		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}).
-			AddRow(1, time.Now(), time.Now(), nil, 1, 1, "www.testurl.com"))
+			AddRow(id, time.Now(), time.Now(), nil, 1, id, "www.testurl.com"))
 
 	format.FormatSelectMock(mock)
 }
@@ -170,4 +169,31 @@ func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
 		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
 		WillReturnError(err)
 	mock.ExpectRollback()
+}
+
+func updateWithErrorMock(mock sqlmock.Sqlmock, err error) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(DatasetCols).
+			AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", nilJsonb(), 10, 200, 2, 2))
+
+	tagAssociationSelectMock(mock)
+
+	mock.ExpectBegin()
+
+	tag.TagSelectMock(mock)
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
+		WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+		WillReturnError(err)
+	mock.ExpectRollback()
+}
+
+func datasetProductExpect(mock sqlmock.Sqlmock, count int) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }

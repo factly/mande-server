@@ -111,7 +111,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:       dataset.CurrencyID,
 		FeaturedMediumID: dataset.FeaturedMediumID,
 		Tags:             newTags,
-	}).Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset).Error
+	}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {
 		tx.Rollback()

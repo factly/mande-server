@@ -10,7 +10,6 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -33,9 +32,9 @@ func TestDetailDataset(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
-		tag.TagSelectMock(mock)
+		tagAssociationSelectMock(mock)
 
-		datasetFormatSelectMock(mock)
+		datasetFormatSelectMock(mock, 1)
 
 		result := e.GET(path).
 			WithPath("dataset_id", "1").

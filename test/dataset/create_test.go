@@ -44,7 +44,7 @@ func TestCreateDataset(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
-		tag.TagSelectMock(mock)
+		tagAssociationSelectMock(mock)
 
 		result := e.POST(basePath).
 			WithJSON(Dataset).
