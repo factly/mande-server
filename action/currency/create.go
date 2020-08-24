@@ -58,7 +58,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsoCode: currency.IsoCode,
 	}
 
-	err = model.DB.Model(&model.Currency{}).Create(&result).First(&result).Error
+	err = model.DB.Model(&model.Currency{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

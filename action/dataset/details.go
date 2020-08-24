@@ -36,7 +36,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
 
-	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset).Error
+	err = model.DB.Model(&model.Dataset{}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {
 		loggerx.Error(err)

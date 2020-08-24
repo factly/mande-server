@@ -29,8 +29,6 @@ func TestCreatePlan(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
-		PlanSelectMock(mock)
-
 		e.POST(basePath).
 			WithJSON(Plan).
 			Expect().

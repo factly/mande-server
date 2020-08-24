@@ -70,7 +70,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").Preload("Tags").Preload("Currency").First(&result.Dataset)
+	model.DB.Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }

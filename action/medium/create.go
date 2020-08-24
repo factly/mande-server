@@ -54,7 +54,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Dimensions:  medium.Dimensions,
 	}
 
-	err = model.DB.Model(&model.Medium{}).Create(&result).First(&result).Error
+	err = model.DB.Model(&model.Medium{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
