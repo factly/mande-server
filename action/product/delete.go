@@ -76,10 +76,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Association("Tags").Delete(result.Tags)
-	model.DB.Model(&result).Association("Datasets").Delete(result.Datasets)
+	tx := model.DB.Begin()
 
-	model.DB.Delete(&result)
+	tx.Model(&result).Association("Tags").Delete(result.Tags)
+	tx.Model(&result).Association("Datasets").Delete(result.Datasets)
+
+	err = tx.Delete(&result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, nil)
 }
