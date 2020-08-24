@@ -44,9 +44,19 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Association("Products").Delete(result.Products)
+	tx := model.DB.Begin()
 
-	model.DB.Delete(&result)
+	tx.Model(&result).Association("Products").Delete(result.Products)
+
+	err = tx.Delete(&result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, nil)
 }

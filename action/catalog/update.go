@@ -100,7 +100,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: catalog.FeaturedMediumID,
 		PublishedDate:    catalog.PublishedDate,
 		Products:         newProducts,
-	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
+	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
 
 	if err != nil {
 		tx.Rollback()
