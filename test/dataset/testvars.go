@@ -61,18 +61,11 @@ var DatasetReceive map[string]interface{} = map[string]interface{}{
 }
 
 var invalidDataset map[string]interface{} = map[string]interface{}{
-	"tite":               "Test Title",
-	"desciption":         "Test Description",
+	"tite":               "Test Titl",
+	"desciption":         "Test Desc",
 	"source":             "testsource",
-	"frequency":          "testfreq",
-	"temporal_coverage":  "Test coverage",
+	"temporal_coverage":  "Test cov",
 	"granularity":        "test",
-	"contact_name":       "Test Name",
-	"contact_email":      "test@mail.com",
-	"license":            "TestLicense",
-	"data_standard":      "Test Datastd",
-	"related_articles":   nil,
-	"time_saved":         10,
 	"pric":               100,
 	"currency_id":        1,
 	"featured_medium_id": 1,
