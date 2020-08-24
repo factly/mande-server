@@ -85,18 +85,18 @@ func ProductSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, Product["title"], Product["slug"], Product["price"], Product["status"], Product["currency_id"], Product["featured_medium_id"]))
 }
 
-func tagsAssociationSelectMock(mock sqlmock.Sqlmock, prod_id int) {
+func tagsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
-		WithArgs(prod_id).
+		WithArgs(prodId).
 		WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "product_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, tag.Tag["title"], tag.Tag["slug"], 1, prod_id))
+			AddRow(1, time.Now(), time.Now(), nil, tag.Tag["title"], tag.Tag["slug"], 1, prodId))
 }
 
-func datasetsAssociationSelectMock(mock sqlmock.Sqlmock, prod_id int) {
+func datasetsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
-		WithArgs(prod_id).
+		WithArgs(prodId).
 		WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1, prod_id))
+			AddRow(1, time.Now(), time.Now(), nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1, prodId))
 }
 
 func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
