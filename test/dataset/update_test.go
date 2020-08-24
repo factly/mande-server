@@ -3,9 +3,7 @@ package dataset
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -28,27 +26,7 @@ func TestUpdateDataset(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("update dataset", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(DatasetCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", nilJsonb(), 10, 200, 2, 2))
-
-		tagAssociationSelectMock(mock)
-
-		mock.ExpectBegin()
-
-		tag.TagSelectMock(mock)
-
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
-			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-
-		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
-			WithArgs(1, 1, 1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
+		updateMock(mock, nil)
 
 		DatasetSelectMock(mock)
 
@@ -107,7 +85,7 @@ func TestUpdateDataset(t *testing.T) {
 	})
 
 	t.Run("new featured medium does not exist", func(t *testing.T) {
-		updateWithErrorMock(mock, errDatasetMediumFK)
+		updateMock(mock, errDatasetMediumFK)
 
 		e.PUT(path).
 			WithPath("dataset_id", "1").
@@ -119,7 +97,7 @@ func TestUpdateDataset(t *testing.T) {
 	})
 
 	t.Run("new currency does not exist", func(t *testing.T) {
-		updateWithErrorMock(mock, errDatasetCurrencyFK)
+		updateMock(mock, errDatasetCurrencyFK)
 
 		e.PUT(path).
 			WithPath("dataset_id", "1").

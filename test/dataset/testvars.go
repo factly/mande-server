@@ -164,7 +164,7 @@ func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectRollback()
 }
 
-func updateWithErrorMock(mock sqlmock.Sqlmock, err error) {
+func updateMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(DatasetCols).
@@ -179,10 +179,20 @@ func updateWithErrorMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
-	mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
-		WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
-		WillReturnError(err)
-	mock.ExpectRollback()
+	if err != nil {
+		mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
+			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+			WillReturnError(err)
+		mock.ExpectRollback()
+	} else {
+		mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
+			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+
+		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+	}
 }
 
 func datasetProductExpect(mock sqlmock.Sqlmock, count int) {
