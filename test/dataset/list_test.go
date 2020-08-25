@@ -62,7 +62,7 @@ func TestListDataset(t *testing.T) {
 		currency.CurrencySelectMock(mock)
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WithArgs(1, 2).
+			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
 			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
 				AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
 
