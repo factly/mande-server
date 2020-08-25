@@ -44,11 +44,27 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Where(&model.OrderItem{
-		OrderID: uint(id),
-	}).Delete(&model.OrderItem{})
+	tx := model.DB.Begin()
 
-	model.DB.Delete(&result)
+	err = tx.Where(&model.OrderItem{
+		OrderID: uint(id),
+	}).Delete(&model.OrderItem{}).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	err = tx.Delete(&result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, nil)
 }
