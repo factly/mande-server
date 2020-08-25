@@ -64,22 +64,39 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tx := model.DB.Begin()
+
 	oldProducts := result.Products
 	newProducts := make([]model.Product, 0)
 	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&newProducts)
 
 	if len(oldProducts) > 0 {
-		model.DB.Model(&result).Association("Products").Delete(oldProducts)
+		err = tx.Model(&result).Association("Products").Delete(oldProducts).Error
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
 	}
 	if len(newProducts) == 0 {
 		newProducts = nil
 	}
 
-	model.DB.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Cart{
+	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Cart{
 		Status:   cart.Status,
 		UserID:   cart.UserID,
 		Products: newProducts,
-	}).Preload("Products").Preload("Products.Tags").Preload("Products.Datasets").Preload("Products.Currency").First(&result)
+	}).Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, result)
 }

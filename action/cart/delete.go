@@ -57,12 +57,27 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tx := model.DB.Begin()
+
 	// delete associations
 	if len(result.Products) > 0 {
-		model.DB.Model(&result).Association("Products").Delete(&result.Products)
+		err = tx.Model(&result).Association("Products").Delete(&result.Products).Error
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
 	}
 
-	model.DB.Delete(&result)
+	err = tx.Delete(&result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, nil)
 }

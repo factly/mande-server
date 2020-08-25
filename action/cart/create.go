@@ -46,7 +46,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		UserID: cart.UserID,
 	}
 
-	model.DB.Model(&model.Product{}).Preload("Tags").Preload("Datasets").Preload("Currency").Where(cart.ProductIDs).Find(&result.Products)
+	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&result.Products)
 
 	err = model.DB.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
@@ -55,6 +55,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
+
+	model.DB.Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
