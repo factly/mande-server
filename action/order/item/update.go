@@ -67,10 +67,24 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 	result.OrderID = uint(oid)
 
-	model.DB.Model(&result).Updates(model.OrderItem{
+	err = model.DB.Model(&model.OrderItem{}).First(&result).Error
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	err = model.DB.Model(&result).Updates(model.OrderItem{
 		ExtraInfo: orderItem.ExtraInfo,
 		ProductID: orderItem.ProductID,
-	}).Preload("Product").Preload("Product.Currency").First(&result)
+	}).Preload("Product").Preload("Product.Currency").First(&result).Error
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
 
 	renderx.JSON(w, http.StatusOK, result)
 }
