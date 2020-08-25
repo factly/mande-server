@@ -36,11 +36,7 @@ func TestListProduct(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(ProductCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "product_id"}...)))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
-			WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)))
+		EmptyProductAssociationsMock(mock)
 
 		e.GET(basePath).
 			Expect().
