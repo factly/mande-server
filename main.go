@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/factly/data-portal-server/action"
+	"github.com/factly/data-portal-server/config"
 	"github.com/factly/data-portal-server/model"
-	"github.com/joho/godotenv"
 )
 
 // @title Data portal API
@@ -26,10 +26,7 @@ import (
 // @BasePath /
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	config.SetupVars()
 
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
@@ -44,7 +41,7 @@ func main() {
 	r := action.RegisterRoutes()
 
 	fmt.Println("swagger-ui http://localhost:7720/swagger/index.html")
-	err = http.ListenAndServe(port, r)
+	err := http.ListenAndServe(port, r)
 	if err != nil {
 		log.Fatal(err)
 	}
