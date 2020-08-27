@@ -85,6 +85,14 @@ func TestUpdateMembership(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable membership body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("membership_id", "1").
+			WithJSON(undecodableMembership).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid membership id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("membership_id", "abc").

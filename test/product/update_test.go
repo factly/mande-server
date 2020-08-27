@@ -75,6 +75,14 @@ func TestUpdateProduct(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable product body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(undecodableProduct).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid product id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "abc").
@@ -107,4 +115,34 @@ func TestUpdateProduct(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
+	t.Run("update product with null medium id", func(t *testing.T) {
+		updateMockWithoutMedium(mock)
+
+		ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		mock.ExpectCommit()
+
+		Product["featured_medium_id"] = 0
+
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(ProductReceive)
+
+		Product["featured_medium_id"] = 0
+
+		test.ExpectationsMet(t, mock)
+	})
 }

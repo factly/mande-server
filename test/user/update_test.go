@@ -80,4 +80,13 @@ func TestUpdateUser(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 
 	})
+
+	t.Run("undecodable user body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("user_id", "1").
+			WithJSON(undecodableUser).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+
+	})
 }

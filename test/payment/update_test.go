@@ -74,6 +74,14 @@ func TestUpdatePayment(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable payment body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("payment_id", "1").
+			WithJSON(undecodablePayment).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid payment id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("payment_id", "abc").

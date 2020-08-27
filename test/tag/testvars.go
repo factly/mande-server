@@ -17,6 +17,11 @@ var invalidTag map[string]interface{} = map[string]interface{}{
 	"slg":  "test",
 }
 
+var undecodableTag map[string]interface{} = map[string]interface{}{
+	"title": 1,
+	"slug":  20,
+}
+
 var taglist []map[string]interface{} = []map[string]interface{}{
 	{"title": "Test Tag 1", "slug": "test-tag-1"},
 	{"title": "Test Tag 2", "slug": "test-tag-2"},

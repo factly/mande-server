@@ -79,4 +79,12 @@ func TestUpdateMedium(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable medium body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("media_id", "1").
+			WithJSON(undecodableMedium).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 }

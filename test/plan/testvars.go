@@ -13,6 +13,12 @@ var Plan map[string]interface{} = map[string]interface{}{
 	"status":    "teststatus",
 }
 
+var undecodablePlan map[string]interface{} = map[string]interface{}{
+	"plan_name": 50,
+	"plan_info": 10,
+	"status":    1,
+}
+
 var invalidPlan map[string]interface{} = map[string]interface{}{
 	"planname":  "Test Plan",
 	"plan_info": "Test Plan Info",

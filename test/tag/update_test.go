@@ -79,4 +79,11 @@ func TestUpdateTag(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable tag body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("tag_id", "1").
+			WithJSON(undecodableTag).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
 }

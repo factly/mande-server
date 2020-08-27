@@ -20,6 +20,13 @@ var Membership map[string]interface{} = map[string]interface{}{
 	"plan_id":    1,
 }
 
+var undecodableMembership map[string]interface{} = map[string]interface{}{
+	"status":     10,
+	"user_id":    "1",
+	"payment_id": 1,
+	"plan_id":    "1",
+}
+
 var invalidMembership map[string]interface{} = map[string]interface{}{
 	"status":    "Test Status",
 	"user_id":   0,

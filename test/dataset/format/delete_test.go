@@ -63,4 +63,24 @@ func TestDeleteDatasetFormat(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("invalid dataset id", func(t *testing.T) {
+		e.DELETE(path).
+			WithPathObject(map[string]interface{}{
+				"dataset_id": "abc",
+				"format_id":  "1",
+			}).
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
+	t.Run("invalid format id", func(t *testing.T) {
+		e.DELETE(path).
+			WithPathObject(map[string]interface{}{
+				"dataset_id": "1",
+				"format_id":  "abc",
+			}).
+			Expect().
+			Status(http.StatusNotFound)
+	})
 }

@@ -79,4 +79,12 @@ func TestUpdateFormat(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 	})
+
+	t.Run("undecodable format body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("format_id", "1").
+			WithJSON(undecodableFormat).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
 }

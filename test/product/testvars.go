@@ -25,6 +25,16 @@ var Product map[string]interface{} = map[string]interface{}{
 	"tag_ids":            []uint{1},
 }
 
+var undecodableProduct map[string]interface{} = map[string]interface{}{
+	"title":              4,
+	"slug":               1,
+	"price":              "100",
+	"currency_id":        1,
+	"featured_medium_id": 1,
+	"dataset_ids":        "[]uint{1}",
+	"tag_ids":            34,
+}
+
 var ProductReceive map[string]interface{} = map[string]interface{}{
 	"title":              "Test Product",
 	"slug":               "test-product",
@@ -119,7 +129,7 @@ func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectRollback()
 }
 
-func updateMock(mock sqlmock.Sqlmock, err error) {
+func preUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(ProductCols).
@@ -140,6 +150,11 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
+}
+
+func updateMock(mock sqlmock.Sqlmock, err error) {
+
+	preUpdateMock(mock)
 
 	if err != nil {
 		mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
@@ -159,6 +174,29 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 	}
+}
+
+func updateMockWithoutMedium(mock sqlmock.Sqlmock) {
+	preUpdateMock(mock)
+
+	mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
+		WithArgs(nil, test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	ProductSelectMock(mock)
+
+	mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
+		WithArgs(Product["currency_id"], Product["price"], Product["slug"], Product["status"], Product["title"], test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
+		WithArgs(1, 1, 1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
+		WithArgs(1, 1, 1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
 }
 
 func productCartExpect(mock sqlmock.Sqlmock, count int) {
