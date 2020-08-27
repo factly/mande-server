@@ -35,7 +35,9 @@ func main() {
 
 	port = ":" + port
 	// db setup
-	model.SetupDB()
+	model.SetupDB(config.DSN)
+
+	model.Migration()
 
 	// register routes
 	r := action.RegisterRoutes()
