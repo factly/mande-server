@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: code-coverage-report
-          path: bin
+          path: cov.out
 
   sonarcloud:
     needs: build
@@ -41,7 +41,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: code-coverage-report
-          path: bin
+          path: cov.out
       - name: Analyze with SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
