@@ -8,6 +8,8 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
+	"github.com/meilisearch/meilisearch-go"
 )
 
 // AnyTime To match time for test sqlmock queries
@@ -21,6 +23,11 @@ func (a AnyTime) Match(v driver.Value) bool {
 
 // SetupMockDB setups the mock sql db
 func SetupMockDB() sqlmock.Sqlmock {
+	meili.Client = meilisearch.NewClient(meilisearch.Config{
+		Host:   "http://meili:7700",
+		APIKey: "password",
+	})
+
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		fmt.Println(err)

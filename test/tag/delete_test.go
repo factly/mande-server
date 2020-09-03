@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeleteTag(t *testing.T) {
@@ -21,6 +22,10 @@ func TestDeleteTag(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -92,4 +97,27 @@ func TestDeleteTag(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("delete tag when meili is down", func(t *testing.T) {
+		gock.Off()
+		TagSelectMock(mock)
+
+		tagProductExpect(mock, 0)
+
+		tagDatasetExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_tag" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("tag_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
