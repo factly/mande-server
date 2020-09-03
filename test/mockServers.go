@@ -44,28 +44,28 @@ var MeiliHits = map[string]interface{}{
 }
 
 func MeiliGock() {
-	gock.New(config.MeiliURL + "/indexes/dega/search").
+	gock.New(config.MeiliURL + "/indexes/data-portal/search").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusOK).
 		JSON(MeiliHits)
 
 	gock.New(config.MeiliURL).
-		Post("/indexes/dega/documents").
+		Post("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
 	gock.New(config.MeiliURL).
-		Put("/indexes/dega/documents").
+		Put("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
 	gock.New(config.MeiliURL).
-		Delete("/indexes/dega/documents/(.+)").
+		Delete("/indexes/data-portal/documents/(.+)").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).

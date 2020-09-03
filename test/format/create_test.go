@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateFormat(t *testing.T) {
@@ -19,6 +20,10 @@ func TestCreateFormat(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -52,4 +57,21 @@ func TestCreateFormat(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
+
+	t.Run("create a format when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_format"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Format).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
