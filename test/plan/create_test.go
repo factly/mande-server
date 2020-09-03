@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreatePlan(t *testing.T) {
@@ -19,6 +20,10 @@ func TestCreatePlan(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -52,4 +57,21 @@ func TestCreatePlan(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
+
+	t.Run("create a plan when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Plan).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
