@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdatePayment(t *testing.T) {
@@ -21,6 +22,10 @@ func TestUpdatePayment(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -34,11 +39,9 @@ func TestUpdatePayment(t *testing.T) {
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
 			WithArgs(Payment["amount"], Payment["currency_id"], Payment["gateway"], Payment["status"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectCommit()
-
 		PaymentSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		mock.ExpectCommit()
 
 		e.PUT(path).
 			WithPath("payment_id", "1").
@@ -100,6 +103,30 @@ func TestUpdatePayment(t *testing.T) {
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
 			WithArgs(Payment["amount"], Payment["currency_id"], Payment["gateway"], Payment["status"], test.AnyTime{}, 1).
 			WillReturnError(errPaymentCurrencyFK)
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("payment_id", "1").
+			WithJSON(Payment).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("update payment when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(PaymentCols).
+				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
+
+		mock.ExpectBegin()
+		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
+			WithArgs(Payment["amount"], Payment["currency_id"], Payment["gateway"], Payment["status"], test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 		mock.ExpectRollback()
 
 		e.PUT(path).

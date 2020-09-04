@@ -13,6 +13,7 @@ import (
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateProduct(t *testing.T) {
@@ -23,6 +24,10 @@ func TestCreateProduct(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -43,7 +48,6 @@ func TestCreateProduct(t *testing.T) {
 		mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
-		mock.ExpectCommit()
 
 		ProductSelectMock(mock)
 
@@ -54,6 +58,8 @@ func TestCreateProduct(t *testing.T) {
 		tagsAssociationSelectMock(mock, 1)
 
 		datasetsAssociationSelectMock(mock, 1)
+
+		mock.ExpectCommit()
 
 		result := e.POST(basePath).
 			WithJSON(Product).
@@ -102,4 +108,44 @@ func TestCreateProduct(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("create a product when meili is down", func(t *testing.T) {
+		gock.Off()
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Product["title"], Product["slug"], Product["price"], Product["status"], Product["currency_id"], Product["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeleteMedium(t *testing.T) {
@@ -20,6 +21,10 @@ func TestDeleteMedium(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -110,4 +115,29 @@ func TestDeleteMedium(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("delete medium when meili is down", func(t *testing.T) {
+		gock.Off()
+		MediumSelectMock(mock)
+
+		mediumCatalogExpect(mock, 0)
+
+		mediumDatasetExpect(mock, 0)
+
+		mediumProductExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_medium" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("media_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

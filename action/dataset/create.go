@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -63,14 +64,43 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
 
-	err = model.DB.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
+	tx := model.DB.Begin()
+	err = tx.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
 	if err != nil {
+		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
-	model.DB.Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset)
+	tx.Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset)
 
+	// Insert into meili index
+	meiliObj := map[string]interface{}{
+		"id":            result.ID,
+		"kind":          "dataset",
+		"title":         result.Title,
+		"description":   result.Description,
+		"source":        result.Source,
+		"frequency":     result.Frequency,
+		"granuality":    result.Granularity,
+		"contact_name":  result.ContactName,
+		"contact_email": result.ContactEmail,
+		"license":       result.License,
+		"data_standard": result.DataStandard,
+		"price":         result.Price,
+		"currency_id":   result.CurrencyID,
+		"tag_IDs":       dataset.TagIDs,
+	}
+
+	err = meili.AddDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 	renderx.JSON(w, http.StatusCreated, result)
 }

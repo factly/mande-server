@@ -34,7 +34,6 @@ func TestUpdateCurrency(t *testing.T) {
 			WithArgs(Currency["iso_code"], Currency["name"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
-
 		CurrencySelectMock(mock)
 
 		e.PUT(path).

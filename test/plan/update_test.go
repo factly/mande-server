@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdatePlan(t *testing.T) {
@@ -20,6 +21,10 @@ func TestUpdatePlan(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -33,9 +38,8 @@ func TestUpdatePlan(t *testing.T) {
 		mock.ExpectExec(`UPDATE \"dp_plan\" SET (.+)  WHERE (.+) \"dp_plan\".\"id\" = `).
 			WithArgs(Plan["plan_info"], Plan["plan_name"], Plan["status"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectCommit()
-
 		PlanSelectMock(mock)
+		mock.ExpectCommit()
 
 		e.PUT(path).
 			WithPath("plan_id", "1").
@@ -86,4 +90,27 @@ func TestUpdatePlan(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
+	t.Run("update plan when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(PlanCols).
+				AddRow(1, time.Now(), time.Now(), nil, "plan_info", "plan_name", "status"))
+
+		mock.ExpectBegin()
+		mock.ExpectExec(`UPDATE \"dp_plan\" SET (.+)  WHERE (.+) \"dp_plan\".\"id\" = `).
+			WithArgs(Plan["plan_info"], Plan["plan_name"], Plan["status"], test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		PlanSelectMock(mock)
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("plan_id", "1").
+			WithJSON(Plan).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

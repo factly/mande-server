@@ -12,6 +12,7 @@ import (
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateDataset(t *testing.T) {
@@ -22,6 +23,10 @@ func TestUpdateDataset(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -98,6 +103,31 @@ func TestUpdateDataset(t *testing.T) {
 
 	t.Run("new currency does not exist", func(t *testing.T) {
 		updateMock(mock, errDatasetCurrencyFK)
+
+		e.PUT(path).
+			WithPath("dataset_id", "1").
+			WithJSON(Dataset).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("update dataset when meili is down", func(t *testing.T) {
+		gock.Off()
+		updateMock(mock, nil)
+
+		DatasetSelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		datasetFormatSelectMock(mock, 1)
+
+		mock.ExpectRollback()
 
 		e.PUT(path).
 			WithPath("dataset_id", "1").

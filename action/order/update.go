@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -63,7 +64,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&result).Updates(model.Order{
+	tx := model.DB.Begin()
+	err = tx.Model(&result).Updates(model.Order{
 		UserID:    order.UserID,
 		PaymentID: order.PaymentID,
 		Status:    order.Status,
@@ -71,10 +73,31 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result).Error
 
 	if err != nil {
+		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
+
+	// Update into meili index
+	meiliObj := map[string]interface{}{
+		"id":         result.ID,
+		"kind":       "order",
+		"user_id":    result.UserID,
+		"status":     result.Status,
+		"payment_id": result.PaymentID,
+		"cart_id":    result.CartID,
+	}
+
+	err = meili.UpdateDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusOK, result)
 }

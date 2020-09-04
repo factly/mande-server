@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateMedium(t *testing.T) {
@@ -20,6 +21,10 @@ func TestUpdateMedium(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -33,9 +38,8 @@ func TestUpdateMedium(t *testing.T) {
 		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
 			WithArgs(Medium["alt_text"], Medium["caption"], Medium["description"], Medium["dimensions"], Medium["file_size"], Medium["name"], Medium["slug"], Medium["title"], Medium["type"], test.AnyTime{}, Medium["url"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectCommit()
-
 		MediumSelectMock(mock)
+		mock.ExpectCommit()
 
 		e.PUT(path).
 			WithPath("media_id", "1").
@@ -85,6 +89,29 @@ func TestUpdateMedium(t *testing.T) {
 			WithJSON(undecodableMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("update medium when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(MediumCols).
+				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
+
+		mock.ExpectBegin()
+		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
+			WithArgs(Medium["alt_text"], Medium["caption"], Medium["description"], Medium["dimensions"], Medium["file_size"], Medium["name"], Medium["slug"], Medium["title"], Medium["type"], test.AnyTime{}, Medium["url"], 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		MediumSelectMock(mock)
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("media_id", "1").
+			WithJSON(Medium).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 }

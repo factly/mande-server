@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/config"
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 )
 
 // @title Data portal API
@@ -38,6 +39,8 @@ func main() {
 	model.SetupDB(config.DSN)
 
 	model.Migration()
+
+	meili.SetupMeiliSearch()
 
 	// register routes
 	r := action.RegisterRoutes()

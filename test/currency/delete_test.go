@@ -111,4 +111,5 @@ func TestDeleteCurrency(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
 }

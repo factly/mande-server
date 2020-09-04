@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateProduct(t *testing.T) {
@@ -21,6 +22,10 @@ func TestUpdateProduct(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -115,8 +120,9 @@ func TestUpdateProduct(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("update product with null medium id", func(t *testing.T) {
-		updateMockWithoutMedium(mock)
+	t.Run("update product when meili is down", func(t *testing.T) {
+		gock.Off()
+		updateMock(mock, nil)
 
 		ProductSelectMock(mock)
 
@@ -128,21 +134,14 @@ func TestUpdateProduct(t *testing.T) {
 
 		datasetsAssociationSelectMock(mock, 1)
 
-		mock.ExpectCommit()
-
-		Product["featured_medium_id"] = 0
+		mock.ExpectRollback()
 
 		e.PUT(path).
 			WithPath("product_id", "1").
 			WithJSON(Product).
 			Expect().
-			Status(http.StatusOK).
-			JSON().
-			Object().
-			ContainsMap(ProductReceive)
-
-		Product["featured_medium_id"] = 0
-
+			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)
 	})
+
 }

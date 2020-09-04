@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateOrder(t *testing.T) {
@@ -21,6 +22,10 @@ func TestCreateOrder(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -34,6 +39,8 @@ func TestCreateOrder(t *testing.T) {
 		currency.CurrencySelectMock(mock)
 
 		cart.CartSelectMock(mock)
+
+		mock.ExpectCommit()
 
 		result := e.POST(basePath).
 			WithJSON(Order).
@@ -63,6 +70,7 @@ func TestCreateOrder(t *testing.T) {
 
 	t.Run("payment does not exist", func(t *testing.T) {
 		insertMock(mock, errOrderPaymentFK)
+		mock.ExpectRollback()
 
 		e.POST(basePath).
 			WithJSON(Order).
@@ -72,6 +80,7 @@ func TestCreateOrder(t *testing.T) {
 
 	t.Run("user does not exist", func(t *testing.T) {
 		insertMock(mock, errOrderUserFK)
+		mock.ExpectRollback()
 
 		e.POST(basePath).
 			WithJSON(Order).
@@ -81,10 +90,34 @@ func TestCreateOrder(t *testing.T) {
 
 	t.Run("cart does not exist", func(t *testing.T) {
 		insertMock(mock, errOrderCartFK)
+		mock.ExpectRollback()
 
 		e.POST(basePath).
 			WithJSON(Order).
 			Expect().
 			Status(http.StatusInternalServerError)
 	})
+
+	t.Run("create a order when meili is down", func(t *testing.T) {
+		gock.Off()
+		insertMock(mock, nil)
+
+		OrderSelectMock(mock)
+
+		payment.PaymentSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		cart.CartSelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Order).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
