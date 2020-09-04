@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -61,7 +62,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = model.DB.Model(&result).Updates(model.Membership{
+	tx := model.DB.Begin()
+	err = tx.Model(&result).Updates(model.Membership{
 		UserID:    membership.UserID,
 		PaymentID: membership.PaymentID,
 		PlanID:    membership.PlanID,
@@ -69,12 +71,32 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}).Error
 
 	if err != nil {
+		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
-	model.DB.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
+	tx.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
 
+	// Update into meili index
+	meiliObj := map[string]interface{}{
+		"id":         result.ID,
+		"kind":       "membership",
+		"status":     result.Status,
+		"user_id":    result.UserID,
+		"payment_id": result.PaymentID,
+		"plan_id":    result.PlanID,
+	}
+
+	err = meili.UpdateDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 	renderx.JSON(w, http.StatusOK, result)
 }
