@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -47,14 +48,35 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Status:     payment.Status,
 	}
 
-	err = model.DB.Model(&model.Payment{}).Create(&result).Error
+	tx := model.DB.Begin()
+	err = tx.Model(&model.Payment{}).Create(&result).Error
 
 	if err != nil {
+		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
-	model.DB.Model(&result).Preload("Currency").First(&result)
+	tx.Model(&result).Preload("Currency").First(&result)
 
+	// Insert into meili index
+	meiliObj := map[string]interface{}{
+		"id":          result.ID,
+		"kind":        "payment",
+		"amount":      result.Amount,
+		"gateway":     result.Gateway,
+		"currency_id": result.CurrencyID,
+		"status":      result.Status,
+	}
+
+	err = meili.AddDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 	renderx.JSON(w, http.StatusCreated, result)
 }

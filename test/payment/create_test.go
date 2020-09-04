@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreatePayment(t *testing.T) {
@@ -21,6 +22,10 @@ func TestCreatePayment(t *testing.T) {
 	server := httptest.NewServer(router)
 	defer server.Close()
 
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("create a payment", func(t *testing.T) {
@@ -28,11 +33,9 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-		mock.ExpectCommit()
-
 		PaymentSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		mock.ExpectCommit()
 
 		e.POST(basePath).
 			WithJSON(Payment).
@@ -72,4 +75,23 @@ func TestCreatePayment(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("create a payment when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Payment).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
