@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -48,15 +49,36 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&result.Products)
 
-	err = model.DB.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	tx := model.DB.Begin()
+	err = tx.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
+		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
 
 	model.DB.Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
+
+	// Insert into meili index
+	meiliObj := map[string]interface{}{
+		"id":          result.ID,
+		"kind":        "cart",
+		"user_id":     result.UserID,
+		"status":      result.Status,
+		"product_ids": cart.ProductIDs,
+	}
+
+	err = meili.AddDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 
 	renderx.JSON(w, http.StatusCreated, result)
 }
