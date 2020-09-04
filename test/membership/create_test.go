@@ -13,6 +13,7 @@ import (
 	"github.com/factly/data-portal-server/test/plan"
 	"github.com/factly/data-portal-server/test/user"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateMembership(t *testing.T) {
@@ -24,6 +25,10 @@ func TestCreateMembership(t *testing.T) {
 	server := httptest.NewServer(router)
 	defer server.Close()
 
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("create a membership", func(t *testing.T) {
@@ -31,7 +36,6 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-		mock.ExpectCommit()
 
 		MembershipSelectMock(mock)
 
@@ -42,6 +46,8 @@ func TestCreateMembership(t *testing.T) {
 		payment.PaymentSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectCommit()
 
 		result := e.POST(basePath).
 			WithJSON(Membership).
@@ -101,4 +107,32 @@ func TestCreateMembership(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("create a membership when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		MembershipSelectMock(mock)
+
+		user.UserSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
+
+		payment.PaymentSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Membership).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

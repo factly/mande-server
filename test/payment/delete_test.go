@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeletePayment(t *testing.T) {
@@ -21,6 +22,10 @@ func TestDeletePayment(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -88,4 +93,27 @@ func TestDeletePayment(t *testing.T) {
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
+
+	t.Run("delete payment when meili is down", func(t *testing.T) {
+		gock.Off()
+		PaymentSelectMock(mock)
+
+		paymentOrderExpect(mock, 0)
+
+		paymentMembershipExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_payment" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("payment_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

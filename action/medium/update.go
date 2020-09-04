@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -62,7 +63,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Update(&model.Medium{
+	tx := model.DB.Begin()
+	tx.Model(&result).Update(&model.Medium{
 		Name:        medium.Name,
 		Slug:        medium.Slug,
 		Title:       medium.Title,
@@ -75,5 +77,29 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Dimensions:  medium.Dimensions,
 	}).First(&result)
 
+	// Update into meili index
+	meiliObj := map[string]interface{}{
+		"id":          result.ID,
+		"kind":        "medium",
+		"name":        result.Name,
+		"slug":        result.Slug,
+		"type":        result.Type,
+		"title":       result.Title,
+		"description": result.Description,
+		"caption":     result.Caption,
+		"alt_text":    result.AltText,
+		"file_size":   result.FileSize,
+		"dimensions":  result.Dimensions,
+	}
+
+	err = meili.UpdateDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 	renderx.JSON(w, http.StatusOK, result)
 }

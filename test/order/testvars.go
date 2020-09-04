@@ -65,13 +65,11 @@ func insertMock(mock sqlmock.Sqlmock, err error) {
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Order["user_id"], Order["status"], Order["payment_id"], Order["cart_id"]).
 			WillReturnError(err)
-		mock.ExpectRollback()
 	} else {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Order["user_id"], Order["status"], Order["payment_id"], Order["cart_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-		mock.ExpectCommit()
 	}
 }
 
@@ -86,12 +84,10 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 		mock.ExpectExec(`UPDATE \"dp_order\" SET (.+)  WHERE (.+) \"dp_order\".\"id\" = `).
 			WithArgs(Order["cart_id"], Order["payment_id"], Order["status"], test.AnyTime{}, Order["user_id"], 1).
 			WillReturnError(err)
-		mock.ExpectRollback()
 	} else {
 		mock.ExpectExec(`UPDATE \"dp_order\" SET (.+)  WHERE (.+) \"dp_order\".\"id\" = `).
 			WithArgs(Order["cart_id"], Order["payment_id"], Order["status"], test.AnyTime{}, Order["user_id"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectCommit()
 	}
 }
 

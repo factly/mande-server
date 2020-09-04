@@ -12,6 +12,7 @@ import (
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateDataset(t *testing.T) {
@@ -22,6 +23,10 @@ func TestCreateDataset(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -36,7 +41,6 @@ func TestCreateDataset(t *testing.T) {
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
-		mock.ExpectCommit()
 
 		DatasetSelectMock(mock)
 
@@ -45,6 +49,8 @@ func TestCreateDataset(t *testing.T) {
 		currency.CurrencySelectMock(mock)
 
 		tagAssociationSelectMock(mock)
+
+		mock.ExpectCommit()
 
 		result := e.POST(basePath).
 			WithJSON(Dataset).
@@ -93,4 +99,36 @@ func TestCreateDataset(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("create a dataset when meili is down", func(t *testing.T) {
+		gock.Off()
+		tag.TagSelectMock(mock)
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		DatasetSelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		tagAssociationSelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Dataset).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

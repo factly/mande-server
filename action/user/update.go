@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -62,11 +63,30 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Model(&result).Updates(&model.User{
+	tx := model.DB.Begin()
+	tx.Model(&result).Updates(&model.User{
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 	}).First(&result)
 
+	// Update into meili index
+	meiliObj := map[string]interface{}{
+		"id":         result.ID,
+		"kind":       "user",
+		"email":      result.Email,
+		"first_name": result.FirstName,
+		"last_name":  result.LastName,
+	}
+
+	err = meili.UpdateDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	tx.Commit()
 	renderx.JSON(w, http.StatusOK, result)
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateCart(t *testing.T) {
@@ -24,6 +25,10 @@ func TestCreateCart(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -38,7 +43,6 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectExec(`INSERT INTO "dp_cart_item"`).
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
-		mock.ExpectCommit()
 
 		CartSelectMock(mock)
 
@@ -51,6 +55,8 @@ func TestCreateCart(t *testing.T) {
 		tag.TagSelectMock(mock)
 
 		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectCommit()
 
 		e.POST(basePath).
 			WithJSON(Cart).
@@ -90,6 +96,40 @@ func TestCreateCart(t *testing.T) {
 			Expect().
 			Status(http.StatusInternalServerError)
 
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("create a cart when meili is down", func(t *testing.T) {
+		gock.Off()
+		product.ProductSelectMock(mock)
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_cart"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Cart["status"], Cart["user_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectExec(`INSERT INTO "dp_cart_item"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		CartSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Cart).
+			Expect().
+			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)
 	})
 }

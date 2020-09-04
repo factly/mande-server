@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeleteProduct(t *testing.T) {
@@ -21,6 +22,10 @@ func TestDeleteProduct(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -133,4 +138,39 @@ func TestDeleteProduct(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("delete product when meili is down", func(t *testing.T) {
+		gock.Off()
+		ProductSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		productCartExpect(mock, 0)
+
+		productCatalogExpect(mock, 0)
+
+		productOrderExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_product" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("product_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }

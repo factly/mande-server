@@ -13,6 +13,7 @@ import (
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateCatalog(t *testing.T) {
@@ -23,6 +24,10 @@ func TestUpdateCatalog(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -98,4 +103,33 @@ func TestUpdateCatalog(t *testing.T) {
 			Expect().
 			Status(http.StatusInternalServerError)
 	})
+
+	t.Run("update catalog when meili is down", func(t *testing.T) {
+		gock.Off()
+		updateMock(mock, nil)
+
+		CatalogSelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("catalog_id", "1").
+			WithJSON(Catalog).
+			Expect().
+			Status(http.StatusInternalServerError)
+		test.ExpectationsMet(t, mock)
+	})
+
 }

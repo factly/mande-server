@@ -5,6 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"gopkg.in/h2non/gock.v1"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
@@ -19,6 +21,10 @@ func TestCreateTag(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -51,6 +57,22 @@ func TestCreateTag(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("create a tag when meili is down", func(t *testing.T) {
+		gock.Off()
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Tag).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 }

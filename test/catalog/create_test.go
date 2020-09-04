@@ -14,6 +14,7 @@ import (
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateCatalog(t *testing.T) {
@@ -24,6 +25,10 @@ func TestCreateCatalog(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -38,7 +43,6 @@ func TestCreateCatalog(t *testing.T) {
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
-		mock.ExpectCommit()
 
 		CatalogSelectMock(mock)
 
@@ -53,6 +57,8 @@ func TestCreateCatalog(t *testing.T) {
 		tag.TagSelectMock(mock)
 
 		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectCommit()
 
 		result := e.POST(basePath).
 			WithJSON(Catalog).
@@ -96,4 +102,42 @@ func TestCreateCatalog(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("create a catalog when meili is down", func(t *testing.T) {
+		gock.Off()
+		product.ProductSelectMock(mock)
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], Catalog["featured_medium_id"], test.AnyTime{}).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		CatalogSelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Catalog).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 }
