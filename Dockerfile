@@ -6,6 +6,10 @@ COPY . .
 
 RUN go mod download
 
+ENV DSN $DSN
+ENV MEILI_URL $MEILI_URL
+ENV MEILI_KEY $MEILI_KEY
+
 RUN go get github.com/githubnemo/CompileDaemon
 
-ENTRYPOINT CompileDaemon -exclude-dir=.git -exclude-dir=docs --build="go build main.go" --command="./main -dsn=postgres://postgres:postgres@postgres:5432/dataportal?sslmode=disable -meili=http://localhost:7700 -meiliKey=password"
+ENTRYPOINT CompileDaemon -exclude-dir=.git -exclude-dir=docs --build="go build main.go" --command="./main -dsn=${DSN} -meili=${MEILI_URL} -meiliKey ${MEILI_KEY}"
