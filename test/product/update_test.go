@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateProduct(t *testing.T) {
@@ -21,6 +22,10 @@ func TestUpdateProduct(t *testing.T) {
 	router := action.RegisterRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.MeiliGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -104,6 +109,30 @@ func TestUpdateProduct(t *testing.T) {
 			Expect().
 			Status(http.StatusInternalServerError)
 
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("update product", func(t *testing.T) {
+		gock.Off()
+		updateMock(mock, nil)
+
+		ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)
 	})
 

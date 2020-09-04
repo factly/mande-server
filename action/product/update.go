@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -127,6 +128,27 @@ func update(w http.ResponseWriter, r *http.Request) {
 		tx.Rollback()
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	// Update into meili index
+	meiliObj := map[string]interface{}{
+		"id":          result.ID,
+		"kind":        "product",
+		"title":       result.Title,
+		"slug":        result.Slug,
+		"price":       result.Price,
+		"status":      result.Status,
+		"currency_id": result.CurrencyID,
+		"tag_ids":     product.TagIDs,
+		"dataset_ids": product.DatasetIDs,
+	}
+
+	err = meili.UpdateDocument(meiliObj)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
 		return
 	}
 
