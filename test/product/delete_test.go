@@ -1,6 +1,7 @@
 package product
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -80,6 +81,39 @@ func TestDeleteProduct(t *testing.T) {
 			WithPath("product_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
+	})
+
+	t.Run("deleting product fails", func(t *testing.T) {
+		ProductSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		productCartExpect(mock, 0)
+
+		productCatalogExpect(mock, 0)
+
+		productOrderExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_product" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnError(errors.New("cannot delete"))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("product_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("product is associated with cart", func(t *testing.T) {

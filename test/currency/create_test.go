@@ -1,6 +1,7 @@
 package currency
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -54,6 +55,24 @@ func TestCreateCurrency(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("createing currency fails", func(t *testing.T) {
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_currency"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Currency["iso_code"], Currency["name"]).
+			WillReturnError(errors.New("cannot create currency"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Currency).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create more than one currency", func(t *testing.T) {

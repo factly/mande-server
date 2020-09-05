@@ -79,6 +79,14 @@ func TestUpdateOrder(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable order body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("order_id", "1").
+			WithJSON(undecodableOrder).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid order id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("order_id", "abc").

@@ -1,8 +1,10 @@
 package dataset
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -81,12 +83,65 @@ func TestUpdateDataset(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable dataset body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("dataset_id", "1").
+			WithJSON(undecodableDataset).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("dataset_id", "abc").
 			WithJSON(Dataset).
 			Expect().
 			Status(http.StatusNotFound)
+	})
+
+	t.Run("update dataset with featured_medium_id = 0", func(t *testing.T) {
+		updateWithoutFeaturedMedium(mock)
+
+		DatasetSelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		datasetFormatSelectMock(mock, 1)
+
+		mock.ExpectCommit()
+
+		Dataset["featured_medium_id"] = 0
+		result := e.PUT(path).
+			WithPath("dataset_id", "1").
+			WithJSON(Dataset).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(DatasetReceive)
+
+		validateAssociations(result)
+		Dataset["featured_medium_id"] = 1
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("deleting old tags fail", func(t *testing.T) {
+		preUpdateMock(mock)
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
+			WillReturnError(errors.New("cannot delete dataset_tags"))
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("dataset_id", "1").
+			WithJSON(Dataset).
+			Expect().
+			Status(http.StatusInternalServerError)
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("new featured medium does not exist", func(t *testing.T) {

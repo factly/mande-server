@@ -27,6 +27,11 @@ var invalidCart map[string]interface{} = map[string]interface{}{
 	"productds": []uint{1},
 }
 
+var undecodableCart map[string]interface{} = map[string]interface{}{
+	"status":  45,
+	"user_id": "1",
+}
+
 var cartlist []map[string]interface{} = []map[string]interface{}{
 	{
 		"status":      "teststatus1",
@@ -69,7 +74,7 @@ func cartOrderExpect(mock sqlmock.Sqlmock, count int) {
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
-func updateMock(mock sqlmock.Sqlmock, err error) {
+func preUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(CartCols).
@@ -80,6 +85,11 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectBegin()
 
 	product.ProductSelectMock(mock)
+
+}
+
+func updateMock(mock sqlmock.Sqlmock, err error) {
+	preUpdateMock(mock)
 
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))

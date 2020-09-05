@@ -19,6 +19,12 @@ var Order map[string]interface{} = map[string]interface{}{
 	"cart_id":    1,
 }
 
+var undecodableOrder map[string]interface{} = map[string]interface{}{
+	"user_id":    "1",
+	"status":     43,
+	"payment_id": "1",
+}
+
 var invalidOrder map[string]interface{} = map[string]interface{}{
 	"userid":    1,
 	"status":    "teststatus",

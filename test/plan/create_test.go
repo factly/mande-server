@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -56,6 +57,21 @@ func TestCreatePlan(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("creating plan fails", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
+			WillReturnError(errors.New("cannot create"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Plan).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create a plan when meili is down", func(t *testing.T) {

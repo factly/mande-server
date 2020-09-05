@@ -145,16 +145,16 @@ func preUpdateMock(mock sqlmock.Sqlmock) {
 
 	dataset.DatasetSelectMock(mock)
 
+}
+
+func updateMock(mock sqlmock.Sqlmock, err error) {
+	preUpdateMock(mock)
+
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
-}
-
-func updateMock(mock sqlmock.Sqlmock, err error) {
-
-	preUpdateMock(mock)
 
 	if err != nil {
 		mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
@@ -178,6 +178,12 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 
 func updateMockWithoutMedium(mock sqlmock.Sqlmock) {
 	preUpdateMock(mock)
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
 		WithArgs(nil, test.AnyTime{}, 1).

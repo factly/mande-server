@@ -89,6 +89,39 @@ func TestUpdateOrderItem(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
+	t.Run("invalid order id", func(t *testing.T) {
+		e.PUT(path).
+			WithPathObject(map[string]interface{}{
+				"order_id": "abc",
+				"item_id":  "1",
+			}).
+			WithJSON(OrderItem).
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
+	t.Run("invalid order item body", func(t *testing.T) {
+		e.PUT(path).
+			WithPathObject(map[string]interface{}{
+				"order_id": "1",
+				"item_id":  "1",
+			}).
+			WithJSON(invalidOrderItem).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("undecodable order item body", func(t *testing.T) {
+		e.PUT(path).
+			WithPathObject(map[string]interface{}{
+				"order_id": "1",
+				"item_id":  "1",
+			}).
+			WithJSON(undecodableOrderItem).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("new product not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).

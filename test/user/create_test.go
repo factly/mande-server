@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -57,6 +58,22 @@ func TestCreateUser(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("creating user fails", func(t *testing.T) {
+
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_user"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, User["email"], User["first_name"], User["last_name"]).
+			WillReturnError(errors.New("cannot create"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(User).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create a user when meili is down", func(t *testing.T) {

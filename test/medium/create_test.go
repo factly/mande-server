@@ -1,6 +1,7 @@
 package medium
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -56,6 +57,21 @@ func TestCreateMedium(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("creating medium fails", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
+			WillReturnError(errors.New("cannot create medium"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Medium).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create medium when meili is down", func(t *testing.T) {
