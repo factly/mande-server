@@ -20,6 +20,13 @@ var Medium map[string]interface{} = map[string]interface{}{
 	"dimensions":  "testdims",
 }
 
+var undecodableMedium map[string]interface{} = map[string]interface{}{
+	"name":      1,
+	"slug":      3,
+	"title":     99,
+	"file_size": "100",
+}
+
 var invalidMedium map[string]interface{} = map[string]interface{}{
 	"nam":         "Test Medium",
 	"slug":        "test-medium",

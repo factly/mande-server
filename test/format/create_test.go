@@ -1,6 +1,7 @@
 package format
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -56,6 +57,21 @@ func TestCreateFormat(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("creating format fails", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_format"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
+			WillReturnError(errors.New("cannot create format"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Format).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create a format when meili is down", func(t *testing.T) {

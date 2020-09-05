@@ -83,6 +83,13 @@ func TestUpdatePlan(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable plan body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("plan_id", "1").
+			WithJSON(undecodablePlan).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
 	t.Run("update plan when meili is down", func(t *testing.T) {
 		gock.Off()
 		mock.ExpectQuery(selectQuery).

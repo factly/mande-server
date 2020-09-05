@@ -61,6 +61,26 @@ func TestCreateDatasetFormat(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable dataset format body", func(t *testing.T) {
+		e.POST(basePath).
+			WithPathObject(map[string]interface{}{
+				"dataset_id": 1,
+			}).
+			WithJSON(undecodableDatasetFormat).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("invalid dataset id", func(t *testing.T) {
+		e.POST(basePath).
+			WithPathObject(map[string]interface{}{
+				"dataset_id": "abc",
+			}).
+			WithJSON(DatasetFormat).
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
 	t.Run("format does not exist", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset_format"`).

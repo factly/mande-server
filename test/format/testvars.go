@@ -13,6 +13,12 @@ var Format map[string]interface{} = map[string]interface{}{
 	"is_default":  true,
 }
 
+var undecodableFormat map[string]interface{} = map[string]interface{}{
+	"name":        10,
+	"description": 20,
+	"is_default":  "true",
+}
+
 var invalidFormat map[string]interface{} = map[string]interface{}{
 	"nae":        "Test Format",
 	"decription": "Test Description",

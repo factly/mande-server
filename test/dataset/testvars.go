@@ -72,6 +72,12 @@ var invalidDataset map[string]interface{} = map[string]interface{}{
 	"tag_ids":            []uint{1},
 }
 
+var undecodableDataset map[string]interface{} = map[string]interface{}{
+	"tite":               23,
+	"desciption":         42,
+	"featured_medium_id": "1",
+}
+
 var datasetlist []map[string]interface{} = []map[string]interface{}{
 	{
 		"title":              "Test Title 1",
@@ -164,7 +170,7 @@ func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectRollback()
 }
 
-func updateMock(mock sqlmock.Sqlmock, err error) {
+func preUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(DatasetCols).
@@ -175,7 +181,10 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectBegin()
 
 	tag.TagSelectMock(mock)
+}
 
+func updateMock(mock sqlmock.Sqlmock, err error) {
+	preUpdateMock(mock)
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -195,8 +204,48 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 	}
 }
 
+func updateWithoutFeaturedMedium(mock sqlmock.Sqlmock) {
+	preUpdateMock(mock)
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
+		WithArgs(nil, test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	DatasetSelectMock(mock)
+
+	mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
+		WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
+		WithArgs(1, 1, 1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+}
+
 func datasetProductExpect(mock sqlmock.Sqlmock, count int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
+}
+
+func deleteMock(mock sqlmock.Sqlmock, err error) {
+	mock.ExpectBegin()
+	mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset_format" SET "deleted_at"=`)).
+		WithArgs(test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	if err == nil {
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+	} else {
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnError(err)
+	}
 }

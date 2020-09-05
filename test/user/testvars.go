@@ -19,6 +19,12 @@ var invalidUser map[string]interface{} = map[string]interface{}{
 	"lst_name":  "User LName",
 }
 
+var undecodableUser map[string]interface{} = map[string]interface{}{
+	"email":      5,
+	"first_name": 13,
+	"last_name":  "User LName",
+}
+
 var userlist []map[string]interface{} = []map[string]interface{}{
 	{
 		"email":      "user1@mail.com",

@@ -1,8 +1,10 @@
 package product
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -80,12 +82,87 @@ func TestUpdateProduct(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable product body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(undecodableProduct).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid product id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "abc").
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusNotFound)
+	})
+
+	t.Run("deleting old tags fails", func(t *testing.T) {
+		preUpdateMock(mock)
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+			WillReturnError(errors.New("cannot delete tags"))
+
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusInternalServerError)
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("deleting old datasets fails", func(t *testing.T) {
+		preUpdateMock(mock)
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
+			WillReturnError(errors.New("cannot delete datasets"))
+
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusInternalServerError)
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("update product with new featured_medium_id = 0", func(t *testing.T) {
+		updateMockWithoutMedium(mock)
+
+		ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tagsAssociationSelectMock(mock, 1)
+
+		datasetsAssociationSelectMock(mock, 1)
+
+		mock.ExpectCommit()
+
+		Product["featured_medium_id"] = 0
+		result := e.PUT(path).
+			WithPath("product_id", "1").
+			WithJSON(Product).
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(ProductReceive)
+
+		validateAssociations(result)
+
+		Product["featured_medium_id"] = 1
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("new featured medium does not exist", func(t *testing.T) {
@@ -112,7 +189,7 @@ func TestUpdateProduct(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("update product", func(t *testing.T) {
+	t.Run("update product when meili is down", func(t *testing.T) {
 		gock.Off()
 		updateMock(mock, nil)
 

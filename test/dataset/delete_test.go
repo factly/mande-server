@@ -1,9 +1,9 @@
 package dataset
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -36,17 +36,7 @@ func TestDeleteDataset(t *testing.T) {
 
 		datasetProductExpect(mock, 0)
 
-		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset_format" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
+		deleteMock(mock, nil)
 		mock.ExpectCommit()
 
 		e.DELETE(path).
@@ -77,6 +67,24 @@ func TestDeleteDataset(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
+	t.Run("deleting dataset fails", func(t *testing.T) {
+		DatasetSelectMock(mock)
+
+		tagAssociationSelectMock(mock)
+
+		datasetProductExpect(mock, 0)
+
+		deleteMock(mock, errors.New("cannot delete dataset"))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("dataset_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 	t.Run("dataset associated with product", func(t *testing.T) {
 		DatasetSelectMock(mock)
 
@@ -100,17 +108,7 @@ func TestDeleteDataset(t *testing.T) {
 
 		datasetProductExpect(mock, 0)
 
-		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset_format" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
+		deleteMock(mock, nil)
 		mock.ExpectRollback()
 
 		e.DELETE(path).

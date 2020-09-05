@@ -84,6 +84,13 @@ func TestUpdateFormat(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
+	t.Run("undecodable format body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("format_id", "1").
+			WithJSON(undecodableFormat).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
 	t.Run("update format when meili is down", func(t *testing.T) {
 		gock.Off()
 		mock.ExpectQuery(selectQuery).

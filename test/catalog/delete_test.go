@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -69,6 +70,28 @@ func TestDeleteCatalog(t *testing.T) {
 			WithPath("catalog_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
+	})
+
+	t.Run("deleting catalog fails", func(t *testing.T) {
+		CatalogSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_catalog_product"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_catalog" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnError(errors.New("cannot delete catalog"))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("catalog_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("delete catalog when meili is down", func(t *testing.T) {

@@ -15,6 +15,13 @@ var Payment map[string]interface{} = map[string]interface{}{
 	"status":      "sucessful",
 }
 
+var undecodablePayment map[string]interface{} = map[string]interface{}{
+	"amount":      "100",
+	"gateway":     500,
+	"currency_id": "1",
+	"status":      20,
+}
+
 var invalidPayment map[string]interface{} = map[string]interface{}{
 	"amt":         100,
 	"gateway":     "testgateway.com",

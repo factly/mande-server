@@ -12,6 +12,11 @@ var Currency map[string]interface{} = map[string]interface{}{
 	"iso_code": "Test ISO Code",
 }
 
+var undecodableCurrency map[string]interface{} = map[string]interface{}{
+	"name":     1,
+	"iso_code": 10,
+}
+
 var invalidCurrency map[string]interface{} = map[string]interface{}{
 	"nam":     "Test Name",
 	"isocode": "Test ISO Code",

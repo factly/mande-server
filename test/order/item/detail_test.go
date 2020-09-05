@@ -74,4 +74,14 @@ func TestDetailOrderItem(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 	})
+
+	t.Run("invalid order id", func(t *testing.T) {
+		e.GET(path).
+			WithPathObject(map[string]interface{}{
+				"order_id": "abc",
+				"item_id":  "1",
+			}).
+			Expect().
+			Status(http.StatusNotFound)
+	})
 }

@@ -13,6 +13,11 @@ var DatasetFormat map[string]interface{} = map[string]interface{}{
 	"url":       "test.url.com",
 }
 
+var undecodableDatasetFormat map[string]interface{} = map[string]interface{}{
+	"format_id": "1",
+	"url":       15,
+}
+
 var invalidDatasetFormat map[string]interface{} = map[string]interface{}{
 	"formatid": 1,
 	"ur":       "test.url.com",

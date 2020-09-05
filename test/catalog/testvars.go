@@ -33,6 +33,12 @@ var invalidCatalog map[string]interface{} = map[string]interface{}{
 	"publisheddate":      nil,
 }
 
+var undecodableCatalog map[string]interface{} = map[string]interface{}{
+	"title":              445,
+	"description":        87,
+	"featured_medium_id": "1",
+}
+
 var cataloglist []map[string]interface{} = []map[string]interface{}{
 	{
 		"title":              "Test Title 1",
@@ -73,7 +79,7 @@ func productsAssociationSelectMock(mock sqlmock.Sqlmock, catId int) {
 			AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, catId))
 }
 
-func updateMock(mock sqlmock.Sqlmock, err error) {
+func preUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(CatalogCols).
@@ -84,6 +90,12 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 	mock.ExpectBegin()
 
 	product.ProductSelectMock(mock)
+
+}
+
+func updateMock(mock sqlmock.Sqlmock, err error) {
+
+	preUpdateMock(mock)
 
 	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_catalog_product"`)).
 		WillReturnResult(sqlmock.NewResult(0, 1))
@@ -102,6 +114,28 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 			WithArgs(1, 1, 1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 	}
+}
+
+func updateWithoutFeaturedMedium(mock sqlmock.Sqlmock) {
+	preUpdateMock(mock)
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_catalog_product"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(`UPDATE \"dp_catalog\" SET (.+)  WHERE (.+) \"dp_catalog\".\"id\" = `).
+		WithArgs(nil, test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	CatalogSelectMock(mock)
+
+	mock.ExpectExec(`UPDATE \"dp_catalog\" SET (.+)  WHERE (.+) \"dp_catalog\".\"id\" = `).
+		WithArgs(Catalog["description"], test.AnyTime{}, Catalog["title"], test.AnyTime{}, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
+		WithArgs(1, 1, 1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
 }
 
 func validateAssociations(result *httpexpect.Object) {

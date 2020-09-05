@@ -18,6 +18,11 @@ var invalidOrderItem map[string]interface{} = map[string]interface{}{
 	"productid":  1,
 }
 
+var undecodableOrderItem map[string]interface{} = map[string]interface{}{
+	"extra_info": 23,
+	"productid":  "1",
+}
+
 var orderitemlist []map[string]interface{} = []map[string]interface{}{
 	{
 		"extra_info": "Test Extra Info 1",

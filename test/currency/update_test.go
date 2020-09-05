@@ -78,4 +78,11 @@ func TestUpdateCurrency(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
+	t.Run("undecodable currency body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("currency_id", "1").
+			WithJSON(undecodableCurrency).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
 }

@@ -1,6 +1,7 @@
 package tag
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -57,6 +58,21 @@ func TestCreateTag(t *testing.T) {
 		e.POST(basePath).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("creating tag fails", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
+			WillReturnError(errors.New("cannot create"))
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithJSON(Tag).
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("create a tag when meili is down", func(t *testing.T) {

@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -84,6 +85,50 @@ func TestDeleteCart(t *testing.T) {
 			WithPath("cart_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("deleting cart items fail", func(t *testing.T) {
+		CartSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		cartOrderExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
+			WillReturnError(errors.New("cannot delete products"))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("cart_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("deleting cart fails", func(t *testing.T) {
+		CartSelectMock(mock)
+
+		productsAssociationSelectMock(mock, 1)
+
+		cartOrderExpect(mock, 0)
+
+		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart" SET "deleted_at"=`)).
+			WithArgs(test.AnyTime{}, 1).
+			WillReturnError(errors.New("cannot delete cart"))
+		mock.ExpectRollback()
+
+		e.DELETE(path).
+			WithPath("cart_id", "1").
+			Expect().
+			Status(http.StatusInternalServerError)
 
 		test.ExpectationsMet(t, mock)
 	})

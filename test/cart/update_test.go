@@ -1,8 +1,10 @@
 package cart
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -82,6 +84,14 @@ func TestUpdateCart(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable cart body", func(t *testing.T) {
+		e.PUT(path).
+			WithPath("cart_id", "1").
+			WithJSON(undecodableCart).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("invalid cart id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("cart_id", "abc").
@@ -99,6 +109,22 @@ func TestUpdateCart(t *testing.T) {
 			Expect().
 			Status(http.StatusInternalServerError)
 
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("deleting old products fails", func(t *testing.T) {
+		preUpdateMock(mock)
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
+			WillReturnError(errors.New("cannot delete products"))
+
+		mock.ExpectRollback()
+
+		e.PUT(path).
+			WithPath("cart_id", "1").
+			WithJSON(Cart).
+			Expect().
+			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)
 	})
 
