@@ -14,37 +14,40 @@ var ReturnUpdate = map[string]interface{}{
 var MeiliHits = map[string]interface{}{
 	"hits": []map[string]interface{}{
 		{
-			"description": "Test claimant",
+			"object_id":   "format_2",
+			"kind":        "format",
 			"id":          2,
-			"kind":        "claimant",
-			"medium_id":   2,
-			"name":        "Tester",
-			"object_id":   "claimant_2",
-			"slug":        "tester",
-			"space_id":    1,
-			"tag_line":    "A claimant for testing",
+			"description": "This is a test format",
+			"name":        "Test Format",
+			"is_default":  true,
 		},
 		{
-			"description": "this is test category",
+			"object_id":   "format_3",
+			"kind":        "format",
 			"id":          3,
-			"kind":        "category",
-			"medium_id":   2,
-			"name":        "Test category",
-			"object_id":   "category_3",
-			"slug":        "test-category",
-			"space_id":    1,
+			"description": "This is second test format",
+			"name":        "Test format 2",
+			"is_default":  true,
+		},
+		{
+			"object_id": "tag_2",
+			"kind":      "tag",
+			"id":        2,
+			"slug":      "test-tag",
+			"title":     "Test tag",
 		},
 	},
 	"offset":           0,
-	"limit":            20,
-	"nbHits":           7,
+	"limit":            10,
+	"nbHits":           10,
 	"exhaustiveNbHits": false,
 	"processingTimeMs": 2,
 	"query":            "test",
 }
 
 func MeiliGock() {
-	gock.New(config.MeiliURL + "/indexes/data-portal/search").
+	gock.New(config.MeiliURL).
+		Post("/indexes/data-portal/search").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusOK).
