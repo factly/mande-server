@@ -32,4 +32,12 @@ func SetupMeiliSearch() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Add searchable attributes in index
+	searchableAttributes := []string{"name", "slug", "description", "title", "contact_name", "contact_email", "license", "caption", "alt_text", "plan_name", "plan_info"}
+	_, err = Client.Settings("data-portal").UpdateSearchableAttributes(searchableAttributes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }

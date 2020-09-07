@@ -2378,6 +2378,32 @@ var doc = `{
                 }
             }
         },
+        "/search": {
+            "post": {
+                "description": "Global search for all entities",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Global search for all entities",
+                "operationId": "search-entities",
+                "parameters": [
+                    {
+                        "description": "Search",
+                        "name": "Search",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/search.searchQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
         "/tags": {
             "get": {
                 "description": "Get all tags",
@@ -3965,6 +3991,29 @@ var doc = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "search.searchQuery": {
+            "type": "object",
+            "required": [
+                "q"
+            ],
+            "properties": {
+                "facetFilters": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "filters": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "q": {
                     "type": "string"
                 }
             }

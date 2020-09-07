@@ -813,6 +813,21 @@ definitions:
     - slug
     - title
     type: object
+  search.searchQuery:
+    properties:
+      facetFilters:
+        items:
+          type: string
+        type: array
+      filters:
+        type: string
+      limit:
+        type: integer
+      q:
+        type: string
+    required:
+    - q
+    type: object
   tag.paging:
     properties:
       nodes:
@@ -2436,6 +2451,23 @@ paths:
       summary: Update a product by id
       tags:
       - Product
+  /search:
+    post:
+      description: Global search for all entities
+      operationId: search-entities
+      parameters:
+      - description: Search
+        in: body
+        name: Search
+        schema:
+          $ref: '#/definitions/search.searchQuery'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: Global search for all entities
+      tags:
+      - Search
   /tags:
     get:
       description: Get all tags
