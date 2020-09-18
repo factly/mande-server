@@ -10,7 +10,6 @@ type order struct {
 	UserID    uint   `json:"user_id" validate:"required"`
 	Status    string `json:"status"`
 	PaymentID uint   `json:"payment_id" validate:"required"`
-	CartID    uint   `json:"cart_id" validate:"required"`
 }
 
 // Router - Group of order router

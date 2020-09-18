@@ -14,5 +14,4 @@ type Product struct {
 	Catalogs         []Catalog `gorm:"many2many:catalog_product;" json:"catalogs"`
 	Tags             []Tag     `gorm:"many2many:product_tag;" json:"tags"`
 	Datasets         []Dataset `gorm:"many2many:product_dataset;" json:"datasets"`
-	Carts            []Cart    `gorm:"many2many:cart_item;" json:"carts"`
 }

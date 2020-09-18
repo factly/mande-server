@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -20,38 +21,43 @@ import (
 // @ID add-cart
 // @Consume json
 // @Produce  json
-// @Param Cart body cart true "Cart object"
-// @Success 201 {object} model.Cart
+// @Param X-User header string true "User ID"
+// @Param CartItem body cartitem true "Cart Item object"
+// @Success 201 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts [post]
+// @Router /cartitems [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
-	cart := &cart{}
+	cartitem := &cartitem{}
 
-	err := json.NewDecoder(r.Body).Decode(&cart)
+	err = json.NewDecoder(r.Body).Decode(&cartitem)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
 		return
 	}
 
-	validationError := validationx.Check(cart)
+	validationError := validationx.Check(cartitem)
 	if validationError != nil {
 		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
 
-	result := &model.Cart{
-		Status: cart.Status,
-		UserID: cart.UserID,
+	result := &model.CartItem{
+		Status:    cartitem.Status,
+		UserID:    uint(uID),
+		ProductID: cartitem.ProductID,
 	}
 
-	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&result.Products)
-
 	tx := model.DB.Begin()
-	err = tx.Model(&model.Cart{}).Set("gorm:association_autoupdate", false).Create(&result).Error
-
+	err = tx.Model(&model.CartItem{}).Create(&result).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
@@ -59,15 +65,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	model.DB.Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
+	tx.Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
-		"id":          result.ID,
-		"kind":        "cart",
-		"user_id":     result.UserID,
-		"status":      result.Status,
-		"product_ids": cart.ProductIDs,
+		"id":         result.ID,
+		"kind":       "cartitem",
+		"user_id":    result.UserID,
+		"status":     result.Status,
+		"product_id": result.ProductID,
 	}
 
 	err = meili.AddDocument(meiliObj)

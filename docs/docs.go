@@ -32,7 +32,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/carts": {
+        "/cartitems": {
             "get": {
                 "description": "Get all carts",
                 "produces": [
@@ -44,6 +44,12 @@ var doc = `{
                 "summary": "Show all carts",
                 "operationId": "get-all-carts",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
                     {
                         "type": "string",
                         "description": "limt per page",
@@ -78,12 +84,19 @@ var doc = `{
                 "operationId": "add-cart",
                 "parameters": [
                     {
-                        "description": "Cart object",
-                        "name": "Cart",
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Cart Item object",
+                        "name": "CartItem",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/cart.cart"
+                            "$ref": "#/definitions/cart.cartitem"
                         }
                     }
                 ],
@@ -91,7 +104,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -106,7 +119,7 @@ var doc = `{
                 }
             }
         },
-        "/carts/{cart_id}": {
+        "/cartitems/{cartitem_id}": {
             "get": {
                 "description": "Get cart by ID",
                 "produces": [
@@ -120,8 +133,15 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     }
@@ -130,7 +150,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -157,17 +177,24 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Cart",
-                        "name": "Cart",
+                        "description": "Cart Item object",
+                        "name": "CartItem",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/cart.cart"
+                            "$ref": "#/definitions/cart.cartitem"
                         }
                     }
                 ],
@@ -175,7 +202,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -199,8 +226,15 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     }
@@ -2780,23 +2814,18 @@ var doc = `{
         }
     },
     "definitions": {
-        "cart.cart": {
+        "cart.cartitem": {
             "type": "object",
             "required": [
-                "user_id"
+                "product_id",
+                "status"
             ],
             "properties": {
-                "product_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                "product_id": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -2806,7 +2835,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Cart"
+                        "$ref": "#/definitions/model.CartItem"
                     }
                 },
                 "total": {
@@ -3212,9 +3241,10 @@ var doc = `{
                 }
             }
         },
-        "model.Cart": {
+        "model.CartItem": {
             "type": "object",
             "required": [
+                "product_id",
                 "status",
                 "user_id"
             ],
@@ -3228,11 +3258,12 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Product"
-                    }
+                "product": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Product"
+                },
+                "product_id": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
@@ -3550,19 +3581,11 @@ var doc = `{
         "model.Order": {
             "type": "object",
             "required": [
-                "cart_id",
                 "payment_id",
                 "status",
                 "user_id"
             ],
             "properties": {
-                "cart": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Cart"
-                },
-                "cart_id": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
                 },
@@ -3705,12 +3728,6 @@ var doc = `{
                 "title"
             ],
             "properties": {
-                "carts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Cart"
-                    }
-                },
                 "catalogs": {
                     "type": "array",
                     "items": {
@@ -3842,14 +3859,10 @@ var doc = `{
         "order.order": {
             "type": "object",
             "required": [
-                "cart_id",
                 "payment_id",
                 "user_id"
             ],
             "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
                 "payment_id": {
                     "type": "integer"
                 },

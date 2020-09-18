@@ -7,8 +7,6 @@ type Order struct {
 	Status    string  `gorm:"column:status" json:"status" validate:"required"`
 	PaymentID uint    `gorm:"column:payment_id" json:"payment_id" validate:"required"`
 	Payment   Payment `gorm:"foreignkey:payment_id;association_foreignkey:id" json:"payment"`
-	CartID    uint    `gorm:"column:cart_id" json:"cart_id" validate:"required"`
-	Cart      Cart    `gorm:"foreignkey:cart_id;association_foreignkey:id" json:"cart"`
 }
 
 // OrderItem model

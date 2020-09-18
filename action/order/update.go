@@ -69,7 +69,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		UserID:    order.UserID,
 		PaymentID: order.PaymentID,
 		Status:    order.Status,
-		CartID:    order.CartID,
 	}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result).Error
 
 	if err != nil {
@@ -86,7 +85,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"user_id":    result.UserID,
 		"status":     result.Status,
 		"payment_id": result.PaymentID,
-		"cart_id":    result.CartID,
 	}
 
 	err = meili.UpdateDocument(meiliObj)

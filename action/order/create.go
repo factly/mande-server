@@ -46,7 +46,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 		UserID:    order.UserID,
 		Status:    order.Status,
 		PaymentID: order.PaymentID,
-		CartID:    order.CartID,
 	}
 
 	tx := model.DB.Begin()
@@ -68,7 +67,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"user_id":    result.UserID,
 		"status":     result.Status,
 		"payment_id": result.PaymentID,
-		"cart_id":    result.CartID,
 	}
 
 	err = meili.AddDocument(meiliObj)
