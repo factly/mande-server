@@ -1,7 +1,6 @@
 package order
 
 import (
-	"errors"
 	"regexp"
 	"time"
 
@@ -23,21 +22,6 @@ var Order map[string]interface{} = map[string]interface{}{
 	"razorpay_order_id": "razor_001",
 }
 
-var undecodableOrder map[string]interface{} = map[string]interface{}{
-	"user_id":           "1",
-	"status":            43,
-	"payment_id":        "1",
-	"razorpay_order_id": 213,
-}
-
-var invalidOrder map[string]interface{} = map[string]interface{}{
-	"userid":         1,
-	"status":         "teststatus",
-	"paymentid":      1,
-	"cartid":         1,
-	"razorpay_orded": "razor_001",
-}
-
 var orderlist []map[string]interface{} = []map[string]interface{}{
 	{
 		"user_id":           1,
@@ -57,9 +41,6 @@ var OrderCols []string = []string{"id", "created_at", "updated_at", "deleted_at"
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_order"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_order"`)
-var errOrderCartFK error = errors.New(`pq: insert or update on table "dp_order" violates foreign key constraint "dp_order_cart_id_dp_cart_id_foreign"`)
-var errOrderPaymentFK error = errors.New(`pq: insert or update on table "dp_order" violates foreign key constraint "dp_order_payment_id_dp_payment_id_foreign"`)
-var errOrderUserFK error = errors.New(`pq: insert or update on table "dp_order" violates foreign key constraint "dp_order_user_id_dp_user_id_foreign"`)
 
 const basePath string = "/orders"
 const path string = "/orders/{order_id}"
