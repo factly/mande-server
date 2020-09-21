@@ -205,8 +205,8 @@ func updateMockWithoutMedium(mock sqlmock.Sqlmock) {
 
 }
 
-func productCartExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_cart" INNER JOIN`)).
+func productOrderExpect(mock sqlmock.Sqlmock, count int) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order" INNER JOIN`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
@@ -217,11 +217,11 @@ func productCatalogExpect(mock sqlmock.Sqlmock, count int) {
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
-func productOrderExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order_item"`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
-}
+// func productOrderExpect(mock sqlmock.Sqlmock, count int) {
+// 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order_item"`)).
+// 		WithArgs(1).
+// 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
+// }
 
 func validateAssociations(result *httpexpect.Object) {
 	result.Value("currency").

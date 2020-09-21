@@ -47,7 +47,6 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var totAssociated int
-	// check if product is associated with cart
 	product := new(model.Product)
 	product.ID = uint(id)
 

@@ -32,8 +32,6 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("delete user", func(t *testing.T) {
 		UserSelectMock(mock)
 
-		userCartExpect(mock, 0)
-
 		userMembershipExpect(mock, 0)
 
 		userOrderExpect(mock, 0)
@@ -72,23 +70,8 @@ func TestDeleteUser(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("user associated with cart", func(t *testing.T) {
-		UserSelectMock(mock)
-
-		userCartExpect(mock, 1)
-
-		e.DELETE(path).
-			WithPath("user_id", "1").
-			Expect().
-			Status(http.StatusUnprocessableEntity)
-
-		test.ExpectationsMet(t, mock)
-	})
-
 	t.Run("user associated with membership", func(t *testing.T) {
 		UserSelectMock(mock)
-
-		userCartExpect(mock, 0)
 
 		userMembershipExpect(mock, 1)
 
@@ -102,8 +85,6 @@ func TestDeleteUser(t *testing.T) {
 
 	t.Run("user associated with order", func(t *testing.T) {
 		UserSelectMock(mock)
-
-		userCartExpect(mock, 0)
 
 		userMembershipExpect(mock, 0)
 
@@ -120,8 +101,6 @@ func TestDeleteUser(t *testing.T) {
 	t.Run("delete user when meili is down", func(t *testing.T) {
 		gock.Off()
 		UserSelectMock(mock)
-
-		userCartExpect(mock, 0)
 
 		userMembershipExpect(mock, 0)
 

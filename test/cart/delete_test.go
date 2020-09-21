@@ -30,24 +30,18 @@ func TestDeleteCart(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("delete cart", func(t *testing.T) {
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
-
-		cartOrderExpect(mock, 0)
+	t.Run("delete cart item", func(t *testing.T) {
+		CartItemSelectMock(mock)
 
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart" SET "deleted_at"=`)).
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart_item" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 
 		e.DELETE(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusOK)
 
@@ -57,10 +51,11 @@ func TestDeleteCart(t *testing.T) {
 	t.Run("cart record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(CartCols))
+			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.DELETE(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -69,89 +64,43 @@ func TestDeleteCart(t *testing.T) {
 
 	t.Run("invalid cart id", func(t *testing.T) {
 		e.DELETE(path).
-			WithPath("cart_id", "abc").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("cart is associated with order", func(t *testing.T) {
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
-
-		cartOrderExpect(mock, 1)
-
-		e.DELETE(path).
-			WithPath("cart_id", "1").
-			Expect().
-			Status(http.StatusUnprocessableEntity)
-
-		test.ExpectationsMet(t, mock)
-	})
-
 	t.Run("deleting cart items fail", func(t *testing.T) {
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
-
-		cartOrderExpect(mock, 0)
+		CartItemSelectMock(mock)
 
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
-			WillReturnError(errors.New("cannot delete products"))
-		mock.ExpectRollback()
-
-		e.DELETE(path).
-			WithPath("cart_id", "1").
-			Expect().
-			Status(http.StatusInternalServerError)
-
-		test.ExpectationsMet(t, mock)
-	})
-
-	t.Run("deleting cart fails", func(t *testing.T) {
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
-
-		cartOrderExpect(mock, 0)
-
-		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart" SET "deleted_at"=`)).
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart_item" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
-			WillReturnError(errors.New("cannot delete cart"))
+			WillReturnError(errors.New("cannot delete cart items"))
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("delete cart when meili is down", func(t *testing.T) {
+	t.Run("delete cart item when meili is down", func(t *testing.T) {
 		gock.Off()
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
-
-		cartOrderExpect(mock, 0)
+		CartItemSelectMock(mock)
 
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart" SET "deleted_at"=`)).
+		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_cart_item" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
 
