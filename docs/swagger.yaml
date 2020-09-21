@@ -670,15 +670,6 @@ definitions:
     - first_name
     - last_name
     type: object
-  order.order:
-    properties:
-      payment_id:
-        type: integer
-      razorpay_order_id:
-        type: string
-      status:
-        type: string
-    type: object
   order.paging:
     properties:
       nodes:
@@ -1823,12 +1814,6 @@ paths:
         name: X-User
         required: true
         type: string
-      - description: Order object
-        in: body
-        name: Order
-        required: true
-        schema:
-          $ref: '#/definitions/order.order'
       produces:
       - application/json
       responses:
@@ -1889,36 +1874,6 @@ paths:
               type: string
             type: array
       summary: Show a orders by id
-      tags:
-      - Order
-    put:
-      description: Update orders by ID
-      operationId: update-orders-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order
-        in: body
-        name: Order
-        schema:
-          $ref: '#/definitions/order.order'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Order'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a orders by id
       tags:
       - Order
   /payments:

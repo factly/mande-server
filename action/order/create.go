@@ -1,8 +1,6 @@
 package order
 
 import (
-	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
@@ -11,7 +9,6 @@ import (
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
-	"github.com/factly/x/validationx"
 )
 
 // create - create orders
@@ -22,7 +19,6 @@ import (
 // @Consume json
 // @Produce  json
 // @Param X-User header string true "User ID"
-// @Param Order body order true "Order object"
 // @Success 201 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders [post]
@@ -34,28 +30,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order := &order{}
-
-	err = json.NewDecoder(r.Body).Decode(&order)
-	if err != nil {
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
-		return
-	}
-
-	validationError := validationx.Check(order)
-	if validationError != nil {
-		loggerx.Error(errors.New("validation error"))
-		errorx.Render(w, validationError)
-		return
-	}
-
-	// Create a razorpay order and get razorpay orderID
-
 	result := &model.Order{
-		UserID:          uint(uID),
-		Status:          "processing",
-		RazorpayOrderID: order.RazorpayOrderID,
+		UserID: uint(uID),
+		Status: "created",
 	}
 
 	tx := model.DB.Begin()
@@ -86,6 +63,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Create order in database
 	err = tx.Model(&model.Order{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 	if err != nil {
 		tx.Rollback()
@@ -93,6 +71,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
+
+	// Create a razorpay order and get razorpay orderID
+	// Change order status to initiated and add razorpay_id in order table
 
 	tx.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result)
 

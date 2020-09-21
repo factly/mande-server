@@ -4,13 +4,6 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Order request body
-type order struct {
-	Status          string `json:"status"`
-	PaymentID       uint   `json:"payment_id"`
-	RazorpayOrderID string `json:"razorpay_order_id"`
-}
-
 // Router - Group of order router
 func Router() chi.Router {
 	r := chi.NewRouter()
@@ -20,7 +13,6 @@ func Router() chi.Router {
 
 	r.Route("/{order_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /orders/{order_id} - read a single order by :order_id
-		r.Put("/", update)    // PUT /orders/{order_id} - update a single order by :order_id
 		r.Delete("/", delete) // DELETE /orders/{order_id} - delete a single order by :order_id
 	})
 

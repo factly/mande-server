@@ -1511,15 +1511,6 @@ var doc = `{
                         "name": "X-User",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "description": "Order object",
-                        "name": "Order",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/order.order"
-                        }
                     }
                 ],
                 "responses": {
@@ -1559,51 +1550,6 @@ var doc = `{
                         "name": "order_id",
                         "in": "path",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Order"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update orders by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Update a orders by id",
-                "operationId": "update-orders-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Order",
-                        "name": "Order",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/order.order"
-                        }
                     }
                 ],
                 "responses": {
@@ -3603,20 +3549,6 @@ var doc = `{
                     "type": "string"
                 },
                 "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "order.order": {
-            "type": "object",
-            "properties": {
-                "payment_id": {
-                    "type": "integer"
-                },
-                "razorpay_order_id": {
-                    "type": "string"
-                },
-                "status": {
                     "type": "string"
                 }
             }
