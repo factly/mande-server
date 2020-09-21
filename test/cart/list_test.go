@@ -43,8 +43,6 @@ func TestListCartItems(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
 			WillReturnRows(sqlmock.NewRows(dataset.DatasetCols))
 
-		// product.EmptyProductAssociationsMock(mock)
-
 		e.GET(basePath).
 			WithHeader("X-User", "1").
 			Expect().
@@ -54,6 +52,13 @@ func TestListCartItems(t *testing.T) {
 			ContainsMap(map[string]interface{}{"total": 0})
 
 		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("invalid user header", func(t *testing.T) {
+		e.GET(basePath).
+			WithHeader("X-User", "anc").
+			Expect().
+			Status(http.StatusNotFound)
 	})
 
 	t.Run("get cart item list", func(t *testing.T) {

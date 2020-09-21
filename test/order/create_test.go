@@ -3,10 +3,13 @@ package order
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/cart"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -40,6 +43,20 @@ func TestCreateOrder(t *testing.T) {
 			ContainsMap(Order)
 
 		validateAssociations(result)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("no cart items found", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_cart_item"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(cart.CartItemCols))
+
+		e.POST(basePath).
+			WithHeader("X-User", "1").
+			Expect().
+			Status(http.StatusUnprocessableEntity)
 
 		test.ExpectationsMet(t, mock)
 	})

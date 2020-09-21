@@ -104,6 +104,13 @@ func TestUpdateCart(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
+	t.Run("invalid user header", func(t *testing.T) {
+		e.POST(basePath).
+			WithHeader("X-User", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
 	t.Run("new product does not exist", func(t *testing.T) {
 		updateMock(mock, errCartItemProductFK)
 
