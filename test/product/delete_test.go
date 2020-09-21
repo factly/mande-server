@@ -37,8 +37,6 @@ func TestDeleteProduct(t *testing.T) {
 
 		datasetsAssociationSelectMock(mock, 1)
 
-		productCartExpect(mock, 0)
-
 		productCatalogExpect(mock, 0)
 
 		productOrderExpect(mock, 0)
@@ -90,8 +88,6 @@ func TestDeleteProduct(t *testing.T) {
 
 		datasetsAssociationSelectMock(mock, 1)
 
-		productCartExpect(mock, 0)
-
 		productCatalogExpect(mock, 0)
 
 		productOrderExpect(mock, 0)
@@ -116,31 +112,12 @@ func TestDeleteProduct(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("product is associated with cart", func(t *testing.T) {
-		ProductSelectMock(mock)
-
-		tagsAssociationSelectMock(mock, 1)
-
-		datasetsAssociationSelectMock(mock, 1)
-
-		productCartExpect(mock, 1)
-
-		e.DELETE(path).
-			WithPath("product_id", "1").
-			Expect().
-			Status(http.StatusUnprocessableEntity)
-
-		test.ExpectationsMet(t, mock)
-	})
-
 	t.Run("product is associated with catalog", func(t *testing.T) {
 		ProductSelectMock(mock)
 
 		tagsAssociationSelectMock(mock, 1)
 
 		datasetsAssociationSelectMock(mock, 1)
-
-		productCartExpect(mock, 0)
 
 		productCatalogExpect(mock, 1)
 
@@ -158,8 +135,6 @@ func TestDeleteProduct(t *testing.T) {
 		tagsAssociationSelectMock(mock, 1)
 
 		datasetsAssociationSelectMock(mock, 1)
-
-		productCartExpect(mock, 0)
 
 		productCatalogExpect(mock, 0)
 
@@ -180,8 +155,6 @@ func TestDeleteProduct(t *testing.T) {
 		tagsAssociationSelectMock(mock, 1)
 
 		datasetsAssociationSelectMock(mock, 1)
-
-		productCartExpect(mock, 0)
 
 		productCatalogExpect(mock, 0)
 

@@ -4,24 +4,23 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Cart request body
-type cart struct {
-	Status     string `json:"status"`
-	UserID     uint   `json:"user_id" validate:"required"`
-	ProductIDs []uint `json:"product_ids"`
+// CartItem request body
+type cartitem struct {
+	Status    string `json:"status" validate:"required"`
+	ProductID uint   `json:"product_id" validate:"required"`
 }
 
 // Router - Group of cart router
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /carts - return list of carts
-	r.Post("/", create) // POST /carts - create a new cart and persist it
+	r.Get("/", list)    // GET /carts - return list of cart items
+	r.Post("/", create) // POST /carts - add a new cart item
 
-	r.Route("/{cart_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /carts/{cart_id} - read a single cart by :cart_id
-		r.Put("/", update)    // PUT /carts/{cart_id} - update a single cart by :cart_id
-		r.Delete("/", delete) // DELETE /carts/{cart_id} - delete a single cart by :cart_id
+	r.Route("/{cartitem_id}", func(r chi.Router) {
+		r.Get("/", details)   // GET /carts/{cartitem_id} - get a single cart item
+		r.Put("/", update)    // PUT /carts/{cartitem_id} - update a cart item
+		r.Delete("/", delete) // DELETE /carts/{cartitem_id} - delete a cart item entry
 	})
 
 	return r

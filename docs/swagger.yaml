@@ -1,23 +1,20 @@
 basePath: /
 definitions:
-  cart.cart:
+  cart.cartitem:
     properties:
-      product_ids:
-        items:
-          type: integer
-        type: array
+      product_id:
+        type: integer
       status:
         type: string
-      user_id:
-        type: integer
     required:
-    - user_id
+    - product_id
+    - status
     type: object
   cart.paging:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.Cart'
+          $ref: '#/definitions/model.CartItem'
         type: array
       total:
         type: integer
@@ -208,24 +205,6 @@ definitions:
       total:
         type: integer
     type: object
-  item.orderItem:
-    properties:
-      extra_info:
-        type: string
-      product_id:
-        type: integer
-    required:
-    - product_id
-    type: object
-  item.paging:
-    properties:
-      nodes:
-        items:
-          $ref: '#/definitions/model.OrderItem'
-        type: array
-      total:
-        type: integer
-    type: object
   medium.medium:
     properties:
       alt_text:
@@ -285,7 +264,7 @@ definitions:
       total:
         type: integer
     type: object
-  model.Cart:
+  model.CartItem:
     properties:
       created_at:
         type: string
@@ -293,10 +272,11 @@ definitions:
         type: string
       id:
         type: integer
-      products:
-        items:
-          $ref: '#/definitions/model.Product'
-        type: array
+      product:
+        $ref: '#/definitions/model.Product'
+        type: object
+      product_id:
+        type: integer
       status:
         type: string
       updated_at:
@@ -304,6 +284,7 @@ definitions:
       user_id:
         type: integer
     required:
+    - product_id
     - status
     - user_id
     type: object
@@ -512,11 +493,6 @@ definitions:
     type: object
   model.Order:
     properties:
-      cart:
-        $ref: '#/definitions/model.Cart'
-        type: object
-      cart_id:
-        type: integer
       created_at:
         type: string
       deleted_at:
@@ -528,6 +504,12 @@ definitions:
         type: object
       payment_id:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+      razorpay_order_id:
+        type: string
       status:
         type: string
       updated_at:
@@ -535,34 +517,8 @@ definitions:
       user_id:
         type: integer
     required:
-    - cart_id
-    - payment_id
     - status
     - user_id
-    type: object
-  model.OrderItem:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      extra_info:
-        type: string
-      id:
-        type: integer
-      order_id:
-        type: integer
-      product:
-        $ref: '#/definitions/model.Product'
-        type: object
-      product_id:
-        type: integer
-      updated_at:
-        type: string
-    required:
-    - extra_info
-    - order_id
-    - product_id
     type: object
   model.Payment:
     properties:
@@ -581,6 +537,10 @@ definitions:
         type: string
       id:
         type: integer
+      razorpay_payment_id:
+        type: string
+      razorpay_signature:
+        type: string
       status:
         type: string
       updated_at:
@@ -614,10 +574,6 @@ definitions:
     type: object
   model.Product:
     properties:
-      carts:
-        items:
-          $ref: '#/definitions/model.Cart'
-        type: array
       catalogs:
         items:
           $ref: '#/definitions/model.Catalog'
@@ -642,6 +598,10 @@ definitions:
         type: integer
       id:
         type: integer
+      orders:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
       price:
         type: integer
       slug:
@@ -709,21 +669,6 @@ definitions:
     - email
     - first_name
     - last_name
-    type: object
-  order.order:
-    properties:
-      cart_id:
-        type: integer
-      payment_id:
-        type: integer
-      status:
-        type: string
-      user_id:
-        type: integer
-    required:
-    - cart_id
-    - payment_id
-    - user_id
     type: object
   order.paging:
     properties:
@@ -881,11 +826,15 @@ info:
   title: Data portal API
   version: "1.0"
 paths:
-  /carts:
+  /cartitems:
     get:
       description: Get all carts
       operationId: get-all-carts
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -908,19 +857,24 @@ paths:
       description: create cart
       operationId: add-cart
       parameters:
-      - description: Cart object
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Cart Item object
         in: body
-        name: Cart
+        name: CartItem
         required: true
         schema:
-          $ref: '#/definitions/cart.cart'
+          $ref: '#/definitions/cart.cartitem'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.Cart'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -930,14 +884,19 @@ paths:
       summary: Create cart
       tags:
       - Cart
-  /carts/{cart_id}:
+  /cartitems/{cartitem_id}:
     delete:
       description: Delete cart by ID
       operationId: delete-cart-by-id
       parameters:
-      - description: Cart ID
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Cart Item ID
         in: path
-        name: cart_id
+        name: cartitem_id
         required: true
         type: string
       responses:
@@ -955,9 +914,14 @@ paths:
       description: Get cart by ID
       operationId: get-cart-by-id
       parameters:
-      - description: Cart ID
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Cart Item ID
         in: path
-        name: cart_id
+        name: cartitem_id
         required: true
         type: string
       produces:
@@ -966,7 +930,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Cart'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -980,23 +944,28 @@ paths:
       description: Update cart by ID
       operationId: update-cart-by-id
       parameters:
-      - description: Cart ID
-        in: path
-        name: cart_id
+      - description: User ID
+        in: header
+        name: X-User
         required: true
         type: string
-      - description: Cart
+      - description: Cart Item ID
+        in: path
+        name: cartitem_id
+        required: true
+        type: string
+      - description: Cart Item object
         in: body
-        name: Cart
+        name: CartItem
         schema:
-          $ref: '#/definitions/cart.cart'
+          $ref: '#/definitions/cart.cartitem'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Cart'
+            $ref: '#/definitions/model.CartItem'
         "400":
           description: Bad Request
           schema:
@@ -1840,12 +1809,11 @@ paths:
       description: create orders
       operationId: add-orders
       parameters:
-      - description: Order object
-        in: body
-        name: Order
+      - description: User ID
+        in: header
+        name: X-User
         required: true
-        schema:
-          $ref: '#/definitions/order.order'
+        type: string
       produces:
       - application/json
       responses:
@@ -1908,180 +1876,6 @@ paths:
       summary: Show a orders by id
       tags:
       - Order
-    put:
-      description: Update orders by ID
-      operationId: update-orders-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order
-        in: body
-        name: Order
-        schema:
-          $ref: '#/definitions/order.order'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Order'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a orders by id
-      tags:
-      - Order
-  /orders/{order_id}/items:
-    get:
-      description: Get all order items
-      operationId: get-all-order-items
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/item.paging'
-      summary: Show all order items
-      tags:
-      - OrderItem
-    post:
-      description: create order items
-      operationId: add-order-item
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order item object
-        in: body
-        name: OrderItem
-        required: true
-        schema:
-          $ref: '#/definitions/item.orderItem'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-      summary: Create order items
-      tags:
-      - OrderItem
-  /orders/{order_id}/items/{item_id}:
-    delete:
-      description: Delete order item by ID
-      operationId: delete-order-items-by-id
-      parameters:
-      - description: OrderItem ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      responses:
-        "200": {}
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a order item
-      tags:
-      - OrderItem
-    get:
-      description: Get order item by ID
-      operationId: get-order-item-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order item ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a order item by id
-      tags:
-      - OrderItem
-    put:
-      description: Update orderItems by ID
-      operationId: update-orderItems-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: OrderItem ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: OrderItem
-        in: body
-        name: OrderItem
-        schema:
-          $ref: '#/definitions/item.orderItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a orderItems by id
-      tags:
-      - OrderItem
   /payments:
     get:
       description: Get all payments

@@ -32,21 +32,15 @@ func TestCreateCart(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("create a cart", func(t *testing.T) {
-		product.ProductSelectMock(mock)
-
+	t.Run("create a cart item", func(t *testing.T) {
 		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_cart"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Cart["status"], Cart["user_id"]).
+		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-		mock.ExpectExec(`INSERT INTO "dp_cart_item"`).
-			WithArgs(1, 1, 1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
+		CartItemSelectMock(mock)
 
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
+		product.ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -59,62 +53,67 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.POST(basePath).
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(CartReceive)
+			ContainsMap(CartItem)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("unprocessable cart body", func(t *testing.T) {
+	t.Run("unprocessable cart item body", func(t *testing.T) {
 		e.POST(basePath).
-			WithJSON(invalidCart).
+			WithHeader("X-User", "1").
+			WithJSON(invalidCartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("empty cart body", func(t *testing.T) {
+	t.Run("empty cart item body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+	})
+
+	t.Run("invalid user header", func(t *testing.T) {
+		e.POST(basePath).
+			WithHeader("X-User", "abc").
+			Expect().
+			Status(http.StatusNotFound)
 	})
 
 	t.Run("user does not exist", func(t *testing.T) {
-		product.ProductSelectMock(mock)
 
 		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_cart"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Cart["status"], Cart["user_id"]).
-			WillReturnError(errCartProductFK)
+		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
+			WillReturnError(errCartItemProductFK)
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("create a cart when meili is down", func(t *testing.T) {
+	t.Run("create a cart item when meili is down", func(t *testing.T) {
 		gock.Off()
-		product.ProductSelectMock(mock)
 
 		mock.ExpectBegin()
-		mock.ExpectQuery(`INSERT INTO "dp_cart"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Cart["status"], Cart["user_id"]).
+		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-		mock.ExpectExec(`INSERT INTO "dp_cart_item"`).
-			WithArgs(1, 1, 1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
+		CartItemSelectMock(mock)
 
-		CartSelectMock(mock)
-
-		productsAssociationSelectMock(mock, 1)
+		product.ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -127,7 +126,8 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)

@@ -52,12 +52,6 @@ func UserSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, User["email"], User["first_name"], User["last_name"]))
 }
 
-func userCartExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_cart`)).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
-}
-
 func userMembershipExpect(mock sqlmock.Sqlmock, count int) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_membership`)).
 		WithArgs(1).

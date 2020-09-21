@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -22,14 +23,15 @@ import (
 // @ID update-cart-by-id
 // @Produce json
 // @Consume json
-// @Param cart_id path string true "Cart ID"
-// @Param Cart body cart false "Cart"
-// @Success 200 {object} model.Cart
+// @Param X-User header string true "User ID"
+// @Param cartitem_id path string true "Cart Item ID"
+// @Param CartItem body cartitem false "Cart Item object"
+// @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
-// @Router /carts/{cart_id} [put]
+// @Router /cartitems/{cartitem_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
-	cartID := chi.URLParam(r, "cart_id")
-	id, err := strconv.Atoi(cartID)
+	cartitemID := chi.URLParam(r, "cartitem_id")
+	id, err := strconv.Atoi(cartitemID)
 
 	if err != nil {
 		loggerx.Error(err)
@@ -37,28 +39,34 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart := &cart{}
+	uID, err := util.GetUser(r)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
-	err = json.NewDecoder(r.Body).Decode(&cart)
+	cartitem := &cartitem{}
+
+	err = json.NewDecoder(r.Body).Decode(&cartitem)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
 		return
 	}
 
-	validationError := validationx.Check(cart)
+	validationError := validationx.Check(cartitem)
 	if validationError != nil {
 		loggerx.Error(errors.New("validation error"))
 		errorx.Render(w, validationError)
 		return
 	}
 
-	result := &model.Cart{}
+	result := &model.CartItem{}
 	result.ID = uint(id)
-	result.Products = make([]model.Product, 0)
 
 	// check record exist or not
-	err = model.DB.Model(&model.Cart{}).Preload("Products").First(&result).Error
+	err = model.DB.Model(&model.CartItem{}).First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
@@ -67,28 +75,11 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldProducts := result.Products
-	newProducts := make([]model.Product, 0)
-	model.DB.Model(&model.Product{}).Where(cart.ProductIDs).Find(&newProducts)
-
-	if len(oldProducts) > 0 {
-		err = tx.Model(&result).Association("Products").Delete(oldProducts).Error
-		if err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-	}
-	if len(newProducts) == 0 {
-		newProducts = nil
-	}
-
-	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Cart{
-		Status:   cart.Status,
-		UserID:   cart.UserID,
-		Products: newProducts,
-	}).Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
+	err = tx.Model(&result).Updates(model.CartItem{
+		Status:    cartitem.Status,
+		UserID:    uint(uID),
+		ProductID: cartitem.ProductID,
+	}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
 
 	if err != nil {
 		tx.Rollback()
@@ -99,11 +90,11 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	// Update into meili index
 	meiliObj := map[string]interface{}{
-		"id":          result.ID,
-		"kind":        "cart",
-		"user_id":     result.UserID,
-		"status":      result.Status,
-		"product_ids": cart.ProductIDs,
+		"id":         result.ID,
+		"kind":       "cartitem",
+		"user_id":    result.UserID,
+		"status":     result.Status,
+		"product_id": result.ProductID,
 	}
 
 	err = meili.UpdateDocument(meiliObj)

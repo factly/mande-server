@@ -59,7 +59,7 @@ func RegisterRoutes() http.Handler {
 	r.Mount("/tags", tag.Router())
 	r.Mount("/formats", format.Router())
 	r.Mount("/catalogs", catalog.Router())
-	r.Mount("/carts", cart.Router())
+	r.Mount("/cartitems", cart.Router())
 	r.Mount("/orders", order.Router())
 	r.Mount("/datasets", dataset.Router())
 	r.Mount("/media", medium.Router())

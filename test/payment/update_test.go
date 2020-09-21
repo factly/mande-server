@@ -33,7 +33,7 @@ func TestUpdatePayment(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(PaymentCols).
-				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
+				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status", "", ""))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
@@ -97,7 +97,7 @@ func TestUpdatePayment(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(PaymentCols).
-				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
+				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status", "", ""))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).
@@ -119,7 +119,7 @@ func TestUpdatePayment(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(PaymentCols).
-				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status"))
+				AddRow(1, time.Now(), time.Now(), nil, 100, "gateway", 1, "status", "", ""))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_payment\" SET (.+)  WHERE (.+) \"dp_payment\".\"id\" = `).

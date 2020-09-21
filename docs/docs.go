@@ -32,7 +32,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/carts": {
+        "/cartitems": {
             "get": {
                 "description": "Get all carts",
                 "produces": [
@@ -44,6 +44,12 @@ var doc = `{
                 "summary": "Show all carts",
                 "operationId": "get-all-carts",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
                     {
                         "type": "string",
                         "description": "limt per page",
@@ -78,12 +84,19 @@ var doc = `{
                 "operationId": "add-cart",
                 "parameters": [
                     {
-                        "description": "Cart object",
-                        "name": "Cart",
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Cart Item object",
+                        "name": "CartItem",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/cart.cart"
+                            "$ref": "#/definitions/cart.cartitem"
                         }
                     }
                 ],
@@ -91,7 +104,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -106,7 +119,7 @@ var doc = `{
                 }
             }
         },
-        "/carts/{cart_id}": {
+        "/cartitems/{cartitem_id}": {
             "get": {
                 "description": "Get cart by ID",
                 "produces": [
@@ -120,8 +133,15 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     }
@@ -130,7 +150,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -157,17 +177,24 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Cart",
-                        "name": "Cart",
+                        "description": "Cart Item object",
+                        "name": "CartItem",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/cart.cart"
+                            "$ref": "#/definitions/cart.cartitem"
                         }
                     }
                 ],
@@ -175,7 +202,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Cart"
+                            "$ref": "#/definitions/model.CartItem"
                         }
                     },
                     "400": {
@@ -199,8 +226,15 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart ID",
-                        "name": "cart_id",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cart Item ID",
+                        "name": "cartitem_id",
                         "in": "path",
                         "required": true
                     }
@@ -1472,13 +1506,11 @@ var doc = `{
                 "operationId": "add-orders",
                 "parameters": [
                     {
-                        "description": "Order object",
-                        "name": "Order",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/order.order"
-                        }
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1538,51 +1570,6 @@ var doc = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update orders by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Update a orders by id",
-                "operationId": "update-orders-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Order",
-                        "name": "Order",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/order.order"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Order"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
             "delete": {
                 "description": "Delete orders by ID",
                 "tags": [
@@ -1591,219 +1578,6 @@ var doc = `{
                 "summary": "Delete a orders",
                 "operationId": "delete-orders-by-id",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {},
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/{order_id}/items": {
-            "get": {
-                "description": "Get all order items",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Show all order items",
-                "operationId": "get-all-order-items",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/item.paging"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "create order items",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Create order items",
-                "operationId": "add-order-item",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Order item object",
-                        "name": "OrderItem",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/item.orderItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/{order_id}/items/{item_id}": {
-            "get": {
-                "description": "Get order item by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Show a order item by id",
-                "operationId": "get-order-item-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Order item ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update orderItems by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Update a orderItems by id",
-                "operationId": "update-orderItems-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "OrderItem ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "OrderItem",
-                        "name": "OrderItem",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/item.orderItem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.OrderItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete order item by ID",
-                "tags": [
-                    "OrderItem"
-                ],
-                "summary": "Delete a order item",
-                "operationId": "delete-order-items-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OrderItem ID",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "Order ID",
@@ -2780,23 +2554,18 @@ var doc = `{
         }
     },
     "definitions": {
-        "cart.cart": {
+        "cart.cartitem": {
             "type": "object",
             "required": [
-                "user_id"
+                "product_id",
+                "status"
             ],
             "properties": {
-                "product_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                "product_id": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -2806,7 +2575,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Cart"
+                        "$ref": "#/definitions/model.CartItem"
                     }
                 },
                 "total": {
@@ -3095,34 +2864,6 @@ var doc = `{
                 }
             }
         },
-        "item.orderItem": {
-            "type": "object",
-            "required": [
-                "product_id"
-            ],
-            "properties": {
-                "extra_info": {
-                    "type": "string"
-                },
-                "product_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "item.paging": {
-            "type": "object",
-            "properties": {
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.OrderItem"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
         "medium.medium": {
             "type": "object",
             "required": [
@@ -3212,9 +2953,10 @@ var doc = `{
                 }
             }
         },
-        "model.Cart": {
+        "model.CartItem": {
             "type": "object",
             "required": [
+                "product_id",
                 "status",
                 "user_id"
             ],
@@ -3228,11 +2970,12 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Product"
-                    }
+                "product": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Product"
+                },
+                "product_id": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
@@ -3550,19 +3293,10 @@ var doc = `{
         "model.Order": {
             "type": "object",
             "required": [
-                "cart_id",
-                "payment_id",
                 "status",
                 "user_id"
             ],
             "properties": {
-                "cart": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Cart"
-                },
-                "cart_id": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
                 },
@@ -3579,6 +3313,15 @@ var doc = `{
                 "payment_id": {
                     "type": "integer"
                 },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Product"
+                    }
+                },
+                "razorpay_order_id": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
@@ -3587,41 +3330,6 @@ var doc = `{
                 },
                 "user_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "model.OrderItem": {
-            "type": "object",
-            "required": [
-                "extra_info",
-                "order_id",
-                "product_id"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "extra_info": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "order_id": {
-                    "type": "integer"
-                },
-                "product": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.Product"
-                },
-                "product_id": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
@@ -3655,6 +3363,12 @@ var doc = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "razorpay_payment_id": {
+                    "type": "string"
+                },
+                "razorpay_signature": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
@@ -3705,12 +3419,6 @@ var doc = `{
                 "title"
             ],
             "properties": {
-                "carts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Cart"
-                    }
-                },
                 "catalogs": {
                     "type": "array",
                     "items": {
@@ -3745,6 +3453,12 @@ var doc = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Order"
+                    }
                 },
                 "price": {
                     "type": "integer"
@@ -3836,28 +3550,6 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
-                }
-            }
-        },
-        "order.order": {
-            "type": "object",
-            "required": [
-                "cart_id",
-                "payment_id",
-                "user_id"
-            ],
-            "properties": {
-                "cart_id": {
-                    "type": "integer"
-                },
-                "payment_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },

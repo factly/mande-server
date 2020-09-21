@@ -33,9 +33,11 @@ func TestDeleteOrder(t *testing.T) {
 	t.Run("delete order", func(t *testing.T) {
 		OrderSelectMock(mock)
 
+		associatedProductsSelectMock(mock)
+
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order_item" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET "deleted_at"=`)).
@@ -44,6 +46,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -57,6 +60,7 @@ func TestDeleteOrder(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
 		e.DELETE(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -66,34 +70,20 @@ func TestDeleteOrder(t *testing.T) {
 
 	t.Run("invalid order id", func(t *testing.T) {
 		e.DELETE(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("deleting order items fail", func(t *testing.T) {
-		OrderSelectMock(mock)
-
-		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order_item" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
-			WillReturnError(errors.New("cannot delete order_items"))
-		mock.ExpectRollback()
-
-		e.DELETE(path).
-			WithPath("order_id", "1").
-			Expect().
-			Status(http.StatusInternalServerError)
-
-		test.ExpectationsMet(t, mock)
-	})
-
 	t.Run("deleting order fail", func(t *testing.T) {
 		OrderSelectMock(mock)
 
+		associatedProductsSelectMock(mock)
+
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order_item" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET "deleted_at"=`)).
@@ -102,6 +92,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -113,9 +104,11 @@ func TestDeleteOrder(t *testing.T) {
 		gock.Off()
 		OrderSelectMock(mock)
 
+		associatedProductsSelectMock(mock)
+
 		mock.ExpectBegin()
-		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order_item" SET "deleted_at"=`)).
-			WithArgs(test.AnyTime{}, 1).
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET "deleted_at"=`)).
@@ -124,6 +117,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)

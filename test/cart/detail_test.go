@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
@@ -27,10 +28,10 @@ func TestDetailCart(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("get cart by id", func(t *testing.T) {
-		CartSelectMock(mock)
+	t.Run("get cart item by id", func(t *testing.T) {
+		CartItemSelectMock(mock)
 
-		productsAssociationSelectMock(mock, 1)
+		product.ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -41,32 +42,35 @@ func TestDetailCart(t *testing.T) {
 		dataset.DatasetSelectMock(mock)
 
 		e.GET(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(CartReceive)
+			ContainsMap(CartItem)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("cart record not found", func(t *testing.T) {
+	t.Run("cart item record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(CartCols))
+			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.GET(path).
-			WithPath("cart_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid cart id", func(t *testing.T) {
+	t.Run("invalid cart item id", func(t *testing.T) {
 		e.GET(path).
-			WithPath("cart_id", "abc").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})

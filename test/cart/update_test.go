@@ -1,10 +1,8 @@
 package cart
 
 import (
-	"errors"
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -13,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
@@ -33,12 +32,12 @@ func TestUpdateCart(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
-	t.Run("update cart", func(t *testing.T) {
+	t.Run("update cart item", func(t *testing.T) {
 		updateMock(mock, nil)
 
-		CartSelectMock(mock)
+		CartItemSelectMock(mock)
 
-		productsAssociationSelectMock(mock, 1)
+		product.ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -51,90 +50,87 @@ func TestUpdateCart(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(CartReceive)
+			ContainsMap(CartItem)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("cart record not found", func(t *testing.T) {
+	t.Run("cart item record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(CartCols))
+			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusNotFound)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("unprocessable cart body", func(t *testing.T) {
+	t.Run("unprocessable cart item body", func(t *testing.T) {
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(invalidCart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(invalidCartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("undecodable cart body", func(t *testing.T) {
+	t.Run("undecodable cart item body", func(t *testing.T) {
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(undecodableCart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(undecodableCartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("invalid cart id", func(t *testing.T) {
+	t.Run("invalid cart item id", func(t *testing.T) {
 		e.PUT(path).
-			WithPath("cart_id", "abc").
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "abc").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("new user does not exist", func(t *testing.T) {
-		updateMock(mock, errCartProductFK)
+	t.Run("invalid user header", func(t *testing.T) {
+		e.POST(basePath).
+			WithHeader("X-User", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
+	t.Run("new product does not exist", func(t *testing.T) {
+		updateMock(mock, errCartItemProductFK)
 
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("deleting old products fails", func(t *testing.T) {
-		preUpdateMock(mock)
-
-		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_cart_item"`)).
-			WillReturnError(errors.New("cannot delete products"))
-
-		mock.ExpectRollback()
-
-		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(Cart).
-			Expect().
-			Status(http.StatusInternalServerError)
-		test.ExpectationsMet(t, mock)
-	})
-
-	t.Run("update cart when meili is down", func(t *testing.T) {
+	t.Run("update cart item when meili is down", func(t *testing.T) {
 		gock.Off()
 		updateMock(mock, nil)
 
-		CartSelectMock(mock)
+		CartItemSelectMock(mock)
 
-		productsAssociationSelectMock(mock, 1)
+		product.ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -147,8 +143,9 @@ func TestUpdateCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.PUT(path).
-			WithPath("cart_id", "1").
-			WithJSON(Cart).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)

@@ -37,7 +37,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Products").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -47,15 +47,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	err = tx.Where(&model.OrderItem{
-		OrderID: uint(id),
-	}).Delete(&model.OrderItem{}).Error
-	if err != nil {
-		tx.Rollback()
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.DBError()))
-		return
-	}
+	tx.Model(&result).Association("Products").Delete(result.Products)
 
 	err = tx.Delete(&result).Error
 	if err != nil {

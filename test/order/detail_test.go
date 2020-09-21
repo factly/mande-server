@@ -8,9 +8,10 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/cart"
 	"github.com/factly/data-portal-server/test/currency"
+	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/payment"
+	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -33,9 +34,14 @@ func TestDetailOrder(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
-		cart.CartSelectMock(mock)
+		associatedProductsSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		tag.TagSelectMock(mock)
 
 		result := e.GET(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -54,6 +60,7 @@ func TestDetailOrder(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
 		e.GET(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -63,6 +70,7 @@ func TestDetailOrder(t *testing.T) {
 
 	t.Run("invalid order id", func(t *testing.T) {
 		e.GET(path).
+			WithHeader("X-User", "1").
 			WithPath("order_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)

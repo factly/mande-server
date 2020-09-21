@@ -31,7 +31,7 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("create a payment", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		PaymentSelectMock(mock)
 		currency.CurrencySelectMock(mock)
@@ -64,7 +64,7 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("currency does not exist", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnError(errPaymentCurrencyFK)
 		mock.ExpectRollback()
 
@@ -80,7 +80,7 @@ func TestCreatePayment(t *testing.T) {
 		gock.Off()
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		PaymentSelectMock(mock)
 		currency.CurrencySelectMock(mock)

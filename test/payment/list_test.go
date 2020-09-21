@@ -48,8 +48,8 @@ func TestListPayment(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PaymentCols).
-				AddRow(1, time.Now(), time.Now(), nil, paymentlist[0]["amount"], paymentlist[0]["gateway"], paymentlist[0]["currency_id"], paymentlist[0]["status"]).
-				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"]))
+				AddRow(1, time.Now(), time.Now(), nil, paymentlist[0]["amount"], paymentlist[0]["gateway"], paymentlist[0]["currency_id"], paymentlist[0]["status"], paymentlist[0]["razorpay_payment_id"], paymentlist[0]["razorpay_signature"]).
+				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"], paymentlist[1]["razorpay_payment_id"], paymentlist[1]["razorpay_signature"]))
 
 		currency.CurrencySelectMock(mock)
 
@@ -74,7 +74,7 @@ func TestListPayment(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PaymentCols).
-				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"]))
+				AddRow(2, time.Now(), time.Now(), nil, paymentlist[1]["amount"], paymentlist[1]["gateway"], paymentlist[1]["currency_id"], paymentlist[1]["status"], paymentlist[1]["razorpay_payment_id"], paymentlist[1]["razorpay_signature"]))
 
 		currency.CurrencySelectMock(mock)
 

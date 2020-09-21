@@ -46,16 +46,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check if product is associated with cart
+	var totAssociated int
 	product := new(model.Product)
 	product.ID = uint(id)
-	totAssociated := model.DB.Model(product).Association("Carts").Count()
-
-	if totAssociated != 0 {
-		loggerx.Error(errors.New("product is associated with cart"))
-		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
-		return
-	}
 
 	// check if product is associated with catalog
 	totAssociated = model.DB.Model(product).Association("Catalogs").Count()
@@ -67,9 +60,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if product is associated with order
-	model.DB.Model(&model.OrderItem{}).Where(&model.OrderItem{
-		ProductID: uint(id),
-	}).Count(&totAssociated)
+	totAssociated = model.DB.Model(product).Association("Orders").Count()
 
 	if totAssociated != 0 {
 		loggerx.Error(errors.New("product is associated with order"))

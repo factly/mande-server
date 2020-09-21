@@ -3,13 +3,13 @@ package order
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/cart"
-	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/payment"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -30,20 +30,12 @@ func TestCreateOrder(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("create a order", func(t *testing.T) {
-		insertMock(mock, nil)
 
-		OrderSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
-
-		cart.CartSelectMock(mock)
-
+		insertMock(mock)
 		mock.ExpectCommit()
 
 		result := e.POST(basePath).
-			WithJSON(Order).
+			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -55,64 +47,34 @@ func TestCreateOrder(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("unprocessable order body", func(t *testing.T) {
+	t.Run("no cart items found", func(t *testing.T) {
+		mock.ExpectBegin()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_cart_item"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(cart.CartItemCols))
+
 		e.POST(basePath).
-			WithJSON(invalidOrder).
+			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
+
+		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("empty order body", func(t *testing.T) {
+	t.Run("invalid user header", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeader("X-User", "abc").
 			Expect().
-			Status(http.StatusUnprocessableEntity)
-	})
-
-	t.Run("payment does not exist", func(t *testing.T) {
-		insertMock(mock, errOrderPaymentFK)
-		mock.ExpectRollback()
-
-		e.POST(basePath).
-			WithJSON(Order).
-			Expect().
-			Status(http.StatusInternalServerError)
-	})
-
-	t.Run("user does not exist", func(t *testing.T) {
-		insertMock(mock, errOrderUserFK)
-		mock.ExpectRollback()
-
-		e.POST(basePath).
-			WithJSON(Order).
-			Expect().
-			Status(http.StatusInternalServerError)
-	})
-
-	t.Run("cart does not exist", func(t *testing.T) {
-		insertMock(mock, errOrderCartFK)
-		mock.ExpectRollback()
-
-		e.POST(basePath).
-			WithJSON(Order).
-			Expect().
-			Status(http.StatusInternalServerError)
+			Status(http.StatusNotFound)
 	})
 
 	t.Run("create a order when meili is down", func(t *testing.T) {
 		gock.Off()
-		insertMock(mock, nil)
-
-		OrderSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
-
-		cart.CartSelectMock(mock)
-
+		insertMock(mock)
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeader("X-User", "1").
 			WithJSON(Order).
 			Expect().
 			Status(http.StatusInternalServerError)

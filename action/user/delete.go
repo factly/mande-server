@@ -45,19 +45,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check if user is associated with cart
-	var totAssociated int
-	model.DB.Model(&model.Cart{}).Where(&model.Cart{
-		UserID: uint(id),
-	}).Count(&totAssociated)
-
-	if totAssociated != 0 {
-		loggerx.Error(errors.New("user is associated with cart"))
-		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
-		return
-	}
-
 	// check if user is associated with membership
+	var totAssociated int
 	model.DB.Model(&model.Membership{}).Where(&model.Membership{
 		UserID: uint(id),
 	}).Count(&totAssociated)
