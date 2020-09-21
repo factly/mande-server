@@ -66,10 +66,10 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 	err = tx.Model(&result).Updates(model.Order{
-		UserID:    order.UserID,
+		// UserID:    order.UserID,
 		PaymentID: order.PaymentID,
 		Status:    order.Status,
-	}).Preload("Payment").Preload("Payment.Currency").Preload("Cart").First(&result).Error
+	}).Preload("Payment").Preload("Payment.Currency").First(&result).Error
 
 	if err != nil {
 		tx.Rollback()

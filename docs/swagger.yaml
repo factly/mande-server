@@ -205,24 +205,6 @@ definitions:
       total:
         type: integer
     type: object
-  item.orderItem:
-    properties:
-      extra_info:
-        type: string
-      product_id:
-        type: integer
-    required:
-    - product_id
-    type: object
-  item.paging:
-    properties:
-      nodes:
-        items:
-          $ref: '#/definitions/model.OrderItem'
-        type: array
-      total:
-        type: integer
-    type: object
   medium.medium:
     properties:
       alt_text:
@@ -522,6 +504,12 @@ definitions:
         type: object
       payment_id:
         type: integer
+      products:
+        items:
+          $ref: '#/definitions/model.Product'
+        type: array
+      razorpay_order_id:
+        type: string
       status:
         type: string
       updated_at:
@@ -529,33 +517,8 @@ definitions:
       user_id:
         type: integer
     required:
-    - payment_id
     - status
     - user_id
-    type: object
-  model.OrderItem:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      extra_info:
-        type: string
-      id:
-        type: integer
-      order_id:
-        type: integer
-      product:
-        $ref: '#/definitions/model.Product'
-        type: object
-      product_id:
-        type: integer
-      updated_at:
-        type: string
-    required:
-    - extra_info
-    - order_id
-    - product_id
     type: object
   model.Payment:
     properties:
@@ -574,6 +537,10 @@ definitions:
         type: string
       id:
         type: integer
+      razorpay_payment_id:
+        type: string
+      razorpay_signature:
+        type: string
       status:
         type: string
       updated_at:
@@ -631,6 +598,10 @@ definitions:
         type: integer
       id:
         type: integer
+      orders:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
       price:
         type: integer
       slug:
@@ -703,13 +674,10 @@ definitions:
     properties:
       payment_id:
         type: integer
+      razorpay_order_id:
+        type: string
       status:
         type: string
-      user_id:
-        type: integer
-    required:
-    - payment_id
-    - user_id
     type: object
   order.paging:
     properties:
@@ -1850,6 +1818,11 @@ paths:
       description: create orders
       operationId: add-orders
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
       - description: Order object
         in: body
         name: Order
@@ -1948,150 +1921,6 @@ paths:
       summary: Update a orders by id
       tags:
       - Order
-  /orders/{order_id}/items:
-    get:
-      description: Get all order items
-      operationId: get-all-order-items
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: limt per page
-        in: query
-        name: limit
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/item.paging'
-      summary: Show all order items
-      tags:
-      - OrderItem
-    post:
-      description: create order items
-      operationId: add-order-item
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order item object
-        in: body
-        name: OrderItem
-        required: true
-        schema:
-          $ref: '#/definitions/item.orderItem'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-      summary: Create order items
-      tags:
-      - OrderItem
-  /orders/{order_id}/items/{item_id}:
-    delete:
-      description: Delete order item by ID
-      operationId: delete-order-items-by-id
-      parameters:
-      - description: OrderItem ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      responses:
-        "200": {}
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Delete a order item
-      tags:
-      - OrderItem
-    get:
-      description: Get order item by ID
-      operationId: get-order-item-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: Order item ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Show a order item by id
-      tags:
-      - OrderItem
-    put:
-      description: Update orderItems by ID
-      operationId: update-orderItems-by-id
-      parameters:
-      - description: Order ID
-        in: path
-        name: order_id
-        required: true
-        type: string
-      - description: OrderItem ID
-        in: path
-        name: item_id
-        required: true
-        type: string
-      - description: OrderItem
-        in: body
-        name: OrderItem
-        schema:
-          $ref: '#/definitions/item.orderItem'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.OrderItem'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a orderItems by id
-      tags:
-      - OrderItem
   /payments:
     get:
       description: Get all payments
