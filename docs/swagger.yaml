@@ -242,18 +242,10 @@ definitions:
     type: object
   membership.membership:
     properties:
-      payment_id:
-        type: integer
       plan_id:
         type: integer
-      status:
-        type: string
-      user_id:
-        type: integer
     required:
-    - payment_id
     - plan_id
-    - user_id
     type: object
   membership.paging:
     properties:
@@ -492,7 +484,6 @@ definitions:
       user_id:
         type: integer
     required:
-    - payment_id
     - plan_id
     - status
     - user_id
@@ -708,6 +699,8 @@ definitions:
         type: integer
       gateway:
         type: string
+      razorpay_order_id:
+        type: string
       razorpay_payment_id:
         type: string
       razorpay_signature:
@@ -717,6 +710,7 @@ definitions:
     required:
     - amount
     - currency_id
+    - razorpay_order_id
     - razorpay_payment_id
     - razorpay_signature
     type: object
@@ -1709,6 +1703,11 @@ paths:
       description: Create membership
       operationId: add-membership
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
       - description: Membership object
         in: body
         name: Membership
@@ -1775,36 +1774,6 @@ paths:
               type: string
             type: array
       summary: Show a membership by id
-      tags:
-      - Membership
-    put:
-      description: Update membership by ID
-      operationId: update-membership-by-id
-      parameters:
-      - description: Membership ID
-        in: path
-        name: membership_id
-        required: true
-        type: string
-      - description: Membership
-        in: body
-        name: Membership
-        schema:
-          $ref: '#/definitions/membership.membership'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Membership'
-        "400":
-          description: Bad Request
-          schema:
-            items:
-              type: string
-            type: array
-      summary: Update a membership by id
       tags:
       - Membership
   /orders:

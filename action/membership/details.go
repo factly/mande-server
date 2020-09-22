@@ -34,7 +34,7 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &model.Membership{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Membership{}).Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result).Error
+	err = model.DB.Model(&model.Membership{}).Preload("Plan").Preload("Plan.Catalogs").Preload("Payment").Preload("Payment.Currency").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
