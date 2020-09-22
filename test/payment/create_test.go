@@ -43,7 +43,7 @@ func TestCreatePayment(t *testing.T) {
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(Payment)
+			ContainsMap(PaymentReceive)
 
 		test.ExpectationsMet(t, mock)
 	})

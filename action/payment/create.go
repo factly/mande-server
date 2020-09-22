@@ -42,10 +42,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Payment{
-		Amount:     payment.Amount,
-		Gateway:    payment.Gateway,
-		CurrencyID: payment.CurrencyID,
-		Status:     payment.Status,
+		Amount:            payment.Amount,
+		Gateway:           payment.Gateway,
+		CurrencyID:        payment.CurrencyID,
+		Status:            payment.Status,
+		RazorpayPaymentID: payment.RazorpayPaymentID,
+		RazorpaySignature: payment.RazorpaySignature,
 	}
 
 	// verify the payment signature

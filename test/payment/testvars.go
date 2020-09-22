@@ -13,8 +13,18 @@ var Payment map[string]interface{} = map[string]interface{}{
 	"gateway":             "testgateway.com",
 	"currency_id":         1,
 	"status":              "sucessful",
-	"razorpay_payment_id": "",
-	"razorpay_signature":  "",
+	"razorpay_order_id":   "order001",
+	"razorpay_payment_id": "payment001",
+	"razorpay_signature":  "signature001",
+}
+
+var PaymentReceive map[string]interface{} = map[string]interface{}{
+	"amount":              100,
+	"gateway":             "testgateway.com",
+	"currency_id":         1,
+	"status":              "sucessful",
+	"razorpay_payment_id": "payment001",
+	"razorpay_signature":  "signature001",
 }
 
 var undecodablePayment map[string]interface{} = map[string]interface{}{
@@ -37,16 +47,18 @@ var paymentlist []map[string]interface{} = []map[string]interface{}{
 		"gateway":             "testgateway1.com",
 		"currency_id":         1,
 		"status":              "sucessful1",
-		"razorpay_payment_id": "",
-		"razorpay_signature":  "",
+		"razorpay_order_id":   "order001",
+		"razorpay_payment_id": "payment001",
+		"razorpay_signature":  "signature001",
 	},
 	{
 		"amount":              200,
 		"gateway":             "testgateway2.com",
 		"currency_id":         1,
 		"status":              "sucessful2",
-		"razorpay_payment_id": "",
-		"razorpay_signature":  "",
+		"razorpay_order_id":   "order002",
+		"razorpay_payment_id": "payment002",
+		"razorpay_signature":  "signature002",
 	},
 }
 
