@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -29,16 +28,7 @@ func TestUpdatePlan(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("update plan", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(1, time.Now(), time.Now(), nil, "plan_info", "plan_name", "status"))
-
-		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_plan\" SET (.+)  WHERE (.+) \"dp_plan\".\"id\" = `).
-			WithArgs(Plan["plan_info"], Plan["plan_name"], Plan["status"], test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-		PlanSelectMock(mock)
+		planUpdateMock(mock)
 		mock.ExpectCommit()
 
 		e.PUT(path).
@@ -48,7 +38,7 @@ func TestUpdatePlan(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(Plan)
+			ContainsMap(PlanReceive)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -92,16 +82,7 @@ func TestUpdatePlan(t *testing.T) {
 	})
 	t.Run("update plan when meili is down", func(t *testing.T) {
 		gock.Off()
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(1, time.Now(), time.Now(), nil, "plan_info", "plan_name", "status"))
-
-		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_plan\" SET (.+)  WHERE (.+) \"dp_plan\".\"id\" = `).
-			WithArgs(Plan["plan_info"], Plan["plan_name"], Plan["status"], test.AnyTime{}, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-		PlanSelectMock(mock)
+		planUpdateMock(mock)
 		mock.ExpectRollback()
 
 		e.PUT(path).
