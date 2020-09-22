@@ -53,6 +53,7 @@ func TestListPayment(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
+		delete(paymentlist[0], "razorpay_order_id")
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -78,6 +79,7 @@ func TestListPayment(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
+		delete(paymentlist[1], "razorpay_order_id")
 		e.GET(basePath).
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",

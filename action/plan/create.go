@@ -42,13 +42,18 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Plan{
-		PlanInfo: plan.PlanInfo,
-		PlanName: plan.PlanName,
-		Status:   plan.Status,
+		Name:        plan.Name,
+		Description: plan.Description,
+		Duration:    plan.Duration,
+		Status:      plan.Status,
 	}
 
+	result.Catalogs = make([]model.Catalog, 0)
+
+	model.DB.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&result.Catalogs)
+
 	tx := model.DB.Begin()
-	err = tx.Model(&model.Plan{}).Create(&result).Error
+	err = tx.Model(&model.Plan{}).Set("gorm:association_autoupdate", false).Create(&result).Error
 
 	if err != nil {
 		tx.Rollback()
@@ -57,13 +62,17 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tx.Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
+
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
-		"id":        result.ID,
-		"kind":      "plan",
-		"plan_name": result.PlanName,
-		"plan_info": result.PlanInfo,
-		"status":    result.Status,
+		"id":          result.ID,
+		"kind":        "plan",
+		"name":        result.Name,
+		"description": result.Description,
+		"duration":    result.Duration,
+		"status":      result.Status,
+		"catalog_ids": plan.CatalogIDs,
 	}
 
 	err = meili.AddDocument(meiliObj)

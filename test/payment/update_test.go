@@ -50,7 +50,7 @@ func TestUpdatePayment(t *testing.T) {
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(Payment)
+			ContainsMap(PaymentReceive)
 
 		test.ExpectationsMet(t, mock)
 	})

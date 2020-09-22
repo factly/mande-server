@@ -3,15 +3,13 @@ package membership
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
-	"github.com/factly/data-portal-server/test/user"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -34,74 +32,67 @@ func TestCreateMembership(t *testing.T) {
 	t.Run("create a membership", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "payment_id", "razorpay_order_id"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
 
 		MembershipSelectMock(mock)
 
-		user.UserSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
 
-		payment.PaymentSelectMock(mock)
+		associatedPlansCatalogSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
+		productCatalogAssociationMock(mock, 1)
 
 		mock.ExpectCommit()
 
-		result := e.POST(basePath).
-			WithJSON(Membership).
+		e.POST(basePath).
+			WithHeader("X-User", "1").
+			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(Membership)
-
-		validateAssociations(result)
+			ContainsMap(Membership).
+			Value("plan").
+			Object().
+			ContainsMap(plan.PlanReceive)
 
 		test.ExpectationsMet(t, mock)
 	})
 
 	t.Run("unprocessable membership body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeader("X-User", "1").
 			WithJSON(invalidMembership).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("empty membership body", func(t *testing.T) {
+	t.Run("invalid user header", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeader("X-User", "abc").
+			WithJSON(requestBody).
 			Expect().
-			Status(http.StatusUnprocessableEntity)
+			Status(http.StatusNotFound)
 	})
 
-	t.Run("user does not exist", func(t *testing.T) {
-		insertWithErrorExpect(mock, errMembershipUserFK)
-
+	t.Run("empty membership body", func(t *testing.T) {
 		e.POST(basePath).
-			WithJSON(Membership).
+			WithHeader("X-User", "1").
 			Expect().
-			Status(http.StatusInternalServerError)
-
-		test.ExpectationsMet(t, mock)
+			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("plan does not exist", func(t *testing.T) {
 		insertWithErrorExpect(mock, errMembershipPlanFK)
 
 		e.POST(basePath).
-			WithJSON(Membership).
-			Expect().
-			Status(http.StatusInternalServerError)
-
-		test.ExpectationsMet(t, mock)
-	})
-
-	t.Run("payment does not exist", func(t *testing.T) {
-		insertWithErrorExpect(mock, errMembershipPaymentFK)
-
-		e.POST(basePath).
-			WithJSON(Membership).
+			WithHeader("X-User", "1").
+			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -112,23 +103,26 @@ func TestCreateMembership(t *testing.T) {
 		gock.Off()
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "payment_id", "razorpay_order_id"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
 
 		MembershipSelectMock(mock)
 
-		user.UserSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
 
-		payment.PaymentSelectMock(mock)
+		associatedPlansCatalogSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
+		productCatalogAssociationMock(mock, 1)
 
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithJSON(Membership).
+			WithHeader("X-User", "1").
+			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
 

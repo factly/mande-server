@@ -3,12 +3,18 @@ package plan
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/catalog"
+	"github.com/factly/data-portal-server/test/currency"
+	"github.com/factly/data-portal-server/test/dataset"
+	"github.com/factly/data-portal-server/test/product"
+	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -30,6 +36,18 @@ func TestListPlan(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PlanCols))
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" INNER JOIN "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows(append(catalog.CatalogCols, []string{"plan_id", "catalog_id"}...)))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_catalog_product"`)).
+			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "catalog_id"}...)))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
+			WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
+			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "product_id"}...)))
+
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -46,9 +64,20 @@ func TestListPlan(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(1, time.Now(), time.Now(), nil, planlist[0]["plan_info"], planlist[0]["plan_name"], planlist[0]["status"]).
-				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["plan_info"], planlist[1]["plan_name"], planlist[1]["status"]))
+				AddRow(1, time.Now(), time.Now(), nil, planlist[0]["name"], planlist[0]["description"], planlist[0]["status"], planlist[0]["duration"]).
+				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"]))
 
+		associatedCatalogWithArg(mock)
+
+		productCatalogAssociationMock(mock, 1)
+
+		currency.CurrencySelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		delete(planlist[0], "catalog_ids")
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -70,8 +99,23 @@ func TestListPlan(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["plan_info"], planlist[1]["plan_name"], planlist[1]["status"]))
+				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"]))
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" INNER JOIN "dp_plan_catalog"`)).
+			WithArgs(2).
+			WillReturnRows(sqlmock.NewRows(append(catalog.CatalogCols, []string{"plan_id", "catalog_id"}...)).
+				AddRow(1, time.Now(), time.Now(), nil, catalog.Catalog["title"], catalog.Catalog["description"], catalog.Catalog["featured_medium_id"], catalog.Catalog["published_date"], 1, 1))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_catalog_product"`)).
+			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "catalog_id"}...)))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
+			WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)))
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
+			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "product_id"}...)))
+
+		delete(planlist[1], "catalog_ids")
 		e.GET(basePath).
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",

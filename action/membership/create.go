@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -20,14 +21,21 @@ import (
 // @ID add-membership
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
 // @Param Membership body membership true "Membership object"
 // @Success 201 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	membership := &membership{}
-	err := json.NewDecoder(r.Body).Decode(&membership)
+	err = json.NewDecoder(r.Body).Decode(&membership)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -42,10 +50,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Membership{
-		Status:    membership.Status,
-		UserID:    membership.UserID,
-		PaymentID: membership.PaymentID,
-		PlanID:    membership.PlanID,
+		Status: "created",
+		UserID: uint(uID),
+		PlanID: membership.PlanID,
 	}
 
 	tx := model.DB.Begin()
@@ -57,7 +64,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.DBError()))
 		return
 	}
-	tx.Preload("User").Preload("Plan").Preload("Payment").Preload("Payment.Currency").First(&result)
+
+	// Create a razorpay order and get razorpay orderID
+	// Change membership status to initiated and add razorpay_id in membership table
+
+	tx.Preload("Plan").Preload("Plan.Catalogs").Preload("Plan.Catalogs.Products").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{

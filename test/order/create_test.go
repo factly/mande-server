@@ -34,15 +34,13 @@ func TestCreateOrder(t *testing.T) {
 		insertMock(mock)
 		mock.ExpectCommit()
 
-		result := e.POST(basePath).
+		e.POST(basePath).
 			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
 			Object().
 			ContainsMap(Order)
-
-		validateAssociations(result)
 
 		test.ExpectationsMet(t, mock)
 	})

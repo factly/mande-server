@@ -9,6 +9,10 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/catalog"
+	"github.com/factly/data-portal-server/test/currency"
+	"github.com/factly/data-portal-server/test/dataset"
+	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -29,10 +33,24 @@ func TestCreatePlan(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("create a plan", func(t *testing.T) {
+		catalog.CatalogSelectMock(mock)
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
+
+		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		PlanSelectMock(mock)
+		associatedCatalogSelectMock(mock)
+		productCatalogAssociationMock(mock, 1)
+		currency.CurrencySelectMock(mock)
+		dataset.DatasetSelectMock(mock)
+		tag.TagSelectMock(mock)
+
 		mock.ExpectCommit()
 
 		e.POST(basePath).
@@ -41,7 +59,7 @@ func TestCreatePlan(t *testing.T) {
 			Status(http.StatusCreated).
 			JSON().
 			Object().
-			ContainsMap(Plan)
+			ContainsMap(PlanReceive)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -60,10 +78,12 @@ func TestCreatePlan(t *testing.T) {
 	})
 
 	t.Run("creating plan fails", func(t *testing.T) {
+		catalog.CatalogSelectMock(mock)
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
-			WillReturnError(errors.New("cannot create"))
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
+			WillReturnError(errors.New("cannot create plan"))
 		mock.ExpectRollback()
 
 		e.POST(basePath).
@@ -76,10 +96,23 @@ func TestCreatePlan(t *testing.T) {
 
 	t.Run("create a plan when meili is down", func(t *testing.T) {
 		gock.Off()
+		catalog.CatalogSelectMock(mock)
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["plan_name"], Plan["plan_info"], Plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
+
+		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
+			WithArgs(1, 1, 1, 1).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
+		PlanSelectMock(mock)
+		associatedCatalogSelectMock(mock)
+		productCatalogAssociationMock(mock, 1)
+		currency.CurrencySelectMock(mock)
+		dataset.DatasetSelectMock(mock)
+		tag.TagSelectMock(mock)
 		mock.ExpectRollback()
 
 		e.POST(basePath).

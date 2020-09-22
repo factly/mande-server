@@ -1319,6 +1319,13 @@ var doc = `{
                 "operationId": "add-membership",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Membership object",
                         "name": "Membership",
                         "in": "body",
@@ -1365,51 +1372,6 @@ var doc = `{
                         "name": "membership_id",
                         "in": "path",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Membership"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update membership by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Membership"
-                ],
-                "summary": "Update a membership by id",
-                "operationId": "update-membership-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Membership ID",
-                        "name": "membership_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Membership",
-                        "name": "Membership",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/membership.membership"
-                        }
                     }
                 ],
                 "responses": {
@@ -2920,21 +2882,10 @@ var doc = `{
         "membership.membership": {
             "type": "object",
             "required": [
-                "payment_id",
-                "plan_id",
-                "user_id"
+                "plan_id"
             ],
             "properties": {
-                "payment_id": {
-                    "type": "integer"
-                },
                 "plan_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "user_id": {
                     "type": "integer"
                 }
             }
@@ -3009,6 +2960,12 @@ var doc = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "plans": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Plan"
+                    }
                 },
                 "products": {
                     "type": "array",
@@ -3246,7 +3203,6 @@ var doc = `{
         "model.Membership": {
             "type": "object",
             "required": [
-                "payment_id",
                 "plan_id",
                 "status",
                 "user_id"
@@ -3274,6 +3230,9 @@ var doc = `{
                 },
                 "plan_id": {
                     "type": "integer"
+                },
+                "razorpay_order_id": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
@@ -3381,22 +3340,31 @@ var doc = `{
         "model.Plan": {
             "type": "object",
             "required": [
-                "plan_info",
+                "duration",
                 "plan_name",
                 "status"
             ],
             "properties": {
+                "catalogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Catalog"
+                    }
+                },
                 "created_at": {
                     "type": "string"
                 },
                 "deleted_at": {
                     "type": "string"
                 },
-                "id": {
+                "description": {
+                    "type": "string"
+                },
+                "duration": {
                     "type": "integer"
                 },
-                "plan_info": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 },
                 "plan_name": {
                     "type": "string"
@@ -3585,7 +3553,10 @@ var doc = `{
             "type": "object",
             "required": [
                 "amount",
-                "currency_id"
+                "currency_id",
+                "razorpay_order_id",
+                "razorpay_payment_id",
+                "razorpay_signature"
             ],
             "properties": {
                 "amount": {
@@ -3595,6 +3566,15 @@ var doc = `{
                     "type": "integer"
                 },
                 "gateway": {
+                    "type": "string"
+                },
+                "razorpay_order_id": {
+                    "type": "string"
+                },
+                "razorpay_payment_id": {
+                    "type": "string"
+                },
+                "razorpay_signature": {
                     "type": "string"
                 },
                 "status": {
@@ -3619,13 +3599,23 @@ var doc = `{
         "plan.plan": {
             "type": "object",
             "required": [
-                "plan_name"
+                "duration",
+                "name"
             ],
             "properties": {
-                "plan_info": {
+                "catalog_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "description": {
                     "type": "string"
                 },
-                "plan_name": {
+                "duration": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 },
                 "status": {

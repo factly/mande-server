@@ -39,7 +39,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.First(&result).Error
+	err = model.DB.Preload("Catalogs").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -60,6 +60,10 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
+
+	// Delete all associations
+	tx.Model(&result).Association("Catalogs").Delete(result.Catalogs)
+
 	tx.Delete(&result)
 
 	err = meili.DeleteDocument(result.ID, "plan")

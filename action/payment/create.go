@@ -42,14 +42,21 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Payment{
-		Amount:     payment.Amount,
-		Gateway:    payment.Gateway,
-		CurrencyID: payment.CurrencyID,
-		Status:     payment.Status,
+		Amount:            payment.Amount,
+		Gateway:           payment.Gateway,
+		CurrencyID:        payment.CurrencyID,
+		Status:            payment.Status,
+		RazorpayPaymentID: payment.RazorpayPaymentID,
+		RazorpaySignature: payment.RazorpaySignature,
 	}
+
+	// verify the payment signature
 
 	tx := model.DB.Begin()
 	err = tx.Model(&model.Payment{}).Create(&result).Error
+
+	// Get the order or membership which has razorpay_order_id == payment.RazorpayOrderID
+	// change order/membership status to complete and update it to add the created payment id
 
 	if err != nil {
 		tx.Rollback()

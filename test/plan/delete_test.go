@@ -31,10 +31,14 @@ func TestDeletePlan(t *testing.T) {
 
 	t.Run("delete plan", func(t *testing.T) {
 		PlanSelectMock(mock)
+		associatedCatalogSelectMock(mock)
 
 		planMembershipExpect(mock, 0)
 
 		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_plan_catalog"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_plan" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
@@ -70,6 +74,7 @@ func TestDeletePlan(t *testing.T) {
 
 	t.Run("plan is associated with membership", func(t *testing.T) {
 		PlanSelectMock(mock)
+		associatedCatalogSelectMock(mock)
 
 		planMembershipExpect(mock, 1)
 
@@ -84,10 +89,14 @@ func TestDeletePlan(t *testing.T) {
 	t.Run("delete plan when meili is down", func(t *testing.T) {
 		gock.Off()
 		PlanSelectMock(mock)
+		associatedCatalogSelectMock(mock)
 
 		planMembershipExpect(mock, 0)
 
 		mock.ExpectBegin()
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_plan_catalog"`)).
+			WillReturnResult(sqlmock.NewResult(0, 1))
+
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_plan" SET "deleted_at"=`)).
 			WithArgs(test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))

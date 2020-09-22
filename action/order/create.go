@@ -75,7 +75,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	// Create a razorpay order and get razorpay orderID
 	// Change order status to initiated and add razorpay_id in order table
 
-	tx.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result)
+	tx.Model(&model.Order{}).Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{

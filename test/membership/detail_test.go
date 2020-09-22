@@ -8,10 +8,10 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/catalog"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
-	"github.com/factly/data-portal-server/test/user"
 	"github.com/gavv/httpexpect"
 )
 
@@ -30,9 +30,9 @@ func TestDetailMembership(t *testing.T) {
 	t.Run("get membership by id", func(t *testing.T) {
 		MembershipSelectMock(mock)
 
-		user.UserSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
+
+		catalog.CatalogSelectMock(mock)
 
 		payment.PaymentSelectMock(mock)
 

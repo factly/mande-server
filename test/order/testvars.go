@@ -7,7 +7,6 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/cart"
-	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/product"
@@ -84,10 +83,6 @@ func insertMock(mock sqlmock.Sqlmock) {
 
 	OrderSelectMock(mock)
 
-	payment.PaymentSelectMock(mock)
-
-	currency.CurrencySelectMock(mock)
-
 	associatedProductsSelectMock(mock)
 
 	dataset.DatasetSelectMock(mock)
@@ -98,5 +93,5 @@ func insertMock(mock sqlmock.Sqlmock) {
 func validateAssociations(result *httpexpect.Object) {
 	result.Value("payment").
 		Object().
-		ContainsMap(payment.Payment)
+		ContainsMap(payment.PaymentReceive)
 }
