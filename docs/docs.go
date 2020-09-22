@@ -3010,6 +3010,12 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "plans": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Plan"
+                    }
+                },
                 "products": {
                     "type": "array",
                     "items": {
@@ -3275,6 +3281,9 @@ var doc = `{
                 "plan_id": {
                     "type": "integer"
                 },
+                "razorpay_order_id": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
@@ -3381,22 +3390,31 @@ var doc = `{
         "model.Plan": {
             "type": "object",
             "required": [
-                "plan_info",
+                "duration",
                 "plan_name",
                 "status"
             ],
             "properties": {
+                "catalogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Catalog"
+                    }
+                },
                 "created_at": {
                     "type": "string"
                 },
                 "deleted_at": {
                     "type": "string"
                 },
-                "id": {
+                "description": {
+                    "type": "string"
+                },
+                "duration": {
                     "type": "integer"
                 },
-                "plan_info": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 },
                 "plan_name": {
                     "type": "string"
@@ -3585,7 +3603,9 @@ var doc = `{
             "type": "object",
             "required": [
                 "amount",
-                "currency_id"
+                "currency_id",
+                "razorpay_payment_id",
+                "razorpay_signature"
             ],
             "properties": {
                 "amount": {
@@ -3595,6 +3615,12 @@ var doc = `{
                     "type": "integer"
                 },
                 "gateway": {
+                    "type": "string"
+                },
+                "razorpay_payment_id": {
+                    "type": "string"
+                },
+                "razorpay_signature": {
                     "type": "string"
                 },
                 "status": {
@@ -3619,13 +3645,23 @@ var doc = `{
         "plan.plan": {
             "type": "object",
             "required": [
-                "plan_name"
+                "duration",
+                "name"
             ],
             "properties": {
-                "plan_info": {
+                "catalog_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "description": {
                     "type": "string"
                 },
-                "plan_name": {
+                "duration": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 },
                 "status": {
