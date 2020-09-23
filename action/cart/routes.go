@@ -19,7 +19,6 @@ func Router() chi.Router {
 
 	r.Route("/{cartitem_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /carts/{cartitem_id} - get a single cart item
-		r.Put("/", update)    // PUT /carts/{cartitem_id} - update a cart item
 		r.Delete("/", delete) // DELETE /carts/{cartitem_id} - delete a cart item entry
 	})
 

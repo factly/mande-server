@@ -164,58 +164,6 @@ var doc = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update cart by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "Update a cart by id",
-                "operationId": "update-cart-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "X-User",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Cart Item ID",
-                        "name": "cartitem_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Cart Item object",
-                        "name": "CartItem",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/cart.cartitem"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.CartItem"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
             "delete": {
                 "description": "Delete cart by ID",
                 "tags": [
@@ -1674,51 +1622,6 @@ var doc = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update payment by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Payment"
-                ],
-                "summary": "Update a payment by id",
-                "operationId": "update-payment-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Payment ID",
-                        "name": "payment_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Payment",
-                        "name": "Payment",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/payment.payment"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Payment"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
             "delete": {
                 "description": "Delete payment by ID",
                 "tags": [
@@ -2309,193 +2212,6 @@ var doc = `{
                         "type": "string",
                         "description": "Tag ID",
                         "name": "tag_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {},
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "description": "Get all users",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Show all users",
-                "operationId": "get-all-users",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "limt per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/user.paging"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create user",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Create user",
-                "operationId": "add-user",
-                "parameters": [
-                    {
-                        "description": "User object",
-                        "name": "User",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/user.user"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{user_id}": {
-            "get": {
-                "description": "Get user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Show a user by id",
-                "operationId": "get-user-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Update a user by id",
-                "operationId": "update-user-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User",
-                        "name": "User",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/user.user"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete user by ID",
-                "tags": [
-                    "User"
-                ],
-                "summary": "Delete a user",
-                "operationId": "delete-user-by-id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }
@@ -3240,10 +2956,6 @@ var doc = `{
                 "updated_at": {
                     "type": "string"
                 },
-                "user": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.User"
-                },
                 "user_id": {
                     "type": "integer"
                 }
@@ -3341,7 +3053,7 @@ var doc = `{
             "type": "object",
             "required": [
                 "duration",
-                "plan_name",
+                "name",
                 "status"
             ],
             "properties": {
@@ -3366,7 +3078,7 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
-                "plan_name": {
+                "name": {
                     "type": "string"
                 },
                 "status": {
@@ -3483,37 +3195,6 @@ var doc = `{
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.User": {
-            "type": "object",
-            "required": [
-                "email",
-                "first_name",
-                "last_name"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_name": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3725,38 +3406,6 @@ var doc = `{
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "user.paging": {
-            "type": "object",
-            "properties": {
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.User"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "user.user": {
-            "type": "object",
-            "required": [
-                "email",
-                "first_name"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
                     "type": "string"
                 }
             }
