@@ -72,6 +72,14 @@ func TestCreateCart(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable cart item body", func(t *testing.T) {
+		e.POST(basePath).
+			WithHeader("X-User", "1").
+			WithJSON(undecodableCartItem).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("empty cart item body", func(t *testing.T) {
 		e.POST(basePath).
 			WithHeader("X-User", "1").

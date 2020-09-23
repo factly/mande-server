@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
 )
 
 var CartItem map[string]interface{} = map[string]interface{}{
@@ -49,28 +48,4 @@ func CartItemSelectMock(mock sqlmock.Sqlmock) {
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(CartItemCols).
 			AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"]))
-}
-
-func preUpdateMock(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(CartItemCols).
-			AddRow(1, time.Now(), time.Now(), nil, "status", 1, 2))
-
-	mock.ExpectBegin()
-}
-
-func updateMock(mock sqlmock.Sqlmock, err error) {
-	preUpdateMock(mock)
-
-	if err != nil {
-		mock.ExpectExec(`UPDATE \"dp_cart_item\" SET (.+)  WHERE (.+) \"dp_cart_item\".\"id\" = `).
-			WithArgs(CartItem["product_id"], CartItem["status"], test.AnyTime{}, 1, 1).
-			WillReturnError(err)
-		mock.ExpectRollback()
-	} else {
-		mock.ExpectExec(`UPDATE \"dp_cart_item\" SET (.+)  WHERE (.+) \"dp_cart_item\".\"id\" = `).
-			WithArgs(CartItem["product_id"], CartItem["status"], test.AnyTime{}, 1, 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
-	}
 }
