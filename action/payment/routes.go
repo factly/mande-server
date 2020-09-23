@@ -22,7 +22,6 @@ func Router() chi.Router {
 
 	r.Route("/{payment_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /payments/{payment_id} - read a single payment by :payment_id
-		r.Put("/", update)    // PUT /payments/{payment_id} - update a single payment by :payment_id
 		r.Delete("/", delete) // DELETE /payments/{payment_id} - delete a single payment by :payment_id
 	})
 

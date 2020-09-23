@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -29,7 +30,10 @@ func TestDetailCart(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("get cart item by id", func(t *testing.T) {
-		CartItemSelectMock(mock)
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1, 1).
+			WillReturnRows(sqlmock.NewRows(CartItemCols).
+				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"]))
 
 		product.ProductSelectMock(mock)
 
@@ -55,7 +59,7 @@ func TestDetailCart(t *testing.T) {
 
 	t.Run("cart item record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
+			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.GET(path).
@@ -71,6 +75,14 @@ func TestDetailCart(t *testing.T) {
 		e.GET(path).
 			WithHeader("X-User", "1").
 			WithPath("cartitem_id", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
+	t.Run("invalid user header", func(t *testing.T) {
+		e.GET(path).
+			WithHeader("X-User", "abc").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 	})

@@ -55,6 +55,13 @@ func TestCreatePayment(t *testing.T) {
 			Status(http.StatusUnprocessableEntity)
 	})
 
+	t.Run("undecodable payment body", func(t *testing.T) {
+		e.POST(basePath).
+			WithJSON(undecodablePayment).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+	})
+
 	t.Run("empty payment body", func(t *testing.T) {
 		e.POST(basePath).
 			Expect().

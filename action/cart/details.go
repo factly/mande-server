@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -23,6 +24,12 @@ import (
 // @Failure 400 {array} string
 // @Router /cartitems/{cartitem_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r)
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	cartitemID := chi.URLParam(r, "cartitem_id")
 	id, err := strconv.Atoi(cartitemID)
@@ -35,7 +42,9 @@ func details(w http.ResponseWriter, r *http.Request) {
 	result := &model.CartItem{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
+	err = model.DB.Model(&model.CartItem{}).Where(&model.CartItem{
+		UserID: uint(uID),
+	}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
