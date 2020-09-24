@@ -20,7 +20,7 @@ func TestDeleteProduct(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
 

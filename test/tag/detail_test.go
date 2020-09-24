@@ -17,12 +17,24 @@ func TestDetailTag(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
-	defer server.Close()
+	adminExpect := httpexpect.New(t, server.URL)
 
-	e := httpexpect.New(t, server.URL)
+	CommonDetailsTests(t, mock, adminExpect)
 
+	server.Close()
+
+	router = action.RegisterUserRoutes()
+	server = httptest.NewServer(router)
+	userExpect := httpexpect.New(t, server.URL)
+
+	CommonDetailsTests(t, mock, userExpect)
+
+	server.Close()
+}
+
+func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get tag by id", func(t *testing.T) {
 		TagSelectMock(mock)
 
@@ -57,5 +69,4 @@ func TestDetailTag(t *testing.T) {
 			Expect().
 			Status(http.StatusNotFound)
 	})
-
 }
