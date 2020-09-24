@@ -24,9 +24,8 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// RegisterRoutes - register routes
-func RegisterRoutes() http.Handler {
-
+// GetCommonRouter returns router with common middleware and settings
+func GetCommonRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -49,18 +48,48 @@ func RegisterRoutes() http.Handler {
 	/* disable swagger in production */
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
-	r.Mount("/currencies", currency.Router())
-	r.Mount("/plans", plan.Router())
-	r.Mount("/memberships", membership.Router())
-	r.Mount("/payments", payment.Router())
-	r.Mount("/products", product.Router())
-	r.Mount("/tags", tag.Router())
-	r.Mount("/formats", format.Router())
-	r.Mount("/catalogs", catalog.Router())
-	r.Mount("/cartitems", cart.Router())
-	r.Mount("/orders", order.Router())
-	r.Mount("/datasets", dataset.Router())
-	r.Mount("/media", medium.Router())
+	return r
+}
+
+// RegisterUserRoutes - register user routes
+func RegisterUserRoutes() http.Handler {
+
+	r := GetCommonRouter()
+
+	r.Mount("/currencies", currency.UserRouter())
+	r.Mount("/plans", plan.UserRouter())
+	r.Mount("/memberships", membership.UserRouter())
+	r.Mount("/payments", payment.UserRouter())
+	r.Mount("/products", product.UserRouter())
+	r.Mount("/tags", tag.UserRouter())
+	r.Mount("/formats", format.UserRouter())
+	r.Mount("/catalogs", catalog.UserRouter())
+	r.Mount("/cartitems", cart.UserRouter())
+	r.Mount("/orders", order.UserRouter())
+	r.Mount("/datasets", dataset.UserRouter())
+	r.Mount("/media", medium.UserRouter())
+	r.Mount("/search", search.Router())
+
+	return r
+}
+
+// RegisterAdminRoutes - register admin routes
+func RegisterAdminRoutes() http.Handler {
+
+	r := GetCommonRouter()
+
+	r.Mount("/currencies", currency.AdminRouter())
+	r.Mount("/plans", plan.AdminRouter())
+	r.Mount("/memberships", membership.AdminRouter())
+	r.Mount("/payments", payment.AdminRouter())
+	r.Mount("/products", product.AdminRouter())
+	r.Mount("/tags", tag.AdminRouter())
+	r.Mount("/formats", format.AdminRouter())
+	r.Mount("/catalogs", catalog.AdminRouter())
+	r.Mount("/cartitems", cart.AdminRouter())
+	r.Mount("/orders", order.AdminRouter())
+	r.Mount("/datasets", dataset.AdminRouter())
+	r.Mount("/media", medium.AdminRouter())
 	r.Mount("/search", search.Router())
 
 	return r

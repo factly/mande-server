@@ -787,7 +787,7 @@ definitions:
     - slug
     - title
     type: object
-host: localhost:7720
+host: localhost:7721
 info:
   contact:
     email: support@swagger.io

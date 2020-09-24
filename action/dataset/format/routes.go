@@ -10,8 +10,8 @@ type datasetFormat struct {
 	URL      string `json:"url" validate:"required"`
 }
 
-// Router - Group of tag router
-func Router() chi.Router {
+// AdminRouter - Group of tag router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/", create) // POST /format - create a new dataset format and persist it

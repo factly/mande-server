@@ -33,8 +33,21 @@ type datasetData struct {
 	Formats []model.DatasetFormat `json:"formats"`
 }
 
-// Router - Group of dataset router
-func Router() chi.Router {
+// UserRouter - Group of dataset router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /datasets - return list of datasets
+
+	r.Route("/{dataset_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of dataset router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /datasets - return list of datasets
@@ -44,7 +57,7 @@ func Router() chi.Router {
 		r.Get("/", details)   // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
 		r.Put("/", update)    // PUT /datasets/{dataset_id} - update a single dataset by :dataset_id
 		r.Delete("/", delete) // DELETE /datasets/{dataset_id} - delete a single dataset by :dataset_id
-		r.Mount("/format", format.Router())
+		r.Mount("/format", format.AdminRouter())
 	})
 
 	return r

@@ -20,7 +20,7 @@ func TestDeleteCart(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterUserRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
 

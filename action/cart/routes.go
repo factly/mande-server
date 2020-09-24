@@ -10,8 +10,8 @@ type cartitem struct {
 	ProductID uint   `json:"product_id" validate:"required"`
 }
 
-// Router - Group of cart router
-func Router() chi.Router {
+// UserRouter - Group of user cart router
+func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /carts - return list of cart items
@@ -20,6 +20,19 @@ func Router() chi.Router {
 	r.Route("/{cartitem_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /carts/{cartitem_id} - get a single cart item
 		r.Delete("/", delete) // DELETE /carts/{cartitem_id} - delete a cart item entry
+	})
+
+	return r
+}
+
+// AdminRouter - Group of user cart router
+func AdminRouter() chi.Router {
+	r := chi.NewRouter()
+
+	// TODO: create separate function to get list of items in user's cart by user_id
+	r.Get("/", list)
+	r.Route("/{cartitem_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /carts/{cartitem_id} - get a single cart item
 	})
 
 	return r

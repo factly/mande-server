@@ -7,8 +7,8 @@ type membership struct {
 	PlanID uint `json:"plan_id" validate:"required"`
 }
 
-// Router - Group of membership router
-func Router() chi.Router {
+// UserRouter - Group of membership router
+func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /memberships - return list of memberships
@@ -17,6 +17,19 @@ func Router() chi.Router {
 	r.Route("/{membership_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /memberships/{membership_id} - read a single membership by :membership_id
 		r.Delete("/", delete) // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of membership router
+func AdminRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /memberships - return list of memberships
+
+	r.Route("/{membership_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /memberships/{membership_id} - read a single membership by :membership_id
 	})
 
 	return r

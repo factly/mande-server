@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/config"
@@ -23,18 +22,12 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:7720
+// @host localhost:7721
 // @BasePath /
 
 func main() {
 	config.SetupVars()
 
-	port, ok := os.LookupEnv("PORT")
-	if !ok {
-		port = "7720"
-	}
-
-	port = ":" + port
 	// db setup
 	model.SetupDB(config.DSN)
 
@@ -43,11 +36,15 @@ func main() {
 	meili.SetupMeiliSearch()
 
 	// register routes
-	r := action.RegisterRoutes()
+	userRouter := action.RegisterUserRoutes()
+	adminRouter := action.RegisterAdminRoutes()
 
 	fmt.Println("swagger-ui http://localhost:7720/swagger/index.html")
-	err := http.ListenAndServe(port, r)
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	go func() {
+		log.Fatal(http.ListenAndServe(":7720", userRouter))
+	}()
+
+	log.Fatal(http.ListenAndServe(":7721", adminRouter))
+
 }

@@ -9,8 +9,20 @@ type format struct {
 	IsDefault   bool   `json:"is_default" `
 }
 
-// Router - Group of format router
-func Router() chi.Router {
+// UserRouter - Group of format router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /formats - return list of formats
+
+	r.Route("/{format_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /formats/{format_id} - read a single format by :format_id
+	})
+	return r
+}
+
+// AdminRouter - Group of format router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/", create) // POST /formats - create a new format and persist it

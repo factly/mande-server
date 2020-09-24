@@ -4,8 +4,8 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// Router - Group of order router
-func Router() chi.Router {
+// UserRouter - Group of order router
+func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /orders - return list of orders
@@ -14,6 +14,19 @@ func Router() chi.Router {
 	r.Route("/{order_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /orders/{order_id} - read a single order by :order_id
 		r.Delete("/", delete) // DELETE /orders/{order_id} - delete a single order by :order_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of order router
+func AdminRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /orders - return list of orders
+
+	r.Route("/{order_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /orders/{order_id} - read a single order by :order_id
 	})
 
 	return r

@@ -23,12 +23,24 @@ func TestListPlan(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
-	defer server.Close()
+	adminExpect := httpexpect.New(t, server.URL)
 
-	e := httpexpect.New(t, server.URL)
+	CommonListTest(t, mock, adminExpect)
 
+	server.Close()
+
+	router = action.RegisterUserRoutes()
+	server = httptest.NewServer(router)
+	userExpect := httpexpect.New(t, server.URL)
+
+	CommonListTest(t, mock, userExpect)
+
+	server.Close()
+}
+
+func CommonListTest(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get empty plan list", func(t *testing.T) {
 		mock.ExpectQuery(countQuery).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))

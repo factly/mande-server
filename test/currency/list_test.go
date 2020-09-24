@@ -17,12 +17,24 @@ func TestListCurrency(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
-	defer server.Close()
+	adminExpect := httpexpect.New(t, server.URL)
 
-	e := httpexpect.New(t, server.URL)
+	CommonListTests(t, mock, adminExpect)
 
+	server.Close()
+
+	router = action.RegisterUserRoutes()
+	server = httptest.NewServer(router)
+	userExpect := httpexpect.New(t, server.URL)
+
+	CommonListTests(t, mock, userExpect)
+
+	server.Close()
+}
+
+func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get empty currency list", func(t *testing.T) {
 		mock.ExpectQuery(countQuery).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
@@ -62,5 +74,4 @@ func TestListCurrency(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
-
 }

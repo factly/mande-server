@@ -69,9 +69,13 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
+	if len(result.Tags) > 0 {
+		tx.Model(&result).Association("Tags").Delete(result.Tags)
+	}
 
-	tx.Model(&result).Association("Tags").Delete(result.Tags)
-	tx.Model(&result).Association("Datasets").Delete(result.Datasets)
+	if len(result.Datasets) > 0 {
+		tx.Model(&result).Association("Datasets").Delete(result.Datasets)
+	}
 
 	err = tx.Delete(&result).Error
 	if err != nil {

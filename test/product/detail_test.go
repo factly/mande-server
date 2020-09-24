@@ -19,12 +19,25 @@ func TestDetailProduct(t *testing.T) {
 	mock := test.SetupMockDB()
 
 	// Setup HttpExpect
-	router := action.RegisterRoutes()
+	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
-	defer server.Close()
+	adminExpect := httpexpect.New(t, server.URL)
 
-	e := httpexpect.New(t, server.URL)
+	CommonDetailTests(t, mock, adminExpect)
 
+	server.Close()
+
+	router = action.RegisterUserRoutes()
+	server = httptest.NewServer(router)
+	userExpect := httpexpect.New(t, server.URL)
+
+	CommonDetailTests(t, mock, userExpect)
+
+	server.Close()
+
+}
+
+func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get product by id", func(t *testing.T) {
 		ProductSelectMock(mock)
 

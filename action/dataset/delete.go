@@ -63,8 +63,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		DatasetID: uint(id),
 	}).Delete(&model.DatasetFormat{})
 
-	tx.Model(&result).Association("Tags").Delete(result.Tags)
-
+	if len(result.Tags) > 0 {
+		tx.Model(&result).Association("Tags").Delete(result.Tags)
+	}
 	err = tx.Delete(&result).Error
 
 	if err != nil {
