@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/factly/data-portal-server/action"
@@ -40,7 +41,10 @@ func main() {
 
 	fmt.Println("swagger-ui http://localhost:7720/swagger/index.html")
 
-	go http.ListenAndServe(":7720", userRouter)
-	http.ListenAndServe(":7721", adminRouter)
+	go func() {
+		log.Fatal(http.ListenAndServe(":7720", userRouter))
+	}()
+
+	log.Fatal(http.ListenAndServe(":7721", adminRouter))
 
 }
