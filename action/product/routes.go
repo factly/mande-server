@@ -15,8 +15,20 @@ type product struct {
 	TagIDs           []uint `json:"tag_ids"`
 }
 
-// Router - Group of product router
-func Router() chi.Router {
+// UserRouter - Group of product router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /products - return list of products
+	r.Route("/{product_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /products/{product_id} - read a single product by :payment_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of product router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/", create) // POST /products - create a new product

@@ -11,8 +11,21 @@ type plan struct {
 	CatalogIDs  []uint `json:"catalog_ids"`
 }
 
-// Router - Group of plan router
-func Router() chi.Router {
+// UserRouter - Group of plan router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /plans - return list of plans
+
+	r.Route("/{plan_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /plans/{plan_id} - read a single plan by :plan_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of plan router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /plans - return list of plans

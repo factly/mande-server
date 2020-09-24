@@ -15,8 +15,21 @@ type catalog struct {
 	ProductIDs       []uint    `json:"product_ids"`
 }
 
-// Router - Group of catalog router
-func Router() chi.Router {
+// UserRouter - Group of catalog user router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /catalogs - return list of catalogs
+
+	r.Route("/{catalog_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /catalogs/{catalog_id} - read a single catalog by :catalog_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of catalog user router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /catalogs - return list of catalogs

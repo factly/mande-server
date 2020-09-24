@@ -13,8 +13,8 @@ type payment struct {
 	RazorpaySignature string `gorm:"column:razorpay_signature" json:"razorpay_signature" validate:"required"`
 }
 
-// Router - Group of payment router
-func Router() chi.Router {
+// UserRouter - Group of payment router
+func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /payments - return list of payments
@@ -23,6 +23,19 @@ func Router() chi.Router {
 	r.Route("/{payment_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /payments/{payment_id} - read a single payment by :payment_id
 		r.Delete("/", delete) // DELETE /payments/{payment_id} - delete a single payment by :payment_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of payment router
+func AdminRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /payments - return list of payments
+
+	r.Route("/{payment_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /payments/{payment_id} - read a single payment by :payment_id
 	})
 
 	return r

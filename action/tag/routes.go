@@ -10,8 +10,21 @@ type tag struct {
 	Slug  string `json:"slug" validate:"required"`
 }
 
-// Router - Group of tag router
-func Router() chi.Router {
+// UserRouter - Group of tag router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /tags - return list of tags
+
+	r.Route("/{tag_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /tags/{tag_id} - read a single tag by :tag_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of tag router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /tags - return list of tags

@@ -18,8 +18,21 @@ type medium struct {
 	Dimensions  string `json:"dimensions"`
 }
 
-// Router - Group of medium router
-func Router() chi.Router {
+// UserRouter - Group of medium router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /media - return list of media
+
+	r.Route("/{medium_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /media/{medium_id} - read a single medium by :medium_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of medium router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /media - return list of media

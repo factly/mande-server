@@ -8,8 +8,21 @@ type currency struct {
 	Name    string `json:"name" validate:"required"`
 }
 
-// Router - Group of currency router
-func Router() chi.Router {
+// UserRouter - Group of currency router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list) // GET /currencies - return list of currencies
+
+	r.Route("/{currency_id}", func(r chi.Router) {
+		r.Get("/", details) // GET /currencies/{currency_id} - read a single currency by :currency_id
+	})
+
+	return r
+}
+
+// AdminRouter - Group of currency router
+func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list)    // GET /currencies - return list of currencies
