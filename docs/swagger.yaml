@@ -809,6 +809,10 @@ paths:
         in: header
         name: X-User
         type: string
+      - description: User ID
+        in: query
+        name: user
+        type: string
       - description: limt per page
         in: query
         name: limit
