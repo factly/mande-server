@@ -51,6 +51,13 @@ func OrderSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, Order["user_id"], Order["status"], Order["payment_id"], Order["razorpay_order_id"]))
 }
 
+func selectWithTwoArgs(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1, 1).
+		WillReturnRows(sqlmock.NewRows(OrderCols).
+			AddRow(1, time.Now(), time.Now(), nil, Order["user_id"], Order["status"], Order["payment_id"], Order["razorpay_order_id"]))
+}
+
 func associatedProductsSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_order_item"`)).
 		WithArgs(sqlmock.AnyArg()).

@@ -40,7 +40,7 @@ func TestDetailOrder(t *testing.T) {
 
 func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get order by id", func(t *testing.T) {
-		OrderSelectMock(mock)
+		selectWithTwoArgs(mock)
 
 		payment.PaymentSelectMock(mock)
 
@@ -68,7 +68,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 	t.Run("order record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
+			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
 		e.GET(path).

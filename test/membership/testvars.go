@@ -63,6 +63,13 @@ func MembershipSelectMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
 }
 
+func selectWithTwoArgsMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1, 1).
+		WillReturnRows(sqlmock.NewRows(MembershipCols).
+			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
+}
+
 func associatedPlansCatalogSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" INNER JOIN "dp_plan_catalog"`)).
 		WithArgs(sqlmock.AnyArg()).

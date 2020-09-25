@@ -47,6 +47,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product"`)).
@@ -74,6 +75,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(orderlist)))
 
 		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(OrderCols).
 				AddRow(1, time.Now(), time.Now(), nil, orderlist[0]["user_id"], orderlist[0]["status"], orderlist[0]["payment_id"], orderlist[0]["razorpay_order_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
@@ -112,6 +114,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(orderlist)))
 
 		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(OrderCols).
 				AddRow(2, time.Now(), time.Now(), nil, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
 
