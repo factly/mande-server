@@ -52,6 +52,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "user",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1235,6 +1241,19 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1320,6 +1339,13 @@ var doc = `{
                         "name": "membership_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1382,6 +1408,19 @@ var doc = `{
                 "summary": "Show all orders",
                 "operationId": "get-all-orders",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user",
+                        "in": "query"
+                    },
                     {
                         "type": "string",
                         "description": "limt per page",
@@ -1459,6 +1498,13 @@ var doc = `{
                         "description": "Order ID",
                         "name": "order_id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
                         "required": true
                     }
                 ],

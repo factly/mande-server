@@ -56,6 +56,17 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
+
+	// Check if the plan is not deleted
+	plan := model.Plan{}
+	plan.ID = membership.PlanID
+	if err = tx.Model(&model.Plan{}).First(&plan).Error; err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	err = tx.Model(&model.Membership{}).Create(&result).Error
 
 	if err != nil {

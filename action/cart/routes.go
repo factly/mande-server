@@ -14,7 +14,7 @@ type cartitem struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /carts - return list of cart items
+	r.Get("/", mylist)  // GET /carts - return list of cart items
 	r.Post("/", create) // POST /carts - add a new cart item
 
 	r.Route("/{cartitem_id}", func(r chi.Router) {
@@ -29,7 +29,6 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	// TODO: create separate function to get list of items in user's cart by user_id
 	r.Get("/", list)
 	r.Route("/{cartitem_id}", func(r chi.Router) {
 		r.Get("/", details) // GET /carts/{cartitem_id} - get a single cart item

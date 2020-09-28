@@ -11,7 +11,7 @@ type membership struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /memberships - return list of memberships
+	r.Get("/", mylist)  // GET /memberships - return list of memberships
 	r.Post("/", create) // POST /memberships - create a new membership and persist it
 
 	r.Route("/{membership_id}", func(r chi.Router) {

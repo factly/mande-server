@@ -1,12 +1,10 @@
 package membership
 
 import (
-	"errors"
 	"regexp"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/catalog"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
@@ -51,7 +49,6 @@ var MembershipCols []string = []string{"id", "created_at", "updated_at", "delete
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_membership"`)
-var errMembershipPlanFK error = errors.New(`pq: insert or update on table "dp_membership" violates foreign key constraint "dp_membership_plan_id_dp_plan_id_foreign"`)
 
 const basePath string = "/memberships"
 const path string = "/memberships/{membership_id}"
@@ -59,6 +56,13 @@ const path string = "/memberships/{membership_id}"
 func MembershipSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(MembershipCols).
+			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
+}
+
+func selectWithTwoArgsMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(selectQuery).
+		WithArgs(1, 1).
 		WillReturnRows(sqlmock.NewRows(MembershipCols).
 			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
 }
@@ -75,14 +79,6 @@ func productCatalogAssociationMock(mock sqlmock.Sqlmock, catId uint) {
 		WithArgs(catId).
 		WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "catalog_id"}...)).
 			AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, catId))
-}
-
-func insertWithErrorExpect(mock sqlmock.Sqlmock, err error) {
-	mock.ExpectBegin()
-	mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
-		WillReturnError(err)
-	mock.ExpectRollback()
 }
 
 func validateAssociations(result *httpexpect.Object) {
