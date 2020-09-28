@@ -31,6 +31,7 @@ func TestCreateMembership(t *testing.T) {
 
 	t.Run("create a membership", func(t *testing.T) {
 		mock.ExpectBegin()
+		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
@@ -88,13 +89,17 @@ func TestCreateMembership(t *testing.T) {
 	})
 
 	t.Run("plan does not exist", func(t *testing.T) {
-		insertWithErrorExpect(mock, errMembershipPlanFK)
+		mock.ExpectBegin()
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(plan.PlanCols))
 
+		mock.ExpectRollback()
 		e.POST(basePath).
 			WithHeader("X-User", "1").
 			WithJSON(requestBody).
 			Expect().
-			Status(http.StatusInternalServerError)
+			Status(http.StatusUnprocessableEntity)
 
 		test.ExpectationsMet(t, mock)
 	})
@@ -102,6 +107,7 @@ func TestCreateMembership(t *testing.T) {
 	t.Run("create a membership when meili is down", func(t *testing.T) {
 		gock.Off()
 		mock.ExpectBegin()
+		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))

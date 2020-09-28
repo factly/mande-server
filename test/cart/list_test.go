@@ -72,6 +72,14 @@ func TestListCartItems(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
+	t.Run("invalid user query param", func(t *testing.T) {
+		adminExpect.GET(basePath).
+			WithHeader("X-User", "1").
+			WithQuery("user", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
 	server.Close()
 
 	router = action.RegisterUserRoutes()

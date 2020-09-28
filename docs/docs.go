@@ -1248,6 +1248,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "user",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"

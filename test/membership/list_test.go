@@ -27,7 +27,51 @@ func TestListMembership(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	// ADMIN tests
 	CommonListTests(t, mock, adminExpect)
+
+	t.Run("get memberships list with user query parameter", func(t *testing.T) {
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(membershiplist)))
+
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(MembershipCols).
+				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
+
+		plan.PlanSelectMock(mock)
+
+		catalog.CatalogSelectMock(mock)
+
+		payment.PaymentSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		adminExpect.GET(basePath).
+			WithHeader("X-User", "1").
+			WithQuery("user", "1").
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(map[string]interface{}{"total": len(membershiplist)}).
+			Value("nodes").
+			Array().
+			Element(0).
+			Object().
+			ContainsMap(membershiplist[0])
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("invalid user query param", func(t *testing.T) {
+		adminExpect.GET(basePath).
+			WithHeader("X-User", "1").
+			WithQuery("user", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 
 	server.Close()
 
@@ -35,7 +79,15 @@ func TestListMembership(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	// USER tests
 	CommonListTests(t, mock, userExpect)
+
+	t.Run("invalid user header", func(t *testing.T) {
+		userExpect.GET(basePath).
+			WithHeader("X-User", "anc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 
 	server.Close()
 }
@@ -46,7 +98,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
 
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MembershipCols))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" INNER JOIN "dp_plan_catalog"`)).
@@ -68,7 +119,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(membershiplist)))
 
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
 				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
@@ -102,7 +152,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("2"))
 
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
 				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 

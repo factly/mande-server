@@ -1610,6 +1610,10 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: User ID
+        in: query
+        name: user
+        type: string
       - description: limt per page
         in: query
         name: limit
