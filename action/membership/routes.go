@@ -11,8 +11,8 @@ type membership struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", userlist) // GET /memberships - return list of memberships
-	r.Post("/", create)  // POST /memberships - create a new membership and persist it
+	r.Get("/", mylist)  // GET /memberships - return list of memberships
+	r.Post("/", create) // POST /memberships - create a new membership and persist it
 
 	r.Route("/{membership_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /memberships/{membership_id} - read a single membership by :membership_id
@@ -26,7 +26,7 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", adminlist) // GET /memberships - return list of memberships
+	r.Get("/", list) // GET /memberships - return list of memberships
 
 	r.Route("/{membership_id}", func(r chi.Router) {
 		r.Get("/", details) // GET /memberships/{membership_id} - read a single membership by :membership_id

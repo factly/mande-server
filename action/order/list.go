@@ -18,7 +18,7 @@ type paging struct {
 	Nodes []model.Order `json:"nodes"`
 }
 
-// userlist - Get all orders
+// mylist - Get all orders
 // @Summary Show all orders
 // @Description Get all orders
 // @Tags Order
@@ -29,7 +29,7 @@ type paging struct {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /orders [get]
-func userlist(w http.ResponseWriter, r *http.Request) {
+func mylist(w http.ResponseWriter, r *http.Request) {
 
 	uID, err := util.GetUser(r)
 	if err != nil {
@@ -50,7 +50,7 @@ func userlist(w http.ResponseWriter, r *http.Request) {
 	renderx.JSON(w, http.StatusOK, result)
 }
 
-// adminlist - Get all orders
+// list - Get all orders
 // @Summary Show all orders
 // @Description Get all orders
 // @Tags Order
@@ -62,7 +62,7 @@ func userlist(w http.ResponseWriter, r *http.Request) {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /orders [get]
-func adminlist(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	userIDStr := r.URL.Query().Get("user")
 

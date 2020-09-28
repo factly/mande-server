@@ -18,7 +18,7 @@ type paging struct {
 	Nodes []model.CartItem `json:"nodes"`
 }
 
-// userlist - Get all carts
+// mylist - Get all carts
 // @Summary Show all carts
 // @Description Get all carts
 // @Tags Cart
@@ -29,7 +29,7 @@ type paging struct {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /cartitems [get]
-func userlist(w http.ResponseWriter, r *http.Request) {
+func mylist(w http.ResponseWriter, r *http.Request) {
 	uID, err := util.GetUser(r)
 	if err != nil {
 		loggerx.Error(err)
@@ -49,7 +49,7 @@ func userlist(w http.ResponseWriter, r *http.Request) {
 	renderx.JSON(w, http.StatusOK, result)
 }
 
-// adminlist - Get all carts
+// list - Get all carts
 // @Summary Show all carts
 // @Description Get all carts
 // @Tags Cart
@@ -61,7 +61,7 @@ func userlist(w http.ResponseWriter, r *http.Request) {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /cartitems [get]
-func adminlist(w http.ResponseWriter, r *http.Request) {
+func list(w http.ResponseWriter, r *http.Request) {
 
 	userIDStr := r.URL.Query().Get("user")
 
@@ -81,14 +81,14 @@ func adminlist(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	tx := model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets")
+	tx := model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").Offset(offset).Limit(limit)
 
 	if userID != 0 {
 		tx.Where(&model.CartItem{
 			UserID: uint(userID),
-		}).Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+		}).Count(&result.Total).Find(&result.Nodes)
 	} else {
-		tx.Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+		tx.Count(&result.Total).Find(&result.Nodes)
 	}
 
 	renderx.JSON(w, http.StatusOK, result)
