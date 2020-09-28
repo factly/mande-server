@@ -85,4 +85,12 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 			Expect().
 			Status(http.StatusNotFound)
 	})
+
+	t.Run("invalid user header", func(t *testing.T) {
+		e.GET(path).
+			WithPath("membership_id", "1").
+			WithHeader("X-User", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 }
