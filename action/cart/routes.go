@@ -29,7 +29,6 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	// TODO: create separate function to get list of items in user's cart by user_id
 	r.Get("/", list)
 	r.Route("/{cartitem_id}", func(r chi.Router) {
 		r.Get("/", details) // GET /carts/{cartitem_id} - get a single cart item
