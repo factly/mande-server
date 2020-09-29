@@ -14,6 +14,7 @@ type datasetFormat struct {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
+	r.Get("/", list)
 	r.Post("/", create) // POST /format - create a new dataset format and persist it
 
 	r.Route("/{format_id}", func(r chi.Router) {

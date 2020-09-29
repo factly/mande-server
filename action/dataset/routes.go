@@ -37,10 +37,10 @@ type datasetData struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list) // GET /datasets - return list of datasets
+	r.Get("/", userlist) // GET /datasets - return list of datasets
 
 	r.Route("/{dataset_id}", func(r chi.Router) {
-		r.Get("/", details) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+		r.Get("/", userdetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
 	})
 
 	return r
@@ -50,13 +50,13 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /datasets - return list of datasets
-	r.Post("/", create) // POST /datasets - create a new dataset and persist it
+	r.Get("/", adminlist) // GET /datasets - return list of datasets
+	r.Post("/", create)   // POST /datasets - create a new dataset and persist it
 
 	r.Route("/{dataset_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
-		r.Put("/", update)    // PUT /datasets/{dataset_id} - update a single dataset by :dataset_id
-		r.Delete("/", delete) // DELETE /datasets/{dataset_id} - delete a single dataset by :dataset_id
+		r.Get("/", admindetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+		r.Put("/", update)       // PUT /datasets/{dataset_id} - update a single dataset by :dataset_id
+		r.Delete("/", delete)    // DELETE /datasets/{dataset_id} - delete a single dataset by :dataset_id
 		r.Mount("/format", format.AdminRouter())
 	})
 

@@ -200,7 +200,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.Format'
+          $ref: '#/definitions/model.DatasetFormat'
         type: array
       total:
         type: integer
@@ -1289,6 +1289,33 @@ paths:
       tags:
       - Dataset
   /datasets/{dataset_id}/format:
+    get:
+      description: Get all datsets format
+      operationId: get-all-datsets-formats
+      parameters:
+      - description: Dataset ID
+        in: path
+        name: dataset_id
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/format.paging'
+      summary: Show all datsets format
+      tags:
+      - Dataset Format
     post:
       description: Create dataset format
       operationId: add-dataset-format
