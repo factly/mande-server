@@ -19,6 +19,7 @@ type dataset struct {
 	ContactEmail     string         `json:"contact_email"`
 	License          string         `json:"license"`
 	DataStandard     string         `json:"data_standard"`
+	SampleURL        string         `json:"sample_url"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles"`
 	TimeSaved        int            `json:"time_saved"`
 	Price            int            `json:"price" validate:"required"`

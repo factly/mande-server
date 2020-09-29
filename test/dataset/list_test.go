@@ -66,8 +66,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetCols).
-				AddRow(1, time.Now(), time.Now(), nil, datasetlist[0]["title"], datasetlist[0]["description"], datasetlist[0]["source"], datasetlist[0]["frequency"], datasetlist[0]["temporal_coverage"], datasetlist[0]["granularity"], datasetlist[0]["contact_name"], datasetlist[0]["contact_email"], datasetlist[0]["license"], datasetlist[0]["data_standard"], datasetlist[0]["related_articles"], datasetlist[0]["time_saved"], datasetlist[0]["price"], datasetlist[0]["currency_id"], datasetlist[0]["featured_medium_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, datasetlist[0]["title"], datasetlist[0]["description"], datasetlist[0]["source"], datasetlist[0]["frequency"], datasetlist[0]["temporal_coverage"], datasetlist[0]["granularity"], datasetlist[0]["contact_name"], datasetlist[0]["contact_email"], datasetlist[0]["license"], datasetlist[0]["data_standard"], datasetlist[0]["sample_url"], datasetlist[0]["related_articles"], datasetlist[0]["time_saved"], datasetlist[0]["price"], datasetlist[0]["currency_id"], datasetlist[0]["featured_medium_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
 		medium.MediumSelectMock(mock)
 
@@ -105,7 +105,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetCols).
-				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
 		medium.MediumSelectMock(mock)
 

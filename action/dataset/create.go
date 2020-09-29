@@ -55,6 +55,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		ContactEmail:     dataset.ContactEmail,
 		License:          dataset.License,
 		DataStandard:     dataset.DataStandard,
+		SampleURL:        dataset.SampleURL,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
 		FeaturedMediumID: dataset.FeaturedMediumID,
