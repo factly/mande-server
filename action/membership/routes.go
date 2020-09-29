@@ -11,12 +11,12 @@ type membership struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", mylist)  // GET /memberships - return list of memberships
-	r.Post("/", create) // POST /memberships - create a new membership and persist it
+	r.Get("/", userList) // GET /memberships - return list of memberships
+	r.Post("/", create)  // POST /memberships - create a new membership and persist it
 
 	r.Route("/{membership_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /memberships/{membership_id} - read a single membership by :membership_id
-		r.Delete("/", delete) // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
+		r.Get("/", userDetails) // GET /memberships/{membership_id} - read a single membership by :membership_id
+		r.Delete("/", delete)   // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
 	})
 
 	return r
@@ -26,10 +26,10 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list) // GET /memberships - return list of memberships
+	r.Get("/", adminList) // GET /memberships - return list of memberships
 
 	r.Route("/{membership_id}", func(r chi.Router) {
-		r.Get("/", details) // GET /memberships/{membership_id} - read a single membership by :membership_id
+		r.Get("/", adminDetails) // GET /memberships/{membership_id} - read a single membership by :membership_id
 	})
 
 	return r

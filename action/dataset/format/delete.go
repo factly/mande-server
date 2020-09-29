@@ -25,7 +25,7 @@ import (
 func delete(w http.ResponseWriter, r *http.Request) {
 
 	datasetID := chi.URLParam(r, "dataset_id")
-	id, err := strconv.Atoi(datasetID)
+	dID, err := strconv.Atoi(datasetID)
 
 	if err != nil {
 		loggerx.Error(err)
@@ -34,7 +34,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	formatID := chi.URLParam(r, "format_id")
-	fID, err := strconv.Atoi(formatID)
+	id, err := strconv.Atoi(formatID)
 
 	if err != nil {
 		loggerx.Error(err)
@@ -43,11 +43,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.DatasetFormat{}
-	result.DatasetID = uint(id)
-	result.FormatID = uint(fID)
+	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.Where(&result).First(&result).Error
+	err = model.DB.Where(&model.DatasetFormat{
+		DatasetID: uint(dID),
+	}).First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))

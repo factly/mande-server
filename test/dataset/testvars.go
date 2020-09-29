@@ -34,6 +34,7 @@ var Dataset map[string]interface{} = map[string]interface{}{
 	"contact_email":      "test@mail.com",
 	"license":            "TestLicense",
 	"data_standard":      "Test Datastd",
+	"sample_url":         "testurl.com",
 	"related_articles":   nilJsonb(),
 	"time_saved":         10,
 	"price":              100,
@@ -53,6 +54,7 @@ var DatasetReceive map[string]interface{} = map[string]interface{}{
 	"contact_email":      "test@mail.com",
 	"license":            "TestLicense",
 	"data_standard":      "Test Datastd",
+	"sample_url":         "testurl.com",
 	"related_articles":   nil,
 	"time_saved":         10,
 	"price":              100,
@@ -90,6 +92,7 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 		"contact_email":      "test1@mail.com",
 		"license":            "TestLicense1",
 		"data_standard":      "Test Datastd 1",
+		"sample_url":         "testurl1.com",
 		"related_articles":   nilJsonb(),
 		"time_saved":         10,
 		"price":              100,
@@ -108,6 +111,7 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 		"contact_email":      "test2@mail.com",
 		"license":            "TestLicense2",
 		"data_standard":      "Test Datastd 2",
+		"sample_url":         "testurl2.com",
 		"related_articles":   nilJsonb(),
 		"time_saved":         20,
 		"price":              200,
@@ -117,7 +121,7 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var DatasetCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "related_articles", "time_saved", "price", "currency_id", "featured_medium_id"}
+var DatasetCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", "related_articles", "time_saved", "price", "currency_id", "featured_medium_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset"`)
@@ -131,7 +135,7 @@ func DatasetSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(DatasetCols).
-			AddRow(1, time.Now(), time.Now(), nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]))
+			AddRow(1, time.Now(), time.Now(), nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]))
 }
 
 func tagAssociationSelectMock(mock sqlmock.Sqlmock) {
@@ -165,7 +169,7 @@ func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
 
 	mock.ExpectBegin()
 	mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
 		WillReturnError(err)
 	mock.ExpectRollback()
 }
@@ -174,7 +178,7 @@ func preUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(DatasetCols).
-			AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", nilJsonb(), 10, 200, 2, 2))
+			AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", nilJsonb(), 10, 200, 2, 2))
 
 	tagAssociationSelectMock(mock)
 
@@ -190,12 +194,12 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 
 	if err != nil {
 		mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
-			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["sample_url"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
 			WillReturnError(err)
 		mock.ExpectRollback()
 	} else {
 		mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
-			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+			WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["featured_medium_id"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["sample_url"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
@@ -216,7 +220,7 @@ func updateWithoutFeaturedMedium(mock sqlmock.Sqlmock) {
 	DatasetSelectMock(mock)
 
 	mock.ExpectExec(`UPDATE \"dp_dataset\" SET (.+)  WHERE (.+) \"dp_dataset\".\"id\" = `).
-		WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
+		WithArgs(Dataset["contact_email"], Dataset["contact_name"], Dataset["currency_id"], Dataset["data_standard"], Dataset["description"], Dataset["frequency"], Dataset["granularity"], Dataset["license"], Dataset["price"], Dataset["related_articles"], Dataset["sample_url"], Dataset["source"], Dataset["temporal_coverage"], Dataset["time_saved"], Dataset["title"], test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).

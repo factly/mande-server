@@ -768,6 +768,46 @@ var doc = `{
             }
         },
         "/datasets/{dataset_id}/format": {
+            "get": {
+                "description": "Get all datsets format",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dataset Format"
+                ],
+                "summary": "Show all datsets format",
+                "operationId": "get-all-datsets-formats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dataset ID",
+                        "name": "dataset_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/format.paging"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create dataset format",
                 "produces": [
@@ -2580,7 +2620,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Format"
+                        "$ref": "#/definitions/model.DatasetFormat"
                     }
                 },
                 "total": {

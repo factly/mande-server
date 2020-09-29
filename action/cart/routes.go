@@ -14,12 +14,12 @@ type cartitem struct {
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", mylist)  // GET /carts - return list of cart items
-	r.Post("/", create) // POST /carts - add a new cart item
+	r.Get("/", userList) // GET /carts - return list of cart items
+	r.Post("/", create)  // POST /carts - add a new cart item
 
 	r.Route("/{cartitem_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /carts/{cartitem_id} - get a single cart item
-		r.Delete("/", delete) // DELETE /carts/{cartitem_id} - delete a cart item entry
+		r.Get("/", userDetails) // GET /carts/{cartitem_id} - get a single cart item
+		r.Delete("/", delete)   // DELETE /carts/{cartitem_id} - delete a cart item entry
 	})
 
 	return r
@@ -29,9 +29,9 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)
+	r.Get("/", adminList)
 	r.Route("/{cartitem_id}", func(r chi.Router) {
-		r.Get("/", details) // GET /carts/{cartitem_id} - get a single cart item
+		r.Get("/", adminDetails) // GET /carts/{cartitem_id} - get a single cart item
 	})
 
 	return r

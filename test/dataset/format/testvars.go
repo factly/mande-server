@@ -13,6 +13,19 @@ var DatasetFormat map[string]interface{} = map[string]interface{}{
 	"url":       "test.url.com",
 }
 
+var datasetformatlist []map[string]interface{} = []map[string]interface{}{
+	{
+		"format_id":  1,
+		"url":        "test1.url.com",
+		"dataset_id": 1,
+	},
+	{
+		"format_id":  1,
+		"url":        "test2.url.com",
+		"dataset_id": 1,
+	},
+}
+
 var undecodableDatasetFormat map[string]interface{} = map[string]interface{}{
 	"format_id": "1",
 	"url":       15,
@@ -26,6 +39,7 @@ var invalidDatasetFormat map[string]interface{} = map[string]interface{}{
 var DatasetFormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset_format"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset_format"`)
 var errDatasetFormatFK error = errors.New(`pq: insert or update on table "dp_dataset_format" violates foreign key constraint "dp_dataset_format_format_id_dp_format_id_foreign"`)
 
 const basePath string = "/datasets/{dataset_id}/format"

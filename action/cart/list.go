@@ -18,7 +18,7 @@ type paging struct {
 	Nodes []model.CartItem `json:"nodes"`
 }
 
-// mylist - Get all carts
+// userList - Get all carts
 // @Summary Show all carts
 // @Description Get all carts
 // @Tags Cart
@@ -29,7 +29,7 @@ type paging struct {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /cartitems [get]
-func mylist(w http.ResponseWriter, r *http.Request) {
+func userList(w http.ResponseWriter, r *http.Request) {
 	uID, err := util.GetUser(r)
 	if err != nil {
 		loggerx.Error(err)
@@ -49,7 +49,7 @@ func mylist(w http.ResponseWriter, r *http.Request) {
 	renderx.JSON(w, http.StatusOK, result)
 }
 
-// list - Get all carts
+// adminList - Get all carts
 // @Summary Show all carts
 // @Description Get all carts
 // @Tags Cart
@@ -61,7 +61,7 @@ func mylist(w http.ResponseWriter, r *http.Request) {
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /cartitems [get]
-func list(w http.ResponseWriter, r *http.Request) {
+func adminList(w http.ResponseWriter, r *http.Request) {
 
 	userIDStr := r.URL.Query().Get("user")
 
