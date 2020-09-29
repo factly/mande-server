@@ -2004,6 +2004,12 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
                         "description": "Product ID",
                         "name": "product_id",
                         "in": "path",
@@ -2456,6 +2462,9 @@ var doc = `{
                 "related_articles": {
                     "type": "string"
                 },
+                "sample_url": {
+                    "type": "string"
+                },
                 "source": {
                     "type": "string"
                 },
@@ -2545,6 +2554,9 @@ var doc = `{
                 "related_articles": {
                     "type": "string"
                 },
+                "sample_url": {
+                    "type": "string"
+                },
                 "source": {
                     "type": "string"
                 },
@@ -2620,7 +2632,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.DatasetFormat"
+                        "$ref": "#/definitions/model.Format"
                     }
                 },
                 "total": {
@@ -2874,6 +2886,9 @@ var doc = `{
                     }
                 },
                 "related_articles": {
+                    "type": "string"
+                },
+                "sample_url": {
                     "type": "string"
                 },
                 "source": {
