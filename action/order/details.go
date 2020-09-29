@@ -12,7 +12,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// details - Get orders by id
+// userDetails - Get orders by id
 // @Summary Show a orders by id
 // @Description Get orders by ID
 // @Tags Order
@@ -23,7 +23,7 @@ import (
 // @Success 200 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders/{order_id} [get]
-func details(w http.ResponseWriter, r *http.Request) {
+func userDetails(w http.ResponseWriter, r *http.Request) {
 
 	uID, err := util.GetUser(r)
 	if err != nil {
@@ -47,6 +47,42 @@ func details(w http.ResponseWriter, r *http.Request) {
 	err = model.DB.Model(&model.Order{}).Where(&model.Order{
 		UserID: uint(uID),
 	}).Preload("Payment").Preload("Payment.Currency").Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result).Error
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
+		return
+	}
+
+	renderx.JSON(w, http.StatusOK, result)
+}
+
+// adminDetails - Get orders by id
+// @Summary Show a orders by id
+// @Description Get orders by ID
+// @Tags Order
+// @ID get-orders-by-id
+// @Produce  json
+// @Param order_id path string true "Order ID"
+// @Param X-User header string true "User ID"
+// @Success 200 {object} model.Order
+// @Failure 400 {array} string
+// @Router /orders/{order_id} [get]
+func adminDetails(w http.ResponseWriter, r *http.Request) {
+
+	orderID := chi.URLParam(r, "order_id")
+	id, err := strconv.Atoi(orderID)
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
+
+	result := &model.Order{}
+	result.ID = uint(id)
+
+	err = model.DB.Model(&model.Order{}).Preload("Payment").Preload("Payment.Currency").Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

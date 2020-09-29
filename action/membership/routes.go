@@ -15,8 +15,8 @@ func UserRouter() chi.Router {
 	r.Post("/", create)  // POST /memberships - create a new membership and persist it
 
 	r.Route("/{membership_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /memberships/{membership_id} - read a single membership by :membership_id
-		r.Delete("/", delete) // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
+		r.Get("/", userDetails) // GET /memberships/{membership_id} - read a single membership by :membership_id
+		r.Delete("/", delete)   // DELETE /memberships/{membership_id} - delete a single membership by :membership_id
 	})
 
 	return r
@@ -29,7 +29,7 @@ func AdminRouter() chi.Router {
 	r.Get("/", adminList) // GET /memberships - return list of memberships
 
 	r.Route("/{membership_id}", func(r chi.Router) {
-		r.Get("/", details) // GET /memberships/{membership_id} - read a single membership by :membership_id
+		r.Get("/", adminDetails) // GET /memberships/{membership_id} - read a single membership by :membership_id
 	})
 
 	return r

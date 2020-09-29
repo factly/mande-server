@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// userdetails - Get dataset by id
+// userDetails - Get dataset by id
 // @Summary Show a dataset by id
 // @Description Get dataset by ID
 // @Tags Dataset
@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} model.Dataset
 // @Failure 400 {array} string
 // @Router /datasets/{dataset_id} [get]
-func userdetails(w http.ResponseWriter, r *http.Request) {
+func userDetails(w http.ResponseWriter, r *http.Request) {
 
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
@@ -54,7 +54,7 @@ func userdetails(w http.ResponseWriter, r *http.Request) {
 	renderx.JSON(w, http.StatusOK, result)
 }
 
-// admindetails - Get dataset by id
+// adminDetails - Get dataset by id
 // @Summary Show a dataset by id
 // @Description Get dataset by ID
 // @Tags Dataset
@@ -64,7 +64,7 @@ func userdetails(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} model.Dataset
 // @Failure 400 {array} string
 // @Router /datasets/{dataset_id} [get]
-func admindetails(w http.ResponseWriter, r *http.Request) {
+func adminDetails(w http.ResponseWriter, r *http.Request) {
 
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)

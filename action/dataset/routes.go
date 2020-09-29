@@ -40,7 +40,7 @@ func UserRouter() chi.Router {
 	r.Get("/", userlist) // GET /datasets - return list of datasets
 
 	r.Route("/{dataset_id}", func(r chi.Router) {
-		r.Get("/", userdetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+		r.Get("/", userDetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
 	})
 
 	return r
@@ -54,7 +54,7 @@ func AdminRouter() chi.Router {
 	r.Post("/", create)   // POST /datasets - create a new dataset and persist it
 
 	r.Route("/{dataset_id}", func(r chi.Router) {
-		r.Get("/", admindetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+		r.Get("/", adminDetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
 		r.Put("/", update)       // PUT /datasets/{dataset_id} - update a single dataset by :dataset_id
 		r.Delete("/", delete)    // DELETE /datasets/{dataset_id} - delete a single dataset by :dataset_id
 		r.Mount("/format", format.AdminRouter())

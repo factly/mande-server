@@ -18,8 +18,8 @@ func UserRouter() chi.Router {
 	r.Post("/", create)  // POST /carts - add a new cart item
 
 	r.Route("/{cartitem_id}", func(r chi.Router) {
-		r.Get("/", details)   // GET /carts/{cartitem_id} - get a single cart item
-		r.Delete("/", delete) // DELETE /carts/{cartitem_id} - delete a cart item entry
+		r.Get("/", userDetails) // GET /carts/{cartitem_id} - get a single cart item
+		r.Delete("/", delete)   // DELETE /carts/{cartitem_id} - delete a cart item entry
 	})
 
 	return r
@@ -31,7 +31,7 @@ func AdminRouter() chi.Router {
 
 	r.Get("/", adminList)
 	r.Route("/{cartitem_id}", func(r chi.Router) {
-		r.Get("/", details) // GET /carts/{cartitem_id} - get a single cart item
+		r.Get("/", adminDetails) // GET /carts/{cartitem_id} - get a single cart item
 	})
 
 	return r
