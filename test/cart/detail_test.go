@@ -27,7 +27,50 @@ func TestDetailCart(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	// ADMIN tests
 	CommonDetailTests(t, mock, adminExpect)
+
+	t.Run("get cart item by id", func(t *testing.T) {
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(CartItemCols).
+				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"]))
+
+		product.ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		adminExpect.GET(path).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(CartItem)
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("cart item record not found", func(t *testing.T) {
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(CartItemCols))
+
+		adminExpect.GET(path).
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "1").
+			Expect().
+			Status(http.StatusNotFound)
+
+		test.ExpectationsMet(t, mock)
+	})
 
 	server.Close()
 
@@ -35,12 +78,9 @@ func TestDetailCart(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	// USER test
 	CommonDetailTests(t, mock, userExpect)
 
-	server.Close()
-}
-
-func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get cart item by id", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1, 1).
@@ -57,7 +97,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 		dataset.DatasetSelectMock(mock)
 
-		e.GET(path).
+		userExpect.GET(path).
 			WithHeader("X-User", "1").
 			WithPath("cartitem_id", "1").
 			Expect().
@@ -74,7 +114,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
-		e.GET(path).
+		userExpect.GET(path).
 			WithHeader("X-User", "1").
 			WithPath("cartitem_id", "1").
 			Expect().
@@ -83,18 +123,23 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid cart item id", func(t *testing.T) {
-		e.GET(path).
-			WithHeader("X-User", "1").
-			WithPath("cartitem_id", "abc").
+	t.Run("invalid user header", func(t *testing.T) {
+		userExpect.GET(path).
+			WithHeader("X-User", "abc").
+			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("invalid user header", func(t *testing.T) {
+	server.Close()
+}
+
+func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
+
+	t.Run("invalid cart item id", func(t *testing.T) {
 		e.GET(path).
-			WithHeader("X-User", "abc").
-			WithPath("cartitem_id", "1").
+			WithHeader("X-User", "1").
+			WithPath("cartitem_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})

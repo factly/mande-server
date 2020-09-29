@@ -43,11 +43,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.DatasetFormat{}
-	result.DatasetID = uint(dID)
 	result.ID = uint(id)
 
 	// check record exists or not
-	err = model.DB.Where(&result).First(&result).Error
+	err = model.DB.Where(&model.DatasetFormat{
+		DatasetID: uint(dID),
+	}).First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
