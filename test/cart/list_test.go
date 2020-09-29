@@ -28,7 +28,57 @@ func TestListCartItems(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	// ADMIN specific tests
 	CommonListTests(t, mock, adminExpect)
+
+	t.Run("get cart item list with user query", func(t *testing.T) {
+		mock.ExpectQuery(countQuery).
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(len(cartitemslist)))
+
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(CartItemCols).
+				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"]))
+
+		product.ProductSelectMock(mock)
+
+		currency.CurrencySelectMock(mock)
+
+		medium.MediumSelectMock(mock)
+
+		tag.TagSelectMock(mock)
+
+		dataset.DatasetSelectMock(mock)
+
+		delete(cartitemslist[0], "product_id")
+
+		adminExpect.GET(basePath).
+			WithHeader("X-User", "1").
+			WithQuery("user", "1").
+			Expect().
+			Status(http.StatusOK).
+			JSON().
+			Object().
+			ContainsMap(map[string]interface{}{"total": len(cartitemslist)}).
+			Value("nodes").
+			Array().
+			Element(0).
+			Object().
+			ContainsMap(cartitemslist[0])
+
+		cartitemslist[0]["product_id"] = 1
+
+		test.ExpectationsMet(t, mock)
+	})
+
+	t.Run("invalid user query param", func(t *testing.T) {
+		adminExpect.GET(basePath).
+			WithHeader("X-User", "1").
+			WithQuery("user", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 
 	server.Close()
 
@@ -36,7 +86,15 @@ func TestListCartItems(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	// USER specific tests
 	CommonListTests(t, mock, userExpect)
+
+	t.Run("invalid user header", func(t *testing.T) {
+		userExpect.GET(basePath).
+			WithHeader("X-User", "anc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 
 	server.Close()
 }
@@ -64,13 +122,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			ContainsMap(map[string]interface{}{"total": 0})
 
 		test.ExpectationsMet(t, mock)
-	})
-
-	t.Run("invalid user header", func(t *testing.T) {
-		e.GET(basePath).
-			WithHeader("X-User", "anc").
-			Expect().
-			Status(http.StatusNotFound)
 	})
 
 	t.Run("get cart item list", func(t *testing.T) {

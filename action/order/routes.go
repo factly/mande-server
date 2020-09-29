@@ -8,7 +8,7 @@ import (
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /orders - return list of orders
+	r.Get("/", mylist)  // GET /orders - return list of orders
 	r.Post("/", create) // POST /orders - create a new order and persist it
 
 	r.Route("/{order_id}", func(r chi.Router) {

@@ -40,7 +40,7 @@ func TestDetailMembership(t *testing.T) {
 
 func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get membership by id", func(t *testing.T) {
-		MembershipSelectMock(mock)
+		selectWithTwoArgsMock(mock)
 
 		plan.PlanSelectMock(mock)
 
@@ -52,6 +52,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 		result := e.GET(path).
 			WithPath("membership_id", "1").
+			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -65,11 +66,12 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 	t.Run("membership record not found", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
+			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(MembershipCols))
 
 		e.GET(path).
 			WithPath("membership_id", "1").
+			WithHeader("X-User", "1").
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -79,6 +81,15 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("invalid membership id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("membership_id", "abc").
+			WithHeader("X-User", "1").
+			Expect().
+			Status(http.StatusNotFound)
+	})
+
+	t.Run("invalid user header", func(t *testing.T) {
+		e.GET(path).
+			WithPath("membership_id", "1").
+			WithHeader("X-User", "abc").
 			Expect().
 			Status(http.StatusNotFound)
 	})

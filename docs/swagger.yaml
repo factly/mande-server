@@ -809,6 +809,10 @@ paths:
         in: header
         name: X-User
         type: string
+      - description: User ID
+        in: query
+        name: user
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1628,6 +1632,15 @@ paths:
       description: Get all memberships
       operationId: get-all-memberships
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1707,6 +1720,11 @@ paths:
         name: membership_id
         required: true
         type: string
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -1728,6 +1746,15 @@ paths:
       description: Get all orders
       operationId: get-all-orders
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: User ID
+        in: query
+        name: user
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1799,6 +1826,11 @@ paths:
       - description: Order ID
         in: path
         name: order_id
+        required: true
+        type: string
+      - description: User ID
+        in: header
+        name: X-User
         required: true
         type: string
       produces:
