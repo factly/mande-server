@@ -99,4 +99,11 @@ func TestListDatasetFormat(t *testing.T) {
 
 		test.ExpectationsMet(t, mock)
 	})
+
+	t.Run("invalid dataset id", func(t *testing.T) {
+		e.GET(basePath).
+			WithPath("dataset_id", "abc").
+			Expect().
+			Status(http.StatusNotFound)
+	})
 }
