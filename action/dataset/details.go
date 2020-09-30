@@ -54,7 +54,7 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the user owns dataset
-	if checkOrderAssociation(uID, id) != 0 || checkMembershipAssociation(uID, id) != 0 {
+	if checkOrderAssociation(uID, id) != 0 {
 		model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 			DatasetID: uint(id),
 		}).Preload("Format").Find(&result.Formats)
@@ -130,45 +130,6 @@ func checkOrderAssociation(uID, id int) int {
 	dataset.ID = uint(id)
 
 	count = model.DB.Model(&dataset).Where("product_id IN (?)", productIDs).Association("Products").Count()
-
-	return count
-}
-
-// check if the item is associated with any membership of the user
-func checkMembershipAssociation(uID, id int) int {
-	var count int
-	// Get all plans of user from membership
-	memberships := make([]model.Membership, 0)
-
-	model.DB.Model(&model.Membership{}).Where(&model.Membership{
-		UserID: uint(uID),
-	}).Find(&memberships)
-
-	planIDs := make([]uint, 0)
-	for _, membership := range memberships {
-		planIDs = append(planIDs, membership.PlanID)
-	}
-
-	// Get all catalogs associated with all the plans
-	catalogs := make([]model.Catalog, 0)
-	model.DB.Model(&model.Catalog{}).Joins("INNER JOIN dp_plan_catalog ON dp_plan_catalog.catalog_id = dp_catalog.id").Where("plan_id IN (?)", planIDs).Find(&catalogs)
-
-	catalogIDs := make([]uint, 0)
-	for _, catalog := range catalogs {
-		catalogIDs = append(catalogIDs, catalog.ID)
-	}
-
-	// Get all products associated with all the catalogs
-	products := make([]model.Product, 0)
-	model.DB.Model(&model.Product{}).Joins("INNER JOIN dp_catalog_product ON dp_catalog_product.product_id = dp_product.id").Where("catalog_id IN (?)", catalogIDs).Find(&products)
-
-	productIDs := make([]uint, 0)
-	for _, product := range products {
-		productIDs = append(productIDs, product.ID)
-	}
-
-	// Count number of datasets in all products
-	model.DB.Model(&model.Product{}).Joins("INNER JOIN dp_product_dataset ON dp_product_dataset.product_id = dp_product.id").Where("product_id IN (?) AND dataset_id = ?", productIDs, id).Count(&count)
 
 	return count
 }
