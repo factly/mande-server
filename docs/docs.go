@@ -668,6 +668,12 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
                         "description": "Dataset ID",
                         "name": "dataset_id",
                         "in": "path",

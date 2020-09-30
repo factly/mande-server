@@ -1247,6 +1247,10 @@ paths:
       description: Get dataset by ID
       operationId: get-dataset-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
