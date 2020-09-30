@@ -653,6 +653,12 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
                         "description": "Dataset ID",
                         "name": "dataset_id",
                         "in": "path",
@@ -1989,6 +1995,12 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header"
+                    },
+                    {
+                        "type": "string",
                         "description": "Product ID",
                         "name": "product_id",
                         "in": "path",
@@ -2441,6 +2453,9 @@
                 "related_articles": {
                     "type": "string"
                 },
+                "sample_url": {
+                    "type": "string"
+                },
                 "source": {
                     "type": "string"
                 },
@@ -2530,6 +2545,9 @@
                 "related_articles": {
                     "type": "string"
                 },
+                "sample_url": {
+                    "type": "string"
+                },
                 "source": {
                     "type": "string"
                 },
@@ -2605,7 +2623,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.DatasetFormat"
+                        "$ref": "#/definitions/model.Format"
                     }
                 },
                 "total": {
@@ -2859,6 +2877,9 @@
                     }
                 },
                 "related_articles": {
+                    "type": "string"
+                },
+                "sample_url": {
                     "type": "string"
                 },
                 "source": {

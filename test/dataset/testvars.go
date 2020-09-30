@@ -122,6 +122,8 @@ var datasetlist []map[string]interface{} = []map[string]interface{}{
 }
 
 var DatasetCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", "related_articles", "time_saved", "price", "currency_id", "featured_medium_id"}
+var productCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug", "price", "status", "currency_id", "featured_medium_id"}
+var orderCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "user_id", "status", "payment_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset"`)
@@ -137,7 +139,12 @@ func DatasetSelectMock(mock sqlmock.Sqlmock) {
 		WillReturnRows(sqlmock.NewRows(DatasetCols).
 			AddRow(1, time.Now(), time.Now(), nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]))
 }
-
+func orderSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(orderCols).
+			AddRow(1, time.Now(), time.Now(), nil, 1, "status", 1, "razorpay_order_id"))
+}
 func tagAssociationSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
 		WithArgs(1).

@@ -17,6 +17,7 @@ import (
 // @Tags Product
 // @ID get-product-by-id
 // @Produce  json
+// @Param X-User header string false "User ID"
 // @Param product_id path string true "Product ID"
 // @Success 200 {object} model.Product
 // @Failure 400 {array} string
