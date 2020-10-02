@@ -8,9 +8,9 @@ type payment struct {
 	Gateway           string `json:"gateway" `
 	CurrencyID        uint   `json:"currency_id" validate:"required"`
 	Status            string `json:"status"`
-	RazorpayOrderID   string `gorm:"column:razorpay_order_id" json:"razorpay_order_id" validate:"required"`
-	RazorpayPaymentID string `gorm:"column:razorpay_payment_id" json:"razorpay_payment_id" validate:"required"`
-	RazorpaySignature string `gorm:"column:razorpay_signature" json:"razorpay_signature" validate:"required"`
+	OrderID           string `json:"order_id" validate:"required"`
+	RazorpayPaymentID string `json:"razorpay_payment_id" validate:"required"`
+	RazorpaySignature string `json:"razorpay_signature" validate:"required"`
 }
 
 // UserRouter - Group of payment router

@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/config"
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/meili"
+	"github.com/factly/data-portal-server/util/razorpay"
 )
 
 // @title Data portal API
@@ -34,6 +35,8 @@ func main() {
 	model.Migration()
 
 	meili.SetupMeiliSearch()
+
+	razorpay.SetupRazorpay()
 
 	// register routes
 	userRouter := action.RegisterUserRoutes()
