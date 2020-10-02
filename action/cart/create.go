@@ -51,9 +51,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.CartItem{
-		Status:    cartitem.Status,
-		UserID:    uint(uID),
-		ProductID: cartitem.ProductID,
+		Status:       cartitem.Status,
+		UserID:       uint(uID),
+		ProductID:    cartitem.ProductID,
+		MembershipID: cartitem.MembershipID,
 	}
 
 	tx := model.DB.Begin()
@@ -65,7 +66,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx.Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result)
+	tx.Preload("Product").Preload("Membership").Preload("Membership.Plan").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{

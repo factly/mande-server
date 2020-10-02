@@ -2,6 +2,8 @@ basePath: /
 definitions:
   cart.cartitem:
     properties:
+      membership_id:
+        type: integer
       product_id:
         type: integer
       status:
@@ -204,7 +206,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.Format'
+          $ref: '#/definitions/model.DatasetFormat'
         type: array
       total:
         type: integer
@@ -267,6 +269,11 @@ definitions:
       deleted_at:
         type: string
       id:
+        type: integer
+      membership:
+        $ref: '#/definitions/model.Membership'
+        type: object
+      membership_id:
         type: integer
       product:
         $ref: '#/definitions/model.Product'

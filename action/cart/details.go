@@ -44,7 +44,7 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 
 	err = model.DB.Model(&model.CartItem{}).Where(&model.CartItem{
 		UserID: uint(uID),
-	}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
+	}).Preload("Product").Preload("Membership").Preload("Membership.Plan").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -79,7 +79,7 @@ func adminDetails(w http.ResponseWriter, r *http.Request) {
 	result := &model.CartItem{}
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
+	err = model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Membership").Preload("Membership.Plan").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

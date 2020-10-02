@@ -2337,6 +2337,9 @@ var doc = `{
                 "status"
             ],
             "properties": {
+                "membership_id": {
+                    "type": "integer"
+                },
                 "product_id": {
                     "type": "integer"
                 },
@@ -2638,7 +2641,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Format"
+                        "$ref": "#/definitions/model.DatasetFormat"
                     }
                 },
                 "total": {
@@ -2739,6 +2742,13 @@ var doc = `{
                     "type": "string"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "membership": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Membership"
+                },
+                "membership_id": {
                     "type": "integer"
                 },
                 "product": {
