@@ -2641,7 +2641,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.DatasetFormat"
+                        "$ref": "#/definitions/model.Format"
                     }
                 },
                 "total": {
@@ -3471,6 +3471,86 @@ var doc = `{
                     }
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "product.productRes": {
+            "type": "object",
+            "required": [
+                "currency_id",
+                "price",
+                "slug",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "catalogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Catalog"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
+                },
+                "datasets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Dataset"
+                    }
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "featured_medium": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "featured_medium_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "memberships": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Membership"
+                    }
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Order"
+                    }
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Tag"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
