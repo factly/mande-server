@@ -34,15 +34,12 @@ func userlist(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Preload("FeaturedMedium").Preload("Currency").Preload("Tags").Model(&model.Dataset{}).Count(&result.Total).Offset(offset).Limit(limit).Find(&datasets)
 
-	// Check if user owns the dataset
-
-	// Import formats only if the user owns the dataset
 	for _, dataset := range datasets {
 		var formats []model.DatasetFormat
 
 		data := &datasetData{}
 		data.Formats = make([]model.DatasetFormat, 0)
-		model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
+		model.DB.Model(&model.DatasetFormat{}).Select("id, created_at, updated_at, deleted_at, format_id, dataset_id").Where(&model.DatasetFormat{
 			DatasetID: uint(dataset.ID),
 		}).Preload("Format").Find(&formats)
 
