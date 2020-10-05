@@ -4,11 +4,11 @@ import "github.com/go-chi/chi"
 
 // payment request body
 type payment struct {
-	Amount            int    `json:"amount" validate:"required"`
 	Gateway           string `json:"gateway" `
 	CurrencyID        uint   `json:"currency_id" validate:"required"`
 	Status            string `json:"status"`
-	OrderID           string `json:"order_id" validate:"required"`
+	For               string `json:"for" validate:"required"`
+	EntityID          uint   `json:"entity_id" validate:"required"`
 	RazorpayPaymentID string `json:"razorpay_payment_id" validate:"required"`
 	RazorpaySignature string `json:"razorpay_signature" validate:"required"`
 }

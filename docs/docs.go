@@ -3362,23 +3362,23 @@ var doc = `{
         "payment.payment": {
             "type": "object",
             "required": [
-                "amount",
                 "currency_id",
-                "order_id",
+                "entity_id",
+                "for",
                 "razorpay_payment_id",
                 "razorpay_signature"
             ],
             "properties": {
-                "amount": {
-                    "type": "integer"
-                },
                 "currency_id": {
                     "type": "integer"
                 },
-                "gateway": {
+                "entity_id": {
+                    "type": "integer"
+                },
+                "for": {
                     "type": "string"
                 },
-                "order_id": {
+                "gateway": {
                     "type": "string"
                 },
                 "razorpay_payment_id": {
