@@ -1,7 +1,10 @@
 package order
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/factly/data-portal-server/util/razorpay"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
@@ -51,9 +54,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Delete cart items
+	var orderPrice int = 0
+
+	// Delete cart items and append it in order & calculate price
 	for _, item := range cartitems {
 		result.Products = append(result.Products, *item.Product)
+
+		if item.MembershipID == 0 {
+			orderPrice += item.Product.Price
+		}
 
 		if err := tx.Delete(item).Error; err != nil {
 			tx.Rollback()
@@ -73,7 +82,39 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a razorpay order and get razorpay orderID
+	razorpayRequest := map[string]interface{}{
+		"amount":          orderPrice * 100,
+		"currency":        "INR",
+		"receipt":         fmt.Sprint(result.ID),
+		"payment_capture": 1,
+	}
+
+	orderBody, err := razorpay.CreateOrder(razorpayRequest)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
 	// Change order status to initiated and add razorpay_id in order table
+	if _, found := orderBody["id"]; !found {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	result.Status = "processing"
+	result.RazorpayOrderID = orderBody["id"].(string)
+
+	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
 
 	tx.Model(&model.Order{}).Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").First(&result)
 

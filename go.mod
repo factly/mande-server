@@ -26,9 +26,9 @@ require (
 	github.com/meilisearch/meilisearch-go v0.12.1
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.14.0 // indirect
-	github.com/razorpay/razorpay-go v0.0.0-20200616141002-0e6c7c357e18
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/swaggo/http-swagger v0.0.0-20200308142732-58ac5e232fba
 	github.com/swaggo/swag v1.6.7
 	github.com/valyala/fasthttp v1.16.0 // indirect
