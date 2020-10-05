@@ -1,19 +1,14 @@
 package razorpay
 
 import (
-	"encoding/base64"
-	"fmt"
-	"net/http"
-
 	"github.com/factly/data-portal-server/config"
+	"github.com/razorpay/razorpay-go"
 )
 
-var URL string = "https://api.razorpay.com/v1"
+// Client client for razorpay
+var Client *razorpay.Client
 
-func AddAuthHeader(request *http.Request) {
-	authHeader := fmt.Sprint(config.RazorpayKey, ":", config.RazorpaySecret)
-	authHeaderEnc := base64.StdEncoding.EncodeToString([]byte(authHeader))
-
-	header := fmt.Sprint("Basic ", authHeaderEnc)
-	request.Header.Add("Authorization", header)
+// SetupClient setups the client with key and secret
+func SetupClient() {
+	Client = razorpay.NewClient(config.RazorpayKey, config.RazorpaySecret)
 }

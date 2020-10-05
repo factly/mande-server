@@ -81,15 +81,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch Currency
+	currency := model.Currency{}
+	model.DB.Model(&model.Currency{}).First(&currency)
+
 	// Create a razorpay order and get razorpay orderID
 	razorpayRequest := map[string]interface{}{
 		"amount":          orderPrice * 100,
-		"currency":        "INR",
+		"currency":        currency.IsoCode,
 		"receipt":         fmt.Sprint(result.ID),
 		"payment_capture": 1,
 	}
 
-	orderBody, err := razorpay.CreateOrder(razorpayRequest)
+	orderBody, err := razorpay.Client.Order.Create(razorpayRequest, nil)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
