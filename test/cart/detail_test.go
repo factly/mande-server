@@ -12,6 +12,8 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/membership"
+	"github.com/factly/data-portal-server/test/plan"
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
@@ -34,9 +36,13 @@ func TestDetailCart(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"], CartItem["membership_id"]))
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -85,9 +91,13 @@ func TestDetailCart(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"], CartItem["membership_id"]))
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 

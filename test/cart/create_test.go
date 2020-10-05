@@ -5,12 +5,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/factly/data-portal-server/test/plan"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/membership"
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
@@ -35,12 +38,16 @@ func TestCreateCart(t *testing.T) {
 	t.Run("create a cart item", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		CartItemSelectMock(mock)
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -98,7 +105,7 @@ func TestCreateCart(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnError(errCartItemProductFK)
 		mock.ExpectRollback()
 
@@ -116,12 +123,16 @@ func TestCreateCart(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		CartItemSelectMock(mock)
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 

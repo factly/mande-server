@@ -6,8 +6,9 @@ import (
 
 // CartItem request body
 type cartitem struct {
-	Status    string `json:"status" validate:"required"`
-	ProductID uint   `json:"product_id" validate:"required"`
+	Status       string `json:"status" validate:"required"`
+	ProductID    uint   `json:"product_id" validate:"required"`
+	MembershipID uint   `json:"membership_id"`
 }
 
 // UserRouter - Group of user cart router
