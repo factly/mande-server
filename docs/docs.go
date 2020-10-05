@@ -2641,7 +2641,7 @@ var doc = `{
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Format"
+                        "$ref": "#/definitions/model.DatasetFormat"
                     }
                 },
                 "total": {
@@ -3169,8 +3169,10 @@ var doc = `{
         "model.Plan": {
             "type": "object",
             "required": [
+                "currency_id",
                 "duration",
                 "name",
+                "price",
                 "status"
             ],
             "properties": {
@@ -3182,6 +3184,13 @@ var doc = `{
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3197,6 +3206,9 @@ var doc = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
@@ -3352,7 +3364,7 @@ var doc = `{
             "required": [
                 "amount",
                 "currency_id",
-                "razorpay_order_id",
+                "order_id",
                 "razorpay_payment_id",
                 "razorpay_signature"
             ],
@@ -3366,7 +3378,7 @@ var doc = `{
                 "gateway": {
                     "type": "string"
                 },
-                "razorpay_order_id": {
+                "order_id": {
                     "type": "string"
                 },
                 "razorpay_payment_id": {
@@ -3397,8 +3409,10 @@ var doc = `{
         "plan.plan": {
             "type": "object",
             "required": [
+                "currency_id",
                 "duration",
-                "name"
+                "name",
+                "price"
             ],
             "properties": {
                 "catalog_ids": {
@@ -3406,6 +3420,9 @@ var doc = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "description": {
                     "type": "string"
@@ -3415,6 +3432,9 @@ var doc = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"

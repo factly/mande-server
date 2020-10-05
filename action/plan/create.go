@@ -46,6 +46,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Description: plan.Description,
 		Duration:    plan.Duration,
 		Status:      plan.Status,
+		CurrencyID:  plan.CurrencyID,
+		Price:       plan.Price,
 	}
 
 	result.Catalogs = make([]model.Catalog, 0)
@@ -62,7 +64,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx.Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
+	tx.Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{

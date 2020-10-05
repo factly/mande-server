@@ -87,6 +87,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Description: plan.Description,
 		Duration:    plan.Duration,
 		Status:      plan.Status,
+		Price:       plan.Price,
+		CurrencyID:  plan.CurrencyID,
 		Catalogs:    newCatalogs,
 	}).Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
 

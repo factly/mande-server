@@ -32,4 +32,5 @@ func Migration() {
 	DB.Model(&Catalog{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Dataset{}).AddForeignKey("featured_medium_id", "dp_medium(id)", "RESTRICT", "RESTRICT")
 	DB.Model(&Dataset{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
+	DB.Model(&Plan{}).AddForeignKey("currency_id", "dp_currency(id)", "RESTRICT", "RESTRICT")
 }
