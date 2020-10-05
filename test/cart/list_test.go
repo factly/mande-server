@@ -13,6 +13,8 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
+	"github.com/factly/data-portal-server/test/membership"
+	"github.com/factly/data-portal-server/test/plan"
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
@@ -38,10 +40,14 @@ func TestListCartItems(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -130,10 +136,14 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
@@ -169,9 +179,13 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		product.ProductSelectMock(mock)
+
+		membership.MembershipSelectMock(mock)
+
+		plan.PlanSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 

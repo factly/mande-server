@@ -161,6 +161,15 @@ func datasetFormatSelectMock(mock sqlmock.Sqlmock, id int) {
 	format.FormatSelectMock(mock)
 }
 
+func userDatasetFormatSelectMock(mock sqlmock.Sqlmock, id int) {
+	mock.ExpectQuery(`SELECT (.+) FROM "dp_dataset_format"`).
+		WithArgs(id).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}).
+			AddRow(id, time.Now(), time.Now(), nil, 1, id, "www.testurl.com"))
+
+	format.FormatSelectMock(mock)
+}
+
 func validateAssociations(result *httpexpect.Object) {
 	result.Value("featured_medium").
 		Object().

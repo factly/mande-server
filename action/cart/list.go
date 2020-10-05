@@ -44,7 +44,7 @@ func userList(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.CartItem{}).Where(&model.CartItem{
 		UserID: uint(uID),
-	}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
+	}).Preload("Product").Preload("Membership").Preload("Membership.Plan").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").Count(&result.Total).Offset(offset).Limit(limit).Find(&result.Nodes)
 
 	renderx.JSON(w, http.StatusOK, result)
 }
@@ -81,7 +81,7 @@ func adminList(w http.ResponseWriter, r *http.Request) {
 
 	offset, limit := paginationx.Parse(r.URL.Query())
 
-	tx := model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").Offset(offset).Limit(limit)
+	tx := model.DB.Model(&model.CartItem{}).Preload("Product").Preload("Membership").Preload("Membership.Plan").Preload("Product.Currency").Preload("Product.FeaturedMedium").Preload("Product.Tags").Preload("Product.Datasets").Offset(offset).Limit(limit)
 
 	if userID != 0 {
 		tx.Where(&model.CartItem{

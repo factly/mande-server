@@ -2,6 +2,8 @@ basePath: /
 definitions:
   cart.cartitem:
     properties:
+      membership_id:
+        type: integer
       product_id:
         type: integer
       status:
@@ -267,6 +269,11 @@ definitions:
       deleted_at:
         type: string
       id:
+        type: integer
+      membership:
+        $ref: '#/definitions/model.Membership'
+        type: object
+      membership_id:
         type: integer
       product:
         $ref: '#/definitions/model.Product'
@@ -757,6 +764,61 @@ definitions:
     required:
     - price
     - slug
+    - title
+    type: object
+  product.productRes:
+    properties:
+      catalogs:
+        items:
+          $ref: '#/definitions/model.Catalog'
+        type: array
+      created_at:
+        type: string
+      currency:
+        $ref: '#/definitions/model.Currency'
+        type: object
+      currency_id:
+        type: integer
+      datasets:
+        items:
+          $ref: '#/definitions/model.Dataset'
+        type: array
+      deleted_at:
+        type: string
+      featured_medium:
+        $ref: '#/definitions/model.Medium'
+        type: object
+      featured_medium_id:
+        type: integer
+      id:
+        type: integer
+      memberships:
+        items:
+          $ref: '#/definitions/model.Membership'
+        type: array
+      orders:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
+      price:
+        type: integer
+      slug:
+        type: string
+      status:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      title:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - currency_id
+    - price
+    - slug
+    - status
     - title
     type: object
   search.searchQuery:

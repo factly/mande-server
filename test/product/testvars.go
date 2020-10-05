@@ -79,6 +79,9 @@ var productlist []map[string]interface{} = []map[string]interface{}{
 }
 
 var ProductCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug", "price", "status", "currency_id", "featured_medium_id"}
+var catalogCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "description", "featured_medium_id", "published_date"}
+var planCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "status", "duration"}
+var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_product"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_product"`)
@@ -115,6 +118,34 @@ func datasetsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
 		WithArgs(prodId).
 		WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)).
 			AddRow(1, time.Now(), time.Now(), nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1, prodId))
+}
+
+func catalogsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_catalog".* FROM "dp_catalog"`)).
+		WithArgs(prodId).
+		WillReturnRows(sqlmock.NewRows(catalogCols).
+			AddRow(1, time.Now(), time.Now(), nil, "title", "description", 1, time.Now()))
+}
+
+func plansCatalogAssociationSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_plan".* FROM "dp_plan"`)).
+		WithArgs(sqlmock.AnyArg()).
+		WillReturnRows(sqlmock.NewRows(planCols).
+			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 10))
+}
+
+func membershipAssociationSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)).
+		WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
+		WillReturnRows(sqlmock.NewRows(membershipCols).
+			AddRow(1, time.Now(), time.Now(), nil, "status", 1, 1, 1, "razorpay_order_id"))
+}
+
+func planSelectMock(mock sqlmock.Sqlmock) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan"`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows(planCols).
+			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 10))
 }
 
 func insertWithErrorMock(mock sqlmock.Sqlmock, err error) {
