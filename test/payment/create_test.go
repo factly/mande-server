@@ -201,7 +201,6 @@ func TestCreatePayment(t *testing.T) {
 
 		gock.New("https://api.razorpay.com").
 			Post("/v1/payments/(.+)").
-			Persist().
 			Reply(http.StatusInternalServerError)
 
 		mock.ExpectBegin()
@@ -228,21 +227,12 @@ func TestCreatePayment(t *testing.T) {
 		defer gock.DisableNetworking()
 
 		gock.New("https://api.razorpay.com").
-			Post("/v1/payments/(.+)").
-			Persist().
+			Get("/v1/payments/(.+)").
 			Reply(http.StatusOK).
 			JSON(map[string]interface{}{
-				"amount":      5000,
-				"amount_paid": 0,
-				"amount_due":  5000,
-				"currency":    "INR",
-				"receipt":     "Test Receipt no. 1",
+				"currency": "INR",
+				"receipt":  "Test Receipt no. 1",
 			})
-
-		gock.New("https://api.razorpay.com").
-			Post("/v1/payments/(.+)").
-			Persist().
-			Reply(http.StatusInternalServerError)
 
 		mock.ExpectBegin()
 
