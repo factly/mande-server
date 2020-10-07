@@ -90,7 +90,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:       plan.Price,
 		CurrencyID:  plan.CurrencyID,
 		Catalogs:    newCatalogs,
-	}).Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
+	}).Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
 
 	// Update into meili index
 	meiliObj := map[string]interface{}{

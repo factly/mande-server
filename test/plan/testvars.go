@@ -17,6 +17,8 @@ var Plan map[string]interface{} = map[string]interface{}{
 	"name":        "Test Plan",
 	"description": "Test Plan Description",
 	"status":      "teststatus",
+	"price":       100,
+	"currency_id": 1,
 	"duration":    364,
 	"catalog_ids": []uint{1},
 }
@@ -25,6 +27,8 @@ var PlanReceive map[string]interface{} = map[string]interface{}{
 	"name":        "Test Plan",
 	"description": "Test Plan Description",
 	"status":      "teststatus",
+	"price":       100,
+	"currency_id": 1,
 	"duration":    364,
 }
 
@@ -46,6 +50,8 @@ var planlist []map[string]interface{} = []map[string]interface{}{
 		"name":        "Test Plan 1",
 		"description": "Test Plan Description 1",
 		"status":      "teststatus1",
+		"price":       100,
+		"currency_id": 1,
 		"duration":    364,
 		"catalog_ids": []uint{1},
 	},
@@ -53,12 +59,14 @@ var planlist []map[string]interface{} = []map[string]interface{}{
 		"name":        "Test Plan 2",
 		"description": "Test Plan Description 2",
 		"status":      "teststatus2",
+		"price":       200,
+		"currency_id": 1,
 		"duration":    223,
 		"catalog_ids": []uint{1},
 	},
 }
 
-var PlanCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "status", "duration"}
+var PlanCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "status", "duration", "price", "currency_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_plan"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_plan"`)
@@ -70,7 +78,7 @@ func PlanSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(PlanCols).
-			AddRow(1, time.Now(), time.Now(), nil, Plan["name"], Plan["description"], Plan["status"], Plan["duration"]))
+			AddRow(1, time.Now(), time.Now(), nil, Plan["name"], Plan["description"], Plan["status"], Plan["duration"], Plan["price"], Plan["currency_id"]))
 }
 
 func associatedCatalogSelectMock(mock sqlmock.Sqlmock) {
@@ -104,7 +112,7 @@ func planUpdateMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(PlanCols).
-			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 50))
+			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 50, 100, 1))
 
 	associatedCatalogSelectMock(mock)
 
@@ -115,7 +123,7 @@ func planUpdateMock(mock sqlmock.Sqlmock) {
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	mock.ExpectExec(`UPDATE \"dp_plan\" SET (.+)  WHERE (.+) \"dp_plan\".\"id\" = `).
-		WithArgs(Plan["description"], Plan["duration"], Plan["name"], Plan["status"], test.AnyTime{}, 1).
+		WithArgs(Plan["currency_id"], Plan["description"], Plan["duration"], Plan["name"], Plan["price"], Plan["status"], test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
@@ -123,6 +131,8 @@ func planUpdateMock(mock sqlmock.Sqlmock) {
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	PlanSelectMock(mock)
+
+	currency.CurrencySelectMock(mock)
 
 	associatedCatalogSelectMock(mock)
 

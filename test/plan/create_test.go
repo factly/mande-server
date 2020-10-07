@@ -37,7 +37,7 @@ func TestCreatePlan(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["price"], Plan["currency_id"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 
 		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
@@ -45,6 +45,7 @@ func TestCreatePlan(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		PlanSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 		associatedCatalogSelectMock(mock)
 		productCatalogAssociationMock(mock, 1)
 		currency.CurrencySelectMock(mock)
@@ -82,7 +83,7 @@ func TestCreatePlan(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["price"], Plan["currency_id"], Plan["duration"], Plan["status"]).
 			WillReturnError(errors.New("cannot create plan"))
 		mock.ExpectRollback()
 
@@ -100,7 +101,7 @@ func TestCreatePlan(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["duration"], Plan["status"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["price"], Plan["currency_id"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 
 		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
@@ -108,6 +109,7 @@ func TestCreatePlan(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		PlanSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 		associatedCatalogSelectMock(mock)
 		productCatalogAssociationMock(mock, 1)
 		currency.CurrencySelectMock(mock)

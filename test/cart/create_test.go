@@ -3,6 +3,7 @@ package cart
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/factly/data-portal-server/test/plan"
@@ -37,6 +38,9 @@ func TestCreateCart(t *testing.T) {
 
 	t.Run("create a cart item", func(t *testing.T) {
 		mock.ExpectBegin()
+
+		membership.MembershipSelectMock(mock)
+
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
@@ -101,9 +105,10 @@ func TestCreateCart(t *testing.T) {
 			Status(http.StatusNotFound)
 	})
 
-	t.Run("user does not exist", func(t *testing.T) {
+	t.Run("product does not exist", func(t *testing.T) {
 
 		mock.ExpectBegin()
+		membership.MembershipSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnError(errCartItemProductFK)
@@ -118,10 +123,31 @@ func TestCreateCart(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
+	t.Run("membership does not exist", func(t *testing.T) {
+
+		mock.ExpectBegin()
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(membership.MembershipCols))
+
+		mock.ExpectRollback()
+
+		e.POST(basePath).
+			WithHeader("X-User", "1").
+			WithJSON(CartItem).
+			Expect().
+			Status(http.StatusUnprocessableEntity)
+
+		test.ExpectationsMet(t, mock)
+	})
+
 	t.Run("create a cart item when meili is down", func(t *testing.T) {
 		gock.Off()
 
 		mock.ExpectBegin()
+		membership.MembershipSelectMock(mock)
+
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
