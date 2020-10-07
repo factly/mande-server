@@ -47,7 +47,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 			Status(http.StatusOK).
 			JSON().
 			Object().
-			ContainsMap(PaymentReceive)
+			ContainsMap(Payment)
 
 		test.ExpectationsMet(t, mock)
 	})

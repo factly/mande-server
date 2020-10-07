@@ -121,5 +121,5 @@ func validateAssociations(result *httpexpect.Object) {
 
 	result.Value("payment").
 		Object().
-		ContainsMap(payment.PaymentReceive)
+		ContainsMap(payment.Payment)
 }

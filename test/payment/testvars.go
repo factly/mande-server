@@ -8,23 +8,54 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
+// order_FjYVOJ8Vod4lmT
+
+var PaymentOrderReq map[string]interface{} = map[string]interface{}{
+	"gateway":             "testgateway.com",
+	"currency_id":         1,
+	"status":              "complete",
+	"for":                 "order",
+	"entity_id":           1,
+	"razorpay_payment_id": "pay_FjYWQFwuiE89Xp",
+	"razorpay_signature":  "114d1d336c37685092345249943acb3007e4c5f8a4fc6493c02c676c7c4e2a0c",
+}
+
+var PaymentMembershipReq map[string]interface{} = map[string]interface{}{
+	"gateway":             "testgateway.com",
+	"currency_id":         1,
+	"status":              "complete",
+	"for":                 "membership",
+	"entity_id":           1,
+	"razorpay_payment_id": "pay_FjYWQFwuiE89Xp",
+	"razorpay_signature":  "114d1d336c37685092345249943acb3007e4c5f8a4fc6493c02c676c7c4e2a0c",
+}
+
+var InvalidSigPaymentReq map[string]interface{} = map[string]interface{}{
+	"gateway":             "testgateway.com",
+	"currency_id":         1,
+	"status":              "complete",
+	"for":                 "order",
+	"entity_id":           1,
+	"razorpay_payment_id": "pay_FjYWQFwuiE89Xp",
+	"razorpay_signature":  "114d1d336c37685092345249943acb3007e4c5f8a4fc6493c02c676c7c4e2a",
+}
+
+var InvalidForPaymentReq map[string]interface{} = map[string]interface{}{
+	"gateway":             "testgateway.com",
+	"currency_id":         1,
+	"status":              "complete",
+	"for":                 "orr",
+	"entity_id":           1,
+	"razorpay_payment_id": "pay_FjYWQFwuiE89Xp",
+	"razorpay_signature":  "114d1d336c37685092345249943acb3007e4c5f8a4fc6493c02c676c7c4e2a0c",
+}
 var Payment map[string]interface{} = map[string]interface{}{
 	"amount":              100,
 	"gateway":             "testgateway.com",
 	"currency_id":         1,
-	"status":              "sucessful",
-	"razorpay_order_id":   "order001",
-	"razorpay_payment_id": "payment001",
-	"razorpay_signature":  "signature001",
-}
-
-var PaymentReceive map[string]interface{} = map[string]interface{}{
-	"amount":              100,
-	"gateway":             "testgateway.com",
-	"currency_id":         1,
-	"status":              "sucessful",
-	"razorpay_payment_id": "payment001",
-	"razorpay_signature":  "signature001",
+	"status":              "complete",
+	"razorpay_payment_id": "pay_FjYWQFwuiE89Xp",
+	"razorpay_signature":  "114d1d336c37685092345249943acb3007e4c5f8a4fc6493c02c676c7c4e2a0c",
 }
 
 var undecodablePayment map[string]interface{} = map[string]interface{}{
@@ -63,6 +94,8 @@ var paymentlist []map[string]interface{} = []map[string]interface{}{
 }
 
 var PaymentCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "amount", "gateway", "currency_id", "status", "razorpay_payment_id", "razorpay_signature"}
+var orderCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "user_id", "status", "payment_id", "razorpay_order_id"}
+var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_payment"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_payment"`)

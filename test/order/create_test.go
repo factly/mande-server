@@ -170,11 +170,12 @@ func TestCreateOrder(t *testing.T) {
 			Persist().
 			Reply(http.StatusOK).
 			JSON(map[string]interface{}{
-				"amount":      5000,
-				"amount_paid": 0,
-				"amount_due":  5000,
-				"currency":    "INR",
-				"receipt":     "Test Receipt no. 1",
+				"currency":      "INR",
+				"status":        "captured",
+				"order_id":      "order_FjYVOJ8Vod4lmT",
+				"invoice_id":    nil,
+				"international": false,
+				"method":        "card",
 			})
 
 		mock.ExpectBegin()

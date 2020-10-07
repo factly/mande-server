@@ -94,12 +94,55 @@ var RazorpayOrder = map[string]interface{}{
 	"created_at": 1602047090,
 }
 
+var RazorpayPayment = map[string]interface{}{
+	"id":              "pay_FjYWQFwuiE89Xp",
+	"entity":          "payment",
+	"amount":          10000,
+	"currency":        "INR",
+	"status":          "captured",
+	"order_id":        "order_FjYVOJ8Vod4lmT",
+	"invoice_id":      nil,
+	"international":   false,
+	"method":          "card",
+	"amount_refunded": 0,
+	"refund_status":   nil,
+	"captured":        true,
+	"description":     "Test Transaction",
+	"card_id":         "card_FjYNqO7cTrB4EU",
+	"bank":            nil,
+	"wallet":          nil,
+	"vpa":             nil,
+	"email":           "gaurav.kumar@example.com",
+	"contact":         "+919999999999",
+	"notes": map[string]interface{}{
+		"address": "Razorpay Corporate Office",
+	},
+	"fee":               2798,
+	"tax":               0,
+	"error_code":        nil,
+	"error_description": nil,
+	"error_source":      nil,
+	"error_step":        nil,
+	"error_reason":      nil,
+	"acquirer_data": map[string]interface{}{
+		"auth_code": "464641",
+	},
+	"created_at": 1601889873,
+}
+
 func RazorpayGock() {
 	razorpay.SetupClient()
+	config.RazorpaySecret = "testsecret"
 
 	gock.New("https://api.razorpay.com").
 		Post("/v1/orders").
 		Persist().
 		Reply(http.StatusOK).
 		JSON(RazorpayOrder)
+
+	gock.New("https://api.razorpay.com").
+		Get("/v1/payments/(.+)").
+		Persist().
+		Reply(http.StatusOK).
+		JSON(RazorpayPayment)
 }
