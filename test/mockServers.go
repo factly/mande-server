@@ -3,6 +3,8 @@ package test
 import (
 	"net/http"
 
+	"github.com/factly/data-portal-server/util/razorpay"
+
 	"github.com/factly/data-portal-server/config"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -73,4 +75,31 @@ func MeiliGock() {
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
+}
+
+var RazorpayOrder = map[string]interface{}{
+	"id":          "order_FltCdu23fGaTwG",
+	"entity":      "order",
+	"amount":      5000,
+	"amount_paid": 0,
+	"amount_due":  5000,
+	"currency":    "INR",
+	"receipt":     "Test Receipt no. 1",
+	"offer_id":    nil,
+	"status":      "created",
+	"attempts":    0,
+	"notes": map[string]interface{}{
+		"info": "this payment is for first order",
+	},
+	"created_at": 1602047090,
+}
+
+func RazorpayGock() {
+	razorpay.SetupClient()
+
+	gock.New("https://api.razorpay.com").
+		Post("/v1/orders").
+		Persist().
+		Reply(http.StatusOK).
+		JSON(RazorpayOrder)
 }

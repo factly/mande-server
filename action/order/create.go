@@ -3,6 +3,7 @@ package order
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/factly/data-portal-server/util/razorpay"
 
@@ -88,7 +89,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	// Create a razorpay order and get razorpay orderID
 	razorpayRequest := map[string]interface{}{
 		"amount":          orderPrice * 100,
-		"currency":        currency.IsoCode,
+		"currency":        strings.ToUpper(currency.IsoCode),
 		"receipt":         fmt.Sprint(result.ID),
 		"payment_capture": 1,
 	}
