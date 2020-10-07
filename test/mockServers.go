@@ -3,6 +3,8 @@ package test
 import (
 	"net/http"
 
+	"github.com/factly/data-portal-server/util/razorpay"
+
 	"github.com/factly/data-portal-server/config"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -73,4 +75,74 @@ func MeiliGock() {
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
+}
+
+var RazorpayOrder = map[string]interface{}{
+	"id":          "order_FltCdu23fGaTwG",
+	"entity":      "order",
+	"amount":      5000,
+	"amount_paid": 0,
+	"amount_due":  5000,
+	"currency":    "INR",
+	"receipt":     "Test Receipt no. 1",
+	"offer_id":    nil,
+	"status":      "created",
+	"attempts":    0,
+	"notes": map[string]interface{}{
+		"info": "this payment is for first order",
+	},
+	"created_at": 1602047090,
+}
+
+var RazorpayPayment = map[string]interface{}{
+	"id":              "pay_FjYWQFwuiE89Xp",
+	"entity":          "payment",
+	"amount":          10000,
+	"currency":        "INR",
+	"status":          "captured",
+	"order_id":        "order_FjYVOJ8Vod4lmT",
+	"invoice_id":      nil,
+	"international":   false,
+	"method":          "card",
+	"amount_refunded": 0,
+	"refund_status":   nil,
+	"captured":        true,
+	"description":     "Test Transaction",
+	"card_id":         "card_FjYNqO7cTrB4EU",
+	"bank":            nil,
+	"wallet":          nil,
+	"vpa":             nil,
+	"email":           "gaurav.kumar@example.com",
+	"contact":         "+919999999999",
+	"notes": map[string]interface{}{
+		"address": "Razorpay Corporate Office",
+	},
+	"fee":               2798,
+	"tax":               0,
+	"error_code":        nil,
+	"error_description": nil,
+	"error_source":      nil,
+	"error_step":        nil,
+	"error_reason":      nil,
+	"acquirer_data": map[string]interface{}{
+		"auth_code": "464641",
+	},
+	"created_at": 1601889873,
+}
+
+func RazorpayGock() {
+	razorpay.SetupClient()
+	config.RazorpaySecret = "testsecret"
+
+	gock.New("https://api.razorpay.com").
+		Post("/v1/orders").
+		Persist().
+		Reply(http.StatusOK).
+		JSON(RazorpayOrder)
+
+	gock.New("https://api.razorpay.com").
+		Get("/v1/payments/(.+)").
+		Persist().
+		Reply(http.StatusOK).
+		JSON(RazorpayPayment)
 }

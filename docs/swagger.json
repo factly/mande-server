@@ -2626,7 +2626,7 @@
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Format"
+                        "$ref": "#/definitions/model.DatasetFormat"
                     }
                 },
                 "total": {
@@ -3154,8 +3154,10 @@
         "model.Plan": {
             "type": "object",
             "required": [
+                "currency_id",
                 "duration",
                 "name",
+                "price",
                 "status"
             ],
             "properties": {
@@ -3167,6 +3169,13 @@
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "currency": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3182,6 +3191,9 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"
@@ -3335,23 +3347,23 @@
         "payment.payment": {
             "type": "object",
             "required": [
-                "amount",
                 "currency_id",
-                "razorpay_order_id",
+                "entity_id",
+                "for",
                 "razorpay_payment_id",
                 "razorpay_signature"
             ],
             "properties": {
-                "amount": {
-                    "type": "integer"
-                },
                 "currency_id": {
                     "type": "integer"
                 },
-                "gateway": {
+                "entity_id": {
+                    "type": "integer"
+                },
+                "for": {
                     "type": "string"
                 },
-                "razorpay_order_id": {
+                "gateway": {
                     "type": "string"
                 },
                 "razorpay_payment_id": {
@@ -3382,8 +3394,10 @@
         "plan.plan": {
             "type": "object",
             "required": [
+                "currency_id",
                 "duration",
-                "name"
+                "name",
+                "price"
             ],
             "properties": {
                 "catalog_ids": {
@@ -3391,6 +3405,9 @@
                     "items": {
                         "type": "integer"
                     }
+                },
+                "currency_id": {
+                    "type": "integer"
                 },
                 "description": {
                     "type": "string"
@@ -3400,6 +3417,9 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
                 },
                 "status": {
                     "type": "string"

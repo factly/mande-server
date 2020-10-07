@@ -3,11 +3,13 @@ package membership
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
+	"github.com/factly/data-portal-server/util/razorpay"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -76,8 +78,44 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch Currency
+	currency := model.Currency{}
+	model.DB.Model(&model.Currency{}).First(&currency)
+
 	// Create a razorpay order and get razorpay orderID
+	razorpayRequest := map[string]interface{}{
+		"amount":          plan.Price * 100,
+		"currency":        currency.IsoCode,
+		"receipt":         fmt.Sprint(result.ID),
+		"payment_capture": 1,
+	}
+
+	orderBody, err := razorpay.Client.Order.Create(razorpayRequest, nil)
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
 	// Change membership status to initiated and add razorpay_id in membership table
+	if _, found := orderBody["id"]; !found {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	result.Status = "processing"
+	result.RazorpayOrderID = orderBody["id"].(string)
+
+	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(result).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
 
 	tx.Preload("Plan").Preload("Plan.Catalogs").Preload("Plan.Catalogs.Products").First(&result)
 

@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/factly/data-portal-server/util/razorpay"
+
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/config"
 	"github.com/factly/data-portal-server/model"
@@ -34,6 +36,8 @@ func main() {
 	model.Migration()
 
 	meili.SetupMeiliSearch()
+
+	razorpay.SetupClient()
 
 	// register routes
 	userRouter := action.RegisterUserRoutes()

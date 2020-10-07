@@ -40,6 +40,8 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("get plan by id", func(t *testing.T) {
 		PlanSelectMock(mock)
 
+		currency.CurrencySelectMock(mock)
+
 		associatedCatalogSelectMock(mock)
 
 		productCatalogAssociationMock(mock, 1)

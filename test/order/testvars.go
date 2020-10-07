@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/factly/data-portal-server/test/currency"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/cart"
@@ -88,6 +90,18 @@ func insertMock(mock sqlmock.Sqlmock) {
 		WithArgs(1, 1, 1, 1).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
+		WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
+			AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
+
+	mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
+		WithArgs(test.AnyTime{}, 1, test.RazorpayOrder["id"], "processing", test.AnyTime{}, 1, 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
+		WithArgs(1, 1, 1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
 	OrderSelectMock(mock)
 
 	associatedProductsSelectMock(mock)
@@ -100,5 +114,5 @@ func insertMock(mock sqlmock.Sqlmock) {
 func validateAssociations(result *httpexpect.Object) {
 	result.Value("payment").
 		Object().
-		ContainsMap(payment.PaymentReceive)
+		ContainsMap(payment.Payment)
 }

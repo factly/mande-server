@@ -58,6 +58,17 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
+
+	membership := model.Membership{}
+	membership.ID = cartitem.MembershipID
+	err = tx.Model(&model.Membership{}).First(&membership).Error
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+		return
+	}
+
 	err = tx.Model(&model.CartItem{}).Create(&result).Error
 	if err != nil {
 		tx.Rollback()

@@ -206,7 +206,7 @@ definitions:
     properties:
       nodes:
         items:
-          $ref: '#/definitions/model.Format'
+          $ref: '#/definitions/model.DatasetFormat'
         type: array
       total:
         type: integer
@@ -566,6 +566,11 @@ definitions:
         type: array
       created_at:
         type: string
+      currency:
+        $ref: '#/definitions/model.Currency'
+        type: object
+      currency_id:
+        type: integer
       deleted_at:
         type: string
       description:
@@ -576,13 +581,17 @@ definitions:
         type: integer
       name:
         type: string
+      price:
+        type: integer
       status:
         type: string
       updated_at:
         type: string
     required:
+    - currency_id
     - duration
     - name
+    - price
     - status
     type: object
   model.Product:
@@ -682,13 +691,13 @@ definitions:
     type: object
   payment.payment:
     properties:
-      amount:
-        type: integer
       currency_id:
         type: integer
-      gateway:
+      entity_id:
+        type: integer
+      for:
         type: string
-      razorpay_order_id:
+      gateway:
         type: string
       razorpay_payment_id:
         type: string
@@ -697,9 +706,9 @@ definitions:
       status:
         type: string
     required:
-    - amount
     - currency_id
-    - razorpay_order_id
+    - entity_id
+    - for
     - razorpay_payment_id
     - razorpay_signature
     type: object
@@ -718,17 +727,23 @@ definitions:
         items:
           type: integer
         type: array
+      currency_id:
+        type: integer
       description:
         type: string
       duration:
         type: integer
       name:
         type: string
+      price:
+        type: integer
       status:
         type: string
     required:
+    - currency_id
     - duration
     - name
+    - price
     type: object
   product.paging:
     properties:

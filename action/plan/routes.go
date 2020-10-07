@@ -8,6 +8,8 @@ type plan struct {
 	Description string `json:"description"`
 	Duration    uint   `json:"duration" validate:"required"`
 	Status      string `json:"status"`
+	Price       int    `json:"price" validate:"required"`
+	CurrencyID  uint   `json:"currency_id" validate:"required"`
 	CatalogIDs  []uint `json:"catalog_ids"`
 }
 
