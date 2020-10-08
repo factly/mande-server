@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/spf13/viper"
 
-	"github.com/factly/data-portal-server/config"
 	"gopkg.in/h2non/gock.v1"
 )
 
@@ -48,28 +48,28 @@ var MeiliHits = map[string]interface{}{
 }
 
 func MeiliGock() {
-	gock.New(config.MeiliURL).
+	gock.New(viper.GetString("meili.url")).
 		Post("/indexes/data-portal/search").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusOK).
 		JSON(MeiliHits)
 
-	gock.New(config.MeiliURL).
+	gock.New(viper.GetString("meili.url")).
 		Post("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
-	gock.New(config.MeiliURL).
+	gock.New(viper.GetString("meili.url")).
 		Put("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
-	gock.New(config.MeiliURL).
+	gock.New(viper.GetString("meili.url")).
 		Delete("/indexes/data-portal/documents/(.+)").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
@@ -132,7 +132,7 @@ var RazorpayPayment = map[string]interface{}{
 
 func RazorpayGock() {
 	razorpay.SetupClient()
-	config.RazorpaySecret = "testsecret"
+	viper.Set("razorpay.secret", "testsecret")
 
 	gock.New("https://api.razorpay.com").
 		Post("/v1/orders").

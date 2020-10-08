@@ -6,12 +6,12 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/factly/data-portal-server/config"
+	"github.com/spf13/viper"
 )
 
 // VerifySignature verifies razorpay payment signature
 func VerifySignature(orderID, paymentID, signature string) bool {
-	h := hmac.New(sha256.New, []byte(config.RazorpaySecret))
+	h := hmac.New(sha256.New, []byte(viper.GetString("razorpay.secret")))
 	_, err := h.Write([]byte(fmt.Sprint(orderID, "|", paymentID)))
 	if err != nil {
 		return false

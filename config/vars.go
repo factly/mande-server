@@ -3,62 +3,41 @@ package config
 import (
 	"flag"
 	"log"
+
+	"github.com/spf13/viper"
 )
-
-// DSN dsn
-var DSN string
-
-// MeiliURL meili search server url
-var MeiliURL string
-
-// MeiliKey meili search key
-var MeiliKey string
-
-// RazorpayKey razorpay api key
-var RazorpayKey string
-
-// RazorpaySecret razorpay api secret
-var RazorpaySecret string
 
 // SetupVars setups all the config variables to run application
 func SetupVars() {
-	var dsn string
-	var meili string
-	var meiliKey string
-	var razorpayKey string
-	var razorpaySecret string
+	var configPath string
 
-	flag.StringVar(&dsn, "dsn", "", "Database connection string")
-	flag.StringVar(&meili, "meili", "", "Meili connection string")
-	flag.StringVar(&meiliKey, "meiliKey", "", "Meili API Key string")
-	flag.StringVar(&razorpayKey, "razorpayKey", "", "Razorpay API Key string")
-	flag.StringVar(&razorpaySecret, "razorpaySecret", "", "Razorpay API Secret string")
-
+	flag.StringVar(&configPath, "config", "./config.yaml", "Config file path")
 	flag.Parse()
 
-	if dsn == "" {
-		log.Fatal("Please pass dsn flag")
+	viper.SetConfigFile(configPath)
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatal("config file not found...")
 	}
 
-	if meili == "" {
-		log.Fatal("Please pass meili flag")
+	if !viper.IsSet("postgres.dsn") {
+		log.Fatal("please provide postgres.dsn in config file")
 	}
 
-	if meiliKey == "" {
-		log.Fatal("Please pass meiliKey flag")
+	if !viper.IsSet("meili.url") {
+		log.Fatal("please provide meili.url in config file")
 	}
 
-	if razorpayKey == "" {
-		log.Fatal("Please pass razorpayKey flag")
+	if !viper.IsSet("meili.key") {
+		log.Fatal("please provide meili.key in config file")
 	}
 
-	if razorpaySecret == "" {
-		log.Fatal("Please pass razorpaySecret flag")
+	if !viper.IsSet("razorpay.key") {
+		log.Fatal("please provide razorpay.key in config file")
 	}
 
-	DSN = dsn
-	MeiliURL = meili
-	MeiliKey = meiliKey
-	RazorpayKey = razorpayKey
-	RazorpaySecret = razorpaySecret
+	if !viper.IsSet("razorpay.secret") {
+		log.Fatal("please provide razorpay.secret in config file")
+	}
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/spf13/viper"
 
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/config"
@@ -31,7 +32,7 @@ func main() {
 	config.SetupVars()
 
 	// db setup
-	model.SetupDB(config.DSN)
+	model.SetupDB(viper.GetString("postgres.dsn"))
 
 	model.Migration()
 
