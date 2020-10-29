@@ -74,7 +74,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(oldCatalogs) > 0 {
-		if err := tx.Model(&result).Association("Catalogs").Delete(oldCatalogs).Error; err != nil {
+		if err := tx.Model(&result).Association("Catalogs").Delete(oldCatalogs); err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
 			errorx.Render(w, errorx.Parser(errorx.DBError()))

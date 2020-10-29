@@ -77,7 +77,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&newDatasets)
 
 	if len(oldTags) > 0 {
-		err = tx.Model(&result).Association("Tags").Delete(oldTags).Error
+		err = tx.Model(&result).Association("Tags").Delete(oldTags)
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -86,7 +86,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if len(oldDatasets) > 0 {
-		err = tx.Model(&result).Association("Datasets").Delete(oldDatasets).Error
+		err = tx.Model(&result).Association("Datasets").Delete(oldDatasets)
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)

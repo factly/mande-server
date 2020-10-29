@@ -47,7 +47,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if payment is associated with order
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.Order{}).Where(&model.Order{
 		PaymentID: uint(id),
 	}).Count(&totAssociated)

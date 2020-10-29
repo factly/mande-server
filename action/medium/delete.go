@@ -45,7 +45,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if medium is associated with catalog
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.Catalog{}).Where(&model.Catalog{
 		FeaturedMediumID: uint(id),
 	}).Count(&totAssociated)

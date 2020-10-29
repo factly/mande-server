@@ -72,7 +72,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&newProducts)
 
 	if len(oldProducts) > 0 {
-		err = tx.Model(&result).Association("Products").Delete(oldProducts).Error
+		err = tx.Model(&result).Association("Products").Delete(oldProducts)
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)

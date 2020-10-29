@@ -38,7 +38,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataset := &dataset{}
+	dataset := dataset{}
 	result := &datasetData{}
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
@@ -67,21 +67,17 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldTags := result.Tags
 	newTags := make([]model.Tag, 0)
-	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
-
-	if len(oldTags) > 0 {
-		err = tx.Model(&result).Association("Tags").Delete(oldTags).Error
-		if err != nil {
+	if len(dataset.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
+		if err = tx.Model(&result.Dataset).Association("Tags").Replace(&newTags); err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
-	}
-	if len(newTags) == 0 {
-		newTags = nil
+	} else {
+		_ = tx.Model(&result.Dataset).Association("Tags").Clear()
 	}
 
 	if dataset.FeaturedMediumID == 0 {

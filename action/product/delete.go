@@ -46,7 +46,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var totAssociated int
+	var totAssociated int64
 	product := new(model.Product)
 	product.ID = uint(id)
 

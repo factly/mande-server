@@ -48,7 +48,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if plan is associated with membership
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.Membership{}).Where(&model.Membership{
 		PlanID: uint(id),
 	}).Count(&totAssociated)
