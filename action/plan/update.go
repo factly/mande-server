@@ -66,22 +66,19 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldCatalogs := result.Catalogs
 	newCatalogs := make([]model.Catalog, 0)
-
 	if len(plan.CatalogIDs) > 0 {
-		model.DB.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&newCatalogs)
-	}
-
-	if len(oldCatalogs) > 0 {
-		if err := tx.Model(&result).Association("Catalogs").Delete(oldCatalogs); err != nil {
+		tx.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&newCatalogs)
+		if err = tx.Model(&result).Association("Catalogs").Replace(&newCatalogs); err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
-
+	} else {
+		_ = tx.Model(&result).Association("Catalogs").Clear()
 	}
+
 	tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Plan{
 		Name:        plan.Name,
 		Description: plan.Description,
@@ -89,7 +86,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Status:      plan.Status,
 		Price:       plan.Price,
 		CurrencyID:  plan.CurrencyID,
-		Catalogs:    newCatalogs,
 	}).Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
 
 	// Update into meili index

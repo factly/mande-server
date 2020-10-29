@@ -68,38 +68,30 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldTags := result.Tags
 	newTags := make([]model.Tag, 0)
-	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&newTags)
+	if len(product.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&newTags)
+		if err = tx.Model(&result).Association("Tags").Replace(&newTags); err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+	} else {
+		_ = tx.Model(&result).Association("Tags").Clear()
+	}
 
-	oldDatasets := result.Datasets
 	newDatasets := make([]model.Dataset, 0)
-	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&newDatasets)
-
-	if len(oldTags) > 0 {
-		err = tx.Model(&result).Association("Tags").Delete(oldTags)
-		if err != nil {
+	if len(product.DatasetIDs) > 0 {
+		model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&newDatasets)
+		if err = tx.Model(&result).Association("Datasets").Replace(&newDatasets); err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
 			return
 		}
-	}
-	if len(oldDatasets) > 0 {
-		err = tx.Model(&result).Association("Datasets").Delete(oldDatasets)
-		if err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-	}
-
-	if len(newTags) == 0 {
-		newTags = nil
-	}
-	if len(newDatasets) == 0 {
-		newDatasets = nil
+	} else {
+		_ = tx.Model(&result).Association("Datasets").Clear()
 	}
 
 	if product.FeaturedMediumID == 0 {
@@ -120,8 +112,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:            product.Price,
 		FeaturedMediumID: product.FeaturedMediumID,
 		Slug:             product.Slug,
-		Tags:             newTags,
-		Datasets:         newDatasets,
 	}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result).Error
 
 	if err != nil {

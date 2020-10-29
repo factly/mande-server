@@ -108,7 +108,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
 		FeaturedMediumID: dataset.FeaturedMediumID,
-		Tags:             newTags,
 	}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {
