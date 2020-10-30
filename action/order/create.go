@@ -74,7 +74,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create order in database
-	err = tx.Model(&model.Order{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = tx.Model(&model.Order{}).Create(&result).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
@@ -113,7 +113,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.Status = "processing"
 	result.RazorpayOrderID = orderBody["id"].(string)
 
-	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(result).Error
+	err = tx.Model(&result).Updates(result).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

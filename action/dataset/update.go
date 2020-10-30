@@ -80,9 +80,10 @@ func update(w http.ResponseWriter, r *http.Request) {
 		_ = tx.Model(&result.Dataset).Association("Tags").Clear()
 	}
 
+	featuredMediumID := &dataset.FeaturedMediumID
 	if dataset.FeaturedMediumID == 0 {
 		err = tx.Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result.Dataset).Error
-		result.FeaturedMediumID = 0
+		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -91,7 +92,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result.Dataset).Set("gorm:association_autoupdate", false).Updates(model.Dataset{
+	err = tx.Model(&result.Dataset).Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -107,7 +108,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		TimeSaved:        dataset.TimeSaved,
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
-		FeaturedMediumID: dataset.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 	}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {

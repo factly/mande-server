@@ -57,7 +57,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
 
 	tx := model.DB.Begin()
-	err = tx.Model(&model.Product{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = tx.Model(&model.Product{}).Create(&result).Error
 
 	if err != nil {
 		tx.Rollback()

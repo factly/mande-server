@@ -21,7 +21,7 @@ type Dataset struct {
 	Price            int            `gorm:"column:price" json:"price" validate:"required"`
 	CurrencyID       uint           `gorm:"column:currency_id" json:"currency_id" validate:"required"`
 	Currency         *Currency      `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
-	FeaturedMediumID uint           `gorm:"column:featured_medium_id;default:NULL" json:"featured_medium_id"`
+	FeaturedMediumID *uint          `gorm:"column:featured_medium_id;default:NULL" json:"featured_medium_id"`
 	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
 	Products         []Product      `gorm:"many2many:product_dataset;" json:"products"`
 	Tags             []Tag          `gorm:"many2many:dataset_tag;" json:"tags"`

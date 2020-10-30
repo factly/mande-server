@@ -109,7 +109,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.Status = "processing"
 	result.RazorpayOrderID = orderBody["id"].(string)
 
-	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(result).Error
+	err = tx.Model(&result).Updates(result).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

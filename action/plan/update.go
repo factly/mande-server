@@ -79,7 +79,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		_ = tx.Model(&result).Association("Catalogs").Clear()
 	}
 
-	tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Plan{
+	tx.Model(&result).Updates(model.Plan{
 		Name:        plan.Name,
 		Description: plan.Description,
 		Duration:    plan.Duration,

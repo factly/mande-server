@@ -95,7 +95,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Catalog{
+	err = tx.Model(&result).Updates(model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: catalog.FeaturedMediumID,

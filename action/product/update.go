@@ -105,7 +105,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(&model.Product{
+	err = tx.Model(&result).Updates(&model.Product{
 		CurrencyID:       product.CurrencyID,
 		Status:           product.Status,
 		Title:            product.Title,

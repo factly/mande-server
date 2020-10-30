@@ -57,8 +57,9 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if medium is associated with dataset
+	uintID := uint(id)
 	model.DB.Model(&model.Dataset{}).Where(&model.Dataset{
-		FeaturedMediumID: uint(id),
+		FeaturedMediumID: &uintID,
 	}).Count(&totAssociated)
 
 	if totAssociated != 0 {
