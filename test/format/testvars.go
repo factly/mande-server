@@ -1,6 +1,7 @@
 package format
 
 import (
+	"database/sql/driver"
 	"regexp"
 	"time"
 
@@ -41,20 +42,20 @@ var formatlist []map[string]interface{} = []map[string]interface{}{
 var FormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "is_default"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_format"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_format"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_format"`)
 
 const basePath string = "/formats"
 const path string = "/formats/{format_id}"
 
-func FormatSelectMock(mock sqlmock.Sqlmock) {
+func FormatSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(FormatCols).
 			AddRow(1, time.Now(), time.Now(), nil, Format["name"], Format["description"], Format["is_default"]))
 }
 
 func formatDatasetExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset_format"  WHERE`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset_format"  WHERE`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }

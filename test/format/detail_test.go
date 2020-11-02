@@ -36,7 +36,7 @@ func TestDetailFormat(t *testing.T) {
 
 func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get format by id", func(t *testing.T) {
-		FormatSelectMock(mock)
+		FormatSelectMock(mock, 1)
 
 		e.GET(path).
 			WithPath("format_id", "1").

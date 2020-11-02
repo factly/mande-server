@@ -36,10 +36,10 @@ func TestUpdateFormat(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, "name", "description", true))
 
 		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_format\" SET (.+)  WHERE (.+) \"dp_format\".\"id\" = `).
-			WithArgs(Format["description"], Format["is_default"], Format["name"], test.AnyTime{}, 1).
+		mock.ExpectExec(`UPDATE \"dp_format\"`).
+			WithArgs(test.AnyTime{}, Format["name"], Format["description"], Format["is_default"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		FormatSelectMock(mock)
+		FormatSelectMock(mock, 1, 1)
 		mock.ExpectCommit()
 
 		e.PUT(path).
@@ -99,10 +99,10 @@ func TestUpdateFormat(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, "name", "description", true))
 
 		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_format\" SET (.+)  WHERE (.+) \"dp_format\".\"id\" = `).
-			WithArgs(Format["description"], Format["is_default"], Format["name"], test.AnyTime{}, 1).
+		mock.ExpectExec(`UPDATE \"dp_format\"`).
+			WithArgs(test.AnyTime{}, Format["name"], Format["description"], Format["is_default"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		FormatSelectMock(mock)
+		FormatSelectMock(mock, 1, 1)
 		mock.ExpectRollback()
 
 		e.PUT(path).

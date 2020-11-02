@@ -2,7 +2,7 @@ package test
 
 import (
 	"database/sql/driver"
-	"fmt"
+	"log"
 	"testing"
 	"time"
 
@@ -10,6 +10,11 @@ import (
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 // AnyTime To match time for test sqlmock queries
@@ -23,17 +28,37 @@ func (a AnyTime) Match(v driver.Value) bool {
 
 // SetupMockDB setups the mock sql db
 func SetupMockDB() sqlmock.Sqlmock {
+	viper.Set("meili.url", "http://meili:7700")
+	viper.Set("meili.key", "password")
+
 	meili.Client = meilisearch.NewClient(meilisearch.Config{
-		Host:   "http://meili:7700",
-		APIKey: "password",
+		Host:   viper.GetString("meili.url"),
+		APIKey: viper.GetString("meili.key"),
 	})
 
 	db, mock, err := sqlmock.New()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-	model.SetupDB(db)
 
+	dialector := postgres.New(postgres.Config{
+		DSN:                  "sqlmock_db_0",
+		DriverName:           "postgres",
+		Conn:                 db,
+		PreferSimpleProtocol: true,
+	})
+
+	model.DB, err = gorm.Open(dialector, &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "dp_",
+			SingularTable: true,
+		},
+	})
+
+	if err != nil {
+		log.Println(err)
+	}
 	return mock
 }
 

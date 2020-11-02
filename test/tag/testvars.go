@@ -1,6 +1,7 @@
 package tag
 
 import (
+	"database/sql/driver"
 	"regexp"
 	"time"
 
@@ -30,26 +31,26 @@ var taglist []map[string]interface{} = []map[string]interface{}{
 var TagCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_tag"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_tag"`)
 
 const basePath string = "/tags"
 const path string = "/tags/{tag_id}"
 
-func TagSelectMock(mock sqlmock.Sqlmock) {
+func TagSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(TagCols).
 			AddRow(1, time.Now(), time.Now(), nil, Tag["title"], Tag["slug"]))
 }
 
 func tagProductExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN "dp_product_tag"`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product" JOIN "dp_product_tag"`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func tagDatasetExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset" INNER JOIN "dp_dataset_tag"`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset" JOIN "dp_dataset_tag"`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
