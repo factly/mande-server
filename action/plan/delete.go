@@ -62,7 +62,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	tx := model.DB.Begin()
 
 	// Delete all associations
-	tx.Model(&result).Association("Catalogs").Delete(result.Catalogs)
+	_ = tx.Model(&result).Association("Catalogs").Delete(result.Catalogs)
 
 	tx.Delete(&result)
 

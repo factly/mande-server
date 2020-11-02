@@ -59,7 +59,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result.Datasets = make([]model.Dataset, 0)
 
 	// check record exist or not
-	err = model.DB.Preload("Tags").Preload("Datasets").First(&result).Error
+	err = model.DB.First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))

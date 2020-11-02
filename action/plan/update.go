@@ -57,7 +57,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := model.Plan{}
 	result.ID = uint(id)
 
-	err = model.DB.Preload("Catalogs").First(&result).Error
+	err = model.DB.First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
