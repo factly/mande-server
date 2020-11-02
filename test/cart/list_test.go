@@ -43,19 +43,24 @@ func TestListCartItems(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
-		product.ProductSelectMock(mock)
-
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
 
 		delete(cartitemslist[0], "product_id")
 
@@ -113,12 +118,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
-			WillReturnRows(sqlmock.NewRows(tag.TagCols))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
-			WillReturnRows(sqlmock.NewRows(dataset.DatasetCols))
-
 		e.GET(basePath).
 			WithHeader("X-User", "1").
 			Expect().
@@ -139,19 +138,24 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
-		product.ProductSelectMock(mock)
-
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
 
 		delete(cartitemslist[0], "product_id")
 
@@ -181,19 +185,24 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
 				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
-		product.ProductSelectMock(mock)
-
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
 
 		delete(cartitemslist[1], "product_id")
 

@@ -43,23 +43,29 @@ func TestCreateCart(t *testing.T) {
 
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
-			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+			WillReturnRows(sqlmock.NewRows([]string{"id", "membership_id"}).AddRow(1, 1))
 
-		CartItemSelectMock(mock)
-
-		product.ProductSelectMock(mock)
+		CartItemSelectMock(mock, 1)
 
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
-		tag.TagSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 
-		dataset.DatasetSelectMock(mock)
+		tag.TagSelectMock(mock)
 
 		mock.ExpectCommit()
 
@@ -150,23 +156,29 @@ func TestCreateCart(t *testing.T) {
 
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
-			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+			WillReturnRows(sqlmock.NewRows([]string{"id", "membership_id"}).AddRow(1, 1))
 
-		CartItemSelectMock(mock)
-
-		product.ProductSelectMock(mock)
+		CartItemSelectMock(mock, 1)
 
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
-		tag.TagSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 
-		dataset.DatasetSelectMock(mock)
+		tag.TagSelectMock(mock)
 
 		mock.ExpectRollback()
 

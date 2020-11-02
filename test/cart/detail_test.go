@@ -3,8 +3,8 @@ package cart
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -33,24 +33,27 @@ func TestDetailCart(t *testing.T) {
 	CommonDetailTests(t, mock, adminExpect)
 
 	t.Run("get cart item by id", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"], CartItem["membership_id"]))
-
-		product.ProductSelectMock(mock)
+		CartItemSelectMock(mock, 1)
 
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
-		tag.TagSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 
-		dataset.DatasetSelectMock(mock)
+		tag.TagSelectMock(mock)
 
 		adminExpect.GET(path).
 			WithHeader("X-User", "1").
@@ -88,24 +91,26 @@ func TestDetailCart(t *testing.T) {
 	CommonDetailTests(t, mock, userExpect)
 
 	t.Run("get cart item by id", func(t *testing.T) {
-		mock.ExpectQuery(selectQuery).
-			WithArgs(1, 1).
-			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, CartItem["status"], CartItem["user_id"], CartItem["product_id"], CartItem["membership_id"]))
-
-		product.ProductSelectMock(mock)
+		CartItemSelectMock(mock, 1, 1)
 
 		membership.MembershipSelectMock(mock)
-
 		plan.PlanSelectMock(mock)
-
+		product.ProductSelectMock(mock)
 		currency.CurrencySelectMock(mock)
+
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+				AddRow(1, 1))
+		dataset.DatasetSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+				AddRow(1, 1))
 		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
 
 		userExpect.GET(path).
 			WithHeader("X-User", "1").

@@ -9,9 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/payment"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -36,10 +34,6 @@ func TestDetailOrder(t *testing.T) {
 		currency.CurrencySelectMock(mock)
 
 		associatedProductsSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
 
 		result := adminExpect.GET(path).
 			WithHeader("X-User", "1").
@@ -79,17 +73,13 @@ func TestDetailOrder(t *testing.T) {
 	CommonDetailTests(t, mock, userExpect)
 
 	t.Run("get order by id", func(t *testing.T) {
-		selectWithTwoArgs(mock)
+		OrderSelectMock(mock, 1, 1)
 
 		payment.PaymentSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
 
 		associatedProductsSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
 
 		result := userExpect.GET(path).
 			WithHeader("X-User", "1").

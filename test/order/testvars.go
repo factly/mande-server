@@ -1,6 +1,7 @@
 package order
 
 import (
+	"database/sql/driver"
 	"regexp"
 	"time"
 
@@ -41,30 +42,35 @@ var orderlist []map[string]interface{} = []map[string]interface{}{
 var OrderCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "user_id", "status", "payment_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_order"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_order"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_order"`)
 
 const basePath string = "/orders"
 const path string = "/orders/{order_id}"
 
-func OrderSelectMock(mock sqlmock.Sqlmock) {
+func OrderSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows(OrderCols).
+			AddRow(1, time.Now(), time.Now(), nil, Order["user_id"], Order["status"], Order["payment_id"], Order["razorpay_order_id"]))
+}
+
+func associatedProductsSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows([]string{"order_id", "product_id"}).
+			AddRow(1, 1))
+	product.ProductSelectMock(mock)
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
 		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows(OrderCols).
-			AddRow(1, time.Now(), time.Now(), nil, Order["user_id"], Order["status"], Order["payment_id"], Order["razorpay_order_id"]))
-}
+		WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+			AddRow(1, 1))
+	dataset.DatasetSelectMock(mock)
 
-func selectWithTwoArgs(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(selectQuery).
-		WithArgs(1, 1).
-		WillReturnRows(sqlmock.NewRows(OrderCols).
-			AddRow(1, time.Now(), time.Now(), nil, Order["user_id"], Order["status"], Order["payment_id"], Order["razorpay_order_id"]))
-}
-
-func associatedProductsSelectMock(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_order_item"`)).
-		WithArgs(sqlmock.AnyArg()).
-		WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "order_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, 1))
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+		WithArgs(1).
+		WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+			AddRow(1, 1))
+	tag.TagSelectMock(mock)
 }
 
 func insertMock(mock sqlmock.Sqlmock) {
@@ -79,15 +85,15 @@ func insertMock(mock sqlmock.Sqlmock) {
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	mock.ExpectQuery(`INSERT INTO "dp_order"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created").
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created", nil, "").
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-	mock.ExpectQuery(`SELECT "payment_id", "razorpay_order_id"`).
-		WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
+	mock.ExpectQuery(`INSERT INTO "dp_product"`).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+		WillReturnRows(sqlmock.NewRows([]string{"fetured_medium_id", "id"}).AddRow(1, 1))
 
 	mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
-		WithArgs(1, 1, 1, 1).
+		WithArgs(1, 1).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
@@ -95,20 +101,13 @@ func insertMock(mock sqlmock.Sqlmock) {
 			AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
 
 	mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
-		WithArgs(test.AnyTime{}, 1, test.RazorpayOrder["id"], "processing", test.AnyTime{}, 1, 1).
+		WithArgs(1, test.AnyTime{}, test.AnyTime{}, 1, "processing", test.RazorpayOrder["id"], 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
-		WithArgs(1, 1, 1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
 
 	OrderSelectMock(mock)
 
 	associatedProductsSelectMock(mock)
 
-	dataset.DatasetSelectMock(mock)
-
-	tag.TagSelectMock(mock)
 }
 
 func validateAssociations(result *httpexpect.Object) {

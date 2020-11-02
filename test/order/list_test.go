@@ -11,10 +11,8 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/product"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -45,14 +43,7 @@ func TestListOrder(t *testing.T) {
 
 		currency.CurrencySelectMock(mock)
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_order_item"`)).
-			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "order_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, 1))
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
+		associatedProductsSelectMock(mock)
 
 		adminExpect.GET(basePath).
 			WithHeader("X-User", "1").
@@ -106,15 +97,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product"`)).
-			WillReturnRows(sqlmock.NewRows(append(OrderCols, []string{"product_id", "order_id"}...)))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset"`)).
-			WillReturnRows(sqlmock.NewRows(append(OrderCols, []string{"product_id", "dataset_id"}...)))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
-			WillReturnRows(sqlmock.NewRows(append(OrderCols, []string{"product_id", "tag_id"}...)))
-
 		e.GET(basePath).
 			WithHeader("X-User", "1").
 			Expect().
@@ -139,14 +121,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		currency.CurrencySelectMock(mock)
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_order_item"`)).
-			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "order_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, 1))
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
+		associatedProductsSelectMock(mock)
 
 		e.GET(basePath).
 			WithHeader("X-User", "1").
@@ -176,14 +151,11 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		currency.CurrencySelectMock(mock)
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_order_item"`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
 			WithArgs(2).
-			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "order_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, 2))
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
+			WillReturnRows(sqlmock.NewRows([]string{"order_id", "product_id"}).
+				AddRow(1, 1))
+		product.ProductSelectMock(mock)
 
 		e.GET(basePath).
 			WithHeader("X-User", "1").

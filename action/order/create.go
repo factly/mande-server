@@ -113,7 +113,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.Status = "processing"
 	result.RazorpayOrderID = orderBody["id"].(string)
 
-	err = tx.Model(&result).Updates(result).Error
+	err = tx.Omit("Products").Model(&result).Updates(result).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
