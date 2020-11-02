@@ -61,7 +61,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	for _, item := range cartitems {
 		result.Products = append(result.Products, *item.Product)
 
-		if item.MembershipID == 0 {
+		if item.MembershipID == nil {
 			orderPrice += item.Product.Price
 		}
 
