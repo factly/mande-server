@@ -69,14 +69,16 @@ func update(w http.ResponseWriter, r *http.Request) {
 	newCatalogs := make([]model.Catalog, 0)
 	if len(plan.CatalogIDs) > 0 {
 		tx.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&newCatalogs)
-		if err = tx.Model(&result).Association("Catalogs").Replace(&newCatalogs); err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
+		err = tx.Model(&result).Association("Catalogs").Replace(&newCatalogs)
 	} else {
-		_ = tx.Model(&result).Association("Catalogs").Clear()
+		err = tx.Model(&result).Association("Catalogs").Clear()
+	}
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	tx.Model(&result).Updates(model.Plan{

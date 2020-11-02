@@ -71,32 +71,37 @@ func update(w http.ResponseWriter, r *http.Request) {
 	newTags := make([]model.Tag, 0)
 	if len(product.TagIDs) > 0 {
 		model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&newTags)
-		if err = tx.Model(&result).Association("Tags").Replace(&newTags); err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
+		err = tx.Model(&result).Association("Tags").Replace(&newTags)
 	} else {
-		_ = tx.Model(&result).Association("Tags").Clear()
+		err = tx.Model(&result).Association("Tags").Clear()
+	}
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	newDatasets := make([]model.Dataset, 0)
 	if len(product.DatasetIDs) > 0 {
 		model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&newDatasets)
-		if err = tx.Model(&result).Association("Datasets").Replace(&newDatasets); err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
+		err = tx.Model(&result).Association("Datasets").Replace(&newDatasets)
 	} else {
-		_ = tx.Model(&result).Association("Datasets").Clear()
+		err = tx.Model(&result).Association("Datasets").Clear()
 	}
 
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	featuredMediumID := &product.FeaturedMediumID
 	if product.FeaturedMediumID == 0 {
 		err = tx.Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result).Error
-		result.FeaturedMediumID = 0
+		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -110,7 +115,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Status:           product.Status,
 		Title:            product.Title,
 		Price:            product.Price,
-		FeaturedMediumID: product.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 		Slug:             product.Slug,
 	}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result).Error
 

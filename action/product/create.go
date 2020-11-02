@@ -41,6 +41,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	featuredMediumID := &product.FeaturedMediumID
+	if product.FeaturedMediumID == 0 {
+		featuredMediumID = nil
+	}
+
 	result := model.Product{}
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
@@ -50,7 +55,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Price:            product.Price,
 		Status:           product.Status,
 		CurrencyID:       product.CurrencyID,
-		FeaturedMediumID: product.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 	}
 
 	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)

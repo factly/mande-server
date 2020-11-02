@@ -70,14 +70,16 @@ func update(w http.ResponseWriter, r *http.Request) {
 	newTags := make([]model.Tag, 0)
 	if len(dataset.TagIDs) > 0 {
 		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
-		if err = tx.Model(&result.Dataset).Association("Tags").Replace(&newTags); err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
+		err = tx.Model(&result.Dataset).Association("Tags").Replace(&newTags)
 	} else {
-		_ = tx.Model(&result.Dataset).Association("Tags").Clear()
+		err = tx.Model(&result.Dataset).Association("Tags").Clear()
+	}
+
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
 
 	featuredMediumID := &dataset.FeaturedMediumID

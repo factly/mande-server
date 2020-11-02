@@ -58,7 +58,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check record exist or not
-	err = model.DB.Preload("Products").First(&result).Error
+	err = model.DB.First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
@@ -67,26 +67,25 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldProducts := result.Products
 	newProducts := make([]model.Product, 0)
-	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&newProducts)
-
-	if len(oldProducts) > 0 {
-		err = tx.Model(&result).Association("Products").Delete(oldProducts)
-		if err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-	}
-	if len(newProducts) == 0 {
-		newProducts = nil
+	if len(catalog.ProductIDs) > 0 {
+		model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&newProducts)
+		err = tx.Model(&result).Association("Products").Replace(&newProducts)
+	} else {
+		err = tx.Model(&result).Association("Products").Clear()
 	}
 
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	featuredMediumID := &catalog.FeaturedMediumID
 	if catalog.FeaturedMediumID == 0 {
 		err = tx.Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result).Error
-		result.FeaturedMediumID = 0
+		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -98,7 +97,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	err = tx.Model(&result).Updates(model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
-		FeaturedMediumID: catalog.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 		PublishedDate:    catalog.PublishedDate,
 		Products:         newProducts,
 	}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error

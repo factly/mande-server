@@ -44,10 +44,15 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	featuredMediumID := &catalog.FeaturedMediumID
+	if catalog.FeaturedMediumID == 0 {
+		featuredMediumID = nil
+	}
+
 	result = model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
-		FeaturedMediumID: catalog.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 		PublishedDate:    catalog.PublishedDate,
 	}
 
