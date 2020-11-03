@@ -63,7 +63,7 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch all catalogs related to product
 	catalogs := make([]model.Catalog, 0)
-	_ = model.DB.Model(&result).Association("Catalogs").Find(&catalogs)
+	_ = model.DB.Model(&result.Product).Association("Catalogs").Find(&catalogs)
 
 	catalogIDs := make([]uint, 0)
 	for _, catalog := range catalogs {

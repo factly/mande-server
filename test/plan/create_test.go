@@ -11,8 +11,6 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/catalog"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -36,21 +34,26 @@ func TestCreatePlan(t *testing.T) {
 		catalog.CatalogSelectMock(mock)
 
 		mock.ExpectBegin()
+
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["price"], Plan["currency_id"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 
+		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, catalog.Catalog["title"], catalog.Catalog["description"], test.AnyTime{}, catalog.Catalog["featured_medium_id"], 1).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
 		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		PlanSelectMock(mock)
-		currency.CurrencySelectMock(mock)
 		associatedCatalogSelectMock(mock)
 		productCatalogAssociationMock(mock, 1)
 		currency.CurrencySelectMock(mock)
-		dataset.DatasetSelectMock(mock)
-		tag.TagSelectMock(mock)
+		datasetsAssociationSelectMock(mock)
+		tagsAssociationSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		mock.ExpectCommit()
 
@@ -100,21 +103,27 @@ func TestCreatePlan(t *testing.T) {
 		catalog.CatalogSelectMock(mock)
 
 		mock.ExpectBegin()
+
 		mock.ExpectQuery(`INSERT INTO "dp_plan"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Plan["name"], Plan["description"], Plan["price"], Plan["currency_id"], Plan["duration"], Plan["status"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 
+		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, catalog.Catalog["title"], catalog.Catalog["description"], test.AnyTime{}, catalog.Catalog["featured_medium_id"], 1).
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
 		mock.ExpectExec(`INSERT INTO "dp_plan_catalog"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		PlanSelectMock(mock)
-		currency.CurrencySelectMock(mock)
 		associatedCatalogSelectMock(mock)
 		productCatalogAssociationMock(mock, 1)
 		currency.CurrencySelectMock(mock)
-		dataset.DatasetSelectMock(mock)
-		tag.TagSelectMock(mock)
+		datasetsAssociationSelectMock(mock)
+		tagsAssociationSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+
 		mock.ExpectRollback()
 
 		e.POST(basePath).

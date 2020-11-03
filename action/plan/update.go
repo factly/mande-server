@@ -81,7 +81,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx.Model(&result).Updates(model.Plan{
+	tx.Omit("Catalogs").Model(&result).Updates(model.Plan{
 		Name:        plan.Name,
 		Description: plan.Description,
 		Duration:    plan.Duration,

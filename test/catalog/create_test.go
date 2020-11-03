@@ -9,10 +9,8 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/factly/data-portal-server/test/product"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -37,26 +35,26 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], Catalog["featured_medium_id"], test.AnyTime{}).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "featured_medium_id"}).AddRow(1, 1))
+
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		CatalogSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 1)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
+		tagsAssociationSelectMock(mock)
 
 		mock.ExpectCommit()
 
@@ -91,7 +89,7 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], Catalog["featured_medium_id"], test.AnyTime{}).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
 			WillReturnError(errCatalogProductFK)
 		mock.ExpectRollback()
 
@@ -109,26 +107,26 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], Catalog["featured_medium_id"], test.AnyTime{}).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "featured_medium_id"}).AddRow(1, 1))
+
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		CatalogSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 1)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
+		tagsAssociationSelectMock(mock)
 
 		mock.ExpectRollback()
 

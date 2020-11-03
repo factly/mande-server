@@ -44,9 +44,8 @@ func AdminTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get dataset by id", func(t *testing.T) {
 		DatasetSelectMock(mock)
 
-		medium.MediumSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		medium.MediumSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
 
@@ -90,20 +89,19 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get dataset by id", func(t *testing.T) {
 		DatasetSelectMock(mock)
 
-		medium.MediumSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		medium.MediumSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
 
 		orderSelectMock(mock)
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_product".* FROM "dp_product" INNER JOIN dp_order_item`)).
+		mock.ExpectQuery(`SELECT "dp_product"(.+) INNER JOIN dp_order_item`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(productCols).
 				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 100, "status", 1, 1))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN "dp_product_dataset"`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product" JOIN "dp_product_dataset"`)).
 			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
 
@@ -126,20 +124,19 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get dataset when user does not own dataset", func(t *testing.T) {
 		DatasetSelectMock(mock)
 
-		medium.MediumSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		medium.MediumSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
 
 		orderSelectMock(mock)
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_product".* FROM "dp_product" INNER JOIN dp_order_item`)).
+		mock.ExpectQuery(`SELECT "dp_product"(.+) INNER JOIN dp_order_item`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(productCols).
 				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 100, "status", 1, 1))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product" INNER JOIN "dp_product_dataset"`)).
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product" JOIN "dp_product_dataset"`)).
 			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
 

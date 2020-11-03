@@ -9,8 +9,6 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -40,17 +38,12 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("get plan by id", func(t *testing.T) {
 		PlanSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
-
 		associatedCatalogSelectMock(mock)
-
 		productCatalogAssociationMock(mock, 1)
-
 		currency.CurrencySelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
-
-		tag.TagSelectMock(mock)
+		datasetsAssociationSelectMock(mock)
+		tagsAssociationSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		e.GET(path).
 			WithPath("plan_id", "1").
