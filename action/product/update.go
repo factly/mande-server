@@ -100,7 +100,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	featuredMediumID := &product.FeaturedMediumID
 	if product.FeaturedMediumID == 0 {
-		err = tx.Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result).Error
+		err = tx.Omit("Datasets", "Tags").Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).Error
 		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
@@ -110,7 +110,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result).Updates(&model.Product{
+	err = tx.Model(&result).Omit("Datasets", "Tags").Updates(&model.Product{
 		CurrencyID:       product.CurrencyID,
 		Status:           product.Status,
 		Title:            product.Title,

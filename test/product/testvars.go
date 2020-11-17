@@ -84,7 +84,7 @@ var catalogCols []string = []string{"id", "created_at", "updated_at", "deleted_a
 var planCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "status", "duration"}
 var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
-var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_product"`)
+var selectQuery string = `SELECT (.+) FROM "dp_product"`
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_product"`)
 var errProductMediumFK = errors.New(`pq: insert or update on table "dp_product" violates foreign key constraint "dp_product_featured_medium_id_dp_medium_id_foreign"`)
 var errProductCurrencyFK = errors.New(`pq: insert or update on table "dp_product" violates foreign key constraint "dp_product_currency_id_dp_currency_id_foreign"`)
@@ -219,22 +219,6 @@ func updateMock(mock sqlmock.Sqlmock, err error) {
 		mock.ExpectExec(`UPDATE \"dp_product\"`).
 			WithArgs(test.AnyTime{}, Product["title"], Product["slug"], Product["price"], Product["status"], Product["featured_medium_id"], Product["currency_id"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-
-		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
-			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-		mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
-			WithArgs(1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
-			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-		mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
-			WithArgs(1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
 	}
 }
 
@@ -245,44 +229,9 @@ func updateMockWithoutMedium(mock sqlmock.Sqlmock) {
 		WithArgs(nil, test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
-		WithArgs(1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
-		WithArgs(1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	ProductSelectMock(mock)
-
 	mock.ExpectExec(`UPDATE \"dp_product\"`).
 		WithArgs(test.AnyTime{}, Product["title"], Product["slug"], Product["price"], Product["status"], Product["currency_id"], 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
-		WithArgs(1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
-		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
-		WithArgs(1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
 }
 
 func productOrderExpect(mock sqlmock.Sqlmock, count int) {

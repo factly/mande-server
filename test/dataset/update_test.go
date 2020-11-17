@@ -4,7 +4,9 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
@@ -125,19 +127,26 @@ func TestUpdateDataset(t *testing.T) {
 	})
 
 	t.Run("replacing old tags fail", func(t *testing.T) {
-		preUpdateMock(mock)
+		mock.ExpectQuery(selectQuery).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows(DatasetCols).
+				AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", nilJsonb(), 10, 200, 2, 2))
 
-		mock.ExpectExec(`UPDATE \"dp_dataset\"`).
-			WithArgs(test.AnyTime{}, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"], 1).
-			WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectBegin()
+
+		tag.TagSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
-			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+			WillReturnError(errors.New(`cannot replace tags`))
 
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
 			WithArgs(1, 1).
 			WillReturnError(errors.New(`cannot replace tags`))
+
+		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_dataset_tag"`)).
+			WillReturnError(errors.New(`cannot replace tags`))
+
 		mock.ExpectRollback()
 
 		e.PUT(path).

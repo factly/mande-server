@@ -56,7 +56,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PublishedDate:    catalog.PublishedDate,
 	}
 
-	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
+	if len(catalog.ProductIDs) > 0 {
+		model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
+	}
 
 	tx := model.DB.Begin()
 	err = tx.Model(&model.Catalog{}).Create(&result).Error

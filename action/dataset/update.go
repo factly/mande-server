@@ -84,7 +84,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	featuredMediumID := &dataset.FeaturedMediumID
 	if dataset.FeaturedMediumID == 0 {
-		err = tx.Omit("Tags").Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result.Dataset).Error
+		err = tx.Omit("Tags").Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).Error
 		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
@@ -94,7 +94,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result.Dataset).Updates(model.Dataset{
+	err = tx.Model(&result.Dataset).Omit("Tags").Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,

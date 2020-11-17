@@ -58,8 +58,13 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: featuredMediumID,
 	}
 
-	model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)
-	model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
+	if len(product.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(product.TagIDs).Find(&result.Tags)
+	}
+
+	if len(product.DatasetIDs) > 0 {
+		model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
+	}
 
 	tx := model.DB.Begin()
 	err = tx.Model(&model.Product{}).Create(&result).Error

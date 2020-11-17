@@ -165,8 +165,6 @@ func updateWithoutFeaturedMedium(mock sqlmock.Sqlmock) {
 		WithArgs(nil, test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	CatalogSelectMock(mock)
-
 	mock.ExpectExec(`UPDATE \"dp_catalog\"`).
 		WithArgs(test.AnyTime{}, Catalog["title"], Catalog["description"], test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))

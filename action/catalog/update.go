@@ -84,7 +84,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	featuredMediumID := &catalog.FeaturedMediumID
 	if catalog.FeaturedMediumID == 0 {
-		err = tx.Omit("Products").Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result).Error
+		err = tx.Omit("Products").Model(result).Updates(map[string]interface{}{"featured_medium_id": nil}).Error
 		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()

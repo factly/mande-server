@@ -68,7 +68,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:       dataset.CurrencyID,
 	}
 
-	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
+	if len(dataset.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
+	}
 
 	tx := model.DB.Begin()
 	err = tx.Model(&model.Dataset{}).Create(&result.Dataset).Error
