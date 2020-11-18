@@ -16,7 +16,7 @@ type Dataset struct {
 	License          string         `gorm:"column:license" json:"license"`
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
 	SampleURL        string         `gorm:"column:sample_url" json:"sample_url"`
-	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles"`
+	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
 	Price            int            `gorm:"column:price" json:"price" validate:"required"`
 	CurrencyID       uint           `gorm:"column:currency_id" json:"currency_id" validate:"required"`

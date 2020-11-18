@@ -809,7 +809,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/format.paging"
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging"
                         }
                     }
                 }
@@ -928,7 +928,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/format.paging"
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_format.paging"
                         }
                     }
                 }
@@ -2511,7 +2511,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -2527,7 +2526,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -2635,13 +2633,27 @@ var doc = `{
                 }
             }
         },
-        "format.paging": {
+        "github.com_factly_data-portal-server_action_dataset_format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.DatasetFormat"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_factly_data-portal-server_action_format.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Format"
                     }
                 },
                 "total": {
@@ -2745,14 +2757,12 @@ var doc = `{
                     "type": "integer"
                 },
                 "membership": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Membership"
                 },
                 "membership_id": {
                     "type": "integer"
                 },
                 "product": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Product"
                 },
                 "product_id": {
@@ -2782,7 +2792,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -2858,7 +2867,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -2874,7 +2882,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -2943,7 +2950,6 @@ var doc = `{
                     "type": "string"
                 },
                 "format": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Format"
                 },
                 "format_id": {
@@ -3051,14 +3057,12 @@ var doc = `{
                     "type": "integer"
                 },
                 "payment": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
                     "type": "integer"
                 },
                 "plan": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Plan"
                 },
                 "plan_id": {
@@ -3095,7 +3099,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "payment": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
@@ -3137,7 +3140,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3186,7 +3188,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3238,7 +3239,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3254,7 +3254,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3515,7 +3514,6 @@ var doc = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3531,7 +3529,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
