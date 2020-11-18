@@ -99,7 +99,7 @@ func TestCreateOrder(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created", nil, "").
 			WillReturnError(errors.New(`cannot create order`))
 
 		mock.ExpectRollback()
@@ -134,21 +134,20 @@ func TestCreateOrder(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created", nil, "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-		mock.ExpectQuery(`SELECT "payment_id", "razorpay_order_id"`).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WillReturnRows(sqlmock.NewRows([]string{"fetured_medium_id", "id"}).AddRow(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
 				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
-
 		mock.ExpectRollback()
 
 		e.POST(basePath).
@@ -189,21 +188,20 @@ func TestCreateOrder(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created", nil, "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-		mock.ExpectQuery(`SELECT "payment_id", "razorpay_order_id"`).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WillReturnRows(sqlmock.NewRows([]string{"fetured_medium_id", "id"}).AddRow(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
 				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
-
 		mock.ExpectRollback()
 
 		e.POST(basePath).
@@ -232,15 +230,15 @@ func TestCreateOrder(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_order"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, "created", nil, "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
-		mock.ExpectQuery(`SELECT "payment_id", "razorpay_order_id"`).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WillReturnRows(sqlmock.NewRows([]string{"fetured_medium_id", "id"}).AddRow(1, 1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`INSERT INTO "dp_order_item"`)).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
@@ -248,7 +246,7 @@ func TestCreateOrder(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
-			WithArgs(test.AnyTime{}, 1, test.RazorpayOrder["id"], "processing", test.AnyTime{}, 1, 1).
+			WithArgs(1, test.AnyTime{}, test.AnyTime{}, 1, "processing", test.RazorpayOrder["id"], 1).
 			WillReturnError(errors.New(`cannot update order`))
 
 		mock.ExpectRollback()

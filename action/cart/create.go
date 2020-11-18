@@ -50,23 +50,30 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	membershipID := &cartitem.MembershipID
+	if cartitem.MembershipID == 0 {
+		membershipID = nil
+	}
+
 	result := &model.CartItem{
 		Status:       cartitem.Status,
 		UserID:       uint(uID),
 		ProductID:    cartitem.ProductID,
-		MembershipID: cartitem.MembershipID,
+		MembershipID: membershipID,
 	}
 
 	tx := model.DB.Begin()
 
-	membership := model.Membership{}
-	membership.ID = cartitem.MembershipID
-	err = tx.Model(&model.Membership{}).First(&membership).Error
-	if err != nil {
-		tx.Rollback()
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
-		return
+	if cartitem.MembershipID != 0 {
+		membership := model.Membership{}
+		membership.ID = cartitem.MembershipID
+		err = tx.Model(&model.Membership{}).First(&membership).Error
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.CannotSaveChanges()))
+			return
+		}
 	}
 
 	err = tx.Model(&model.CartItem{}).Create(&result).Error

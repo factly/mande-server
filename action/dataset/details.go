@@ -105,8 +105,8 @@ func adminDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 // check if the item is associated with any order of the user
-func checkOrderAssociation(uID, id int) int {
-	var count int
+func checkOrderAssociation(uID, id int) int64 {
+	var count int64
 
 	orders := make([]model.Order, 0)
 	model.DB.Model(&model.Order{}).Where(&model.Order{

@@ -96,7 +96,7 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnError(errors.New(`cannot create membership`))
 
 		mock.ExpectRollback()
@@ -123,12 +123,8 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "payment_id", "razorpay_order_id"`)).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
@@ -165,12 +161,8 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "payment_id", "razorpay_order_id"`)).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
@@ -196,19 +188,15 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, Membership["plan_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT "payment_id", "razorpay_order_id"`)).
-			WithArgs(1).
-			WillReturnRows(sqlmock.NewRows([]string{"payment_id", "razorpay_order_id"}).AddRow(nil, nil))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
 				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
-			WithArgs(test.AnyTime{}, 1, 1, test.RazorpayOrder["id"], "processing", test.AnyTime{}, 1, 1).
+			WithArgs(1, test.AnyTime{}, test.AnyTime{}, "processing", 1, 1, test.RazorpayOrder["id"], 1).
 			WillReturnError(errors.New(`cannot update membership`))
 
 		mock.ExpectRollback()

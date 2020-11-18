@@ -3,7 +3,6 @@ package catalog
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 	"time"
 
@@ -11,10 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/product"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -49,11 +45,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CatalogCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_catalog_product"`)).
-			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "catalog_id"}...)))
-
-		product.EmptyProductAssociationsMock(mock)
-
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -74,19 +65,12 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(2, time.Now(), time.Now(), nil, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
 
 		medium.MediumSelectMock(mock)
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product" INNER JOIN "dp_catalog_product"`)).
-			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-			WillReturnRows(sqlmock.NewRows(append(product.ProductCols, []string{"product_id", "catalog_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1, 1))
+		productsAssociationSelectMock(mock, 1, 2)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
+		tagsAssociationSelectMock(mock)
 
 		delete(cataloglist[0], "product_ids")
 
@@ -114,16 +98,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(2, time.Now(), time.Now(), nil, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 2)
-
-		currency.CurrencySelectMock(mock)
-
-		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
 
 		delete(cataloglist[1], "product_ids")
 

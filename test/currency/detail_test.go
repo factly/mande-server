@@ -35,7 +35,7 @@ func TestDetailCurrency(t *testing.T) {
 
 func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get currency by id", func(t *testing.T) {
-		CurrencySelectMock(mock)
+		CurrencySelectMock(mock, 1)
 
 		e.GET(path).
 			WithPath("currency_id", "1").

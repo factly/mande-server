@@ -44,11 +44,10 @@ func adminDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) 
 
 		currency.CurrencySelectMock(mock)
 
+		datasetsAssociationSelectMock(mock, 1)
 		medium.MediumSelectMock(mock)
 
 		tagsAssociationSelectMock(mock, 1)
-
-		datasetsAssociationSelectMock(mock, 1)
 
 		result := e.GET(path).
 			WithPath("product_id", "1").
@@ -88,12 +87,9 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		ProductSelectMock(mock)
 
 		currency.CurrencySelectMock(mock)
-
-		medium.MediumSelectMock(mock)
-
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		medium.MediumSelectMock(mock)
+		tagsAssociationSelectMock(mock, 1)
 
 		catalogsAssociationSelectMock(mock, 1)
 

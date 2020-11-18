@@ -32,21 +32,23 @@ func TestCreateDataset(t *testing.T) {
 
 	t.Run("create a dataset", func(t *testing.T) {
 		tag.TagSelectMock(mock)
-
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"featured_medium_id", "id"}).AddRow(1, 1))
+
+		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		DatasetSelectMock(mock)
 
-		medium.MediumSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		medium.MediumSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
 
@@ -103,21 +105,23 @@ func TestCreateDataset(t *testing.T) {
 	t.Run("create a dataset when meili is down", func(t *testing.T) {
 		gock.Off()
 		tag.TagSelectMock(mock)
-
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Dataset["title"], Dataset["description"], Dataset["source"], Dataset["frequency"], Dataset["temporal_coverage"], Dataset["granularity"], Dataset["contact_name"], Dataset["contact_email"], Dataset["license"], Dataset["data_standard"], Dataset["sample_url"], Dataset["related_articles"], Dataset["time_saved"], Dataset["price"], Dataset["currency_id"], Dataset["featured_medium_id"]).
+			WillReturnRows(sqlmock.NewRows([]string{"featured_medium_id", "id"}).AddRow(1, 1))
+
+		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).
-			WithArgs(1, 1, 1, 1).
+			WithArgs(1, 1).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		DatasetSelectMock(mock)
 
-		medium.MediumSelectMock(mock)
-
 		currency.CurrencySelectMock(mock)
+		medium.MediumSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
 

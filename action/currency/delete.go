@@ -43,7 +43,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if currency is associated with payment
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.Payment{}).Where(&model.Payment{
 		CurrencyID: uint(id),
 	}).Count(&totAssociated)

@@ -44,17 +44,24 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	featuredMediumID := &catalog.FeaturedMediumID
+	if catalog.FeaturedMediumID == 0 {
+		featuredMediumID = nil
+	}
+
 	result = model.Catalog{
 		Title:            catalog.Title,
 		Description:      catalog.Description,
-		FeaturedMediumID: catalog.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 		PublishedDate:    catalog.PublishedDate,
 	}
 
-	model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
+	if len(catalog.ProductIDs) > 0 {
+		model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
+	}
 
 	tx := model.DB.Begin()
-	err = tx.Model(&model.Catalog{}).Set("gorm:association_autoupdate", false).Create(&result).Error
+	err = tx.Model(&model.Catalog{}).Create(&result).Error
 
 	if err != nil {
 		tx.Rollback()

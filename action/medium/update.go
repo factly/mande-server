@@ -64,7 +64,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
-	tx.Model(&result).Update(&model.Medium{
+	tx.Model(&result).Updates(&model.Medium{
 		Name:        medium.Name,
 		Slug:        medium.Slug,
 		Title:       medium.Title,

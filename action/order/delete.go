@@ -47,7 +47,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	tx.Model(&result).Association("Products").Delete(result.Products)
+	_ = tx.Model(&result).Association("Products").Delete(result.Products)
 
 	err = tx.Delete(&result).Error
 	if err != nil {

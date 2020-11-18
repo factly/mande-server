@@ -20,7 +20,7 @@ type dataset struct {
 	License          string         `json:"license"`
 	DataStandard     string         `json:"data_standard"`
 	SampleURL        string         `json:"sample_url"`
-	RelatedArticles  postgres.Jsonb `json:"related_articles"`
+	RelatedArticles  postgres.Jsonb `json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `json:"time_saved"`
 	Price            int            `json:"price" validate:"required"`
 	CurrencyID       uint           `json:"currency_id"`

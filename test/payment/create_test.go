@@ -45,7 +45,7 @@ func TestCreatePayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
-			WithArgs(1, "complete", test.AnyTime{}, 1).
+			WithArgs(test.AnyTime{}, "complete", 1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		PaymentSelectMock(mock)
@@ -76,7 +76,7 @@ func TestCreatePayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
-			WithArgs(1, "complete", test.AnyTime{}, 1).
+			WithArgs(test.AnyTime{}, "complete", 1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		PaymentSelectMock(mock)
@@ -292,7 +292,7 @@ func TestCreatePayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
-			WithArgs(1, "complete", test.AnyTime{}, 1).
+			WithArgs(test.AnyTime{}, "complete", 1, 1).
 			WillReturnError(errors.New(`cannot update order`))
 
 		mock.ExpectRollback()
@@ -318,7 +318,7 @@ func TestCreatePayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
-			WithArgs(1, "complete", test.AnyTime{}, 1).
+			WithArgs(test.AnyTime{}, "complete", 1, 1).
 			WillReturnError(errors.New(`cannot update membership`))
 
 		mock.ExpectRollback()
@@ -349,7 +349,7 @@ func TestCreatePayment(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
-			WithArgs(1, "complete", test.AnyTime{}, 1).
+			WithArgs(test.AnyTime{}, "complete", 1, 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		PaymentSelectMock(mock)

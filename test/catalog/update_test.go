@@ -11,9 +11,8 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
 	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/tag"
+	"github.com/factly/data-portal-server/test/product"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -39,16 +38,12 @@ func TestUpdateCatalog(t *testing.T) {
 		CatalogSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 1)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
+		tagsAssociationSelectMock(mock)
 
 		mock.ExpectCommit()
 
@@ -116,11 +111,19 @@ func TestUpdateCatalog(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("deleting old products fails", func(t *testing.T) {
+	t.Run("replacing old products fails", func(t *testing.T) {
 		preUpdateMock(mock)
 
+		mock.ExpectQuery(`INSERT INTO "dp_product"`).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WillReturnError(errors.New("cannot replace products"))
+
+		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
+			WithArgs(1, 1).
+			WillReturnError(errors.New("cannot replace products"))
+
 		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_catalog_product"`)).
-			WillReturnError(errors.New("cannot delete products"))
+			WillReturnError(errors.New("cannot replace products"))
 
 		mock.ExpectRollback()
 
@@ -138,17 +141,12 @@ func TestUpdateCatalog(t *testing.T) {
 		CatalogSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 1)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
-
+		tagsAssociationSelectMock(mock)
 		mock.ExpectCommit()
 
 		Catalog["featured_medium_id"] = 0
@@ -173,16 +171,12 @@ func TestUpdateCatalog(t *testing.T) {
 		CatalogSelectMock(mock)
 
 		medium.MediumSelectMock(mock)
-
 		productsAssociationSelectMock(mock, 1)
 
 		currency.CurrencySelectMock(mock)
-
+		datasetsAssociationSelectMock(mock)
 		medium.MediumSelectMock(mock)
-
-		tag.TagSelectMock(mock)
-
-		dataset.DatasetSelectMock(mock)
+		tagsAssociationSelectMock(mock)
 
 		mock.ExpectRollback()
 

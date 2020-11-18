@@ -1,6 +1,7 @@
 package currency
 
 import (
+	"database/sql/driver"
 	"regexp"
 	"time"
 
@@ -25,32 +26,32 @@ var invalidCurrency map[string]interface{} = map[string]interface{}{
 var CurrencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_currency"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_currency"`)
 
 const basePath string = "/currencies"
 const path string = "/currencies/{currency_id}"
 
-func CurrencySelectMock(mock sqlmock.Sqlmock) {
+func CurrencySelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(CurrencyCols).
 			AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
 }
 
 func currencyPaymentExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_payment`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_payment`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func currencyProductExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func currencyDatasetExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }

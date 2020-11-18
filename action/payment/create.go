@@ -128,9 +128,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	// Update order/membership and mark as completed
 	if payment.For == "order" {
-		if err = tx.Model(&order).Set("gorm:association_autoupdate", false).Updates(&model.Order{
+		if err = tx.Model(&order).Updates(&model.Order{
 			Status:    "complete",
-			PaymentID: result.ID,
+			PaymentID: &result.ID,
 		}).Error; err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -138,9 +138,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else if payment.For == "membership" {
-		if err = tx.Model(&membership).Set("gorm:association_autoupdate", false).Updates(&model.Membership{
+		if err = tx.Model(&membership).Updates(&model.Membership{
 			Status:    "complete",
-			PaymentID: result.ID,
+			PaymentID: &result.ID,
 		}).Error; err != nil {
 			tx.Rollback()
 			loggerx.Error(err)

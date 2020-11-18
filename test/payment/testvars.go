@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"database/sql/driver"
 	"errors"
 	"regexp"
 	"time"
@@ -98,27 +99,27 @@ var orderCols []string = []string{"id", "created_at", "updated_at", "deleted_at"
 var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_payment"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_payment"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_payment"`)
 var errPaymentCurrencyFK = errors.New("pq: insert or update on table \"dp_payment\" violates foreign key constraint \"dp_payment_currency_id_dp_currency_id_foreign\"")
 
 const basePath string = "/payments"
 const path string = "/payments/{payment_id}"
 
-func PaymentSelectMock(mock sqlmock.Sqlmock) {
+func PaymentSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(PaymentCols).
 			AddRow(1, time.Now(), time.Now(), nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]))
 }
 
 func paymentOrderExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order"  WHERE`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_order"  WHERE`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func paymentMembershipExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_membership"  WHERE`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_membership"  WHERE`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }

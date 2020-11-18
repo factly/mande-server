@@ -16,13 +16,13 @@ type Dataset struct {
 	License          string         `gorm:"column:license" json:"license"`
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
 	SampleURL        string         `gorm:"column:sample_url" json:"sample_url"`
-	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles"`
+	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
 	Price            int            `gorm:"column:price" json:"price" validate:"required"`
 	CurrencyID       uint           `gorm:"column:currency_id" json:"currency_id" validate:"required"`
-	Currency         *Currency      `gorm:"foreignkey:currency_id;association_foreignkey:id"  json:"currency"`
-	FeaturedMediumID uint           `gorm:"column:featured_medium_id" json:"featured_medium_id" sql:"DEFAULT:NULL"`
-	FeaturedMedium   *Medium        `gorm:"foreignkey:featured_medium_id;association_foreignkey:id"  json:"featured_medium"`
+	Currency         *Currency      `gorm:"foreignkey:currency_id" json:"currency"`
+	FeaturedMediumID *uint          `gorm:"column:featured_medium_id;default:NULL" json:"featured_medium_id"`
+	FeaturedMedium   *Medium        `gorm:"foreignKey:featured_medium_id" json:"featured_medium"`
 	Products         []Product      `gorm:"many2many:product_dataset;" json:"products"`
 	Tags             []Tag          `gorm:"many2many:dataset_tag;" json:"tags"`
 }
@@ -31,7 +31,7 @@ type Dataset struct {
 type DatasetFormat struct {
 	Base
 	FormatID  uint   `gorm:"column:format_id" json:"format_id"`
-	Format    Format `gorm:"foreignkey:format_id;association_foreignkey:id"  json:"format"`
+	Format    Format `gorm:"foreignKey:format_id"  json:"format"`
 	DatasetID uint   `gorm:"column:dataset_id" json:"dataset_id"`
 	URL       string `gorm:"column:url" json:"url"`
 }

@@ -39,7 +39,7 @@ var invalidDatasetFormat map[string]interface{} = map[string]interface{}{
 var DatasetFormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset_format"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset_format"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset_format"`)
 var errDatasetFormatFK error = errors.New(`pq: insert or update on table "dp_dataset_format" violates foreign key constraint "dp_dataset_format_format_id_dp_format_id_foreign"`)
 
 const basePath string = "/datasets/{dataset_id}/format"

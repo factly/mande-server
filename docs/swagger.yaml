@@ -118,7 +118,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       data_standard:
@@ -129,7 +128,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       formats:
@@ -202,11 +200,20 @@ definitions:
     required:
     - name
     type: object
-  format.paging:
+  github.com_factly_data-portal-server_action_dataset_format.paging:
     properties:
       nodes:
         items:
           $ref: '#/definitions/model.DatasetFormat'
+        type: array
+      total:
+        type: integer
+    type: object
+  github.com_factly_data-portal-server_action_format.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Format'
         type: array
       total:
         type: integer
@@ -272,12 +279,10 @@ definitions:
         type: integer
       membership:
         $ref: '#/definitions/model.Membership'
-        type: object
       membership_id:
         type: integer
       product:
         $ref: '#/definitions/model.Product'
-        type: object
       product_id:
         type: integer
       status:
@@ -301,7 +306,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -349,7 +353,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       data_standard:
@@ -360,7 +363,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       frequency:
@@ -409,7 +411,6 @@ definitions:
         type: string
       format:
         $ref: '#/definitions/model.Format'
-        type: object
       format_id:
         type: integer
       id:
@@ -477,12 +478,10 @@ definitions:
         type: integer
       payment:
         $ref: '#/definitions/model.Payment'
-        type: object
       payment_id:
         type: integer
       plan:
         $ref: '#/definitions/model.Plan'
-        type: object
       plan_id:
         type: integer
       razorpay_order_id:
@@ -508,7 +507,6 @@ definitions:
         type: integer
       payment:
         $ref: '#/definitions/model.Payment'
-        type: object
       payment_id:
         type: integer
       products:
@@ -535,7 +533,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -568,7 +565,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -604,7 +600,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       datasets:
@@ -615,7 +610,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -791,7 +785,6 @@ definitions:
         type: string
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       datasets:
@@ -802,7 +795,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -1403,7 +1395,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/format.paging'
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging'
       summary: Show all datsets format
       tags:
       - Dataset Format
@@ -1483,7 +1475,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/format.paging'
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_format.paging'
       summary: Show all formats
       tags:
       - Format

@@ -44,10 +44,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	uintID := uint(id)
+
 	// check if medium is associated with catalog
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.Catalog{}).Where(&model.Catalog{
-		FeaturedMediumID: uint(id),
+		FeaturedMediumID: &uintID,
 	}).Count(&totAssociated)
 
 	if totAssociated != 0 {
@@ -58,7 +60,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	// check if medium is associated with dataset
 	model.DB.Model(&model.Dataset{}).Where(&model.Dataset{
-		FeaturedMediumID: uint(id),
+		FeaturedMediumID: &uintID,
 	}).Count(&totAssociated)
 
 	if totAssociated != 0 {
@@ -69,7 +71,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	// check if medium is associated with product
 	model.DB.Model(&model.Product{}).Where(&model.Product{
-		FeaturedMediumID: uint(id),
+		FeaturedMediumID: &uintID,
 	}).Count(&totAssociated)
 
 	if totAssociated != 0 {

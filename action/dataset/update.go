@@ -38,7 +38,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dataset := &dataset{}
+	dataset := dataset{}
 	result := &datasetData{}
 	result.ID = uint(id)
 	result.Formats = make([]model.DatasetFormat, 0)
@@ -58,7 +58,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check record exist or not
-	err = model.DB.Preload("Tags").First(&result.Dataset).Error
+	err = model.DB.First(&result.Dataset).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
@@ -67,26 +67,25 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldTags := result.Tags
 	newTags := make([]model.Tag, 0)
-	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
-
-	if len(oldTags) > 0 {
-		err = tx.Model(&result).Association("Tags").Delete(oldTags).Error
-		if err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-	}
-	if len(newTags) == 0 {
-		newTags = nil
+	if len(dataset.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&newTags)
+		err = tx.Model(&result.Dataset).Association("Tags").Replace(&newTags)
+	} else {
+		err = tx.Model(&result.Dataset).Association("Tags").Clear()
 	}
 
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
+	}
+
+	featuredMediumID := &dataset.FeaturedMediumID
 	if dataset.FeaturedMediumID == 0 {
-		err = tx.Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).First(&result.Dataset).Error
-		result.FeaturedMediumID = 0
+		err = tx.Omit("Tags").Model(result.Dataset).Updates(map[string]interface{}{"featured_medium_id": nil}).Error
+		featuredMediumID = nil
 		if err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
@@ -95,7 +94,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tx.Model(&result.Dataset).Set("gorm:association_autoupdate", false).Updates(model.Dataset{
+	err = tx.Model(&result.Dataset).Omit("Tags").Updates(model.Dataset{
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
@@ -111,8 +110,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		TimeSaved:        dataset.TimeSaved,
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
-		FeaturedMediumID: dataset.FeaturedMediumID,
-		Tags:             newTags,
+		FeaturedMediumID: featuredMediumID,
 	}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {

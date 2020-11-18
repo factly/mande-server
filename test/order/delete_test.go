@@ -10,6 +10,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
+	"github.com/factly/data-portal-server/test/product"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )
@@ -33,7 +34,11 @@ func TestDeleteOrder(t *testing.T) {
 	t.Run("delete order", func(t *testing.T) {
 		OrderSelectMock(mock)
 
-		associatedProductsSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"order_id", "product_id"}).
+				AddRow(1, 1))
+		product.ProductSelectMock(mock)
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).
@@ -79,7 +84,11 @@ func TestDeleteOrder(t *testing.T) {
 	t.Run("deleting order fail", func(t *testing.T) {
 		OrderSelectMock(mock)
 
-		associatedProductsSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"order_id", "product_id"}).
+				AddRow(1, 1))
+		product.ProductSelectMock(mock)
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).
@@ -104,7 +113,11 @@ func TestDeleteOrder(t *testing.T) {
 		gock.Off()
 		OrderSelectMock(mock)
 
-		associatedProductsSelectMock(mock)
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
+			WithArgs(1).
+			WillReturnRows(sqlmock.NewRows([]string{"order_id", "product_id"}).
+				AddRow(1, 1))
+		product.ProductSelectMock(mock)
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_order_item"`)).

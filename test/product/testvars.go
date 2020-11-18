@@ -1,6 +1,7 @@
 package product
 
 import (
+	"database/sql/driver"
 	"errors"
 	"regexp"
 	"time"
@@ -83,17 +84,17 @@ var catalogCols []string = []string{"id", "created_at", "updated_at", "deleted_a
 var planCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "status", "duration"}
 var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
-var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_product"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_product"`)
+var selectQuery string = `SELECT (.+) FROM "dp_product"`
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_product"`)
 var errProductMediumFK = errors.New(`pq: insert or update on table "dp_product" violates foreign key constraint "dp_product_featured_medium_id_dp_medium_id_foreign"`)
 var errProductCurrencyFK = errors.New(`pq: insert or update on table "dp_product" violates foreign key constraint "dp_product_currency_id_dp_currency_id_foreign"`)
 
 const basePath string = "/products"
 const path string = "/products/{product_id}"
 
-func ProductSelectMock(mock sqlmock.Sqlmock) {
+func ProductSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(ProductCols).
 			AddRow(1, time.Now(), time.Now(), nil, Product["title"], Product["slug"], Product["price"], Product["status"], Product["currency_id"], Product["featured_medium_id"]))
 }
@@ -106,32 +107,43 @@ func EmptyProductAssociationsMock(mock sqlmock.Sqlmock) {
 		WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)))
 }
 
-func tagsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_product_tag"`)).
-		WithArgs(prodId).
-		WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "product_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, tag.Tag["title"], tag.Tag["slug"], 1, prodId))
-}
+func tagsAssociationSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_tag"`)).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows([]string{"product_id", "tag_id"}).
+			AddRow(1, 1))
 
-func datasetsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset" INNER JOIN "dp_product_dataset"`)).
-		WithArgs(prodId).
-		WillReturnRows(sqlmock.NewRows(append(dataset.DatasetCols, []string{"dataset_id", "product_id"}...)).
-			AddRow(1, time.Now(), time.Now(), nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1, prodId))
-}
-
-func catalogsAssociationSelectMock(mock sqlmock.Sqlmock, prodId int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_catalog".* FROM "dp_catalog"`)).
-		WithArgs(prodId).
-		WillReturnRows(sqlmock.NewRows(catalogCols).
-			AddRow(1, time.Now(), time.Now(), nil, "title", "description", 1, time.Now()))
-}
-
-func plansCatalogAssociationSelectMock(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT "dp_plan".* FROM "dp_plan"`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
 		WithArgs(sqlmock.AnyArg()).
-		WillReturnRows(sqlmock.NewRows(planCols).
-			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 10))
+		WillReturnRows(sqlmock.NewRows(tag.TagCols).
+			AddRow(1, time.Now(), time.Now(), nil, tag.Tag["title"], tag.Tag["slug"]))
+}
+
+func datasetsAssociationSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
+
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_product_dataset"`)).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows([]string{"product_id", "dataset_id"}).
+			AddRow(1, 1))
+
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_dataset"`)).
+		WithArgs(sqlmock.AnyArg()).
+		WillReturnRows(sqlmock.NewRows(dataset.DatasetCols).
+			AddRow(1, time.Now(), time.Now(), nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"]))
+}
+
+func catalogsAssociationSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" JOIN "dp_catalog_product"`)).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows(append(catalogCols, []string{"product_id", "catalog_id"}...)).
+			AddRow(1, time.Now(), time.Now(), nil, "title", "description", 1, time.Now(), 1, 1))
+}
+
+func plansCatalogAssociationSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
+	mock.ExpectQuery(`SELECT (.+) FROM "dp_plan" INNER JOIN dp_plan_catalog`).
+		WithArgs(args...).
+		WillReturnRows(sqlmock.NewRows(append(planCols, []string{"catalog_id", "plan_id"}...)).
+			AddRow(1, time.Now(), time.Now(), nil, "name", "description", "status", 10, 1, 1))
 }
 
 func membershipAssociationSelectMock(mock sqlmock.Sqlmock) {
@@ -166,93 +178,73 @@ func preUpdateMock(mock sqlmock.Sqlmock) {
 		WillReturnRows(sqlmock.NewRows(ProductCols).
 			AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 200, "status", 2, 2))
 
-	tagsAssociationSelectMock(mock, 1)
-
-	datasetsAssociationSelectMock(mock, 1)
-
 	mock.ExpectBegin()
 
 	tag.TagSelectMock(mock)
 
+	mock.ExpectQuery(`INSERT INTO "dp_tag"`).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+	mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
+		WithArgs(1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
 	dataset.DatasetSelectMock(mock)
 
+	mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
+		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+	mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
+		WithArgs(1, 1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+
+	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
+		WillReturnResult(sqlmock.NewResult(0, 1))
 }
 
 func updateMock(mock sqlmock.Sqlmock, err error) {
 	preUpdateMock(mock)
 
-	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
 	if err != nil {
-		mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
-			WithArgs(Product["currency_id"], Product["featured_medium_id"], Product["price"], Product["slug"], Product["status"], Product["title"], test.AnyTime{}, 1).
+		mock.ExpectExec(`UPDATE \"dp_product\"`).
+			WithArgs(test.AnyTime{}, Product["title"], Product["slug"], Product["price"], Product["status"], Product["featured_medium_id"], Product["currency_id"], 1).
 			WillReturnError(err)
 		mock.ExpectRollback()
 	} else {
-		mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
-			WithArgs(Product["currency_id"], Product["featured_medium_id"], Product["price"], Product["slug"], Product["status"], Product["title"], test.AnyTime{}, 1).
+		mock.ExpectExec(`UPDATE \"dp_product\"`).
+			WithArgs(test.AnyTime{}, Product["title"], Product["slug"], Product["price"], Product["status"], Product["featured_medium_id"], Product["currency_id"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-
-		mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
-			WithArgs(1, 1, 1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
-			WithArgs(1, 1, 1, 1).
-			WillReturnResult(sqlmock.NewResult(0, 1))
 	}
 }
 
 func updateMockWithoutMedium(mock sqlmock.Sqlmock) {
 	preUpdateMock(mock)
 
-	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_tag"`)).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectExec(regexp.QuoteMeta(`DELETE FROM "dp_product_dataset"`)).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
+	mock.ExpectExec(`UPDATE \"dp_product\"`).
 		WithArgs(nil, test.AnyTime{}, 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	ProductSelectMock(mock)
-
-	mock.ExpectExec(`UPDATE \"dp_product\" SET (.+)  WHERE (.+) \"dp_product\".\"id\" = `).
-		WithArgs(Product["currency_id"], Product["price"], Product["slug"], Product["status"], Product["title"], test.AnyTime{}, 1).
+	mock.ExpectExec(`UPDATE \"dp_product\"`).
+		WithArgs(test.AnyTime{}, Product["title"], Product["slug"], Product["price"], Product["status"], Product["currency_id"], 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
-		WithArgs(1, 1, 1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
-	mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).
-		WithArgs(1, 1, 1, 1).
-		WillReturnResult(sqlmock.NewResult(0, 1))
-
 }
 
 func productOrderExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order" INNER JOIN`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_order" JOIN`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func productCatalogExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_catalog" INNER JOIN`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_catalog" JOIN`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
-
-// func productOrderExpect(mock sqlmock.Sqlmock, count int) {
-// 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_order_item"`)).
-// 		WithArgs(1).
-// 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
-// }
 
 func validateAssociations(result *httpexpect.Object) {
 	result.Value("currency").

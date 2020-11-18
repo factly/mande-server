@@ -33,9 +33,8 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("delete product", func(t *testing.T) {
 		ProductSelectMock(mock)
 
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		tagsAssociationSelectMock(mock, 1)
 
 		productCatalogExpect(mock, 0)
 
@@ -84,9 +83,8 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("deleting product fails", func(t *testing.T) {
 		ProductSelectMock(mock)
 
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		tagsAssociationSelectMock(mock, 1)
 
 		productCatalogExpect(mock, 0)
 
@@ -115,9 +113,8 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("product is associated with catalog", func(t *testing.T) {
 		ProductSelectMock(mock)
 
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		tagsAssociationSelectMock(mock, 1)
 
 		productCatalogExpect(mock, 1)
 
@@ -132,9 +129,8 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("product is associated with order", func(t *testing.T) {
 		ProductSelectMock(mock)
 
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		tagsAssociationSelectMock(mock, 1)
 
 		productCatalogExpect(mock, 0)
 
@@ -152,9 +148,8 @@ func TestDeleteProduct(t *testing.T) {
 		gock.Off()
 		ProductSelectMock(mock)
 
-		tagsAssociationSelectMock(mock, 1)
-
 		datasetsAssociationSelectMock(mock, 1)
+		tagsAssociationSelectMock(mock, 1)
 
 		productCatalogExpect(mock, 0)
 

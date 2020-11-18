@@ -3,6 +3,7 @@ package membership
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -31,13 +32,16 @@ func TestDetailMembership(t *testing.T) {
 	t.Run("get membership by id", func(t *testing.T) {
 		MembershipSelectMock(mock)
 
+		payment.PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+
 		plan.PlanSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows([]string{"plan_id", "catalog_id"}).
+				AddRow(1, 1))
+
 		catalog.CatalogSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
 
 		result := adminExpect.GET(path).
 			WithPath("membership_id", "1").
@@ -77,15 +81,18 @@ func TestDetailMembership(t *testing.T) {
 	CommonDetailTests(t, mock, userExpect)
 
 	t.Run("get membership by id", func(t *testing.T) {
-		selectWithTwoArgsMock(mock)
+		MembershipSelectMock(mock, 1, 1)
+
+		payment.PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
 
 		plan.PlanSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows([]string{"plan_id", "catalog_id"}).
+				AddRow(1, 1))
+
 		catalog.CatalogSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
 
 		result := userExpect.GET(path).
 			WithPath("membership_id", "1").

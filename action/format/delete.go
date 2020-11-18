@@ -48,7 +48,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check if format is associated with datasets
-	var totAssociated int
+	var totAssociated int64
 	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
 		FormatID: uint(id),
 	}).Count(&totAssociated)

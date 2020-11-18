@@ -3,7 +3,6 @@ package dataset
 import (
 	"net/http"
 	"net/http/httptest"
-	"regexp"
 	"testing"
 	"time"
 
@@ -12,7 +11,6 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
 )
 
@@ -47,9 +45,6 @@ func AdminListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)))
-
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -69,14 +64,10 @@ func AdminListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(1, time.Now(), time.Now(), nil, datasetlist[0]["title"], datasetlist[0]["description"], datasetlist[0]["source"], datasetlist[0]["frequency"], datasetlist[0]["temporal_coverage"], datasetlist[0]["granularity"], datasetlist[0]["contact_name"], datasetlist[0]["contact_email"], datasetlist[0]["license"], datasetlist[0]["data_standard"], datasetlist[0]["sample_url"], datasetlist[0]["related_articles"], datasetlist[0]["time_saved"], datasetlist[0]["price"], datasetlist[0]["currency_id"], datasetlist[0]["featured_medium_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
+		currency.CurrencySelectMock(mock)
 		medium.MediumSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
+		tagAssociationSelectMock(mock, 1, 2)
 
 		datasetFormatSelectMock(mock, 1)
 
@@ -107,14 +98,10 @@ func AdminListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(DatasetCols).
 				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
+		currency.CurrencySelectMock(mock)
 		medium.MediumSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WithArgs(2).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
+		tagAssociationSelectMock(mock, 2)
 
 		datasetFormatSelectMock(mock, 2)
 
@@ -148,9 +135,6 @@ func UserListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)))
-
 		e.GET(basePath).
 			Expect().
 			Status(http.StatusOK).
@@ -170,14 +154,10 @@ func UserListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(1, time.Now(), time.Now(), nil, datasetlist[0]["title"], datasetlist[0]["description"], datasetlist[0]["source"], datasetlist[0]["frequency"], datasetlist[0]["temporal_coverage"], datasetlist[0]["granularity"], datasetlist[0]["contact_name"], datasetlist[0]["contact_email"], datasetlist[0]["license"], datasetlist[0]["data_standard"], datasetlist[0]["sample_url"], datasetlist[0]["related_articles"], datasetlist[0]["time_saved"], datasetlist[0]["price"], datasetlist[0]["currency_id"], datasetlist[0]["featured_medium_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
+		currency.CurrencySelectMock(mock)
 		medium.MediumSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg()).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
+		tagAssociationSelectMock(mock, 1, 2)
 
 		userDatasetFormatSelectMock(mock, 1)
 
@@ -208,14 +188,10 @@ func UserListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(DatasetCols).
 				AddRow(2, time.Now(), time.Now(), nil, datasetlist[1]["title"], datasetlist[1]["description"], datasetlist[1]["source"], datasetlist[1]["frequency"], datasetlist[1]["temporal_coverage"], datasetlist[1]["granularity"], datasetlist[1]["contact_name"], datasetlist[1]["contact_email"], datasetlist[1]["license"], datasetlist[1]["data_standard"], datasetlist[1]["sample_url"], datasetlist[1]["related_articles"], datasetlist[1]["time_saved"], datasetlist[1]["price"], datasetlist[1]["currency_id"], datasetlist[1]["featured_medium_id"]))
 
+		currency.CurrencySelectMock(mock)
 		medium.MediumSelectMock(mock)
 
-		currency.CurrencySelectMock(mock)
-
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag" INNER JOIN "dp_dataset_tag"`)).
-			WithArgs(2).
-			WillReturnRows(sqlmock.NewRows(append(tag.TagCols, []string{"tag_id", "dataset_id"}...)).
-				AddRow(1, time.Now(), time.Now(), nil, "title1", "slug1", 1, 1))
+		tagAssociationSelectMock(mock, 2)
 
 		userDatasetFormatSelectMock(mock, 2)
 

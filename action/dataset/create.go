@@ -42,6 +42,11 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	featuredMediumID := &dataset.FeaturedMediumID
+	if dataset.FeaturedMediumID == 0 {
+		featuredMediumID = nil
+	}
+
 	result := &datasetData{}
 	result.Tags = make([]model.Tag, 0)
 	result.Dataset = model.Dataset{
@@ -58,15 +63,17 @@ func create(w http.ResponseWriter, r *http.Request) {
 		SampleURL:        dataset.SampleURL,
 		RelatedArticles:  dataset.RelatedArticles,
 		TimeSaved:        dataset.TimeSaved,
-		FeaturedMediumID: dataset.FeaturedMediumID,
+		FeaturedMediumID: featuredMediumID,
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
 	}
 
-	model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
+	if len(dataset.TagIDs) > 0 {
+		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
+	}
 
 	tx := model.DB.Begin()
-	err = tx.Model(&model.Dataset{}).Set("gorm:association_autoupdate", false).Create(&result.Dataset).Error
+	err = tx.Model(&model.Dataset{}).Create(&result.Dataset).Error
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

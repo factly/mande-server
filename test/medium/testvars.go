@@ -1,6 +1,7 @@
 package medium
 
 import (
+	"database/sql/driver"
 	"regexp"
 	"time"
 
@@ -70,33 +71,33 @@ var mediumlist []map[string]interface{} = []map[string]interface{}{
 var MediumCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "slug", "type", "title", "description", "caption", "alt_text", "file_size", "url", "dimensions"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_medium"`)
-var countQuery string = regexp.QuoteMeta(`SELECT count(*) FROM "dp_medium"`)
+var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_medium"`)
 
 const basePath string = "/media"
 const path string = "/media/{media_id}"
 
-func MediumSelectMock(mock sqlmock.Sqlmock) {
+func MediumSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
-		WithArgs(1).
+		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(MediumCols).
 			AddRow(1, time.Now(), time.Now(), nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]))
 
 }
 
 func mediumCatalogExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_catalog`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_catalog`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func mediumDatasetExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_dataset`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }
 
 func mediumProductExpect(mock sqlmock.Sqlmock, count int) {
-	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "dp_product`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product`)).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(count))
 }

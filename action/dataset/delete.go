@@ -64,7 +64,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	}).Delete(&model.DatasetFormat{})
 
 	if len(result.Tags) > 0 {
-		tx.Model(&result).Association("Tags").Delete(result.Tags)
+		_ = tx.Model(&result).Association("Tags").Delete(result.Tags)
 	}
 	err = tx.Delete(&result).Error
 

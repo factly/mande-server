@@ -46,7 +46,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var totAssociated int
+	var totAssociated int64
 	product := new(model.Product)
 	product.ID = uint(id)
 
@@ -70,11 +70,11 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 	if len(result.Tags) > 0 {
-		tx.Model(&result).Association("Tags").Delete(result.Tags)
+		_ = tx.Model(&result).Association("Tags").Delete(result.Tags)
 	}
 
 	if len(result.Datasets) > 0 {
-		tx.Model(&result).Association("Datasets").Delete(result.Datasets)
+		_ = tx.Model(&result).Association("Datasets").Delete(result.Datasets)
 	}
 
 	err = tx.Delete(&result).Error

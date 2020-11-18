@@ -29,7 +29,7 @@ func TestDeleteMedium(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	t.Run("delete medium", func(t *testing.T) {
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 0)
 
@@ -72,7 +72,7 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("medium is associated with catalog", func(t *testing.T) {
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 1)
 
@@ -85,7 +85,7 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("medium is associated with dataset", func(t *testing.T) {
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 0)
 
@@ -100,7 +100,7 @@ func TestDeleteMedium(t *testing.T) {
 	})
 
 	t.Run("medium is associated with product", func(t *testing.T) {
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 0)
 
@@ -118,7 +118,7 @@ func TestDeleteMedium(t *testing.T) {
 
 	t.Run("delete medium when meili is down", func(t *testing.T) {
 		gock.Off()
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 0)
 

@@ -64,7 +64,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := model.DB.Begin()
-	tx.Model(&result).Update(&model.Tag{
+	tx.Model(&result).Updates(&model.Tag{
 		Title: tag.Title,
 		Slug:  tag.Slug,
 	}).First(&result)

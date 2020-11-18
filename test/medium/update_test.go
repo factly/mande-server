@@ -35,10 +35,10 @@ func TestUpdateMedium(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
 
 		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
-			WithArgs(Medium["alt_text"], Medium["caption"], Medium["description"], Medium["dimensions"], Medium["file_size"], Medium["name"], Medium["slug"], Medium["title"], Medium["type"], test.AnyTime{}, Medium["url"], 1).
+		mock.ExpectExec(`UPDATE \"dp_medium\"`).
+			WithArgs(test.AnyTime{}, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1, 1)
 		mock.ExpectCommit()
 
 		e.PUT(path).
@@ -99,10 +99,10 @@ func TestUpdateMedium(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
 
 		mock.ExpectBegin()
-		mock.ExpectExec(`UPDATE \"dp_medium\" SET (.+)  WHERE (.+) \"dp_medium\".\"id\" = `).
-			WithArgs(Medium["alt_text"], Medium["caption"], Medium["description"], Medium["dimensions"], Medium["file_size"], Medium["name"], Medium["slug"], Medium["title"], Medium["type"], test.AnyTime{}, Medium["url"], 1).
+		mock.ExpectExec(`UPDATE \"dp_medium\"`).
+			WithArgs(test.AnyTime{}, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1, 1)
 		mock.ExpectRollback()
 
 		e.PUT(path).

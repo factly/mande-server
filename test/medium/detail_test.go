@@ -35,7 +35,7 @@ func TestDetailMedium(t *testing.T) {
 
 func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get medium by id", func(t *testing.T) {
-		MediumSelectMock(mock)
+		MediumSelectMock(mock, 1)
 
 		e.GET(path).
 			WithPath("media_id", "1").

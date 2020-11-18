@@ -42,7 +42,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if currency already exists
-	var totCurrencies int
+	var totCurrencies int64
 	model.DB.Model(&model.Currency{}).Count(&totCurrencies)
 
 	if totCurrencies > 0 {

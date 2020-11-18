@@ -40,13 +40,16 @@ func TestListMembership(t *testing.T) {
 				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
+		payment.PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+
 		plan.PlanSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows([]string{"plan_id", "catalog_id"}).
+				AddRow(1, 1))
+
 		catalog.CatalogSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
 
 		adminExpect.GET(basePath).
 			WithHeader("X-User", "1").
@@ -100,9 +103,6 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(MembershipCols))
 
-		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_catalog" INNER JOIN "dp_plan_catalog"`)).
-			WillReturnRows(sqlmock.NewRows(append(catalog.CatalogCols, []string{"plan_id", "catalog_id"}...)))
-
 		e.GET(basePath).
 			WithHeader("X-User", "1").
 			Expect().
@@ -123,13 +123,16 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
 				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
+		payment.PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+
 		plan.PlanSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows([]string{"plan_id", "catalog_id"}).
+				AddRow(1, 1))
+
 		catalog.CatalogSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
 
 		e.GET(basePath).
 			WithHeader("X-User", "1").
@@ -155,13 +158,16 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
 				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
+		payment.PaymentSelectMock(mock)
+		currency.CurrencySelectMock(mock)
+
 		plan.PlanSelectMock(mock)
 
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_plan_catalog"`)).
+			WillReturnRows(sqlmock.NewRows([]string{"plan_id", "catalog_id"}).
+				AddRow(1, 1))
+
 		catalog.CatalogSelectMock(mock)
-
-		payment.PaymentSelectMock(mock)
-
-		currency.CurrencySelectMock(mock)
 
 		e.GET(basePath).
 			WithQueryObject(map[string]interface{}{

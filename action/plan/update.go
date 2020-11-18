@@ -57,7 +57,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	result := model.Plan{}
 	result.ID = uint(id)
 
-	err = model.DB.Preload("Catalogs").First(&result).Error
+	err = model.DB.First(&result).Error
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.RecordNotFound()))
@@ -66,30 +66,28 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 
-	oldCatalogs := result.Catalogs
 	newCatalogs := make([]model.Catalog, 0)
-
 	if len(plan.CatalogIDs) > 0 {
-		model.DB.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&newCatalogs)
+		tx.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&newCatalogs)
+		err = tx.Model(&result).Association("Catalogs").Replace(&newCatalogs)
+	} else {
+		err = tx.Model(&result).Association("Catalogs").Clear()
 	}
 
-	if len(oldCatalogs) > 0 {
-		if err := tx.Model(&result).Association("Catalogs").Delete(oldCatalogs).Error; err != nil {
-			tx.Rollback()
-			loggerx.Error(err)
-			errorx.Render(w, errorx.Parser(errorx.DBError()))
-			return
-		}
-
+	if err != nil {
+		tx.Rollback()
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.DBError()))
+		return
 	}
-	tx.Model(&result).Set("gorm:association_autoupdate", false).Updates(model.Plan{
+
+	tx.Omit("Catalogs").Model(&result).Updates(model.Plan{
 		Name:        plan.Name,
 		Description: plan.Description,
 		Duration:    plan.Duration,
 		Status:      plan.Status,
 		Price:       plan.Price,
 		CurrencyID:  plan.CurrencyID,
-		Catalogs:    newCatalogs,
 	}).Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
 
 	// Update into meili index

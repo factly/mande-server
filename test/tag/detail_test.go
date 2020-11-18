@@ -36,7 +36,7 @@ func TestDetailTag(t *testing.T) {
 
 func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get tag by id", func(t *testing.T) {
-		TagSelectMock(mock)
+		TagSelectMock(mock,1)
 
 		e.GET(path).
 			WithPath("tag_id", "1").
