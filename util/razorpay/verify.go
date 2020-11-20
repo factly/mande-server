@@ -11,7 +11,7 @@ import (
 
 // VerifySignature verifies razorpay payment signature
 func VerifySignature(orderID, paymentID, signature string) bool {
-	h := hmac.New(sha256.New, []byte(viper.GetString("razorpay.secret")))
+	h := hmac.New(sha256.New, []byte(viper.GetString("razorpay_secret")))
 	_, err := h.Write([]byte(fmt.Sprint(orderID, "|", paymentID)))
 	if err != nil {
 		return false

@@ -139,4 +139,4 @@ main
 # Logs
 *.log
 
-data-portal.yml
+config.*

@@ -48,28 +48,28 @@ var MeiliHits = map[string]interface{}{
 }
 
 func MeiliGock() {
-	gock.New(viper.GetString("meili.url")).
+	gock.New(viper.GetString("meili_url")).
 		Post("/indexes/data-portal/search").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusOK).
 		JSON(MeiliHits)
 
-	gock.New(viper.GetString("meili.url")).
+	gock.New(viper.GetString("meili_url")).
 		Post("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
-	gock.New(viper.GetString("meili.url")).
+	gock.New(viper.GetString("meili_url")).
 		Put("/indexes/data-portal/documents").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
 		Reply(http.StatusAccepted).
 		JSON(ReturnUpdate)
 
-	gock.New(viper.GetString("meili.url")).
+	gock.New(viper.GetString("meili_url")).
 		Delete("/indexes/data-portal/documents/(.+)").
 		HeaderPresent("X-Meili-API-Key").
 		Persist().
@@ -132,7 +132,7 @@ var RazorpayPayment = map[string]interface{}{
 
 func RazorpayGock() {
 	razorpay.SetupClient()
-	viper.Set("razorpay.secret", "testsecret")
+	viper.Set("razorpay_secret", "testsecret")
 
 	gock.New("https://api.razorpay.com").
 		Post("/v1/orders").

@@ -28,12 +28,12 @@ func (a AnyTime) Match(v driver.Value) bool {
 
 // SetupMockDB setups the mock sql db
 func SetupMockDB() sqlmock.Sqlmock {
-	viper.Set("meili.url", "http://meili:7700")
-	viper.Set("meili.key", "password")
+	viper.Set("meili_url", "http://meili:7700")
+	viper.Set("meili_key", "password")
 
 	meili.Client = meilisearch.NewClient(meilisearch.Config{
-		Host:   viper.GetString("meili.url"),
-		APIKey: viper.GetString("meili.key"),
+		Host:   viper.GetString("meili_url"),
+		APIKey: viper.GetString("meili_key"),
 	})
 
 	db, mock, err := sqlmock.New()
