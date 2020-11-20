@@ -20,6 +20,8 @@ import (
 // @ID add-tag
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Tag body tag true "Tag object"
 // @Success 201 {object} model.Tag
 // @Failure 400 {array} string

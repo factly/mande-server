@@ -18,6 +18,8 @@ import (
 // @Tags Catalog
 // @ID delete-catalog-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param catalog_id path string true "Catalog ID"
 // @Success 200
 // @Failure 400 {array} string

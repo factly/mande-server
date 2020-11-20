@@ -17,6 +17,8 @@ import (
 // @Tags Payment
 // @ID get-payment-by-id
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param payment_id path string true "Payment ID"
 // @Success 200 {object} model.Payment
 // @Failure 400 {array} string

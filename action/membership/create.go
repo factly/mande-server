@@ -24,12 +24,13 @@ import (
 // @Consume json
 // @Produce  json
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Membership body membership true "Membership object"
 // @Success 201 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))

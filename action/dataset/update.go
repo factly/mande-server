@@ -22,6 +22,8 @@ import (
 // @ID update-dataset-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Param Dataset body dataset false "Dataset"
 // @Success 200 {object} model.Dataset

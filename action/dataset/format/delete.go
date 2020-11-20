@@ -17,6 +17,8 @@ import (
 // @Tags Dataset Format
 // @ID delete-dataset-format-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Param format_id path string true "Dataset Format ID"
 // @Success 200

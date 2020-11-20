@@ -20,6 +20,8 @@ import (
 // @ID add-catalog
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Catalog body catalog true "Catalog object"
 // @Success 201 {object} model.Catalog
 // @Failure 400 {array} string

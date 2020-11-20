@@ -22,6 +22,8 @@ import (
 // @ID update-medium-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param medium_id path string true "Medium ID"
 // @Param Medium body medium false "Medium"
 // @Success 200 {object} model.Medium

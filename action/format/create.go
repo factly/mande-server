@@ -20,6 +20,8 @@ import (
 // @ID add-format
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Format body format true "Format object"
 // @Success 201 {object} model.Format
 // @Failure 400 {array} string

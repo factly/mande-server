@@ -19,12 +19,13 @@ import (
 // @ID get-cart-by-id
 // @Produce  json
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param cartitem_id path string true "Cart Item ID"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string
 // @Router /cartitems/{cartitem_id} [get]
 func userDetails(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -62,6 +63,7 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 // @ID get-cart-by-id
 // @Produce  json
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param cartitem_id path string true "Cart Item ID"
 // @Success 200 {object} model.CartItem
 // @Failure 400 {array} string

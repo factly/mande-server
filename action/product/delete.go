@@ -19,6 +19,8 @@ import (
 // @Tags Product
 // @ID delete-product-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param product_id path string true "Product ID"
 // @Success 200
 // @Failure 400 {array} string

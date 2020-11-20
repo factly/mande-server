@@ -17,6 +17,8 @@ import (
 // @Tags Currency
 // @ID get-currency-by-id
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param currency_id path string false "Currency ID"
 // @Success 200 {object} model.Currency
 // @Failure 400 {array} string

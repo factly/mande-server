@@ -22,6 +22,8 @@ import (
 // @ID update-format-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param format_id path string true "Format ID"
 // @Param format body format false "Format"
 // @Success 200 {object} model.Format

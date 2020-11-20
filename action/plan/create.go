@@ -20,6 +20,8 @@ import (
 // @ID add-plan
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Plan body plan true "Plan object"
 // @Success 201 {object} model.Plan
 // @Router /plans [post]

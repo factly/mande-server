@@ -22,6 +22,8 @@ import (
 // @ID update-product-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param product_id path string true "Product ID"
 // @Param Product body product false "Product"
 // @Success 200 {object} model.Product

@@ -21,6 +21,8 @@ import (
 // @ID add-dataset-format
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Param DatasetFormat body datasetFormat true "Dataset Format object"
 // @Success 201 {object} model.DatasetFormat

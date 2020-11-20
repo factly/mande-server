@@ -18,14 +18,15 @@ import (
 // @Tags Dataset
 // @ID get-dataset-by-id
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Success 200 {object} model.Dataset
 // @Failure 400 {array} string
 // @Router /datasets/{dataset_id} [get]
 func userDetails(w http.ResponseWriter, r *http.Request) {
 
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -69,7 +70,8 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 // @Tags Dataset
 // @ID get-dataset-by-id
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Success 200 {object} model.Dataset
 // @Failure 400 {array} string

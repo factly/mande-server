@@ -23,11 +23,12 @@ import (
 // @Consume json
 // @Produce  json
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Success 201 {object} model.Order
 // @Failure 400 {array} string
 // @Router /orders [post]
 func create(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))

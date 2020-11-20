@@ -20,6 +20,8 @@ import (
 // @ID search-entities
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Search body searchQuery false "Search"
 // @Success 200
 // @Router /search [post]

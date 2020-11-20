@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/factly/data-portal-server/util"
+
 	"github.com/factly/data-portal-server/action/cart"
 	"github.com/factly/data-portal-server/action/catalog"
 	"github.com/factly/data-portal-server/action/currency"
@@ -47,7 +49,12 @@ func GetCommonRouter() chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	return r
+	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
+		r.Get("/swagger/*", httpSwagger.WrapHandler)
+		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
+	}
+
+	return r.With(util.CheckUser, util.CheckOrganisation)
 }
 
 // RegisterUserRoutes - register user routes
@@ -90,11 +97,6 @@ func RegisterAdminRoutes() http.Handler {
 	r.Mount("/datasets", dataset.AdminRouter())
 	r.Mount("/media", medium.AdminRouter())
 	r.Mount("/search", search.Router())
-
-	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
-		r.Get("/swagger/*", httpSwagger.WrapHandler)
-		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
-	}
 
 	return r
 }

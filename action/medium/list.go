@@ -19,6 +19,8 @@ type paging struct {
 // @Tags Medium
 // @ID get-media
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
