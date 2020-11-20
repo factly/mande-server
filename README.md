@@ -11,27 +11,29 @@
  
  For generating docs, run `swag init`  it will parse your comments and generate the required files (`docs` folder and `docs/docs.go`).
 
- ## Development environment ( sample )
+ ## Development environment config vars ( sample )
 
 ```
-DB_USER=postgres
-DB_PASSWORD=password
-DB_NAME=data_portal
-DB_HOST=localhost
+DATABASE_HOST=postgres 
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=dataportal 
+DATABASE_PORT=5432 
+DATABASE_SSL_MODE=disable
+
+MEILI_URL=http://meilisearch:7700
+MEILI_KEY=password
+
+RAZORPAY_KEY=<razorpay access key>
+RAZORPAY_SECRET=<razorpay secret key>
+
 ```
 
 ##  Run
+To start  `go run main.go`  
+With docker `docker build -t data-portal-server .`
 
-To start  `go run main.go`
+Swagger UI (admin): http://localhost:7721/swagger/index.html
 
-With docker run `docker-compose up`
-
-Swagger-ui :- http://localhost:3000/swagger/index.html
-
-## Test
-
-Go to the following url to get all the test details
-http://localhost:8898/
-
-We are using `goconvey` for manage out BDD
-For more details visit http://goconvey.co/
+## Run Tests
+`go test ./test/... -coverpkg ./action/... -coverprofile=cov.out && go tool cover -html=cov.out`
