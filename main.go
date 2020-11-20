@@ -40,6 +40,11 @@ func main() {
 
 	razorpay.SetupClient()
 
+	err := config.CreateSuperOrganisation()
+	if err != nil {
+		log.Println(err)
+	}
+
 	// register routes
 	userRouter := action.RegisterUserRoutes()
 	adminRouter := action.RegisterAdminRoutes()

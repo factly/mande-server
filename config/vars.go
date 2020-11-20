@@ -45,6 +45,30 @@ func SetupVars() {
 		log.Fatal("please provide database_ssl_mode config param")
 	}
 
+	if !viper.IsSet("super_organisation_title") {
+		log.Fatal("please provide super_organisation_title config param")
+	}
+
+	if !viper.IsSet("default_user_email") {
+		log.Fatal("please provide default_user_email config param")
+	}
+
+	if !viper.IsSet("default_user_password") {
+		log.Fatal("please provide default_user_password config param")
+	}
+
+	if !viper.IsSet("keto_url") {
+		log.Fatal("please provide keto_url config param")
+	}
+
+	if !viper.IsSet("kavach_url") {
+		log.Fatal("please provide kavach_url config param")
+	}
+
+	if !viper.IsSet("kratos_public_url") {
+		log.Fatal("please provide kratos_public_url config param")
+	}
+
 	if !viper.IsSet("meili_url") {
 		log.Fatal("please provide meili_url in config file")
 	}
