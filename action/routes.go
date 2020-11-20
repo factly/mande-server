@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/factly/data-portal-server/action/cart"
@@ -21,6 +22,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/spf13/viper"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -44,9 +46,6 @@ func GetCommonRouter() chi.Router {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-
-	/* disable swagger in production */
-	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	return r
 }
@@ -91,6 +90,11 @@ func RegisterAdminRoutes() http.Handler {
 	r.Mount("/datasets", dataset.AdminRouter())
 	r.Mount("/media", medium.AdminRouter())
 	r.Mount("/search", search.Router())
+
+	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
+		r.Get("/swagger/*", httpSwagger.WrapHandler)
+		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
+	}
 
 	return r
 }
