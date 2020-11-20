@@ -12,7 +12,7 @@ func SetupVars() {
 
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")
-	viper.SetEnvPrefix("mande_")
+	viper.SetEnvPrefix("mande")
 	viper.AutomaticEnv()
 
 	viper.SetConfigFile(configPath)
