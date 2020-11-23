@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/factly/data-portal-server/action/organisation"
-
 	"github.com/factly/data-portal-server/util"
 
 	"github.com/factly/data-portal-server/action/cart"
@@ -36,8 +34,8 @@ func GetCommonRouter() chi.Router {
 
 	r.Use(middleware.RequestID)
 	r.Use(loggerx.Init())
-	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/ping"))
 
 	r.Use(cors.Handler(cors.Options{
@@ -77,7 +75,6 @@ func RegisterUserRoutes() http.Handler {
 	r.Mount("/datasets", dataset.UserRouter())
 	r.Mount("/media", medium.UserRouter())
 	r.Mount("/search", search.Router())
-
 	return r
 }
 
@@ -85,6 +82,8 @@ func RegisterUserRoutes() http.Handler {
 func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
+
+	r = r.With(util.CheckSuperOrganisation)
 
 	r.Mount("/currencies", currency.AdminRouter())
 	r.Mount("/plans", plan.AdminRouter())
@@ -99,7 +98,6 @@ func RegisterAdminRoutes() http.Handler {
 	r.Mount("/datasets", dataset.AdminRouter())
 	r.Mount("/media", medium.AdminRouter())
 	r.Mount("/search", search.Router())
-	r.Mount("/superorgs", organisation.Router())
 
 	return r
 }
