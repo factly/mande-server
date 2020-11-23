@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/factly/data-portal-server/action/organisation"
+
 	"github.com/factly/data-portal-server/util"
 
 	"github.com/factly/data-portal-server/action/cart"
@@ -97,6 +99,7 @@ func RegisterAdminRoutes() http.Handler {
 	r.Mount("/datasets", dataset.AdminRouter())
 	r.Mount("/media", medium.AdminRouter())
 	r.Mount("/search", search.Router())
+	r.Mount("/superorgs", organisation.Router())
 
 	return r
 }
