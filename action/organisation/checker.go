@@ -96,7 +96,7 @@ func checker(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if belongs == false {
+	if belongs {
 		errorx.Render(w, errorx.Parser(errorx.GetMessage("User is not from Super Organisation", http.StatusUnauthorized)))
 		return
 	}
