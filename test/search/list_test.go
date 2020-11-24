@@ -21,6 +21,8 @@ func TestListSearch(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -29,6 +31,7 @@ func TestListSearch(t *testing.T) {
 	t.Run("undecodable body", func(t *testing.T) {
 		e.POST(path).
 			WithJSON(undecodableData).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -36,6 +39,7 @@ func TestListSearch(t *testing.T) {
 	t.Run("invalid body", func(t *testing.T) {
 		e.POST(path).
 			WithJSON(invalidData).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -43,14 +47,20 @@ func TestListSearch(t *testing.T) {
 	t.Run("search entities with query 'test'", func(t *testing.T) {
 		e.POST(path).
 			WithJSON(Data).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK)
 	})
 
 	t.Run("meili server is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		e.POST(path).
 			WithJSON(Data).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 	})

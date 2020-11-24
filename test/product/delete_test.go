@@ -25,6 +25,8 @@ func TestDeleteProduct(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -54,6 +56,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK)
 
@@ -67,6 +70,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -76,6 +80,7 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("invalid product id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("product_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -104,6 +109,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -120,6 +126,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -138,6 +145,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -146,6 +154,10 @@ func TestDeleteProduct(t *testing.T) {
 
 	t.Run("delete product when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		ProductSelectMock(mock)
 
 		datasetsAssociationSelectMock(mock, 1)
@@ -169,6 +181,7 @@ func TestDeleteProduct(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

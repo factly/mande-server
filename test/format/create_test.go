@@ -23,6 +23,8 @@ func TestCreateFormat(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -37,6 +39,7 @@ func TestCreateFormat(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Format).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -49,12 +52,14 @@ func TestCreateFormat(t *testing.T) {
 	t.Run("unprocessable format body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidFormat).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty format body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -67,6 +72,7 @@ func TestCreateFormat(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(Format).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -76,6 +82,10 @@ func TestCreateFormat(t *testing.T) {
 
 	t.Run("create a format when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_format"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
@@ -84,6 +94,7 @@ func TestCreateFormat(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Format).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/format"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateDatasetFormat(t *testing.T) {
@@ -20,6 +21,10 @@ func TestCreateDatasetFormat(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -39,6 +44,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 				"dataset_id": 1,
 			}).
 			WithJSON(DatasetFormat).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -56,6 +62,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 			WithPathObject(map[string]interface{}{
 				"dataset_id": 1,
 			}).
+			WithHeaders(headers).
 			WithJSON(invalidDatasetFormat).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -66,6 +73,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 			WithPathObject(map[string]interface{}{
 				"dataset_id": 1,
 			}).
+			WithHeaders(headers).
 			WithJSON(undecodableDatasetFormat).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -76,6 +84,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 			WithPathObject(map[string]interface{}{
 				"dataset_id": "abc",
 			}).
+			WithHeaders(headers).
 			WithJSON(DatasetFormat).
 			Expect().
 			Status(http.StatusNotFound)
@@ -90,6 +99,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 
 		e.POST(basePath).
 			WithPath("dataset_id", "1").
+			WithHeaders(headers).
 			WithJSON(DatasetFormat).
 			Expect().
 			Status(http.StatusInternalServerError)

@@ -28,6 +28,8 @@ func TestCreateMembership(t *testing.T) {
 
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -39,7 +41,7 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusCreated).
@@ -55,23 +57,15 @@ func TestCreateMembership(t *testing.T) {
 
 	t.Run("unprocessable membership body", func(t *testing.T) {
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(invalidMembership).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
-	t.Run("invalid user header", func(t *testing.T) {
-		e.POST(basePath).
-			WithHeader("X-User", "abc").
-			WithJSON(requestBody).
-			Expect().
-			Status(http.StatusNotFound)
-	})
-
 	t.Run("empty membership body", func(t *testing.T) {
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -84,7 +78,7 @@ func TestCreateMembership(t *testing.T) {
 
 		mock.ExpectRollback()
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -101,7 +95,7 @@ func TestCreateMembership(t *testing.T) {
 
 		mock.ExpectRollback()
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -112,6 +106,8 @@ func TestCreateMembership(t *testing.T) {
 	t.Run("razorpay gives error response", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -132,7 +128,7 @@ func TestCreateMembership(t *testing.T) {
 
 		mock.ExpectRollback()
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -143,6 +139,8 @@ func TestCreateMembership(t *testing.T) {
 	t.Run("razorpay returns invalid body", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -170,7 +168,7 @@ func TestCreateMembership(t *testing.T) {
 
 		mock.ExpectRollback()
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -181,6 +179,8 @@ func TestCreateMembership(t *testing.T) {
 	gock.Off()
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -201,7 +201,7 @@ func TestCreateMembership(t *testing.T) {
 
 		mock.ExpectRollback()
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -212,6 +212,8 @@ func TestCreateMembership(t *testing.T) {
 	t.Run("create a membership when meili is down", func(t *testing.T) {
 		gock.Off()
 		test.RazorpayGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 
 		mock.ExpectBegin()
@@ -219,7 +221,7 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(requestBody).
 			Expect().
 			Status(http.StatusInternalServerError)

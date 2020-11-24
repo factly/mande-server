@@ -14,6 +14,11 @@ import (
 	"github.com/factly/data-portal-server/test/tag"
 )
 
+var headers = map[string]string{
+	"X-User":         "1",
+	"X-Organisation": "1",
+}
+
 var Plan map[string]interface{} = map[string]interface{}{
 	"name":        "Test Plan",
 	"description": "Test Plan Description",

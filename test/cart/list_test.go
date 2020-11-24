@@ -18,6 +18,7 @@ import (
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListCartItems(t *testing.T) {
@@ -29,6 +30,11 @@ func TestListCartItems(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// ADMIN specific tests
 	CommonListTests(t, mock, adminExpect)
@@ -65,7 +71,7 @@ func TestListCartItems(t *testing.T) {
 		delete(cartitemslist[0], "product_id")
 
 		adminExpect.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithQuery("user", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -83,28 +89,25 @@ func TestListCartItems(t *testing.T) {
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid user query param", func(t *testing.T) {
-		adminExpect.GET(basePath).
-			WithHeader("X-User", "1").
-			WithQuery("user", "abc").
-			Expect().
-			Status(http.StatusNotFound)
-	})
-
 	server.Close()
 
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// USER specific tests
 	CommonListTests(t, mock, userExpect)
 
 	t.Run("invalid user header", func(t *testing.T) {
 		userExpect.GET(basePath).
-			WithHeader("X-User", "anc").
+			WithHeaders(map[string]string{
+				"X-Organisation": "1",
+				"X-User":         "invalid",
+			}).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusUnauthorized)
 	})
 
 	server.Close()
@@ -119,7 +122,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -160,7 +163,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		delete(cartitemslist[0], "product_id")
 
 		e.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -207,7 +210,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		delete(cartitemslist[1], "product_id")
 
 		e.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",
 				"page":  "2",

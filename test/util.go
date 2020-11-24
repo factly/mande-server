@@ -30,6 +30,8 @@ func (a AnyTime) Match(v driver.Value) bool {
 func SetupMockDB() sqlmock.Sqlmock {
 	viper.Set("meili_url", "http://meili:7700")
 	viper.Set("meili_key", "password")
+	viper.Set("keto_url", "http://keto:4466")
+	viper.Set("kavach_url", "http://kavach:8000")
 
 	meili.Client = meilisearch.NewClient(meilisearch.Config{
 		Host:   viper.GetString("meili_url"),

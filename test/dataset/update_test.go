@@ -28,6 +28,8 @@ func TestUpdateDataset(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -47,6 +49,7 @@ func TestUpdateDataset(t *testing.T) {
 		mock.ExpectCommit()
 
 		result := e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().
@@ -66,6 +69,7 @@ func TestUpdateDataset(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(DatasetCols))
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().
@@ -76,6 +80,7 @@ func TestUpdateDataset(t *testing.T) {
 
 	t.Run("unprocessable dataset body", func(t *testing.T) {
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(invalidDataset).
 			Expect().
@@ -84,6 +89,7 @@ func TestUpdateDataset(t *testing.T) {
 
 	t.Run("undecodable dataset body", func(t *testing.T) {
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(undecodableDataset).
 			Expect().
@@ -92,6 +98,7 @@ func TestUpdateDataset(t *testing.T) {
 
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "abc").
 			WithJSON(Dataset).
 			Expect().
@@ -113,6 +120,7 @@ func TestUpdateDataset(t *testing.T) {
 
 		Dataset["featured_medium_id"] = 0
 		result := e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().
@@ -151,6 +159,7 @@ func TestUpdateDataset(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("dataset_id", "1").
+			WithHeaders(headers).
 			WithJSON(Dataset).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -161,6 +170,7 @@ func TestUpdateDataset(t *testing.T) {
 		updateMock(mock, errDatasetMediumFK)
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().
@@ -173,6 +183,7 @@ func TestUpdateDataset(t *testing.T) {
 		updateMock(mock, errDatasetCurrencyFK)
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().
@@ -183,6 +194,10 @@ func TestUpdateDataset(t *testing.T) {
 
 	t.Run("update dataset when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KetoGock()
+		test.KavachGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		updateMock(mock, nil)
 
 		DatasetSelectMock(mock)
@@ -196,6 +211,7 @@ func TestUpdateDataset(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithJSON(Dataset).
 			Expect().

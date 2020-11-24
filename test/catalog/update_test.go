@@ -27,6 +27,8 @@ func TestUpdateCatalog(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -50,6 +52,7 @@ func TestUpdateCatalog(t *testing.T) {
 		result := e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(Catalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -68,6 +71,7 @@ func TestUpdateCatalog(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			WithJSON(Catalog).
 			Expect().
 			Status(http.StatusNotFound)
@@ -79,6 +83,7 @@ func TestUpdateCatalog(t *testing.T) {
 		e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(invalidCatalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -87,6 +92,7 @@ func TestUpdateCatalog(t *testing.T) {
 		e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(undecodableCatalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -94,6 +100,7 @@ func TestUpdateCatalog(t *testing.T) {
 	t.Run("invalid catalog id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("catalog_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Catalog).
 			Expect().
 			Status(http.StatusNotFound)
@@ -105,6 +112,7 @@ func TestUpdateCatalog(t *testing.T) {
 		e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(Catalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -130,6 +138,7 @@ func TestUpdateCatalog(t *testing.T) {
 		e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(Catalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)
@@ -153,6 +162,7 @@ func TestUpdateCatalog(t *testing.T) {
 		result := e.PUT(path).
 			WithPath("catalog_id", "1").
 			WithJSON(Catalog).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -166,6 +176,10 @@ func TestUpdateCatalog(t *testing.T) {
 
 	t.Run("update catalog when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KetoGock()
+		test.KavachGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		updateMock(mock, nil)
 
 		CatalogSelectMock(mock)
@@ -182,6 +196,7 @@ func TestUpdateCatalog(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			WithJSON(Catalog).
 			Expect().
 			Status(http.StatusInternalServerError)

@@ -23,6 +23,8 @@ func TestCreateMedium(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -37,6 +39,7 @@ func TestCreateMedium(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Medium).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -49,12 +52,14 @@ func TestCreateMedium(t *testing.T) {
 	t.Run("unprocessable medium body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidMedium).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty medium body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -68,6 +73,7 @@ func TestCreateMedium(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Medium).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -76,6 +82,10 @@ func TestCreateMedium(t *testing.T) {
 
 	t.Run("create medium when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
@@ -84,6 +94,7 @@ func TestCreateMedium(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Medium).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)

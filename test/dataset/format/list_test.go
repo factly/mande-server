@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/format"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListDatasetFormat(t *testing.T) {
@@ -25,6 +26,10 @@ func TestListDatasetFormat(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	t.Run("get empty list", func(t *testing.T) {
 		mock.ExpectQuery(countQuery).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
@@ -33,6 +38,7 @@ func TestListDatasetFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(DatasetFormatCols))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -55,6 +61,7 @@ func TestListDatasetFormat(t *testing.T) {
 		format.FormatSelectMock(mock)
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -81,6 +88,7 @@ func TestListDatasetFormat(t *testing.T) {
 		format.FormatSelectMock(mock)
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",
@@ -102,6 +110,7 @@ func TestListDatasetFormat(t *testing.T) {
 
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithPath("dataset_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)

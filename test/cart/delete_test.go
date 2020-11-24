@@ -25,6 +25,8 @@ func TestDeleteCart(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -40,7 +42,7 @@ func TestDeleteCart(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -54,7 +56,7 @@ func TestDeleteCart(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -64,7 +66,7 @@ func TestDeleteCart(t *testing.T) {
 
 	t.Run("invalid cart id", func(t *testing.T) {
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
@@ -80,7 +82,7 @@ func TestDeleteCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -99,7 +101,7 @@ func TestDeleteCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)

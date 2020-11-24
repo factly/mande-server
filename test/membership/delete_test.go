@@ -24,6 +24,8 @@ func TestDeleteMembership(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -40,6 +42,7 @@ func TestDeleteMembership(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("membership_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK)
 
@@ -53,6 +56,7 @@ func TestDeleteMembership(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("membership_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -62,6 +66,7 @@ func TestDeleteMembership(t *testing.T) {
 	t.Run("invalid membership id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("membership_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -78,6 +83,7 @@ func TestDeleteMembership(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("membership_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

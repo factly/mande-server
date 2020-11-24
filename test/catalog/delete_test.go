@@ -25,6 +25,8 @@ func TestDeleteCatalog(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -46,6 +48,7 @@ func TestDeleteCatalog(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK)
 
@@ -59,6 +62,7 @@ func TestDeleteCatalog(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -68,6 +72,7 @@ func TestDeleteCatalog(t *testing.T) {
 	t.Run("invalid catalog id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("catalog_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -88,6 +93,7 @@ func TestDeleteCatalog(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -96,6 +102,10 @@ func TestDeleteCatalog(t *testing.T) {
 
 	t.Run("delete catalog when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KetoGock()
+		test.KavachGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		CatalogSelectMock(mock)
 
 		productsAssociationSelectMock(mock, 1)
@@ -111,6 +121,7 @@ func TestDeleteCatalog(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

@@ -25,6 +25,8 @@ func TestCreatePlan(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -59,6 +61,7 @@ func TestCreatePlan(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Plan).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -71,12 +74,14 @@ func TestCreatePlan(t *testing.T) {
 	t.Run("unprocessable plan body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidPlan).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty plan body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -91,6 +96,7 @@ func TestCreatePlan(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -100,6 +106,10 @@ func TestCreatePlan(t *testing.T) {
 
 	t.Run("create a plan when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		catalog.CatalogSelectMock(mock)
 
 		mock.ExpectBegin()
@@ -127,6 +137,7 @@ func TestCreatePlan(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
 			Status(http.StatusInternalServerError)

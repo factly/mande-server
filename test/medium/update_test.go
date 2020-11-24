@@ -23,6 +23,8 @@ func TestUpdateMedium(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -43,6 +45,7 @@ func TestUpdateMedium(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			WithJSON(Medium).
 			Expect().
 			Status(http.StatusOK).
@@ -60,6 +63,7 @@ func TestUpdateMedium(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			WithJSON(Medium).
 			Expect().
 			Status(http.StatusNotFound)
@@ -70,6 +74,7 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("invalid medium id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("media_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Medium).
 			Expect().
 			Status(http.StatusNotFound)
@@ -78,6 +83,7 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("unprocessable medium body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			WithJSON(invalidMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -86,6 +92,7 @@ func TestUpdateMedium(t *testing.T) {
 	t.Run("undecodable medium body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			WithJSON(undecodableMedium).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -93,6 +100,10 @@ func TestUpdateMedium(t *testing.T) {
 
 	t.Run("update medium when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MediumCols).
@@ -107,6 +118,7 @@ func TestUpdateMedium(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			WithJSON(Medium).
 			Expect().
 			Status(http.StatusInternalServerError)

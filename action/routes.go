@@ -54,7 +54,7 @@ func GetCommonRouter() chi.Router {
 		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
 	}
 
-	return r.With(util.CheckUser, util.CheckOrganisation)
+	return r
 }
 
 // RegisterUserRoutes - register user routes
@@ -62,19 +62,23 @@ func RegisterUserRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.Mount("/currencies", currency.UserRouter())
-	r.Mount("/plans", plan.UserRouter())
-	r.Mount("/memberships", membership.UserRouter())
-	r.Mount("/payments", payment.UserRouter())
-	r.Mount("/products", product.UserRouter())
-	r.Mount("/tags", tag.UserRouter())
-	r.Mount("/formats", format.UserRouter())
-	r.Mount("/catalogs", catalog.UserRouter())
-	r.Mount("/cartitems", cart.UserRouter())
-	r.Mount("/orders", order.UserRouter())
-	r.Mount("/datasets", dataset.UserRouter())
-	r.Mount("/media", medium.UserRouter())
-	r.Mount("/search", search.Router())
+	r.With(util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
+
+		r.Mount("/currencies", currency.UserRouter())
+		r.Mount("/plans", plan.UserRouter())
+		r.Mount("/memberships", membership.UserRouter())
+		r.Mount("/payments", payment.UserRouter())
+		r.Mount("/products", product.UserRouter())
+		r.Mount("/tags", tag.UserRouter())
+		r.Mount("/formats", format.UserRouter())
+		r.Mount("/catalogs", catalog.UserRouter())
+		r.Mount("/cartitems", cart.UserRouter())
+		r.Mount("/orders", order.UserRouter())
+		r.Mount("/datasets", dataset.UserRouter())
+		r.Mount("/media", medium.UserRouter())
+		r.Mount("/search", search.Router())
+
+	})
 	return r
 }
 
@@ -83,21 +87,22 @@ func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r = r.With(util.CheckSuperOrganisation)
+	r.With(util.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
-	r.Mount("/currencies", currency.AdminRouter())
-	r.Mount("/plans", plan.AdminRouter())
-	r.Mount("/memberships", membership.AdminRouter())
-	r.Mount("/payments", payment.AdminRouter())
-	r.Mount("/products", product.AdminRouter())
-	r.Mount("/tags", tag.AdminRouter())
-	r.Mount("/formats", format.AdminRouter())
-	r.Mount("/catalogs", catalog.AdminRouter())
-	r.Mount("/cartitems", cart.AdminRouter())
-	r.Mount("/orders", order.AdminRouter())
-	r.Mount("/datasets", dataset.AdminRouter())
-	r.Mount("/media", medium.AdminRouter())
-	r.Mount("/search", search.Router())
+		r.Mount("/currencies", currency.AdminRouter())
+		r.Mount("/plans", plan.AdminRouter())
+		r.Mount("/memberships", membership.AdminRouter())
+		r.Mount("/payments", payment.AdminRouter())
+		r.Mount("/products", product.AdminRouter())
+		r.Mount("/tags", tag.AdminRouter())
+		r.Mount("/formats", format.AdminRouter())
+		r.Mount("/catalogs", catalog.AdminRouter())
+		r.Mount("/cartitems", cart.AdminRouter())
+		r.Mount("/orders", order.AdminRouter())
+		r.Mount("/datasets", dataset.AdminRouter())
+		r.Mount("/media", medium.AdminRouter())
+		r.Mount("/search", search.Router())
 
+	})
 	return r
 }

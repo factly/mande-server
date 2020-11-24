@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailProduct(t *testing.T) {
@@ -23,6 +24,11 @@ func TestDetailProduct(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.KavachGock()
+	test.KetoGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	// ADMIN tests
 	adminDetailTests(t, mock, adminExpect)
 
@@ -31,6 +37,8 @@ func TestDetailProduct(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	userDetailTests(t, mock, userExpect)
 
@@ -51,6 +59,7 @@ func adminDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) 
 
 		result := e.GET(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -68,6 +77,7 @@ func adminDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) 
 
 		e.GET(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -77,6 +87,7 @@ func adminDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) 
 	t.Run("invalid product id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("product_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -101,7 +112,7 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		result := e.GET(path).
 			WithPath("product_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -119,7 +130,7 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		e.GET(path).
 			WithPath("product_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -129,7 +140,7 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("invalid product id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("product_id", "abc").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -137,7 +148,7 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("invalid user id header", func(t *testing.T) {
 		e.GET(path).
 			WithPath("product_id", "1").
-			WithHeader("X-User", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

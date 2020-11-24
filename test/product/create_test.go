@@ -26,6 +26,8 @@ func TestCreateProduct(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -68,6 +70,7 @@ func TestCreateProduct(t *testing.T) {
 
 		result := e.POST(basePath).
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -81,6 +84,7 @@ func TestCreateProduct(t *testing.T) {
 
 	t.Run("unprocessable product body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(invalidProduct).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -88,6 +92,7 @@ func TestCreateProduct(t *testing.T) {
 
 	t.Run("empty product body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -97,6 +102,7 @@ func TestCreateProduct(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -108,6 +114,7 @@ func TestCreateProduct(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -116,6 +123,10 @@ func TestCreateProduct(t *testing.T) {
 
 	t.Run("create a product when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		tag.TagSelectMock(mock)
 
 		dataset.DatasetSelectMock(mock)
@@ -152,6 +163,7 @@ func TestCreateProduct(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

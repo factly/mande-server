@@ -17,6 +17,7 @@ import (
 	"github.com/factly/data-portal-server/test/product"
 	"github.com/factly/data-portal-server/test/tag"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailCart(t *testing.T) {
@@ -28,6 +29,11 @@ func TestDetailCart(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// ADMIN tests
 	CommonDetailTests(t, mock, adminExpect)
@@ -56,7 +62,7 @@ func TestDetailCart(t *testing.T) {
 		tag.TagSelectMock(mock)
 
 		adminExpect.GET(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -73,7 +79,7 @@ func TestDetailCart(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		adminExpect.GET(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -86,6 +92,8 @@ func TestDetailCart(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// USER test
 	CommonDetailTests(t, mock, userExpect)
@@ -113,7 +121,7 @@ func TestDetailCart(t *testing.T) {
 		tag.TagSelectMock(mock)
 
 		userExpect.GET(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -130,7 +138,7 @@ func TestDetailCart(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(CartItemCols))
 
 		userExpect.GET(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -140,7 +148,7 @@ func TestDetailCart(t *testing.T) {
 
 	t.Run("invalid user header", func(t *testing.T) {
 		userExpect.GET(path).
-			WithHeader("X-User", "abc").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -153,7 +161,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 	t.Run("invalid cart item id", func(t *testing.T) {
 		e.GET(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("cartitem_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)

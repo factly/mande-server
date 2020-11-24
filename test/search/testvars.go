@@ -1,5 +1,10 @@
 package search
 
+var headers = map[string]string{
+	"X-User":         "1",
+	"X-Organisation": "1",
+}
+
 var Data = map[string]interface{}{
 	"q":       "test",
 	"limit":   10,

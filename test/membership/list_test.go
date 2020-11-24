@@ -15,6 +15,7 @@ import (
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListMembership(t *testing.T) {
@@ -26,6 +27,11 @@ func TestListMembership(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// ADMIN tests
 	CommonListTests(t, mock, adminExpect)
@@ -52,7 +58,7 @@ func TestListMembership(t *testing.T) {
 		catalog.CatalogSelectMock(mock)
 
 		adminExpect.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithQuery("user", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -70,7 +76,7 @@ func TestListMembership(t *testing.T) {
 
 	t.Run("invalid user query param", func(t *testing.T) {
 		adminExpect.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithQuery("user", "abc").
 			Expect().
 			Status(http.StatusNotFound)
@@ -82,15 +88,10 @@ func TestListMembership(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	// USER tests
 	CommonListTests(t, mock, userExpect)
-
-	t.Run("invalid user header", func(t *testing.T) {
-		userExpect.GET(basePath).
-			WithHeader("X-User", "anc").
-			Expect().
-			Status(http.StatusNotFound)
-	})
 
 	server.Close()
 }
@@ -104,7 +105,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(MembershipCols))
 
 		e.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -135,7 +136,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		catalog.CatalogSelectMock(mock)
 
 		e.GET(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -174,7 +175,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				"limit": "1",
 				"page":  "2",
 			}).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().

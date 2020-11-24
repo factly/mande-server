@@ -9,6 +9,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailTag(t *testing.T) {
@@ -21,6 +22,11 @@ func TestDetailTag(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.KavachGock()
+	test.KetoGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	CommonDetailsTests(t, mock, adminExpect)
 
 	server.Close()
@@ -29,6 +35,8 @@ func TestDetailTag(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	CommonDetailsTests(t, mock, userExpect)
 
 	server.Close()
@@ -36,10 +44,11 @@ func TestDetailTag(t *testing.T) {
 
 func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("get tag by id", func(t *testing.T) {
-		TagSelectMock(mock,1)
+		TagSelectMock(mock, 1)
 
 		e.GET(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -57,6 +66,7 @@ func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect
 
 		e.GET(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -66,6 +76,7 @@ func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect
 	t.Run("invalid tag id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("tag_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

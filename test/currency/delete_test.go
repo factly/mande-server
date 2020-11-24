@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeleteCurrency(t *testing.T) {
@@ -23,6 +24,10 @@ func TestDeleteCurrency(t *testing.T) {
 	defer server.Close()
 
 	e := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	t.Run("delete currency", func(t *testing.T) {
 		CurrencySelectMock(mock)
@@ -40,6 +45,7 @@ func TestDeleteCurrency(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("currency_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -53,6 +59,7 @@ func TestDeleteCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("currency_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -63,6 +70,7 @@ func TestDeleteCurrency(t *testing.T) {
 	t.Run("invalid currency id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("currency_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -74,6 +82,7 @@ func TestDeleteCurrency(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -89,6 +98,7 @@ func TestDeleteCurrency(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -106,6 +116,7 @@ func TestDeleteCurrency(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 

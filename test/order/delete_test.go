@@ -26,6 +26,8 @@ func TestDeleteOrder(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -51,7 +53,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -65,7 +67,7 @@ func TestDeleteOrder(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(OrderCols))
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -75,7 +77,7 @@ func TestDeleteOrder(t *testing.T) {
 
 	t.Run("invalid order id", func(t *testing.T) {
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("order_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
@@ -101,7 +103,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -111,6 +113,10 @@ func TestDeleteOrder(t *testing.T) {
 
 	t.Run("delete order when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		OrderSelectMock(mock)
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order_item"`)).
@@ -130,7 +136,7 @@ func TestDeleteOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithPath("order_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
