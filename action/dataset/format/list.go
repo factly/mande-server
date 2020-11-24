@@ -24,6 +24,8 @@ type paging struct {
 // @Tags Dataset Format
 // @ID get-all-datsets-formats
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param dataset_id path string true "Dataset ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"

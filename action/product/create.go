@@ -20,6 +20,8 @@ import (
 // @ID add-product
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Product body product true "Product object"
 // @Success 201 {object} model.Product
 // @Failure 400 {array} string

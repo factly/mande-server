@@ -24,6 +24,8 @@ func TestCreateTag(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -38,6 +40,7 @@ func TestCreateTag(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -50,12 +53,14 @@ func TestCreateTag(t *testing.T) {
 	t.Run("unprocessable tag body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidTag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty tag body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -69,6 +74,7 @@ func TestCreateTag(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -77,6 +83,10 @@ func TestCreateTag(t *testing.T) {
 
 	t.Run("create a tag when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
 			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
@@ -85,6 +95,7 @@ func TestCreateTag(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

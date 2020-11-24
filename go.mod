@@ -7,10 +7,11 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/factly/dega-server v0.0.0-20201022071708-cf14a714911e
-	github.com/factly/x v0.0.5
+	github.com/factly/x v0.0.6
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gavv/httpexpect v2.0.0+incompatible
+	github.com/gavv/httpexpect/v2 v2.1.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.1.1
 	github.com/go-openapi/swag v0.19.9 // indirect

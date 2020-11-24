@@ -24,13 +24,14 @@ type paging struct {
 // @Tags Cart
 // @ID get-all-carts
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"
 // @Success 200 {object} paging
 // @Router /cartitems [get]
 func userList(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -55,7 +56,8 @@ func userList(w http.ResponseWriter, r *http.Request) {
 // @Tags Cart
 // @ID get-all-carts
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param user query string false "User ID"
 // @Param limit query string false "limt per page"
 // @Param page query string false "page number"

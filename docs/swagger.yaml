@@ -883,6 +883,12 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
         type: string
       - description: User ID
         in: query
@@ -913,6 +919,11 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
         required: true
         type: string
       - description: Cart Item object
@@ -947,6 +958,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Cart Item ID
         in: path
         name: cartitem_id
@@ -970,6 +986,11 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
         required: true
         type: string
       - description: Cart Item ID
@@ -998,6 +1019,16 @@ paths:
       description: Get all catalogs
       operationId: get-all-catalogs
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1020,6 +1051,16 @@ paths:
       description: create catalog
       operationId: add-catalog
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Catalog object
         in: body
         name: Catalog
@@ -1047,6 +1088,16 @@ paths:
       description: Delete catalog by ID
       operationId: delete-catalog-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Catalog ID
         in: path
         name: catalog_id
@@ -1067,6 +1118,16 @@ paths:
       description: Get catalog by ID
       operationId: get-catalog-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Catalog ID
         in: path
         name: catalog_id
@@ -1092,6 +1153,16 @@ paths:
       description: Update catalog by ID
       operationId: update-catalog-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Catalog ID
         in: path
         name: catalog_id
@@ -1123,6 +1194,16 @@ paths:
       description: Get all currencies
       operationId: get-all-currencies
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1145,6 +1226,16 @@ paths:
       description: Create currency
       operationId: add-currency
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Currency object
         in: body
         name: Currency
@@ -1172,6 +1263,16 @@ paths:
       description: Delete currency by ID
       operationId: delete-currency-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Currency ID
         in: path
         name: currency_id
@@ -1192,6 +1293,16 @@ paths:
       description: get currency by ID
       operationId: get-currency-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Currency ID
         in: path
         name: currency_id
@@ -1216,6 +1327,16 @@ paths:
       description: Update currency by ID
       operationId: update-currency-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Currency ID
         in: path
         name: currency_id
@@ -1247,6 +1368,16 @@ paths:
       description: Get all datsets
       operationId: get-all-datsets
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1269,6 +1400,16 @@ paths:
       description: create dataset
       operationId: add-dataset
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset object
         in: body
         name: Dataset
@@ -1296,6 +1437,16 @@ paths:
       description: Delete dataset by ID
       operationId: delete-dataset-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
@@ -1319,6 +1470,12 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
         type: string
       - description: Dataset ID
         in: path
@@ -1345,6 +1502,16 @@ paths:
       description: Update dataset by ID
       operationId: update-dataset-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
@@ -1376,6 +1543,16 @@ paths:
       description: Get all datsets format
       operationId: get-all-datsets-formats
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
@@ -1403,6 +1580,16 @@ paths:
       description: Create dataset format
       operationId: add-dataset-format
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
@@ -1435,6 +1622,16 @@ paths:
       description: Delete dataset format by ID
       operationId: delete-dataset-format-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Dataset ID
         in: path
         name: dataset_id
@@ -1461,6 +1658,16 @@ paths:
       description: Get all formats
       operationId: get-all-formats
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limit per page
         in: query
         name: limit
@@ -1483,6 +1690,16 @@ paths:
       description: Create format
       operationId: add-format
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Format object
         in: body
         name: Format
@@ -1510,6 +1727,16 @@ paths:
       description: Delete format by ID
       operationId: delete-format-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Format ID
         in: path
         name: format_id
@@ -1530,6 +1757,16 @@ paths:
       description: Get format by ID
       operationId: get-format-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: format ID
         in: path
         name: format_id
@@ -1555,6 +1792,16 @@ paths:
       description: Update format by ID
       operationId: update-format-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Format ID
         in: path
         name: format_id
@@ -1586,6 +1833,16 @@ paths:
       description: Get media
       operationId: get-media
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1608,6 +1865,16 @@ paths:
       description: Create medium
       operationId: add-medium
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Medium object
         in: body
         name: Medium
@@ -1635,6 +1902,16 @@ paths:
       description: Delete medium by ID
       operationId: delete-medium-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Medium ID
         in: path
         name: medium_id
@@ -1655,6 +1932,16 @@ paths:
       description: Get medium by ID
       operationId: get-medium-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Medium ID
         in: path
         name: medium_id
@@ -1680,6 +1967,16 @@ paths:
       description: Update medium by ID
       operationId: update-medium-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Medium ID
         in: path
         name: medium_id
@@ -1716,6 +2013,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: User ID
         in: query
         name: user
@@ -1747,6 +2049,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Membership object
         in: body
         name: Membership
@@ -1774,6 +2081,16 @@ paths:
       description: Delete membership by ID
       operationId: delete-membership-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Membership ID
         in: path
         name: membership_id
@@ -1804,6 +2121,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -1828,6 +2150,11 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
         required: true
         type: string
       - description: User ID
@@ -1861,6 +2188,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -1882,6 +2214,16 @@ paths:
       description: Delete orders by ID
       operationId: delete-orders-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Order ID
         in: path
         name: order_id
@@ -1912,6 +2254,11 @@ paths:
         name: X-User
         required: true
         type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -1933,6 +2280,16 @@ paths:
       description: Get all payments
       operationId: get-all-payments
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -1955,6 +2312,16 @@ paths:
       description: Create payment
       operationId: add-payment
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Payment object
         in: body
         name: Payment
@@ -1982,6 +2349,16 @@ paths:
       description: Delete payment by ID
       operationId: delete-payment-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Payment ID
         in: path
         name: payment_id
@@ -2002,6 +2379,16 @@ paths:
       description: Get payment by ID
       operationId: get-payment-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Payment ID
         in: path
         name: payment_id
@@ -2028,6 +2415,16 @@ paths:
       description: Get all plans
       operationId: get-all-plans
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -2050,6 +2447,16 @@ paths:
       description: create plan
       operationId: add-plan
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Plan object
         in: body
         name: Plan
@@ -2071,6 +2478,16 @@ paths:
       description: Delete plan by ID
       operationId: delete-plan-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Plan ID
         in: path
         name: plan_id
@@ -2091,6 +2508,16 @@ paths:
       description: Get plan by ID
       operationId: get-plan-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Plan ID
         in: path
         name: plan_id
@@ -2116,6 +2543,16 @@ paths:
       description: Update plan by ID
       operationId: update-plan-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Plan ID
         in: path
         name: plan_id
@@ -2147,6 +2584,16 @@ paths:
       description: Get all products
       operationId: get-all-products
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -2169,6 +2616,16 @@ paths:
       description: Create product
       operationId: add-product
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Product object
         in: body
         name: Product
@@ -2196,6 +2653,16 @@ paths:
       description: Delete product by ID
       operationId: delete-product-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Product ID
         in: path
         name: product_id
@@ -2219,6 +2686,12 @@ paths:
       - description: User ID
         in: header
         name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
         type: string
       - description: Product ID
         in: path
@@ -2245,6 +2718,16 @@ paths:
       description: Update product by ID
       operationId: update-product-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Product ID
         in: path
         name: product_id
@@ -2276,6 +2759,16 @@ paths:
       description: Global search for all entities
       operationId: search-entities
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Search
         in: body
         name: Search
@@ -2293,6 +2786,16 @@ paths:
       description: Get all tags
       operationId: get-all-tags
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: limt per page
         in: query
         name: limit
@@ -2315,6 +2818,16 @@ paths:
       description: Create tag
       operationId: add-tag
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Tag object
         in: body
         name: Tag
@@ -2342,6 +2855,16 @@ paths:
       description: Delete tag by ID
       operationId: delete-tag-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Tag ID
         in: path
         name: tag_id
@@ -2362,6 +2885,16 @@ paths:
       description: Get tag by ID
       operationId: get-tag-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Tag ID
         in: path
         name: tag_id
@@ -2387,6 +2920,16 @@ paths:
       description: Update tag by ID
       operationId: update-tag-by-id
       parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
       - description: Tag ID
         in: path
         name: tag_id

@@ -2,6 +2,7 @@ package test
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/factly/data-portal-server/util/razorpay"
 	"github.com/spf13/viper"
@@ -145,4 +146,64 @@ func RazorpayGock() {
 		Persist().
 		Reply(http.StatusOK).
 		JSON(RazorpayPayment)
+}
+
+var Dummy_SinglePolicy = map[string]interface{}{
+	"id":          "app:dataportal:superorg",
+	"description": "",
+	"subjects": []string{
+		"1",
+	},
+	"resources": []string{
+		"resources:org:1:<.*>",
+	},
+	"actions": []string{
+		"actions:org:1:<.*>",
+	},
+	"effect":     "allow",
+	"conditions": nil,
+}
+
+// KetoGock Mock server for keto
+func KetoGock() {
+	gock.New(viper.GetString("keto_url")).
+		Get("/engines/acp/ory/regex/policies/(.+)").
+		SetMatcher(gock.NewMatcher()).
+		AddMatcher(func(req *http.Request, ereq *gock.Request) (bool, error) { return req.Method == "GET", nil }).
+		Persist().
+		Reply(http.StatusOK).
+		JSON(Dummy_SinglePolicy)
+
+}
+
+var Dummy_Org = map[string]interface{}{
+	"id":         1,
+	"created_at": time.Now(),
+	"updated_at": time.Now(),
+	"deleted_at": nil,
+	"title":      "test org",
+	"slug":       "test-org",
+	"permission": map[string]interface{}{
+		"id":              1,
+		"created_at":      time.Now(),
+		"updated_at":      time.Now(),
+		"deleted_at":      nil,
+		"user_id":         1,
+		"user":            nil,
+		"organisation_id": 1,
+		"organisation":    nil,
+		"role":            "owner",
+	},
+}
+
+var Dummy_OrgList = []map[string]interface{}{
+	Dummy_Org,
+}
+
+// KavachGock Mock server for kavach-server
+func KavachGock() {
+	gock.New(viper.GetString("kavach_url") + "/organisations/my").
+		Persist().
+		Reply(http.StatusOK).
+		JSON(Dummy_OrgList)
 }

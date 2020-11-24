@@ -16,6 +16,11 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
+var headers = map[string]string{
+	"X-User":         "1",
+	"X-Organisation": "1",
+}
+
 var Membership map[string]interface{} = map[string]interface{}{
 	"status":            "Test Status",
 	"user_id":           1,

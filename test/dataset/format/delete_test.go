@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDeleteDatasetFormat(t *testing.T) {
@@ -22,6 +23,10 @@ func TestDeleteDatasetFormat(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	defer server.Close()
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	e := httpexpect.New(t, server.URL)
 
@@ -38,6 +43,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPathObject(map[string]interface{}{
 				"dataset_id": "1",
 				"format_id":  "1",
@@ -54,6 +60,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(DatasetFormatCols))
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPathObject(map[string]interface{}{
 				"dataset_id": "1",
 				"format_id":  "1",
@@ -66,6 +73,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPathObject(map[string]interface{}{
 				"dataset_id": "abc",
 				"format_id":  "1",
@@ -76,6 +84,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 
 	t.Run("invalid format id", func(t *testing.T) {
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPathObject(map[string]interface{}{
 				"dataset_id": "1",
 				"format_id":  "abc",

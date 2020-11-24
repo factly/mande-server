@@ -29,6 +29,8 @@ func TestUpdateProduct(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -48,6 +50,7 @@ func TestUpdateProduct(t *testing.T) {
 
 		result := e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusOK).
@@ -67,6 +70,7 @@ func TestUpdateProduct(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusNotFound)
@@ -77,6 +81,7 @@ func TestUpdateProduct(t *testing.T) {
 	t.Run("unprocessable product body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(invalidProduct).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -85,6 +90,7 @@ func TestUpdateProduct(t *testing.T) {
 	t.Run("undecodable product body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(undecodableProduct).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -93,6 +99,7 @@ func TestUpdateProduct(t *testing.T) {
 	t.Run("invalid product id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusNotFound)
@@ -123,6 +130,7 @@ func TestUpdateProduct(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -166,6 +174,7 @@ func TestUpdateProduct(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("product_id", "1").
 			WithJSON(Product).
 			Expect().
@@ -188,6 +197,7 @@ func TestUpdateProduct(t *testing.T) {
 		result := e.PUT(path).
 			WithPath("product_id", "1").
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -207,6 +217,7 @@ func TestUpdateProduct(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "1").
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -219,6 +230,7 @@ func TestUpdateProduct(t *testing.T) {
 		e.PUT(path).
 			WithPath("product_id", "1").
 			WithJSON(Product).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -227,6 +239,10 @@ func TestUpdateProduct(t *testing.T) {
 
 	t.Run("update product when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		updateMock(mock, nil)
 
 		ProductSelectMock(mock, 1, 1)
@@ -240,6 +256,7 @@ func TestUpdateProduct(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("product_id", "1").
+			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
 			Status(http.StatusInternalServerError)

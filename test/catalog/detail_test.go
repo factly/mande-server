@@ -11,6 +11,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailCatalog(t *testing.T) {
@@ -22,6 +23,11 @@ func TestDetailCatalog(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
+	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	CommonDetailTests(t, mock, adminExpect)
 
@@ -30,6 +36,8 @@ func TestDetailCatalog(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	CommonDetailTests(t, mock, userExpect)
 
@@ -50,6 +58,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 		result := e.GET(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -68,6 +77,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 		e.GET(path).
 			WithPath("catalog_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -77,6 +87,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("invalid catalog id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("catalog_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

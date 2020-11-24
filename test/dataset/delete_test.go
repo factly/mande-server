@@ -24,6 +24,8 @@ func TestDeleteDataset(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -40,6 +42,7 @@ func TestDeleteDataset(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -54,6 +57,7 @@ func TestDeleteDataset(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("dataset_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -62,6 +66,7 @@ func TestDeleteDataset(t *testing.T) {
 
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
@@ -78,6 +83,7 @@ func TestDeleteDataset(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -93,6 +99,7 @@ func TestDeleteDataset(t *testing.T) {
 		datasetProductExpect(mock, 1)
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -102,6 +109,10 @@ func TestDeleteDataset(t *testing.T) {
 
 	t.Run("delete dataset when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KetoGock()
+		test.KavachGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		DatasetSelectMock(mock)
 
 		tagAssociationSelectMock(mock)
@@ -113,6 +124,7 @@ func TestDeleteDataset(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("dataset_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

@@ -22,6 +22,8 @@ import (
 // @ID update-catalog-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param catalog_id path string true "Catalog ID"
 // @Param Catalog body catalog false "Catalog"
 // @Success 200 {object} model.Catalog

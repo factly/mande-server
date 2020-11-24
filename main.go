@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -40,11 +39,14 @@ func main() {
 
 	razorpay.SetupClient()
 
+	err := config.CreateSuperOrganisation()
+	if err != nil {
+		log.Println(err)
+	}
+
 	// register routes
 	userRouter := action.RegisterUserRoutes()
 	adminRouter := action.RegisterAdminRoutes()
-
-	fmt.Println("swagger-ui http://localhost:7721/swagger/index.html")
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":7720", userRouter))

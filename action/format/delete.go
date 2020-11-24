@@ -19,6 +19,8 @@ import (
 // @Tags Format
 // @ID delete-format-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param format_id path string true "Format ID"
 // @Success 200
 // @Failure 400 {array} string

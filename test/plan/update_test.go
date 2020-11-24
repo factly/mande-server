@@ -22,6 +22,8 @@ func TestUpdatePlan(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -33,6 +35,7 @@ func TestUpdatePlan(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
 			Status(http.StatusOK).
@@ -49,6 +52,7 @@ func TestUpdatePlan(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(PlanCols))
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("plan_id", "1").
 			WithJSON(Plan).
 			Expect().
@@ -60,6 +64,7 @@ func TestUpdatePlan(t *testing.T) {
 	t.Run("invalid plan id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("plan_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
 			Status(http.StatusNotFound)
@@ -68,6 +73,7 @@ func TestUpdatePlan(t *testing.T) {
 	t.Run("unprocessable plan body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			WithJSON(invalidPlan).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -76,17 +82,23 @@ func TestUpdatePlan(t *testing.T) {
 	t.Run("undecodable plan body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			WithJSON(undecodablePlan).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 	t.Run("update plan when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		planUpdateMock(mock)
 		mock.ExpectRollback()
 
 		e.PUT(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
 			Status(http.StatusInternalServerError)

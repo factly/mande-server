@@ -24,6 +24,8 @@ func TestDeletePlan(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -45,6 +47,7 @@ func TestDeletePlan(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("plan_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -59,6 +62,7 @@ func TestDeletePlan(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -68,6 +72,7 @@ func TestDeletePlan(t *testing.T) {
 	t.Run("invalid plan id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("plan_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -80,6 +85,7 @@ func TestDeletePlan(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -88,6 +94,10 @@ func TestDeletePlan(t *testing.T) {
 
 	t.Run("delete plan when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		PlanSelectMock(mock)
 		associatedCatalogSelectMock(mock)
 
@@ -104,6 +114,7 @@ func TestDeletePlan(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

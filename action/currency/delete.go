@@ -18,6 +18,8 @@ import (
 // @Tags Currency
 // @ID delete-currency-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param currency_id path string true "Currency ID"
 // @Success 200
 // @Failure 400 {array} string

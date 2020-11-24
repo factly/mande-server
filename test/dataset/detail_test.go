@@ -13,6 +13,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailDataset(t *testing.T) {
@@ -25,6 +26,10 @@ func TestDetailDataset(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	// ADMIN tests
 	AdminTests(t, mock, adminExpect)
 
@@ -34,6 +39,7 @@ func TestDetailDataset(t *testing.T) {
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
 
+	gock.New(server.URL).EnableNetworking().Persist()
 	// USER tests
 	UserTests(t, mock, userExpect)
 
@@ -53,6 +59,7 @@ func AdminTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		result := e.GET(path).
 			WithPath("dataset_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -70,6 +77,7 @@ func AdminTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(DatasetCols))
 
 		e.GET(path).
+			WithHeaders(headers).
 			WithPath("dataset_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -80,6 +88,7 @@ func AdminTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("dataset_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -109,7 +118,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		result := e.GET(path).
 			WithPath("dataset_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -142,7 +151,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		result := e.GET(path).
 			WithPath("dataset_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -166,7 +175,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		e.GET(path).
 			WithPath("dataset_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -176,7 +185,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("invalid dataset id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("dataset_id", "abc").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -184,7 +193,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 	t.Run("invalid user id header", func(t *testing.T) {
 		e.GET(path).
 			WithPath("dataset_id", "1").
-			WithHeader("X-User", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

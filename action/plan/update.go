@@ -22,6 +22,8 @@ import (
 // @ID update-plan-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param plan_id path string true "Plan ID"
 // @Param Plan body plan false "Plan"
 // @Success 200 {object} model.Plan

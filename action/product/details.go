@@ -23,14 +23,15 @@ type productRes struct {
 // @Tags Product
 // @ID get-product-by-id
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param product_id path string true "Product ID"
 // @Success 200 {object} productRes
 // @Failure 400 {array} string
 // @Router /products/{product_id} [get]
 func userDetails(w http.ResponseWriter, r *http.Request) {
 
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -91,7 +92,8 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 // @Tags Product
 // @ID get-product-by-id
 // @Produce  json
-// @Param X-User header string false "User ID"
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param product_id path string true "Product ID"
 // @Success 200 {object} model.Product
 // @Failure 400 {array} string

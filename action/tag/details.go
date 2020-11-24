@@ -17,6 +17,8 @@ import (
 // @Tags Tag
 // @ID get-tag-by-id
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param tag_id path string true "Tag ID"
 // @Success 200 {object} model.Tag
 // @Failure 400 {array} string

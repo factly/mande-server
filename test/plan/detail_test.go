@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/test"
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailPlan(t *testing.T) {
@@ -21,6 +22,11 @@ func TestDetailPlan(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.KavachGock()
+	test.KetoGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	CommonDetailTests(t, mock, adminExpect)
 
 	server.Close()
@@ -28,6 +34,8 @@ func TestDetailPlan(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	CommonDetailTests(t, mock, userExpect)
 
@@ -46,6 +54,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 		currency.CurrencySelectMock(mock)
 
 		e.GET(path).
+			WithHeaders(headers).
 			WithPath("plan_id", "1").
 			Expect().
 			Status(http.StatusOK).
@@ -63,6 +72,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 
 		e.GET(path).
 			WithPath("plan_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -72,6 +82,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("invalid id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("plan_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

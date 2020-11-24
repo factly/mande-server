@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListCurrency(t *testing.T) {
@@ -21,6 +22,10 @@ func TestListCurrency(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	CommonListTests(t, mock, adminExpect)
 
 	server.Close()
@@ -28,6 +33,8 @@ func TestListCurrency(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	CommonListTests(t, mock, userExpect)
 
@@ -43,6 +50,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -61,6 +69,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().

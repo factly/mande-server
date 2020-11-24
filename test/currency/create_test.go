@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestCreateCurrency(t *testing.T) {
@@ -23,6 +24,10 @@ func TestCreateCurrency(t *testing.T) {
 
 	e := httpexpect.New(t, server.URL)
 
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+
 	t.Run("create a currency", func(t *testing.T) {
 		mock.ExpectQuery(countQuery).
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("0"))
@@ -35,6 +40,7 @@ func TestCreateCurrency(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Currency).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -47,12 +53,14 @@ func TestCreateCurrency(t *testing.T) {
 	t.Run("unprocessable currency body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidCurrency).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty currency body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -69,6 +77,7 @@ func TestCreateCurrency(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Currency).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -81,6 +90,7 @@ func TestCreateCurrency(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Currency).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 

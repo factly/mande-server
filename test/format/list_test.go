@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListFormat(t *testing.T) {
@@ -22,6 +23,12 @@ func TestListFormat(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	CommonListTests(t, mock, adminExpect)
 
 	server.Close()
@@ -29,6 +36,8 @@ func TestListFormat(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	CommonListTests(t, mock, userExpect)
 
@@ -44,6 +53,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -64,6 +74,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -87,6 +98,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",
 				"page":  "2",

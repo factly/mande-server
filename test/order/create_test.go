@@ -29,6 +29,8 @@ func TestCreateOrder(t *testing.T) {
 
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -40,7 +42,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -59,7 +61,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -80,7 +82,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -105,7 +107,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -115,6 +117,8 @@ func TestCreateOrder(t *testing.T) {
 	t.Run("when razorpay gives error", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -151,7 +155,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -161,6 +165,8 @@ func TestCreateOrder(t *testing.T) {
 	t.Run("when razorpay returns invalid body", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -205,7 +211,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -215,6 +221,8 @@ func TestCreateOrder(t *testing.T) {
 	gock.Off()
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -252,23 +260,18 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
 		test.ExpectationsMet(t, mock)
 	})
 
-	t.Run("invalid user header", func(t *testing.T) {
-		e.POST(basePath).
-			WithHeader("X-User", "abc").
-			Expect().
-			Status(http.StatusNotFound)
-	})
-
 	t.Run("create a order when meili is down", func(t *testing.T) {
 		gock.Off()
 		test.RazorpayGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -276,7 +279,7 @@ func TestCreateOrder(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(Order).
 			Expect().
 			Status(http.StatusInternalServerError)

@@ -23,6 +23,8 @@ func TestUpdateTag(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -44,6 +46,7 @@ func TestUpdateTag(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			WithJSON(Tag).
 			Expect().
 			Status(http.StatusOK).
@@ -62,6 +65,7 @@ func TestUpdateTag(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "1").
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -72,6 +76,7 @@ func TestUpdateTag(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "abc").
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -80,6 +85,7 @@ func TestUpdateTag(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "1").
 			WithJSON(invalidTag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -88,11 +94,16 @@ func TestUpdateTag(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "1").
 			WithJSON(undecodableTag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 	t.Run("update tag when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(TagCols).
@@ -109,6 +120,7 @@ func TestUpdateTag(t *testing.T) {
 		e.PUT(path).
 			WithPath("tag_id", "1").
 			WithJSON(Tag).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 		test.ExpectationsMet(t, mock)

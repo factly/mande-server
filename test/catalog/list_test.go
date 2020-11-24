@@ -12,6 +12,7 @@ import (
 	"github.com/factly/data-portal-server/test/currency"
 	"github.com/factly/data-portal-server/test/medium"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestListCatalog(t *testing.T) {
@@ -24,6 +25,12 @@ func TestListCatalog(t *testing.T) {
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
 
+	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
+
 	CommonListTests(t, mock, adminExpect)
 
 	server.Close()
@@ -31,6 +38,9 @@ func TestListCatalog(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	CommonListTests(t, mock, userExpect)
 
@@ -46,6 +56,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WillReturnRows(sqlmock.NewRows(CatalogCols))
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -75,6 +86,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		delete(cataloglist[0], "product_ids")
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -103,6 +115,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		delete(cataloglist[1], "product_ids")
 
 		e.GET(basePath).
+			WithHeaders(headers).
 			WithQueryObject(map[string]interface{}{
 				"limit": "1",
 				"page":  "2",

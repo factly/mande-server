@@ -22,6 +22,8 @@ import (
 // @ID add-payment
 // @Consume json
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param Payment body payment true "Payment object"
 // @Success 201 {object} model.Payment
 // @Failure 400 {array} string

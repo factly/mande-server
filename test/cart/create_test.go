@@ -31,6 +31,8 @@ func TestCreateCart(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -70,7 +72,7 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusCreated).
@@ -83,7 +85,7 @@ func TestCreateCart(t *testing.T) {
 
 	t.Run("unprocessable cart item body", func(t *testing.T) {
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(invalidCartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -91,7 +93,7 @@ func TestCreateCart(t *testing.T) {
 
 	t.Run("undecodable cart item body", func(t *testing.T) {
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(undecodableCartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -99,16 +101,9 @@ func TestCreateCart(t *testing.T) {
 
 	t.Run("empty cart item body", func(t *testing.T) {
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
-	})
-
-	t.Run("invalid user header", func(t *testing.T) {
-		e.POST(basePath).
-			WithHeader("X-User", "abc").
-			Expect().
-			Status(http.StatusNotFound)
 	})
 
 	t.Run("product does not exist", func(t *testing.T) {
@@ -121,7 +116,7 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -140,7 +135,7 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -183,7 +178,7 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			WithJSON(CartItem).
 			Expect().
 			Status(http.StatusInternalServerError)

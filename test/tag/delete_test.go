@@ -24,6 +24,8 @@ func TestDeleteTag(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -43,6 +45,7 @@ func TestDeleteTag(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("tag_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -57,6 +60,7 @@ func TestDeleteTag(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -66,6 +70,7 @@ func TestDeleteTag(t *testing.T) {
 	t.Run("invalid tag id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("tag_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -77,6 +82,7 @@ func TestDeleteTag(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -92,6 +98,7 @@ func TestDeleteTag(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -100,6 +107,10 @@ func TestDeleteTag(t *testing.T) {
 
 	t.Run("delete tag when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		TagSelectMock(mock)
 
 		tagProductExpect(mock, 0)
@@ -114,6 +125,7 @@ func TestDeleteTag(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("tag_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

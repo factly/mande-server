@@ -21,6 +21,8 @@ import (
 // @ID update-currency-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param currency_id path string true "Currency ID"
 // @Param Currency body currency false "Currency"
 // @Success 200 {object} model.Currency

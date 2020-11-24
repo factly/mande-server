@@ -22,6 +22,8 @@ import (
 // @ID update-tag-by-id
 // @Produce json
 // @Consume json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param tag_id path string true "Tag ID"
 // @Param Tag body tag false "Tag"
 // @Success 200 {object} model.Tag

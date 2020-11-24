@@ -10,6 +10,7 @@ import (
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/test"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestUpdateCurrency(t *testing.T) {
@@ -22,6 +23,10 @@ func TestUpdateCurrency(t *testing.T) {
 	defer server.Close()
 
 	e := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	t.Run("update currency", func(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
@@ -38,6 +43,7 @@ func TestUpdateCurrency(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			WithJSON(Currency).
 			Expect().
 			Status(http.StatusOK).
@@ -54,6 +60,7 @@ func TestUpdateCurrency(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(CurrencyCols))
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("currency_id", "1").
 			WithJSON(Currency).
 			Expect().
@@ -65,6 +72,7 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("unprocessable currency body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			WithJSON(invalidCurrency).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -73,6 +81,7 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("invalid currency id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("currency_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Currency).
 			Expect().
 			Status(http.StatusNotFound)
@@ -81,6 +90,7 @@ func TestUpdateCurrency(t *testing.T) {
 	t.Run("undecodable currency body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("currency_id", "1").
+			WithHeaders(headers).
 			WithJSON(undecodableCurrency).
 			Expect().
 			Status(http.StatusUnprocessableEntity)

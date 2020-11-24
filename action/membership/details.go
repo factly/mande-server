@@ -20,12 +20,13 @@ import (
 // @Produce  json
 // @Param membership_id path string true "Membership ID"
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{membership_id} [get]
 func userDetails(w http.ResponseWriter, r *http.Request) {
 
-	uID, err := util.GetUser(r)
+	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -64,6 +65,7 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param membership_id path string true "Membership ID"
 // @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Success 200 {object} model.Membership
 // @Failure 400 {array} string
 // @Router /memberships/{membership_id} [get]

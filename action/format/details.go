@@ -17,6 +17,8 @@ import (
 // @Tags Format
 // @ID get-format-by-id
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param format_id path string true "format ID"
 // @Success 200 {object} model.Format
 // @Failure 400 {array} string

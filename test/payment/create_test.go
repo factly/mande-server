@@ -27,6 +27,8 @@ func TestCreatePayment(t *testing.T) {
 
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -54,6 +56,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -85,6 +88,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentMembershipReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusCreated).
 			JSON().
@@ -96,6 +100,7 @@ func TestCreatePayment(t *testing.T) {
 
 	t.Run("unprocessable payment body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(invalidPayment).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -103,6 +108,7 @@ func TestCreatePayment(t *testing.T) {
 
 	t.Run("undecodable payment body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(undecodablePayment).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -110,6 +116,7 @@ func TestCreatePayment(t *testing.T) {
 
 	t.Run("empty payment body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -117,6 +124,7 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("invalid for field in payment request", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(InvalidForPaymentReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -132,6 +140,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -149,6 +158,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentMembershipReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -167,6 +177,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(InvalidSigPaymentReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -187,6 +198,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -196,6 +208,8 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("razorpay returns error", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -214,6 +228,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -223,6 +238,8 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("razorpay returns invalid payment body", func(t *testing.T) {
 		gock.Off()
 		test.MeiliGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -244,6 +261,7 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(PaymentOrderReq).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -254,6 +272,8 @@ func TestCreatePayment(t *testing.T) {
 	gock.Off()
 	test.MeiliGock()
 	test.RazorpayGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -273,6 +293,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -298,6 +319,7 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectRollback()
 
 		e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(PaymentOrderReq).
 			Expect().
 			Status(http.StatusInternalServerError)
@@ -325,6 +347,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentMembershipReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -334,6 +357,8 @@ func TestCreatePayment(t *testing.T) {
 	t.Run("create a payment when meili is down", func(t *testing.T) {
 		gock.Off()
 		test.RazorpayGock()
+		test.KavachGock()
+		test.KetoGock()
 		gock.New(server.URL).EnableNetworking().Persist()
 		defer gock.DisableNetworking()
 
@@ -358,6 +383,7 @@ func TestCreatePayment(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(PaymentOrderReq).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

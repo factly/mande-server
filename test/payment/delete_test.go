@@ -24,6 +24,8 @@ func TestDeletePayment(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -44,6 +46,7 @@ func TestDeletePayment(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK)
 
@@ -57,6 +60,7 @@ func TestDeletePayment(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -66,6 +70,7 @@ func TestDeletePayment(t *testing.T) {
 	t.Run("invalid payment id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("payment_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -77,6 +82,7 @@ func TestDeletePayment(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -90,12 +96,17 @@ func TestDeletePayment(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("delete payment when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		PaymentSelectMock(mock)
 
 		paymentOrderExpect(mock, 0)
@@ -110,6 +121,7 @@ func TestDeletePayment(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("payment_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

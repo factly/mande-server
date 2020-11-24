@@ -23,6 +23,8 @@ func TestDeleteMedium(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -44,6 +46,7 @@ func TestDeleteMedium(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -57,6 +60,7 @@ func TestDeleteMedium(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(MediumCols))
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("media_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -66,6 +70,7 @@ func TestDeleteMedium(t *testing.T) {
 
 	t.Run("invalid medium id", func(t *testing.T) {
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("media_id", "abc").
 			Expect().
 			Status(http.StatusNotFound)
@@ -78,6 +83,7 @@ func TestDeleteMedium(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -93,6 +99,7 @@ func TestDeleteMedium(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -110,6 +117,7 @@ func TestDeleteMedium(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -118,6 +126,10 @@ func TestDeleteMedium(t *testing.T) {
 
 	t.Run("delete medium when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		MediumSelectMock(mock, 1)
 
 		mediumCatalogExpect(mock, 0)
@@ -134,6 +146,7 @@ func TestDeleteMedium(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("media_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

@@ -48,7 +48,15 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
-                        "in": "header"
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -93,6 +101,13 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
                         "in": "header",
                         "required": true
                     },
@@ -146,6 +161,13 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Cart Item ID",
                         "name": "cartitem_id",
                         "in": "path",
@@ -187,6 +209,13 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Cart Item ID",
                         "name": "cartitem_id",
                         "in": "path",
@@ -221,6 +250,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -252,6 +295,20 @@ var doc = `{
                 "summary": "Create catalog",
                 "operationId": "add-catalog",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Catalog object",
                         "name": "Catalog",
@@ -295,6 +352,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Catalog ID",
                         "name": "catalog_id",
                         "in": "path",
@@ -330,6 +401,20 @@ var doc = `{
                 "summary": "Update a catalog by id",
                 "operationId": "update-catalog-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Catalog ID",
@@ -374,6 +459,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Catalog ID",
                         "name": "catalog_id",
                         "in": "path",
@@ -408,6 +507,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -439,6 +552,20 @@ var doc = `{
                 "summary": "Create currency",
                 "operationId": "add-currency",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Currency object",
                         "name": "Currency",
@@ -482,6 +609,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Currency ID",
                         "name": "currency_id",
                         "in": "path"
@@ -516,6 +657,20 @@ var doc = `{
                 "summary": "Update a currency by id",
                 "operationId": "update-currency-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Currency ID",
@@ -560,6 +715,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Currency ID",
                         "name": "currency_id",
                         "in": "path",
@@ -594,6 +763,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -625,6 +808,20 @@ var doc = `{
                 "summary": "Create dataset",
                 "operationId": "add-dataset",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Dataset object",
                         "name": "Dataset",
@@ -670,7 +867,15 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
-                        "in": "header"
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -709,6 +914,20 @@ var doc = `{
                 "summary": "Update a dataset by id",
                 "operationId": "update-dataset-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Dataset ID",
@@ -753,6 +972,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Dataset ID",
                         "name": "dataset_id",
                         "in": "path",
@@ -785,6 +1018,20 @@ var doc = `{
                 "summary": "Show all datsets format",
                 "operationId": "get-all-datsets-formats",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Dataset ID",
@@ -825,6 +1072,20 @@ var doc = `{
                 "summary": "Create dataset format",
                 "operationId": "add-dataset-format",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Dataset ID",
@@ -872,6 +1133,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Dataset ID",
                         "name": "dataset_id",
                         "in": "path",
@@ -913,6 +1188,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limit per page",
                         "name": "limit",
                         "in": "query"
@@ -944,6 +1233,20 @@ var doc = `{
                 "summary": "Create format",
                 "operationId": "add-format",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Format object",
                         "name": "Format",
@@ -987,6 +1290,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "format ID",
                         "name": "format_id",
                         "in": "path",
@@ -1022,6 +1339,20 @@ var doc = `{
                 "summary": "Update a format by id",
                 "operationId": "update-format-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Format ID",
@@ -1066,6 +1397,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Format ID",
                         "name": "format_id",
                         "in": "path",
@@ -1100,6 +1445,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1131,6 +1490,20 @@ var doc = `{
                 "summary": "Create medium",
                 "operationId": "add-medium",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Medium object",
                         "name": "Medium",
@@ -1174,6 +1547,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Medium ID",
                         "name": "medium_id",
                         "in": "path",
@@ -1209,6 +1596,20 @@ var doc = `{
                 "summary": "Update a medium by id",
                 "operationId": "update-medium-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Medium ID",
@@ -1253,6 +1654,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Medium ID",
                         "name": "medium_id",
                         "in": "path",
@@ -1289,6 +1704,13 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
                         "in": "header",
                         "required": true
                     },
@@ -1335,6 +1757,13 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
                         "in": "header",
                         "required": true
                     },
@@ -1392,6 +1821,13 @@ var doc = `{
                         "name": "X-User",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1420,6 +1856,20 @@ var doc = `{
                 "summary": "Delete a membership",
                 "operationId": "delete-membership-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Membership ID",
@@ -1458,6 +1908,13 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
                         "in": "header",
                         "required": true
                     },
@@ -1506,6 +1963,13 @@ var doc = `{
                         "name": "X-User",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1552,6 +2016,13 @@ var doc = `{
                         "name": "X-User",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1580,6 +2051,20 @@ var doc = `{
                 "summary": "Delete a orders",
                 "operationId": "delete-orders-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Order ID",
@@ -1616,6 +2101,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1647,6 +2146,20 @@ var doc = `{
                 "summary": "Create payment",
                 "operationId": "add-payment",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Payment object",
                         "name": "Payment",
@@ -1690,6 +2203,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Payment ID",
                         "name": "payment_id",
                         "in": "path",
@@ -1722,6 +2249,20 @@ var doc = `{
                 "summary": "Delete a payment",
                 "operationId": "delete-payment-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Payment ID",
@@ -1758,6 +2299,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1790,6 +2345,20 @@ var doc = `{
                 "operationId": "add-plan",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Plan object",
                         "name": "Plan",
                         "in": "body",
@@ -1821,6 +2390,20 @@ var doc = `{
                 "summary": "Show a plan by id",
                 "operationId": "get-plan-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Plan ID",
@@ -1858,6 +2441,20 @@ var doc = `{
                 "summary": "Update a plan by id",
                 "operationId": "update-plan-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Plan ID",
@@ -1902,6 +2499,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Plan ID",
                         "name": "plan_id",
                         "in": "path",
@@ -1936,6 +2547,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "limt per page",
                         "name": "limit",
                         "in": "query"
@@ -1967,6 +2592,20 @@ var doc = `{
                 "summary": "Create product",
                 "operationId": "add-product",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Product object",
                         "name": "Product",
@@ -2012,7 +2651,15 @@ var doc = `{
                         "type": "string",
                         "description": "User ID",
                         "name": "X-User",
-                        "in": "header"
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -2051,6 +2698,20 @@ var doc = `{
                 "summary": "Update a product by id",
                 "operationId": "update-product-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Product ID",
@@ -2095,6 +2756,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Product ID",
                         "name": "product_id",
                         "in": "path",
@@ -2128,6 +2803,20 @@ var doc = `{
                 "operationId": "search-entities",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Search",
                         "name": "Search",
                         "in": "body",
@@ -2153,6 +2842,20 @@ var doc = `{
                 "summary": "Show all tags",
                 "operationId": "get-all-tags",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "limt per page",
@@ -2186,6 +2889,20 @@ var doc = `{
                 "summary": "Create tag",
                 "operationId": "add-tag",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Tag object",
                         "name": "Tag",
@@ -2229,6 +2946,20 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Tag ID",
                         "name": "tag_id",
                         "in": "path",
@@ -2264,6 +2995,20 @@ var doc = `{
                 "summary": "Update a tag by id",
                 "operationId": "update-tag-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Tag ID",
@@ -2306,6 +3051,20 @@ var doc = `{
                 "summary": "Delete a tag",
                 "operationId": "delete-tag-by-id",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Tag ID",

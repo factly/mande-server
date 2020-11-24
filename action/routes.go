@@ -1,7 +1,10 @@
 package action
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/factly/data-portal-server/util"
 
 	"github.com/factly/data-portal-server/action/cart"
 	"github.com/factly/data-portal-server/action/catalog"
@@ -21,6 +24,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/spf13/viper"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -30,8 +34,8 @@ func GetCommonRouter() chi.Router {
 
 	r.Use(middleware.RequestID)
 	r.Use(loggerx.Init())
-	r.Use(middleware.Recoverer)
 	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/ping"))
 
 	r.Use(cors.Handler(cors.Options{
@@ -45,8 +49,10 @@ func GetCommonRouter() chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	/* disable swagger in production */
-	r.Get("/swagger/*", httpSwagger.WrapHandler)
+	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
+		r.Get("/swagger/*", httpSwagger.WrapHandler)
+		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
+	}
 
 	return r
 }
@@ -56,20 +62,23 @@ func RegisterUserRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.Mount("/currencies", currency.UserRouter())
-	r.Mount("/plans", plan.UserRouter())
-	r.Mount("/memberships", membership.UserRouter())
-	r.Mount("/payments", payment.UserRouter())
-	r.Mount("/products", product.UserRouter())
-	r.Mount("/tags", tag.UserRouter())
-	r.Mount("/formats", format.UserRouter())
-	r.Mount("/catalogs", catalog.UserRouter())
-	r.Mount("/cartitems", cart.UserRouter())
-	r.Mount("/orders", order.UserRouter())
-	r.Mount("/datasets", dataset.UserRouter())
-	r.Mount("/media", medium.UserRouter())
-	r.Mount("/search", search.Router())
+	r.With(util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
+		r.Mount("/currencies", currency.UserRouter())
+		r.Mount("/plans", plan.UserRouter())
+		r.Mount("/memberships", membership.UserRouter())
+		r.Mount("/payments", payment.UserRouter())
+		r.Mount("/products", product.UserRouter())
+		r.Mount("/tags", tag.UserRouter())
+		r.Mount("/formats", format.UserRouter())
+		r.Mount("/catalogs", catalog.UserRouter())
+		r.Mount("/cartitems", cart.UserRouter())
+		r.Mount("/orders", order.UserRouter())
+		r.Mount("/datasets", dataset.UserRouter())
+		r.Mount("/media", medium.UserRouter())
+		r.Mount("/search", search.Router())
+
+	})
 	return r
 }
 
@@ -78,19 +87,22 @@ func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.Mount("/currencies", currency.AdminRouter())
-	r.Mount("/plans", plan.AdminRouter())
-	r.Mount("/memberships", membership.AdminRouter())
-	r.Mount("/payments", payment.AdminRouter())
-	r.Mount("/products", product.AdminRouter())
-	r.Mount("/tags", tag.AdminRouter())
-	r.Mount("/formats", format.AdminRouter())
-	r.Mount("/catalogs", catalog.AdminRouter())
-	r.Mount("/cartitems", cart.AdminRouter())
-	r.Mount("/orders", order.AdminRouter())
-	r.Mount("/datasets", dataset.AdminRouter())
-	r.Mount("/media", medium.AdminRouter())
-	r.Mount("/search", search.Router())
+	r.With(util.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
+		r.Mount("/currencies", currency.AdminRouter())
+		r.Mount("/plans", plan.AdminRouter())
+		r.Mount("/memberships", membership.AdminRouter())
+		r.Mount("/payments", payment.AdminRouter())
+		r.Mount("/products", product.AdminRouter())
+		r.Mount("/tags", tag.AdminRouter())
+		r.Mount("/formats", format.AdminRouter())
+		r.Mount("/catalogs", catalog.AdminRouter())
+		r.Mount("/cartitems", cart.AdminRouter())
+		r.Mount("/orders", order.AdminRouter())
+		r.Mount("/datasets", dataset.AdminRouter())
+		r.Mount("/media", medium.AdminRouter())
+		r.Mount("/search", search.Router())
+
+	})
 	return r
 }

@@ -17,6 +17,8 @@ import (
 // @Tags Plan
 // @ID get-plan-by-id
 // @Produce  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param plan_id path string true "Plan ID"
 // @Success 200 {object} model.Plan
 // @Failure 400 {array} string

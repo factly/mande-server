@@ -25,6 +25,8 @@ func TestCreateDataset(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KetoGock()
+	test.KavachGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -55,6 +57,7 @@ func TestCreateDataset(t *testing.T) {
 		mock.ExpectCommit()
 
 		result := e.POST(basePath).
+			WithHeaders(headers).
 			WithJSON(Dataset).
 			Expect().
 			Status(http.StatusCreated).
@@ -70,12 +73,14 @@ func TestCreateDataset(t *testing.T) {
 	t.Run("unprocessable dataset body", func(t *testing.T) {
 		e.POST(basePath).
 			WithJSON(invalidDataset).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 
 	t.Run("empty dataset body", func(t *testing.T) {
 		e.POST(basePath).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
@@ -85,6 +90,7 @@ func TestCreateDataset(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Dataset).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -96,6 +102,7 @@ func TestCreateDataset(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Dataset).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 
@@ -104,6 +111,10 @@ func TestCreateDataset(t *testing.T) {
 
 	t.Run("create a dataset when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KetoGock()
+		test.KavachGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		tag.TagSelectMock(mock)
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
@@ -129,6 +140,7 @@ func TestCreateDataset(t *testing.T) {
 
 		e.POST(basePath).
 			WithJSON(Dataset).
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

@@ -9,6 +9,11 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
+var headers = map[string]string{
+	"X-User":         "1",
+	"X-Organisation": "1",
+}
+
 // order_FjYVOJ8Vod4lmT
 
 var PaymentOrderReq map[string]interface{} = map[string]interface{}{

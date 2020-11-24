@@ -17,6 +17,11 @@ import (
 	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
+var headers = map[string]string{
+	"X-User":         "1",
+	"X-Organisation": "1",
+}
+
 func nilJsonb() postgres.Jsonb {
 	ba, _ := json.Marshal(nil)
 	return postgres.Jsonb{

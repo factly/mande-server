@@ -23,6 +23,8 @@ func TestUpdateFormat(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -43,6 +45,7 @@ func TestUpdateFormat(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.PUT(path).
+			WithHeaders(headers).
 			WithPath("format_id", "1").
 			WithJSON(Format).
 			Expect().
@@ -61,6 +64,7 @@ func TestUpdateFormat(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			WithJSON(Format).
 			Expect().
 			Status(http.StatusNotFound)
@@ -71,6 +75,7 @@ func TestUpdateFormat(t *testing.T) {
 	t.Run("unprocessable format body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			WithJSON(invalidFormat).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
@@ -79,6 +84,7 @@ func TestUpdateFormat(t *testing.T) {
 	t.Run("invalid format id", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("format_id", "abc").
+			WithHeaders(headers).
 			WithJSON(Format).
 			Expect().
 			Status(http.StatusNotFound)
@@ -87,12 +93,17 @@ func TestUpdateFormat(t *testing.T) {
 	t.Run("undecodable format body", func(t *testing.T) {
 		e.PUT(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			WithJSON(undecodableFormat).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 	})
 	t.Run("update format when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(FormatCols).
@@ -107,6 +118,7 @@ func TestUpdateFormat(t *testing.T) {
 
 		e.PUT(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			WithJSON(Format).
 			Expect().
 			Status(http.StatusInternalServerError)

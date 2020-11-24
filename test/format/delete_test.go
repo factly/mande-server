@@ -24,6 +24,8 @@ func TestDeleteFormat(t *testing.T) {
 	defer server.Close()
 
 	test.MeiliGock()
+	test.KavachGock()
+	test.KetoGock()
 	gock.New(server.URL).EnableNetworking().Persist()
 	defer gock.DisableNetworking()
 
@@ -41,6 +43,7 @@ func TestDeleteFormat(t *testing.T) {
 		mock.ExpectCommit()
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("format_id", "1").
 			Expect().
 			Status(http.StatusOK)
@@ -54,6 +57,7 @@ func TestDeleteFormat(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows(FormatCols))
 
 		e.DELETE(path).
+			WithHeaders(headers).
 			WithPath("format_id", "1").
 			Expect().
 			Status(http.StatusNotFound)
@@ -64,6 +68,7 @@ func TestDeleteFormat(t *testing.T) {
 	t.Run("invalid format id", func(t *testing.T) {
 		e.DELETE(path).
 			WithPath("format_id", "abc").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})
@@ -75,6 +80,7 @@ func TestDeleteFormat(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusUnprocessableEntity)
 
@@ -83,6 +89,10 @@ func TestDeleteFormat(t *testing.T) {
 
 	t.Run("delete format when meili is down", func(t *testing.T) {
 		gock.Off()
+		test.KavachGock()
+		test.KetoGock()
+		gock.New(server.URL).EnableNetworking().Persist()
+
 		FormatSelectMock(mock)
 
 		formatDatasetExpect(mock, 0)
@@ -95,6 +105,7 @@ func TestDeleteFormat(t *testing.T) {
 
 		e.DELETE(path).
 			WithPath("format_id", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusInternalServerError)
 

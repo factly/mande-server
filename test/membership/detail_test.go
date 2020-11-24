@@ -14,6 +14,7 @@ import (
 	"github.com/factly/data-portal-server/test/payment"
 	"github.com/factly/data-portal-server/test/plan"
 	"github.com/gavv/httpexpect"
+	"gopkg.in/h2non/gock.v1"
 )
 
 func TestDetailMembership(t *testing.T) {
@@ -25,6 +26,11 @@ func TestDetailMembership(t *testing.T) {
 	router := action.RegisterAdminRoutes()
 	server := httptest.NewServer(router)
 	adminExpect := httpexpect.New(t, server.URL)
+
+	test.KetoGock()
+	test.KavachGock()
+	gock.New(server.URL).EnableNetworking().Persist()
+	defer gock.DisableNetworking()
 
 	// ADMIN tests
 	CommonDetailTests(t, mock, adminExpect)
@@ -45,7 +51,7 @@ func TestDetailMembership(t *testing.T) {
 
 		result := adminExpect.GET(path).
 			WithPath("membership_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -64,7 +70,7 @@ func TestDetailMembership(t *testing.T) {
 
 		adminExpect.GET(path).
 			WithPath("membership_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
@@ -76,6 +82,8 @@ func TestDetailMembership(t *testing.T) {
 	router = action.RegisterUserRoutes()
 	server = httptest.NewServer(router)
 	userExpect := httpexpect.New(t, server.URL)
+
+	gock.New(server.URL).EnableNetworking().Persist()
 
 	// USER tests
 	CommonDetailTests(t, mock, userExpect)
@@ -96,7 +104,7 @@ func TestDetailMembership(t *testing.T) {
 
 		result := userExpect.GET(path).
 			WithPath("membership_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusOK).
 			JSON().
@@ -115,19 +123,11 @@ func TestDetailMembership(t *testing.T) {
 
 		userExpect.GET(path).
 			WithPath("membership_id", "1").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 
 		test.ExpectationsMet(t, mock)
-	})
-
-	t.Run("invalid user header", func(t *testing.T) {
-		userExpect.GET(path).
-			WithPath("membership_id", "1").
-			WithHeader("X-User", "abc").
-			Expect().
-			Status(http.StatusNotFound)
 	})
 
 	server.Close()
@@ -138,7 +138,7 @@ func CommonDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect)
 	t.Run("invalid membership id", func(t *testing.T) {
 		e.GET(path).
 			WithPath("membership_id", "abc").
-			WithHeader("X-User", "1").
+			WithHeaders(headers).
 			Expect().
 			Status(http.StatusNotFound)
 	})

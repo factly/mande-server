@@ -19,6 +19,8 @@ import (
 // @Tags Payment
 // @ID delete-payment-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param payment_id path string true "Payment ID"
 // @Success 200
 // @Failure 400 {array} string

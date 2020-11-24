@@ -19,6 +19,8 @@ import (
 // @Tags Tag
 // @ID delete-tag-by-id
 // @Consume  json
+// @Param X-User header string true "User ID"
+// @Param X-Organisation header string true "Organisation ID"
 // @Param tag_id path string true "Tag ID"
 // @Success 200
 // @Failure 400 {array} string
