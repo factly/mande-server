@@ -20,6 +20,7 @@ DATABASE_PASSWORD=postgres
 DATABASE_NAME=dataportal 
 DATABASE_PORT=5432 
 DATABASE_SSL_MODE=disable
+MODE=development
 
 MEILI_URL=http://meilisearch:7700
 MEILI_KEY=password
@@ -27,6 +28,14 @@ MEILI_KEY=password
 RAZORPAY_KEY=<razorpay access key>
 RAZORPAY_SECRET=<razorpay secret key>
 
+KETO_URL=http://keto:4466
+KAVACH_URL=http://kavach-server:8000
+KRATOS_PUBLIC_URL=http://kratos:4433
+OATHKEEPER_HOST=oathkeeper:4455
+
+SUPER_ORGANISATION_TITLE=<Super organisation title>
+DEFAULT_USER_EMAIL=<user email>
+DEFAULT_USER_PASSWORD=<user password>
 ```
 
 ##  Run

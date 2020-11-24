@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/spf13/viper"
@@ -180,11 +179,11 @@ func createKratosUser() (*http.Response, error) {
 		return nil, err
 	}
 
-	actionpathIdx := strings.Index(actionURL, ".ory/kratos/public")
+	req, _ = http.NewRequest("POST", actionURL, buf)
+	if viper.IsSet("oathkeeper_host") {
+		req.URL.Host = viper.GetString("oathkeeper_host")
+	}
 
-	actionpath := actionURL[actionpathIdx+18:]
-
-	req, _ = http.NewRequest("POST", viper.GetString("kratos_public_url")+actionpath, buf)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err = client.Do(req)
