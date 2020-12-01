@@ -78,6 +78,6 @@ func CommonDetailsTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect
 			WithPath("tag_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 }

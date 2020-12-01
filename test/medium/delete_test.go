@@ -73,7 +73,7 @@ func TestDeleteMedium(t *testing.T) {
 			WithHeaders(headers).
 			WithPath("media_id", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("medium is associated with catalog", func(t *testing.T) {

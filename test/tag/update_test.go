@@ -78,7 +78,7 @@ func TestUpdateTag(t *testing.T) {
 			WithJSON(Tag).
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("unprocessable tag body", func(t *testing.T) {

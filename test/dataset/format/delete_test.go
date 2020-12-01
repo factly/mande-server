@@ -79,7 +79,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 				"format_id":  "1",
 			}).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("invalid format id", func(t *testing.T) {
@@ -90,6 +90,6 @@ func TestDeleteDatasetFormat(t *testing.T) {
 				"format_id":  "abc",
 			}).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 }

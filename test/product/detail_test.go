@@ -89,7 +89,7 @@ func adminDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) 
 			WithPath("product_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 }
 
@@ -142,7 +142,7 @@ func userDetailTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 			WithPath("product_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("invalid user id header", func(t *testing.T) {

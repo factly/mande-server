@@ -69,7 +69,7 @@ func TestDeleteDataset(t *testing.T) {
 			WithHeaders(headers).
 			WithPath("dataset_id", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("deleting dataset fails", func(t *testing.T) {

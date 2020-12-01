@@ -72,7 +72,7 @@ func TestDeleteCurrency(t *testing.T) {
 			WithPath("currency_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("currency associated with payment", func(t *testing.T) {

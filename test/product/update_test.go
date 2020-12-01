@@ -102,7 +102,7 @@ func TestUpdateProduct(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Product).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("replacing old tags fails", func(t *testing.T) {

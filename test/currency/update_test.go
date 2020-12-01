@@ -84,7 +84,7 @@ func TestUpdateCurrency(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Currency).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("undecodable currency body", func(t *testing.T) {

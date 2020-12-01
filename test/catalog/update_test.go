@@ -103,7 +103,7 @@ func TestUpdateCatalog(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Catalog).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("new featured medium does not exist", func(t *testing.T) {

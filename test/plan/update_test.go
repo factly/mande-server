@@ -67,7 +67,7 @@ func TestUpdatePlan(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Plan).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("unprocessable plan body", func(t *testing.T) {

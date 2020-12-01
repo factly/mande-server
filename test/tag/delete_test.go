@@ -72,7 +72,7 @@ func TestDeleteTag(t *testing.T) {
 			WithPath("tag_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("tag associated with product", func(t *testing.T) {

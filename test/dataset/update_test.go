@@ -102,7 +102,7 @@ func TestUpdateDataset(t *testing.T) {
 			WithPath("dataset_id", "abc").
 			WithJSON(Dataset).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("update dataset with featured_medium_id = 0", func(t *testing.T) {

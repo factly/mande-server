@@ -74,7 +74,7 @@ func TestDeletePlan(t *testing.T) {
 			WithPath("plan_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("plan is associated with membership", func(t *testing.T) {

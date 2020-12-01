@@ -87,7 +87,7 @@ func TestUpdateFormat(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Format).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("undecodable format body", func(t *testing.T) {

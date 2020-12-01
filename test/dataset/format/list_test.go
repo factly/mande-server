@@ -113,6 +113,6 @@ func TestListDatasetFormat(t *testing.T) {
 			WithHeaders(headers).
 			WithPath("dataset_id", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 }

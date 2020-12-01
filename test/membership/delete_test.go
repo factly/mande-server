@@ -68,7 +68,7 @@ func TestDeleteMembership(t *testing.T) {
 			WithPath("membership_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("delete membership when meili is down", func(t *testing.T) {

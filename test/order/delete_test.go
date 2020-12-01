@@ -80,7 +80,7 @@ func TestDeleteOrder(t *testing.T) {
 			WithHeaders(headers).
 			WithPath("order_id", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("deleting order fail", func(t *testing.T) {

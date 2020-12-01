@@ -74,7 +74,7 @@ func TestDeleteCatalog(t *testing.T) {
 			WithPath("catalog_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("deleting catalog fails", func(t *testing.T) {

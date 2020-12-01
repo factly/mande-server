@@ -72,7 +72,7 @@ func TestDeletePayment(t *testing.T) {
 			WithPath("payment_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("payment associated with order", func(t *testing.T) {

@@ -87,7 +87,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(DatasetFormat).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("format does not exist", func(t *testing.T) {

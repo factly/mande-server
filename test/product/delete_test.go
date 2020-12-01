@@ -82,7 +82,7 @@ func TestDeleteProduct(t *testing.T) {
 			WithPath("product_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("deleting product fails", func(t *testing.T) {
