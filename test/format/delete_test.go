@@ -70,7 +70,7 @@ func TestDeleteFormat(t *testing.T) {
 			WithPath("format_id", "abc").
 			WithHeaders(headers).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("format associated with dataset", func(t *testing.T) {

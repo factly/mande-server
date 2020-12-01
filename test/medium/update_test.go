@@ -77,7 +77,7 @@ func TestUpdateMedium(t *testing.T) {
 			WithHeaders(headers).
 			WithJSON(Medium).
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("unprocessable medium body", func(t *testing.T) {

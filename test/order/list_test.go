@@ -73,7 +73,7 @@ func TestListOrder(t *testing.T) {
 			WithHeaders(headers).
 			WithQuery("user", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	server.Close()

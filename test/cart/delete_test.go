@@ -69,7 +69,7 @@ func TestDeleteCart(t *testing.T) {
 			WithHeaders(headers).
 			WithPath("cartitem_id", "abc").
 			Expect().
-			Status(http.StatusNotFound)
+			Status(http.StatusBadRequest)
 	})
 
 	t.Run("deleting cart items fail", func(t *testing.T) {
