@@ -1,12 +1,17 @@
 package currency
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-server/model"
+	"github.com/go-chi/chi"
+)
 
 // currency request body
 type currency struct {
 	IsoCode string `json:"iso_code" validate:"required"`
 	Name    string `json:"name" validate:"required"`
 }
+
+var userContext model.ContextKey = "currency_user"
 
 // UserRouter - Group of currency router
 func UserRouter() chi.Router {

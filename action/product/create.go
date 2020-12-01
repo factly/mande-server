@@ -1,11 +1,13 @@
 package product
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,9 +29,15 @@ import (
 // @Failure 400 {array} string
 // @Router /products [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
+		return
+	}
 
 	product := &product{}
-	err := json.NewDecoder(r.Body).Decode(&product)
+	err = json.NewDecoder(r.Body).Decode(&product)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -68,7 +76,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		model.DB.Model(&model.Dataset{}).Where(product.DatasetIDs).Find(&result.Datasets)
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Product{}).Create(&result).Error
 
 	if err != nil {

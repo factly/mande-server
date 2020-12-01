@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -30,6 +31,12 @@ import (
 // @Failure 400 {array} string
 // @Router /formats/{format_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	formatID := chi.URLParam(r, "format_id")
 	id, err := strconv.Atoi(formatID)
@@ -67,6 +74,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 	tx := model.DB.Begin()
 	tx.Model(&result).Updates(model.Format{
+		Base:        model.Base{UpdatedByID: uint(uID)},
 		Name:        format.Name,
 		Description: format.Description,
 		IsDefault:   format.IsDefault,

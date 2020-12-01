@@ -1,11 +1,16 @@
 package membership
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-server/model"
+	"github.com/go-chi/chi"
+)
 
 // membership request body
 type membership struct {
 	PlanID uint `json:"plan_id" validate:"required"`
 }
+
+var userContext model.ContextKey = "membership_user"
 
 // UserRouter - Group of membership router
 func UserRouter() chi.Router {

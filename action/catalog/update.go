@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -30,6 +31,12 @@ import (
 // @Failure 400 {array} string
 // @Router /catalogs/{catalog_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	catalogID := chi.URLParam(r, "catalog_id")
 	id, err := strconv.Atoi(catalogID)
@@ -97,6 +104,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = tx.Omit("Products").Model(&result).Updates(model.Catalog{
+		Base:             model.Base{UpdatedByID: uint(uID)},
 		Title:            catalog.Title,
 		Description:      catalog.Description,
 		FeaturedMediumID: featuredMediumID,

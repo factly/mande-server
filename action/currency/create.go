@@ -1,11 +1,13 @@
 package currency
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -26,10 +28,16 @@ import (
 // @Failure 400 {array} string
 // @Router /currencies [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	currency := &currency{}
 
-	err := json.NewDecoder(r.Body).Decode(&currency)
+	err = json.NewDecoder(r.Body).Decode(&currency)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -60,7 +68,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsoCode: currency.IsoCode,
 	}
 
-	err = model.DB.Model(&model.Currency{}).Create(&result).Error
+	err = model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Model(&model.Currency{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

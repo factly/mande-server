@@ -1,6 +1,9 @@
 package plan
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-server/model"
+	"github.com/go-chi/chi"
+)
 
 // Plan request body
 type plan struct {
@@ -12,6 +15,8 @@ type plan struct {
 	CurrencyID  uint   `json:"currency_id" validate:"required"`
 	CatalogIDs  []uint `json:"catalog_ids"`
 }
+
+var userContext model.ContextKey = "plan_user"
 
 // UserRouter - Group of plan router
 func UserRouter() chi.Router {

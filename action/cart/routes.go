@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -10,6 +11,8 @@ type cartitem struct {
 	ProductID    uint   `json:"product_id" validate:"required"`
 	MembershipID uint   `json:"membership_id"`
 }
+
+var userContext model.ContextKey = "cartitem_user"
 
 // UserRouter - Group of user cart router
 func UserRouter() chi.Router {

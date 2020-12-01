@@ -1,11 +1,13 @@
 package medium
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,10 +29,16 @@ import (
 // @Failure 400 {array} string
 // @Router /media [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	medium := &medium{}
 
-	err := json.NewDecoder(r.Body).Decode(&medium)
+	err = json.NewDecoder(r.Body).Decode(&medium)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -57,7 +65,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Dimensions:  medium.Dimensions,
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Medium{}).Create(&result).Error
 
 	if err != nil {

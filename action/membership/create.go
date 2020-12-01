@@ -1,6 +1,7 @@
 package membership
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -58,7 +59,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PlanID: membership.PlanID,
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 
 	// Check if the plan is not deleted
 	plan := model.Plan{}

@@ -1,6 +1,7 @@
 package format
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -9,6 +10,8 @@ type datasetFormat struct {
 	FormatID uint   `json:"format_id" validate:"required"`
 	URL      string `json:"url" validate:"required"`
 }
+
+var userContext model.ContextKey = "dataset_user"
 
 // AdminRouter - Group of tag router
 func AdminRouter() chi.Router {

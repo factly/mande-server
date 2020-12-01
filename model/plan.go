@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 // Plan model
 type Plan struct {
 	Base
@@ -11,4 +13,21 @@ type Plan struct {
 	Duration    uint      `gorm:"column:duration" json:"duration" validate:"required"`
 	Status      string    `gorm:"column:status" json:"status" validate:"required"`
 	Catalogs    []Catalog `gorm:"many2many:plan_catalog" json:"catalogs"`
+}
+
+var planUser ContextKey = "plan_user"
+
+// BeforeCreate hook
+func (plan *Plan) BeforeCreate(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	userID := ctx.Value(planUser)
+
+	if userID == nil {
+		return nil
+	}
+	uID := userID.(int)
+
+	plan.CreatedByID = uint(uID)
+	plan.UpdatedByID = uint(uID)
+	return nil
 }

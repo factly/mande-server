@@ -1,10 +1,12 @@
 package payment
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/razorpay"
 
 	"github.com/factly/data-portal-server/model"
@@ -29,9 +31,15 @@ import (
 // @Failure 400 {array} string
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
+		return
+	}
 
 	payment := &payment{}
-	err := json.NewDecoder(r.Body).Decode(&payment)
+	err = json.NewDecoder(r.Body).Decode(&payment)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -62,7 +70,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 
 	// Fetch razorpay_order_id from entity for which the payment is created
 	var razorpayOrderID string

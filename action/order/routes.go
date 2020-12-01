@@ -1,6 +1,7 @@
 package order
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -18,6 +19,8 @@ func UserRouter() chi.Router {
 
 	return r
 }
+
+var userContext model.ContextKey = "order_user"
 
 // AdminRouter - Group of order router
 func AdminRouter() chi.Router {

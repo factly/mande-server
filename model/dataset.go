@@ -1,6 +1,9 @@
 package model
 
-import "github.com/jinzhu/gorm/dialects/postgres"
+import (
+	"github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/gorm"
+)
 
 // Dataset model
 type Dataset struct {
@@ -34,4 +37,36 @@ type DatasetFormat struct {
 	Format    Format `gorm:"foreignKey:format_id"  json:"format"`
 	DatasetID uint   `gorm:"column:dataset_id" json:"dataset_id"`
 	URL       string `gorm:"column:url" json:"url"`
+}
+
+var datasetUser ContextKey = "dataset_user"
+
+// BeforeCreate hook
+func (dataset *Dataset) BeforeCreate(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	userID := ctx.Value(datasetUser)
+
+	if userID == nil {
+		return nil
+	}
+	uID := userID.(int)
+
+	dataset.CreatedByID = uint(uID)
+	dataset.UpdatedByID = uint(uID)
+	return nil
+}
+
+// BeforeCreate hook
+func (df *DatasetFormat) BeforeCreate(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	userID := ctx.Value(datasetUser)
+
+	if userID == nil {
+		return nil
+	}
+	uID := userID.(int)
+
+	df.CreatedByID = uint(uID)
+	df.UpdatedByID = uint(uID)
+	return nil
 }

@@ -1,6 +1,7 @@
 package order
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -40,7 +41,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Status: "created",
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 
 	cartitems := make([]model.CartItem, 0)
 

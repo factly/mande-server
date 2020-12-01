@@ -1,6 +1,7 @@
 package product
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -14,6 +15,8 @@ type product struct {
 	DatasetIDs       []uint `json:"dataset_ids"`
 	TagIDs           []uint `json:"tag_ids"`
 }
+
+var userContext model.ContextKey = "product_user"
 
 // UserRouter - Group of product router
 func UserRouter() chi.Router {
