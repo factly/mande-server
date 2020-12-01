@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/factly/data-portal-server/model"
+	"github.com/factly/x/healthx"
+
 	"github.com/factly/data-portal-server/util"
 
 	"github.com/factly/data-portal-server/action/cart"
@@ -48,6 +51,15 @@ func GetCommonRouter() chi.Router {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+
+	sqlDB, _ := model.DB.DB()
+	healthx.RegisterRoutes(r, healthx.ReadyCheckers{
+		"database":    sqlDB.Ping,
+		"keto":        util.KetoChecker,
+		"kavach":      util.KavachChecker,
+		"kratos":      util.KratosChecker,
+		"meilisearch": util.MeiliChecker,
+	})
 
 	return r
 }
