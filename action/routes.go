@@ -49,11 +49,6 @@ func GetCommonRouter() chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
-		r.Get("/swagger/*", httpSwagger.WrapHandler)
-		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
-	}
-
 	return r
 }
 
@@ -62,7 +57,7 @@ func RegisterUserRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.With(util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
+	r.With(util.GormRequestID, util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.UserRouter())
 		r.Mount("/plans", plan.UserRouter())
@@ -87,7 +82,7 @@ func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.With(util.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
+	r.With(util.GormRequestID, util.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.AdminRouter())
 		r.Mount("/plans", plan.AdminRouter())
@@ -104,5 +99,11 @@ func RegisterAdminRoutes() http.Handler {
 		r.Mount("/search", search.Router())
 
 	})
+
+	if viper.IsSet("mode") && viper.GetString("mode") == "development" {
+		r.Get("/swagger/*", httpSwagger.WrapHandler)
+		fmt.Println("Admin Swagger @ http://localhost:7721/swagger/index.html")
+	}
+
 	return r
 }
