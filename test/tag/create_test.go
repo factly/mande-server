@@ -34,7 +34,7 @@ func TestCreateTag(t *testing.T) {
 	t.Run("create a tag", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Tag["title"], Tag["slug"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
@@ -68,7 +68,7 @@ func TestCreateTag(t *testing.T) {
 	t.Run("creating tag fails", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Tag["title"], Tag["slug"]).
 			WillReturnError(errors.New("cannot create"))
 		mock.ExpectRollback()
 
@@ -89,7 +89,7 @@ func TestCreateTag(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Tag["title"], Tag["slug"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Tag["title"], Tag["slug"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectRollback()
 

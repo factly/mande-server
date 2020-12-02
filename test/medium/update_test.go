@@ -34,11 +34,11 @@ func TestUpdateMedium(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, nil, "dimensions"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_medium\"`).
-			WithArgs(test.AnyTime{}, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
+			WithArgs(test.AnyTime{}, 1, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		MediumSelectMock(mock, 1, 1)
 		mock.ExpectCommit()
@@ -107,11 +107,11 @@ func TestUpdateMedium(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MediumCols).
-				AddRow(1, time.Now(), time.Now(), nil, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, "url", "dimensions"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "name", "slug", "type", "title", "description", "caption", "alt_text", 100, nil, "dimensions"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_medium\"`).
-			WithArgs(test.AnyTime{}, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
+			WithArgs(test.AnyTime{}, 1, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		MediumSelectMock(mock, 1, 1)
 		mock.ExpectRollback()

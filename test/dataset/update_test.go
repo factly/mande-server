@@ -138,14 +138,14 @@ func TestUpdateDataset(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(DatasetCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", nilJsonb(), 10, 200, 2, 2))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "title", "description", "source", "frequency", "temporal_coverage", "granularity", "contact_name", "contact_email", "license", "data_standard", "sample_url", nilJsonb(), 10, 200, 2, 2))
 
 		mock.ExpectBegin()
 
 		tag.TagSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, tag.Tag["title"], tag.Tag["slug"], 1).
 			WillReturnError(errors.New(`cannot replace tags`))
 
 		mock.ExpectExec(`INSERT INTO "dp_dataset_tag"`).

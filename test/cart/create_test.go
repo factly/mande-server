@@ -44,7 +44,7 @@ func TestCreateCart(t *testing.T) {
 		membership.MembershipSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "membership_id"}).AddRow(1, 1))
 
 		CartItemSelectMock(mock, 1)
@@ -111,7 +111,7 @@ func TestCreateCart(t *testing.T) {
 		mock.ExpectBegin()
 		membership.MembershipSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnError(errCartItemProductFK)
 		mock.ExpectRollback()
 
@@ -150,7 +150,7 @@ func TestCreateCart(t *testing.T) {
 		membership.MembershipSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_cart_item"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, CartItem["status"], 1, CartItem["product_id"], CartItem["membership_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "membership_id"}).AddRow(1, 1))
 
 		CartItemSelectMock(mock, 1)

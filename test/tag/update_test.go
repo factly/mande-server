@@ -34,11 +34,11 @@ func TestUpdateTag(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(TagCols).
-				AddRow(1, time.Now(), time.Now(), nil, "Original Tag", "original-tag"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "Original Tag", "original-tag"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_tag\"`).
-			WithArgs(test.AnyTime{}, Tag["title"], Tag["slug"], 1).
+			WithArgs(test.AnyTime{}, 1, Tag["title"], Tag["slug"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		TagSelectMock(mock, 1, 1)
@@ -107,11 +107,11 @@ func TestUpdateTag(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(TagCols).
-				AddRow(1, time.Now(), time.Now(), nil, "Original Tag", "original-tag"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "Original Tag", "original-tag"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_tag\"`).
-			WithArgs(test.AnyTime{}, Tag["title"], Tag["slug"], 1).
+			WithArgs(test.AnyTime{}, 1, Tag["title"], Tag["slug"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		TagSelectMock(mock, 1, 1)

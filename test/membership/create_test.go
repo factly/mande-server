@@ -90,7 +90,7 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnError(errors.New(`cannot create membership`))
 
 		mock.ExpectRollback()
@@ -119,12 +119,12 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, currency.Currency["iso_code"], currency.Currency["name"]))
 
 		mock.ExpectRollback()
 		e.POST(basePath).
@@ -159,12 +159,12 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, currency.Currency["iso_code"], currency.Currency["name"]))
 
 		mock.ExpectRollback()
 		e.POST(basePath).
@@ -188,15 +188,15 @@ func TestCreateMembership(t *testing.T) {
 		mock.ExpectBegin()
 		plan.PlanSelectMock(mock)
 		mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, "created", 1, nil, Membership["plan_id"], "").
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 			WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, currency.Currency["iso_code"], currency.Currency["name"]))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
-			WithArgs(1, test.AnyTime{}, test.AnyTime{}, "processing", 1, 1, test.RazorpayOrder["id"], 1).
+			WithArgs(1, test.AnyTime{}, test.AnyTime{}, 1, 1, "processing", 1, 1, test.RazorpayOrder["id"], 1).
 			WillReturnError(errors.New(`cannot update membership`))
 
 		mock.ExpectRollback()

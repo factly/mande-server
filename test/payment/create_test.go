@@ -40,10 +40,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
@@ -72,10 +72,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(membershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, "status", 1, nil, 1, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "status", 1, nil, 1, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
@@ -171,7 +171,7 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectRollback()
 
@@ -189,10 +189,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnError(errPaymentCurrencyFK)
 		mock.ExpectRollback()
 
@@ -222,7 +222,7 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectRollback()
 
@@ -256,7 +256,7 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectRollback()
 
@@ -283,10 +283,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnError(errors.New(`cannot create payment`))
 
 		mock.ExpectRollback()
@@ -306,10 +306,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).
@@ -333,10 +333,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(membershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, "status", 1, nil, 1, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "status", 1, nil, 1, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
@@ -367,10 +367,10 @@ func TestCreatePayment(t *testing.T) {
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_order"`)).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(orderCols).
-				AddRow(1, time.Now(), time.Now(), nil, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, 1, "status", nil, "order_FjYVOJ8Vod4lmT"))
 
 		mock.ExpectQuery(`INSERT INTO "dp_payment"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_order" SET`)).

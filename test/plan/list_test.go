@@ -68,8 +68,8 @@ func CommonListTest(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(1, time.Now(), time.Now(), nil, planlist[0]["name"], planlist[0]["description"], planlist[0]["status"], planlist[0]["duration"], planlist[0]["price"], planlist[0]["currency_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"], planlist[1]["price"], planlist[1]["currency_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, planlist[0]["name"], planlist[0]["description"], planlist[0]["status"], planlist[0]["duration"], planlist[0]["price"], planlist[0]["currency_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"], planlist[1]["price"], planlist[1]["currency_id"]))
 
 		associatedCatalogSelectMock(mock, 1, 2)
 		productCatalogAssociationMock(mock)
@@ -101,7 +101,7 @@ func CommonListTest(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(PlanCols).
-				AddRow(2, time.Now(), time.Now(), nil, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"], planlist[1]["price"], planlist[1]["currency_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, planlist[1]["name"], planlist[1]["description"], planlist[1]["status"], planlist[1]["duration"], planlist[1]["price"], planlist[1]["currency_id"]))
 
 		associatedCatalogSelectMock(mock, 2)
 		currency.CurrencySelectMock(mock)

@@ -71,8 +71,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
 			WillReturnRows(sqlmock.NewRows(TagCols).
-				AddRow(1, time.Now(), time.Now(), nil, taglist[0]["title"], taglist[0]["slug"]).
-				AddRow(2, time.Now(), time.Now(), nil, taglist[1]["title"], taglist[1]["slug"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, taglist[0]["title"], taglist[0]["slug"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, taglist[1]["title"], taglist[1]["slug"]))
 
 		e.GET(basePath).
 			WithHeaders(headers).
@@ -97,7 +97,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(`SELECT \* FROM "dp_tag" (.+) LIMIT 1 OFFSET 1`).
 			WillReturnRows(sqlmock.NewRows(TagCols).
-				AddRow(2, time.Now(), time.Now(), nil, taglist[1]["title"], taglist[1]["slug"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, taglist[1]["title"], taglist[1]["slug"]))
 
 		e.GET(basePath).
 			WithQueryObject(map[string]interface{}{

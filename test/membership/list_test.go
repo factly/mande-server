@@ -43,8 +43,8 @@ func TestListMembership(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 		currency.CurrencySelectMock(mock)
@@ -121,8 +121,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(1, time.Now(), time.Now(), nil, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, membershiplist[0]["status"], membershiplist[0]["user_id"], membershiplist[0]["payment_id"], membershiplist[0]["plan_id"], membershiplist[0]["razorpay_order_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 		currency.CurrencySelectMock(mock)
@@ -157,7 +157,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(MembershipCols).
-				AddRow(2, time.Now(), time.Now(), nil, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, membershiplist[1]["status"], membershiplist[1]["user_id"], membershiplist[1]["payment_id"], membershiplist[1]["plan_id"], membershiplist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 		currency.CurrencySelectMock(mock)

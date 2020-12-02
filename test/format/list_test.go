@@ -70,8 +70,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(FormatCols).
-				AddRow(1, time.Now(), time.Now(), nil, formatlist[0]["name"], formatlist[0]["description"], formatlist[0]["is_default"]).
-				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, formatlist[0]["name"], formatlist[0]["description"], formatlist[0]["is_default"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
 		e.GET(basePath).
 			WithHeaders(headers).
@@ -95,7 +95,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(FormatCols).
-				AddRow(2, time.Now(), time.Now(), nil, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, formatlist[1]["name"], formatlist[1]["description"], formatlist[1]["is_default"]))
 
 		e.GET(basePath).
 			WithHeaders(headers).

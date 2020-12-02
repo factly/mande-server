@@ -72,8 +72,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CatalogCols).
-				AddRow(1, time.Now(), time.Now(), nil, cataloglist[0]["title"], cataloglist[0]["description"], cataloglist[0]["featured_medium_id"], cataloglist[0]["published_date"]).
-				AddRow(2, time.Now(), time.Now(), nil, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, cataloglist[0]["title"], cataloglist[0]["description"], cataloglist[0]["featured_medium_id"], cataloglist[0]["published_date"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
 
 		medium.MediumSelectMock(mock)
 		productsAssociationSelectMock(mock, 1, 2)
@@ -107,7 +107,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CatalogCols).
-				AddRow(2, time.Now(), time.Now(), nil, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, cataloglist[1]["title"], cataloglist[1]["description"], cataloglist[1]["featured_medium_id"], cataloglist[1]["published_date"]))
 
 		medium.MediumSelectMock(mock)
 		productsAssociationSelectMock(mock, 2)

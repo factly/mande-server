@@ -31,7 +31,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 	t.Run("create a dataset format", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, DatasetFormat["format_id"], 1, DatasetFormat["url"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, DatasetFormat["format_id"], 1, DatasetFormat["url"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
@@ -93,7 +93,7 @@ func TestCreateDatasetFormat(t *testing.T) {
 	t.Run("format does not exist", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_dataset_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, DatasetFormat["format_id"], 1, DatasetFormat["url"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, DatasetFormat["format_id"], 1, DatasetFormat["url"]).
 			WillReturnError(errDatasetFormatFK)
 		mock.ExpectRollback()
 

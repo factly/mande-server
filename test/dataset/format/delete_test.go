@@ -34,7 +34,7 @@ func TestDeleteDatasetFormat(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1, 1).
 			WillReturnRows(sqlmock.NewRows(DatasetFormatCols).
-				AddRow(1, time.Now(), time.Now(), nil, DatasetFormat["format_id"], 1, DatasetFormat["url"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, DatasetFormat["format_id"], 1, DatasetFormat["url"]))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_dataset_format" SET "deleted_at"=`)).

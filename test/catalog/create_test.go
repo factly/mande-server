@@ -37,11 +37,11 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "featured_medium_id"}).AddRow(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_product"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).
@@ -94,7 +94,7 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
 			WillReturnError(errCatalogProductFK)
 		mock.ExpectRollback()
 
@@ -117,11 +117,11 @@ func TestCreateCatalog(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_catalog"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Catalog["title"], Catalog["description"], test.AnyTime{}, Catalog["featured_medium_id"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "featured_medium_id"}).AddRow(1, 1))
 
 		mock.ExpectQuery(`INSERT INTO "dp_product"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).

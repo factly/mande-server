@@ -54,7 +54,7 @@ var membershiplist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var MembershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
+var MembershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_membership"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_membership"`)
@@ -66,21 +66,21 @@ func MembershipSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(MembershipCols).
-			AddRow(1, time.Now(), time.Now(), nil, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, Membership["status"], Membership["user_id"], Membership["payment_id"], Membership["plan_id"], Membership["razorpay_order_id"]))
 }
 
 func createMock(mock sqlmock.Sqlmock) {
 	plan.PlanSelectMock(mock)
 	mock.ExpectQuery(`INSERT INTO "dp_membership"`).
-		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, "created", 1, nil, Membership["plan_id"], "").
+		WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, "created", 1, nil, Membership["plan_id"], "").
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)).
 		WillReturnRows(sqlmock.NewRows(currency.CurrencyCols).
-			AddRow(1, time.Now(), time.Now(), nil, currency.Currency["iso_code"], currency.Currency["name"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, currency.Currency["iso_code"], currency.Currency["name"]))
 
 	mock.ExpectExec(regexp.QuoteMeta(`UPDATE "dp_membership" SET`)).
-		WithArgs(1, test.AnyTime{}, test.AnyTime{}, "processing", 1, 1, test.RazorpayOrder["id"], 1).
+		WithArgs(1, test.AnyTime{}, test.AnyTime{}, 1, 1, "processing", 1, 1, test.RazorpayOrder["id"], 1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	postCreateSelectMock(mock)
