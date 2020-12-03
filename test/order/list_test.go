@@ -42,8 +42,8 @@ func TestListOrder(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(OrderCols).
-				AddRow(1, time.Now(), time.Now(), nil, orderlist[0]["user_id"], orderlist[0]["status"], orderlist[0]["payment_id"], orderlist[0]["razorpay_order_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, orderlist[0]["user_id"], orderlist[0]["status"], orderlist[0]["payment_id"], orderlist[0]["razorpay_order_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 
@@ -115,8 +115,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(OrderCols).
-				AddRow(1, time.Now(), time.Now(), nil, orderlist[0]["user_id"], orderlist[0]["status"], orderlist[0]["payment_id"], orderlist[0]["razorpay_order_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, orderlist[0]["user_id"], orderlist[0]["status"], orderlist[0]["payment_id"], orderlist[0]["razorpay_order_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 
@@ -146,7 +146,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(OrderCols).
-				AddRow(2, time.Now(), time.Now(), nil, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, orderlist[1]["user_id"], orderlist[1]["status"], orderlist[1]["payment_id"], orderlist[1]["razorpay_order_id"]))
 
 		payment.PaymentSelectMock(mock)
 

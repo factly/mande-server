@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -29,6 +30,13 @@ import (
 // @Failure 400 {array} string
 // @Router /currencies/{currency_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
+
 	currencyID := chi.URLParam(r, "currency_id")
 	id, err := strconv.Atoi(currencyID)
 	if err != nil {
@@ -64,6 +72,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	model.DB.Model(&result).Updates(model.Currency{
+		Base:    model.Base{UpdatedByID: uint(uID)},
 		IsoCode: currency.IsoCode,
 		Name:    currency.Name,
 	}).First(&result)

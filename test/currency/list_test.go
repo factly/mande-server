@@ -66,7 +66,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CurrencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, Currency["iso_code"], Currency["name"]))
 
 		e.GET(basePath).
 			WithHeaders(headers).

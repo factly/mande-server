@@ -33,7 +33,7 @@ func TestCreateMedium(t *testing.T) {
 	t.Run("create medium", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
@@ -67,7 +67,7 @@ func TestCreateMedium(t *testing.T) {
 	t.Run("creating medium fails", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
 			WillReturnError(errors.New("cannot create medium"))
 		mock.ExpectRollback()
 
@@ -88,7 +88,7 @@ func TestCreateMedium(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_medium"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Medium["name"], Medium["slug"], Medium["type"], Medium["title"], Medium["description"], Medium["caption"], Medium["alt_text"], Medium["file_size"], Medium["url"], Medium["dimensions"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectRollback()
 

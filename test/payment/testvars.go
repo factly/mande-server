@@ -99,9 +99,9 @@ var paymentlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var PaymentCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "amount", "gateway", "currency_id", "status", "razorpay_payment_id", "razorpay_signature"}
-var orderCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "user_id", "status", "payment_id", "razorpay_order_id"}
-var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
+var PaymentCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "amount", "gateway", "currency_id", "status", "razorpay_payment_id", "razorpay_signature"}
+var orderCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "user_id", "status", "payment_id", "razorpay_order_id"}
+var membershipCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "status", "user_id", "payment_id", "plan_id", "razorpay_order_id"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_payment"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_payment"`)
@@ -114,7 +114,7 @@ func PaymentSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(PaymentCols).
-			AddRow(1, time.Now(), time.Now(), nil, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, Payment["amount"], Payment["gateway"], Payment["currency_id"], Payment["status"], Payment["razorpay_payment_id"], Payment["razorpay_signature"]))
 }
 
 func paymentOrderExpect(mock sqlmock.Sqlmock, count int) {

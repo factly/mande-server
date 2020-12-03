@@ -32,11 +32,11 @@ func TestUpdateCurrency(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(CurrencyCols).
-				AddRow(1, time.Now(), time.Now(), nil, "iso_code", "name"))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "iso_code", "name"))
 
 		mock.ExpectBegin()
 		mock.ExpectExec(`UPDATE \"dp_currency\"`).
-			WithArgs(test.AnyTime{}, Currency["iso_code"], Currency["name"], 1).
+			WithArgs(test.AnyTime{}, 1, Currency["iso_code"], Currency["name"], 1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectCommit()
 		CurrencySelectMock(mock, 1, 1)

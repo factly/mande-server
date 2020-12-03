@@ -1,11 +1,13 @@
 package tag
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,10 +29,16 @@ import (
 // @Failure 400 {array} string
 // @Router /tags [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
+		return
+	}
 
 	tag := &tag{}
 
-	err := json.NewDecoder(r.Body).Decode(&tag)
+	err = json.NewDecoder(r.Body).Decode(&tag)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -49,7 +57,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Slug:  tag.Slug,
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Tag{}).Create(&result).Error
 
 	if err != nil {

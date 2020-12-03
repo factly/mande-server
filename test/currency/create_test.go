@@ -34,7 +34,7 @@ func TestCreateCurrency(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_currency"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Currency["iso_code"], Currency["name"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Currency["iso_code"], Currency["name"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow("1"))
 		mock.ExpectCommit()
 
@@ -71,7 +71,7 @@ func TestCreateCurrency(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_currency"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Currency["iso_code"], Currency["name"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Currency["iso_code"], Currency["name"]).
 			WillReturnError(errors.New("cannot create currency"))
 		mock.ExpectRollback()
 

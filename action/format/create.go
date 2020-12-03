@@ -1,11 +1,13 @@
 package format
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,9 +29,15 @@ import (
 // @Failure 400 {array} string
 // @Router /formats [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	format := &format{}
-	err := json.NewDecoder(r.Body).Decode(&format)
+	err = json.NewDecoder(r.Body).Decode(&format)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -49,7 +57,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		IsDefault:   format.IsDefault,
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Format{}).Create(&result).Error
 
 	if err != nil {

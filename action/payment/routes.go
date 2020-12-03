@@ -1,6 +1,9 @@
 package payment
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-server/model"
+	"github.com/go-chi/chi"
+)
 
 // payment request body
 type payment struct {
@@ -12,6 +15,8 @@ type payment struct {
 	RazorpayPaymentID string `json:"razorpay_payment_id" validate:"required"`
 	RazorpaySignature string `json:"razorpay_signature" validate:"required"`
 }
+
+var userContext model.ContextKey = "payment_user"
 
 // UserRouter - Group of payment router
 func UserRouter() chi.Router {

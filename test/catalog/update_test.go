@@ -123,7 +123,7 @@ func TestUpdateCatalog(t *testing.T) {
 		preUpdateMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_product"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, product.Product["title"], product.Product["slug"], product.Product["price"], product.Product["status"], product.Product["currency_id"], product.Product["featured_medium_id"], 1).
 			WillReturnError(errors.New("cannot replace products"))
 
 		mock.ExpectExec(`INSERT INTO "dp_catalog_product"`).

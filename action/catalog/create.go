@@ -1,11 +1,13 @@
 package catalog
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,12 +29,18 @@ import (
 // @Failure 400 {array} string
 // @Router /catalogs [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	catalog := catalog{}
 	result := model.Catalog{}
 	result.Products = make([]model.Product, 0)
 
-	err := json.NewDecoder(r.Body).Decode(&catalog)
+	err = json.NewDecoder(r.Body).Decode(&catalog)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -62,7 +70,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Catalog{}).Create(&result).Error
 
 	if err != nil {

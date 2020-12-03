@@ -1,11 +1,13 @@
 package plan
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -26,10 +28,16 @@ import (
 // @Success 201 {object} model.Plan
 // @Router /plans [post]
 func Create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
+		return
+	}
 
 	plan := &plan{}
 
-	err := json.NewDecoder(r.Body).Decode(&plan)
+	err = json.NewDecoder(r.Body).Decode(&plan)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -56,7 +64,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	model.DB.Model(&model.Catalog{}).Where(plan.CatalogIDs).Find(&result.Catalogs)
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Plan{}).Create(&result).Error
 
 	if err != nil {

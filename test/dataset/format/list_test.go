@@ -55,8 +55,8 @@ func TestListDatasetFormat(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetFormatCols).
-				AddRow(1, time.Now(), time.Now(), nil, datasetformatlist[0]["format_id"], datasetformatlist[0]["dataset_id"], datasetformatlist[0]["url"]).
-				AddRow(2, time.Now(), time.Now(), nil, datasetformatlist[1]["format_id"], datasetformatlist[1]["dataset_id"], datasetformatlist[1]["url"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, datasetformatlist[0]["format_id"], datasetformatlist[0]["dataset_id"], datasetformatlist[0]["url"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, datasetformatlist[1]["format_id"], datasetformatlist[1]["dataset_id"], datasetformatlist[1]["url"]))
 
 		format.FormatSelectMock(mock)
 
@@ -83,7 +83,7 @@ func TestListDatasetFormat(t *testing.T) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(DatasetFormatCols).
-				AddRow(2, time.Now(), time.Now(), nil, datasetformatlist[1]["format_id"], datasetformatlist[1]["dataset_id"], datasetformatlist[1]["url"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, datasetformatlist[1]["format_id"], datasetformatlist[1]["dataset_id"], datasetformatlist[1]["url"]))
 
 		format.FormatSelectMock(mock)
 

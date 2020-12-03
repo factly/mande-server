@@ -33,7 +33,7 @@ func TestCreateFormat(t *testing.T) {
 	t.Run("create a format", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Format["name"], Format["description"], Format["is_default"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectCommit()
 
@@ -67,7 +67,7 @@ func TestCreateFormat(t *testing.T) {
 	t.Run("creating format fails", func(t *testing.T) {
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Format["name"], Format["description"], Format["is_default"]).
 			WillReturnError(errors.New("cannot create format"))
 		mock.ExpectRollback()
 
@@ -88,7 +88,7 @@ func TestCreateFormat(t *testing.T) {
 
 		mock.ExpectBegin()
 		mock.ExpectQuery(`INSERT INTO "dp_format"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, Format["name"], Format["description"], Format["is_default"]).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, Format["name"], Format["description"], Format["is_default"]).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 		mock.ExpectRollback()
 

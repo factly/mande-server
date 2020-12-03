@@ -28,7 +28,7 @@ var invalidCurrency map[string]interface{} = map[string]interface{}{
 	"isocode": "Test ISO Code",
 }
 
-var CurrencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "iso_code", "name"}
+var CurrencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "iso_code", "name"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_currency"`)
@@ -40,7 +40,7 @@ func CurrencySelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(CurrencyCols).
-			AddRow(1, time.Now(), time.Now(), nil, Currency["iso_code"], Currency["name"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, Currency["iso_code"], Currency["name"]))
 }
 
 func currencyPaymentExpect(mock sqlmock.Sqlmock, count int) {

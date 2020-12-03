@@ -44,7 +44,7 @@ var formatlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
-var FormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "name", "description", "is_default"}
+var FormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "name", "description", "is_default"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_format"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_format"`)
@@ -56,7 +56,7 @@ func FormatSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(FormatCols).
-			AddRow(1, time.Now(), time.Now(), nil, Format["name"], Format["description"], Format["is_default"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, Format["name"], Format["description"], Format["is_default"]))
 }
 
 func formatDatasetExpect(mock sqlmock.Sqlmock, count int) {

@@ -34,6 +34,8 @@ type datasetData struct {
 	Formats []model.DatasetFormat `json:"formats"`
 }
 
+var userContext model.ContextKey = "dataset_user"
+
 // UserRouter - Group of dataset router
 func UserRouter() chi.Router {
 	r := chi.NewRouter()

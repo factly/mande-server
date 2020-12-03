@@ -1,12 +1,14 @@
 package format
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
@@ -29,6 +31,12 @@ import (
 // @Failure 400 {array} string
 // @Router /datasets/{dataset_id}/format [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
@@ -61,7 +69,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	result.DatasetID = uint(id)
 	result.URL = datasetFormat.URL
 
-	err = model.DB.Model(&model.DatasetFormat{}).Create(&result).Error
+	err = model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Model(&model.DatasetFormat{}).Create(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

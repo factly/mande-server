@@ -1,22 +1,26 @@
 package medium
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
+	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // medium request body
 type medium struct {
-	Name        string `json:"name" validate:"required"`
-	Slug        string `json:"slug"`
-	Type        string `json:"type"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Caption     string `json:"caption"`
-	AltText     string `json:"alt_text"`
-	FileSize    int    `json:"file_size" validate:"required"`
-	URL         string `json:"url"`
-	Dimensions  string `json:"dimensions"`
+	Name        string         `json:"name" validate:"required"`
+	Slug        string         `json:"slug"`
+	Type        string         `json:"type"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	Caption     string         `json:"caption"`
+	AltText     string         `json:"alt_text"`
+	FileSize    int            `json:"file_size" validate:"required"`
+	URL         postgres.Jsonb `json:"url"`
+	Dimensions  string         `json:"dimensions"`
 }
+
+var userContext model.ContextKey = "medium_user"
 
 // UserRouter - Group of medium router
 func UserRouter() chi.Router {

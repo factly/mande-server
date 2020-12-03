@@ -46,8 +46,8 @@ func TestListCartItems(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		membership.MembershipSelectMock(mock)
 		plan.PlanSelectMock(mock)
@@ -138,8 +138,8 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(1, time.Now(), time.Now(), nil, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, cartitemslist[0]["status"], cartitemslist[0]["user_id"], cartitemslist[0]["product_id"], cartitemslist[0]["membership_id"]).
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		membership.MembershipSelectMock(mock)
 		plan.PlanSelectMock(mock)
@@ -186,7 +186,7 @@ func CommonListTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 
 		mock.ExpectQuery(selectQuery).
 			WillReturnRows(sqlmock.NewRows(CartItemCols).
-				AddRow(2, time.Now(), time.Now(), nil, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
+				AddRow(2, time.Now(), time.Now(), nil, 1, 1, cartitemslist[1]["status"], cartitemslist[1]["user_id"], cartitemslist[1]["product_id"], cartitemslist[1]["membership_id"]))
 
 		membership.MembershipSelectMock(mock)
 		plan.PlanSelectMock(mock)

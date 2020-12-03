@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 // Product model
 type Product struct {
 	Base
@@ -15,4 +17,21 @@ type Product struct {
 	Tags             []Tag     `gorm:"many2many:product_tag;" json:"tags"`
 	Datasets         []Dataset `gorm:"many2many:product_dataset;" json:"datasets"`
 	Orders           []Order   `gorm:"many2many:order_item;" json:"orders"`
+}
+
+var productUser ContextKey = "product_user"
+
+// BeforeCreate hook
+func (product *Product) BeforeCreate(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	userID := ctx.Value(productUser)
+
+	if userID == nil {
+		return nil
+	}
+	uID := userID.(int)
+
+	product.CreatedByID = uint(uID)
+	product.UpdatedByID = uint(uID)
+	return nil
 }

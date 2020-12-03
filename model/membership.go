@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 // Membership model
 type Membership struct {
 	Base
@@ -10,4 +12,21 @@ type Membership struct {
 	PlanID          uint     `gorm:"column:plan_id" json:"plan_id" validate:"required"`
 	Plan            Plan     `gorm:"foreignKey:plan_id" json:"plan"`
 	RazorpayOrderID string   `gorm:"column:razorpay_order_id" json:"razorpay_order_id" sql:"DEFAULT:NULL"`
+}
+
+var membershipUser ContextKey = "membership_user"
+
+// BeforeCreate hook
+func (membership *Membership) BeforeCreate(tx *gorm.DB) error {
+	ctx := tx.Statement.Context
+	userID := ctx.Value(membershipUser)
+
+	if userID == nil {
+		return nil
+	}
+	uID := userID.(int)
+
+	membership.CreatedByID = uint(uID)
+	membership.UpdatedByID = uint(uID)
+	return nil
 }

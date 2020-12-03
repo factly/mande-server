@@ -108,7 +108,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(`SELECT "dp_product"(.+) INNER JOIN dp_order_item`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(productCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 100, "status", 1, 1))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "title", "slug", 100, "status", 1, 1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product" JOIN "dp_product_dataset"`)).
 			WithArgs(1, 1).
@@ -143,7 +143,7 @@ func UserTests(t *testing.T, mock sqlmock.Sqlmock, e *httpexpect.Expect) {
 		mock.ExpectQuery(`SELECT "dp_product"(.+) INNER JOIN dp_order_item`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(productCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 100, "status", 1, 1))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "title", "slug", 100, "status", 1, 1))
 
 		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(1) FROM "dp_product" JOIN "dp_product_dataset"`)).
 			WithArgs(1, 1).

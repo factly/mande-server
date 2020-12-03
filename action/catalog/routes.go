@@ -3,6 +3,7 @@ package catalog
 import (
 	"time"
 
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -14,6 +15,8 @@ type catalog struct {
 	PublishedDate    time.Time `json:"published_date" validate:"required"`
 	ProductIDs       []uint    `json:"product_ids"`
 }
+
+var userContext model.ContextKey = "catalog_user"
 
 // UserRouter - Group of catalog user router
 func UserRouter() chi.Router {

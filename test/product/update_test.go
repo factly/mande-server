@@ -109,14 +109,14 @@ func TestUpdateProduct(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(ProductCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 200, "status", 2, 2))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "title", "slug", 200, "status", 2, 2))
 
 		mock.ExpectBegin()
 
 		tag.TagSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, tag.Tag["title"], tag.Tag["slug"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
@@ -141,14 +141,14 @@ func TestUpdateProduct(t *testing.T) {
 		mock.ExpectQuery(selectQuery).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows(ProductCols).
-				AddRow(1, time.Now(), time.Now(), nil, "title", "slug", 200, "status", 2, 2))
+				AddRow(1, time.Now(), time.Now(), nil, 1, 1, "title", "slug", 200, "status", 2, 2))
 
 		mock.ExpectBegin()
 
 		tag.TagSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_tag"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, tag.Tag["title"], tag.Tag["slug"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, tag.Tag["title"], tag.Tag["slug"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_product_tag"`).
@@ -161,7 +161,7 @@ func TestUpdateProduct(t *testing.T) {
 		dataset.DatasetSelectMock(mock)
 
 		mock.ExpectQuery(`INSERT INTO "dp_dataset"`).
-			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
+			WithArgs(test.AnyTime{}, test.AnyTime{}, nil, 1, 1, dataset.Dataset["title"], dataset.Dataset["description"], dataset.Dataset["source"], dataset.Dataset["frequency"], dataset.Dataset["temporal_coverage"], dataset.Dataset["granularity"], dataset.Dataset["contact_name"], dataset.Dataset["contact_email"], dataset.Dataset["license"], dataset.Dataset["data_standard"], dataset.Dataset["sample_url"], dataset.Dataset["related_articles"], dataset.Dataset["time_saved"], dataset.Dataset["price"], dataset.Dataset["currency_id"], dataset.Dataset["featured_medium_id"], 1).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 		mock.ExpectExec(`INSERT INTO "dp_product_dataset"`).

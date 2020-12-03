@@ -33,7 +33,7 @@ var taglist []map[string]interface{} = []map[string]interface{}{
 	{"title": "Test Tag 2", "slug": "test-tag-2"},
 }
 
-var TagCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "title", "slug"}
+var TagCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "title", "slug"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_tag"`)
@@ -45,7 +45,7 @@ func TagSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "dp_tag"`)).
 		WithArgs(args...).
 		WillReturnRows(sqlmock.NewRows(TagCols).
-			AddRow(1, time.Now(), time.Now(), nil, Tag["title"], Tag["slug"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, Tag["title"], Tag["slug"]))
 }
 
 func tagProductExpect(mock sqlmock.Sqlmock, count int) {

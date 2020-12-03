@@ -41,7 +41,7 @@ var invalidDatasetFormat map[string]interface{} = map[string]interface{}{
 	"ur":       "test.url.com",
 }
 
-var DatasetFormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "format_id", "dataset_id", "url"}
+var DatasetFormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "format_id", "dataset_id", "url"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_dataset_format"`)
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_dataset_format"`)
@@ -54,5 +54,5 @@ func DatasetFormatSelectMock(mock sqlmock.Sqlmock) {
 	mock.ExpectQuery(selectQuery).
 		WithArgs(1).
 		WillReturnRows(sqlmock.NewRows(DatasetFormatCols).
-			AddRow(1, time.Now(), time.Now(), nil, DatasetFormat["format_id"], 1, DatasetFormat["url"]))
+			AddRow(1, time.Now(), time.Now(), nil, 1, 1, DatasetFormat["format_id"], 1, DatasetFormat["url"]))
 }

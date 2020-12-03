@@ -1,6 +1,9 @@
 package format
 
-import "github.com/go-chi/chi"
+import (
+	"github.com/factly/data-portal-server/model"
+	"github.com/go-chi/chi"
+)
 
 // format request body
 type format struct {
@@ -8,6 +11,8 @@ type format struct {
 	Description string `json:"description" `
 	IsDefault   bool   `json:"is_default" `
 }
+
+var userContext model.ContextKey = "format_user"
 
 // UserRouter - Group of format router
 func UserRouter() chi.Router {

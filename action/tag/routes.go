@@ -1,6 +1,7 @@
 package tag
 
 import (
+	"github.com/factly/data-portal-server/model"
 	"github.com/go-chi/chi"
 )
 
@@ -9,6 +10,8 @@ type tag struct {
 	Title string `json:"title" validate:"required"`
 	Slug  string `json:"slug" validate:"required"`
 }
+
+var userContext model.ContextKey = "tag_user"
 
 // UserRouter - Group of tag router
 func UserRouter() chi.Router {

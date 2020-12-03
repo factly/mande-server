@@ -1,11 +1,13 @@
 package dataset
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
+	"github.com/factly/data-portal-server/util"
 	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
@@ -27,10 +29,16 @@ import (
 // @Failure 400 {array} string
 // @Router /datasets [post]
 func create(w http.ResponseWriter, r *http.Request) {
+	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
 
 	dataset := dataset{}
 
-	err := json.NewDecoder(r.Body).Decode(&dataset)
+	err = json.NewDecoder(r.Body).Decode(&dataset)
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
@@ -74,7 +82,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		model.DB.Model(&model.Tag{}).Where(dataset.TagIDs).Find(&result.Tags)
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 	err = tx.Model(&model.Dataset{}).Create(&result.Dataset).Error
 	if err != nil {
 		tx.Rollback()

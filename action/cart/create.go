@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -63,7 +64,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		MembershipID: membershipID,
 	}
 
-	tx := model.DB.Begin()
+	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
 
 	if cartitem.MembershipID != 0 {
 		membership := model.Membership{}
