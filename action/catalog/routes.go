@@ -35,6 +35,7 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
+	r.Get("/my", list)  // GET /catalogs/my - return list of catalogs
 	r.Get("/", list)    // GET /catalogs - return list of catalogs
 	r.Post("/", create) // POST /catalogs - create a new catalog and persist it
 
