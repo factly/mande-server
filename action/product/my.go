@@ -39,7 +39,7 @@ func my(w http.ResponseWriter, r *http.Request) {
 
 	orders := []model.Order{}
 
-	model.DB.Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").Model(&model.Order{}).Where(&model.Order{
+	model.DB.Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").Preload("Products.Currency").Preload("Products.FeaturedMedium").Model(&model.Order{}).Where(&model.Order{
 		UserID: uint(uID),
 	}).Find(&orders)
 

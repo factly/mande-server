@@ -39,7 +39,7 @@ func my(w http.ResponseWriter, r *http.Request) {
 
 	memberships := []model.Membership{}
 
-	model.DB.Preload("Plan").Preload("Plan.Catalogs").Preload("Payment").Preload("Payment.Currency").Model(&model.Membership{}).Where(&model.Membership{
+	model.DB.Preload("Plan").Preload("Plan.Catalogs").Preload("Payment").Preload("Payment.Currency").Preload("Plan.Catalogs.FeaturedMedium").Preload("Plan.Catalogs.Products").Preload("Plan.Catalogs.Products.Currency").Preload("Plan.Catalogs.Products.FeaturedMedium").Preload("Plan.Catalogs.Products.Tags").Preload("Plan.Catalogs.Products.Datasets").Model(&model.Membership{}).Where(&model.Membership{
 		UserID: uint(uID),
 	}).Find(&memberships)
 
