@@ -1056,7 +1056,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging"
+                            "$ref": "#/definitions/format.paging"
                         }
                     }
                 }
@@ -1217,7 +1217,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_format.paging"
+                            "$ref": "#/definitions/format.paging"
                         }
                     }
                 }
@@ -2635,6 +2635,59 @@ var doc = `{
                 }
             }
         },
+        "/products/my": {
+            "get": {
+                "description": "Get product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Show a product by id",
+                "operationId": "get-product-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/product.productRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/products/{product_id}": {
             "get": {
                 "description": "Get product by ID",
@@ -3269,7 +3322,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3285,6 +3342,7 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3343,6 +3401,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3392,21 +3453,7 @@ var doc = `{
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_dataset_format.paging": {
-            "type": "object",
-            "properties": {
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.DatasetFormat"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_factly_data-portal-server_action_format.paging": {
+        "format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
@@ -3509,6 +3556,9 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3516,12 +3566,14 @@ var doc = `{
                     "type": "integer"
                 },
                 "membership": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Membership"
                 },
                 "membership_id": {
                     "type": "integer"
                 },
                 "product": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Product"
                 },
                 "product_id": {
@@ -3532,6 +3584,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3544,6 +3599,9 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3551,6 +3609,7 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3579,6 +3638,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3591,6 +3653,9 @@ var doc = `{
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3606,6 +3671,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3625,7 +3693,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3641,6 +3713,7 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3693,6 +3766,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3702,6 +3778,9 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "dataset_id": {
                     "type": "integer"
                 },
@@ -3709,6 +3788,7 @@ var doc = `{
                     "type": "string"
                 },
                 "format": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Format"
                 },
                 "format_id": {
@@ -3720,6 +3800,9 @@ var doc = `{
                 "updated_at": {
                     "type": "string"
                 },
+                "updated_by_id": {
+                    "type": "integer"
+                },
                 "url": {
                     "type": "string"
                 }
@@ -3730,6 +3813,9 @@ var doc = `{
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3748,6 +3834,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3762,6 +3851,9 @@ var doc = `{
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3793,6 +3885,9 @@ var doc = `{
                 "updated_at": {
                     "type": "string"
                 },
+                "updated_by_id": {
+                    "type": "integer"
+                },
                 "url": {
                     "type": "string"
                 }
@@ -3809,6 +3904,9 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3816,12 +3914,14 @@ var doc = `{
                     "type": "integer"
                 },
                 "payment": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
                     "type": "integer"
                 },
                 "plan": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Plan"
                 },
                 "plan_id": {
@@ -3835,6 +3935,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3851,6 +3954,9 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3858,6 +3964,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "payment": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
@@ -3877,6 +3984,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3898,7 +4008,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3924,6 +4038,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3937,6 +4054,9 @@ var doc = `{
                 "status"
             ],
             "properties": {
+                "all_products": {
+                    "type": "boolean"
+                },
                 "catalogs": {
                     "type": "array",
                     "items": {
@@ -3946,7 +4066,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3975,6 +4099,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3997,7 +4124,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4013,6 +4144,7 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4047,6 +4179,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4059,6 +4194,9 @@ var doc = `{
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "datasets": {
                     "type": "array",
@@ -4086,6 +4224,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4173,6 +4314,9 @@ var doc = `{
                 "price"
             ],
             "properties": {
+                "all_products": {
+                    "type": "boolean"
+                },
                 "catalog_ids": {
                     "type": "array",
                     "items": {
@@ -4272,7 +4416,11 @@ var doc = `{
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4288,6 +4436,7 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4328,6 +4477,9 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },

@@ -69,19 +69,20 @@ func RegisterUserRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
+	r.Mount("/products", product.PublicRouter())
+	r.Mount("/catalogs", catalog.PublicRouter())
+	r.Mount("/datasets", dataset.PublicRouter())
+
 	r.With(util.GormRequestID, util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.UserRouter())
 		r.Mount("/plans", plan.UserRouter())
 		r.Mount("/memberships", membership.UserRouter())
 		r.Mount("/payments", payment.UserRouter())
-		r.Mount("/products", product.UserRouter())
 		r.Mount("/tags", tag.UserRouter())
 		r.Mount("/formats", format.UserRouter())
-		r.Mount("/catalogs", catalog.UserRouter())
 		r.Mount("/cartitems", cart.UserRouter())
 		r.Mount("/orders", order.UserRouter())
-		r.Mount("/datasets", dataset.UserRouter())
 		r.Mount("/media", medium.UserRouter())
 		r.Mount("/search", search.Router())
 

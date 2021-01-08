@@ -1041,7 +1041,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging"
+                            "$ref": "#/definitions/format.paging"
                         }
                     }
                 }
@@ -1202,7 +1202,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_format.paging"
+                            "$ref": "#/definitions/format.paging"
                         }
                     }
                 }
@@ -2620,6 +2620,59 @@
                 }
             }
         },
+        "/products/my": {
+            "get": {
+                "description": "Get product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Show a product by id",
+                "operationId": "get-product-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/product.productRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/products/{product_id}": {
             "get": {
                 "description": "Get product by ID",
@@ -3254,7 +3307,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3270,6 +3327,7 @@
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3328,6 +3386,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3377,21 +3438,7 @@
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_dataset_format.paging": {
-            "type": "object",
-            "properties": {
-                "nodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.DatasetFormat"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_factly_data-portal-server_action_format.paging": {
+        "format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
@@ -3494,6 +3541,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3501,12 +3551,14 @@
                     "type": "integer"
                 },
                 "membership": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Membership"
                 },
                 "membership_id": {
                     "type": "integer"
                 },
                 "product": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Product"
                 },
                 "product_id": {
@@ -3517,6 +3569,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3529,6 +3584,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3536,6 +3594,7 @@
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3564,6 +3623,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3576,6 +3638,9 @@
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3591,6 +3656,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3610,7 +3678,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3626,6 +3698,7 @@
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3678,6 +3751,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3687,6 +3763,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "dataset_id": {
                     "type": "integer"
                 },
@@ -3694,6 +3773,7 @@
                     "type": "string"
                 },
                 "format": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Format"
                 },
                 "format_id": {
@@ -3705,6 +3785,9 @@
                 "updated_at": {
                     "type": "string"
                 },
+                "updated_by_id": {
+                    "type": "integer"
+                },
                 "url": {
                     "type": "string"
                 }
@@ -3715,6 +3798,9 @@
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3733,6 +3819,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3747,6 +3836,9 @@
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "deleted_at": {
                     "type": "string"
@@ -3778,6 +3870,9 @@
                 "updated_at": {
                     "type": "string"
                 },
+                "updated_by_id": {
+                    "type": "integer"
+                },
                 "url": {
                     "type": "string"
                 }
@@ -3794,6 +3889,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3801,12 +3899,14 @@
                     "type": "integer"
                 },
                 "payment": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
                     "type": "integer"
                 },
                 "plan": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Plan"
                 },
                 "plan_id": {
@@ -3820,6 +3920,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3836,6 +3939,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3843,6 +3949,7 @@
                     "type": "integer"
                 },
                 "payment": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
@@ -3862,6 +3969,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 },
                 "user_id": {
                     "type": "integer"
@@ -3883,7 +3993,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3909,6 +4023,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3922,6 +4039,9 @@
                 "status"
             ],
             "properties": {
+                "all_products": {
+                    "type": "boolean"
+                },
                 "catalogs": {
                     "type": "array",
                     "items": {
@@ -3931,7 +4051,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3960,6 +4084,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -3982,7 +4109,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3998,6 +4129,7 @@
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4032,6 +4164,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4044,6 +4179,9 @@
             "properties": {
                 "created_at": {
                     "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
                 },
                 "datasets": {
                     "type": "array",
@@ -4071,6 +4209,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4158,6 +4299,9 @@
                 "price"
             ],
             "properties": {
+                "all_products": {
+                    "type": "boolean"
+                },
                 "catalog_ids": {
                     "type": "array",
                     "items": {
@@ -4257,7 +4401,11 @@
                 "created_at": {
                     "type": "string"
                 },
+                "created_by_id": {
+                    "type": "integer"
+                },
                 "currency": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4273,6 +4421,7 @@
                     "type": "string"
                 },
                 "featured_medium": {
+                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4313,6 +4462,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },

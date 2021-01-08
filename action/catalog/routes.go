@@ -18,8 +18,8 @@ type catalog struct {
 
 var userContext model.ContextKey = "catalog_user"
 
-// UserRouter - Group of catalog user router
-func UserRouter() chi.Router {
+// PublicRouter - Group of catalog user router
+func PublicRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list) // GET /catalogs - return list of catalogs
