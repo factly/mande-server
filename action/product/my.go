@@ -11,17 +11,17 @@ import (
 	"github.com/factly/x/renderx"
 )
 
-// list - Get all products owned by user
-// @Summary Show all products owned by user
-// @Description Get all products owned by user
+// userDetails - Get product by id
+// @Summary Show a product by id
+// @Description Get product by ID
 // @Tags Product
-// @ID get-all-products-owned-by-user
+// @ID get-product-by-id
 // @Produce  json
 // @Param X-User header string true "User ID"
 // @Param X-Organisation header string true "Organisation ID"
-// @Param limit query string false "limt per page"
-// @Param page query string false "page number"
-// @Success 200 {object} paging
+// @Param product_id path string true "Product ID"
+// @Success 200 {object} productRes
+// @Failure 400 {array} string
 // @Router /products/my [get]
 func my(w http.ResponseWriter, r *http.Request) {
 
@@ -32,25 +32,25 @@ func my(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := &paging{}
-	result.Nodes = make([]model.Product, 0)
-
 	offset, limit := paginationx.Parse(r.URL.Query())
+
+	result := &paging{}
 
 	orders := []model.Order{}
 
-	model.DB.Preload("Products").Preload("Products.Datasets").Preload("Products.Tags").Preload("Products.Currency").Preload("Products.FeaturedMedium").Model(&model.Order{}).Where(&model.Order{
+	products := make([]model.Product, 0)
+
+	model.DB.Preload("Products").Model(&model.Order{}).Where(&model.Order{
+		Status: "complete",
 		UserID: uint(uID),
 	}).Find(&orders)
 
-	products := []model.Product{}
-
-	for _, order := range orders {
-		products = append(products, order.Products...)
+	for _, each := range orders {
+		products = append(products, each.Products...)
 	}
 
-	result.Nodes = products[offset : offset+limit]
 	result.Total = int64(len(products))
+	result.Nodes = products[offset : offset+limit]
 
 	renderx.JSON(w, http.StatusOK, result)
 }

@@ -36,8 +36,8 @@ type datasetData struct {
 
 var userContext model.ContextKey = "dataset_user"
 
-// UserRouter - Group of dataset router
-func UserRouter() chi.Router {
+// PublicRouter - Group of dataset router
+func PublicRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", userlist) // GET /datasets - return list of datasets

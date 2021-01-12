@@ -12,6 +12,7 @@ type Plan struct {
 	Currency    *Currency `gorm:"foreignKey:currency_id"  json:"currency"`
 	Duration    uint      `gorm:"column:duration" json:"duration" validate:"required"`
 	Status      string    `gorm:"column:status" json:"status" validate:"required"`
+	AllProducts bool      `gorm:"column:all_products" json:"all_products"`
 	Catalogs    []Catalog `gorm:"many2many:plan_catalog" json:"catalogs"`
 }
 

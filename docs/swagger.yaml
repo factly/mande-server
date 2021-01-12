@@ -116,8 +116,11 @@ definitions:
         type: string
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       data_standard:
@@ -128,6 +131,7 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
+        type: object
       featured_medium_id:
         type: integer
       formats:
@@ -166,6 +170,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - currency_id
     - price
@@ -200,16 +206,7 @@ definitions:
     required:
     - name
     type: object
-  github.com_factly_data-portal-server_action_dataset_format.paging:
-    properties:
-      nodes:
-        items:
-          $ref: '#/definitions/model.DatasetFormat'
-        type: array
-      total:
-        type: integer
-    type: object
-  github.com_factly_data-portal-server_action_format.paging:
+  format.paging:
     properties:
       nodes:
         items:
@@ -273,22 +270,28 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       id:
         type: integer
       membership:
         $ref: '#/definitions/model.Membership'
+        type: object
       membership_id:
         type: integer
       product:
         $ref: '#/definitions/model.Product'
+        type: object
       product_id:
         type: integer
       status:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
       user_id:
         type: integer
     required:
@@ -300,12 +303,15 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       description:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
+        type: object
       featured_medium_id:
         type: integer
       id:
@@ -324,11 +330,15 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     type: object
   model.Currency:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       id:
@@ -339,6 +349,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - iso_code
     - name
@@ -351,8 +363,11 @@ definitions:
         type: string
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       data_standard:
@@ -363,6 +378,7 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
+        type: object
       featured_medium_id:
         type: integer
       frequency:
@@ -397,6 +413,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - currency_id
     - price
@@ -405,18 +423,23 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       dataset_id:
         type: integer
       deleted_at:
         type: string
       format:
         $ref: '#/definitions/model.Format'
+        type: object
       format_id:
         type: integer
       id:
         type: integer
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
       url:
         type: string
     type: object
@@ -424,6 +447,8 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       description:
@@ -436,6 +461,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     type: object
   model.Medium:
     properties:
@@ -445,6 +472,8 @@ definitions:
         type: string
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       description:
@@ -465,6 +494,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
       url:
         type: string
     type: object
@@ -472,16 +503,20 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       id:
         type: integer
       payment:
         $ref: '#/definitions/model.Payment'
+        type: object
       payment_id:
         type: integer
       plan:
         $ref: '#/definitions/model.Plan'
+        type: object
       plan_id:
         type: integer
       razorpay_order_id:
@@ -490,6 +525,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
       user_id:
         type: integer
     required:
@@ -501,12 +538,15 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       deleted_at:
         type: string
       id:
         type: integer
       payment:
         $ref: '#/definitions/model.Payment'
+        type: object
       payment_id:
         type: integer
       products:
@@ -519,6 +559,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
       user_id:
         type: integer
     required:
@@ -531,8 +573,11 @@ definitions:
         type: integer
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -549,6 +594,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - amount
     - currency_id
@@ -557,14 +604,19 @@ definitions:
     type: object
   model.Plan:
     properties:
+      all_products:
+        type: boolean
       catalogs:
         items:
           $ref: '#/definitions/model.Catalog'
         type: array
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -583,6 +635,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - currency_id
     - duration
@@ -598,8 +652,11 @@ definitions:
         type: array
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       datasets:
@@ -610,6 +667,7 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
+        type: object
       featured_medium_id:
         type: integer
       id:
@@ -632,6 +690,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - currency_id
     - price
@@ -643,6 +703,8 @@ definitions:
     properties:
       created_at:
         type: string
+      created_by_id:
+        type: integer
       datasets:
         items:
           $ref: '#/definitions/model.Dataset'
@@ -661,6 +723,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - slug
     - title
@@ -717,6 +781,8 @@ definitions:
     type: object
   plan.plan:
     properties:
+      all_products:
+        type: boolean
       catalog_ids:
         items:
           type: integer
@@ -783,8 +849,11 @@ definitions:
         type: array
       created_at:
         type: string
+      created_by_id:
+        type: integer
       currency:
         $ref: '#/definitions/model.Currency'
+        type: object
       currency_id:
         type: integer
       datasets:
@@ -795,6 +864,7 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
+        type: object
       featured_medium_id:
         type: integer
       id:
@@ -821,6 +891,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      updated_by_id:
+        type: integer
     required:
     - currency_id
     - price
@@ -1572,7 +1644,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging'
+            $ref: '#/definitions/format.paging'
       summary: Show all datsets format
       tags:
       - Dataset Format
@@ -1682,7 +1754,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_format.paging'
+            $ref: '#/definitions/format.paging'
       summary: Show all formats
       tags:
       - Format
@@ -2752,6 +2824,42 @@ paths:
               type: string
             type: array
       summary: Update a product by id
+      tags:
+      - Product
+  /products/my:
+    get:
+      description: Get product by ID
+      operationId: get-product-by-id
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.productRes'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Show a product by id
       tags:
       - Product
   /search:

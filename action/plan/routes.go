@@ -14,6 +14,7 @@ type plan struct {
 	Price       int    `json:"price" validate:"required"`
 	CurrencyID  uint   `json:"currency_id" validate:"required"`
 	CatalogIDs  []uint `json:"catalog_ids"`
+	AllProducts bool   `json:"all_products"`
 }
 
 var userContext model.ContextKey = "plan_user"

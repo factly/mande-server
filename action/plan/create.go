@@ -58,6 +58,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		Status:      plan.Status,
 		CurrencyID:  plan.CurrencyID,
 		Price:       plan.Price,
+		AllProducts: plan.AllProducts,
 	}
 
 	result.Catalogs = make([]model.Catalog, 0)
@@ -74,17 +75,22 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx.Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
+	if !plan.AllProducts {
+		tx.Preload("Currency").Preload("Catalogs").Preload("Catalogs.Products").Preload("Catalogs.Products.Currency").Preload("Catalogs.Products.Datasets").Preload("Catalogs.Products.Tags").First(&result)
+	} else {
+		tx.Preload("Currency").First(&result)
+	}
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
-		"id":          result.ID,
-		"kind":        "plan",
-		"name":        result.Name,
-		"description": result.Description,
-		"duration":    result.Duration,
-		"status":      result.Status,
-		"catalog_ids": plan.CatalogIDs,
+		"id":           result.ID,
+		"kind":         "plan",
+		"name":         result.Name,
+		"description":  result.Description,
+		"duration":     result.Duration,
+		"status":       result.Status,
+		"catalog_ids":  plan.CatalogIDs,
+		"all_products": plan.AllProducts,
 	}
 
 	err = meili.AddDocument(meiliObj)
