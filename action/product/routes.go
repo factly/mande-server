@@ -23,6 +23,7 @@ func PublicRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list) // GET /products - return list of products
+	r.Get("/my", my)    // GET /products/my - return list of products owned by user
 	r.Route("/{product_id}", func(r chi.Router) {
 		r.Get("/", adminDetails) // GET /products/{product_id} - read a single product by :payment_id
 	})
