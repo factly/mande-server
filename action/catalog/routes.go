@@ -23,7 +23,7 @@ func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", list) // GET /catalogs - return list of catalogs
-
+	r.Get("/my", my)    // GET /catalogs/my - return list of catalogs owned by user
 	r.Route("/{catalog_id}", func(r chi.Router) {
 		r.Get("/", details) // GET /catalogs/{catalog_id} - read a single catalog by :catalog_id
 	})
