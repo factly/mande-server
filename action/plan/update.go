@@ -99,6 +99,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:       plan.Price,
 		CurrencyID:  plan.CurrencyID,
 		AllProducts: plan.AllProducts,
+		Users:       plan.Users,
 	}).First(&result)
 
 	if !result.AllProducts {
@@ -117,6 +118,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"status":       result.Status,
 		"catalog_ids":  plan.CatalogIDs,
 		"all_products": plan.AllProducts,
+		"users":        plan.Users,
 	}
 
 	err = meili.UpdateDocument(meiliObj)

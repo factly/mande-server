@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/factly/data-portal-server/util"
+	"github.com/factly/data-portal-server/util/keto"
 	"github.com/factly/data-portal-server/util/razorpay"
 
 	"github.com/factly/data-portal-server/model"
@@ -32,6 +34,13 @@ import (
 // @Router /payments [post]
 func create(w http.ResponseWriter, r *http.Request) {
 	uID, err := util.GetUser(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
+		return
+	}
+
+	oID, err := util.GetOrganisation(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
@@ -148,13 +157,45 @@ func create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else if payment.For == "membership" {
+
 		if err = tx.Model(&membership).Updates(&model.Membership{
 			Status:    "complete",
 			PaymentID: &result.ID,
-		}).Error; err != nil {
+		}).First(&membership).Error; err != nil {
 			tx.Rollback()
 			loggerx.Error(err)
 			errorx.Render(w, errorx.Parser(errorx.DBError()))
+			return
+		}
+
+		/* creating user groups of plan */
+		reqRole := &model.Role{}
+		reqRole.ID = "roles:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":users"
+		reqRole.Members = []string{fmt.Sprint(uID)}
+
+		err = keto.UpdateRole("/engines/acp/ory/regex/roles", reqRole)
+
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.NetworkError()))
+			return
+		}
+
+		/* creating policy for plan users */
+		reqPolicy := &model.KetoPolicy{}
+		reqPolicy.ID = "org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":users"
+		reqPolicy.Subjects = []string{reqRole.ID}
+		reqPolicy.Resources = []string{"resources:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":<.*>"}
+		reqPolicy.Actions = []string{"actions:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":<.*>"}
+		reqPolicy.Effect = "allow"
+
+		err = keto.UpdatePolicy("/engines/acp/ory/regex/policies", reqPolicy)
+
+		if err != nil {
+			tx.Rollback()
+			loggerx.Error(err)
+			errorx.Render(w, errorx.Parser(errorx.NetworkError()))
 			return
 		}
 	}

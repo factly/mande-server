@@ -38,6 +38,13 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	oID, err := util.GetOrganisation(r.Context())
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		return
+	}
+
 	membership := &membership{}
 	err = json.NewDecoder(r.Body).Decode(&membership)
 	if err != nil {
@@ -54,9 +61,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := &model.Membership{
-		Status: "created",
-		UserID: uint(uID),
-		PlanID: membership.PlanID,
+		Status:         "created",
+		UserID:         uint(uID),
+		OrganisationID: uint(oID),
+		PlanID:         membership.PlanID,
 	}
 
 	tx := model.DB.WithContext(context.WithValue(r.Context(), userContext, uID)).Begin()
@@ -123,12 +131,13 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
-		"id":         result.ID,
-		"kind":       "membership",
-		"status":     result.Status,
-		"user_id":    result.UserID,
-		"payment_id": result.PaymentID,
-		"plan_id":    result.PlanID,
+		"id":              result.ID,
+		"kind":            "membership",
+		"status":          result.Status,
+		"user_id":         result.UserID,
+		"organisation_id": result.OrganisationID,
+		"payment_id":      result.PaymentID,
+		"plan_id":         result.PlanID,
 	}
 
 	err = meili.AddDocument(meiliObj)

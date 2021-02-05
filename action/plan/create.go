@@ -59,6 +59,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		CurrencyID:  plan.CurrencyID,
 		Price:       plan.Price,
 		AllProducts: plan.AllProducts,
+		Users:       plan.Users,
 	}
 
 	result.Catalogs = make([]model.Catalog, 0)
@@ -91,6 +92,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		"status":       result.Status,
 		"catalog_ids":  plan.CatalogIDs,
 		"all_products": plan.AllProducts,
+		"users":        plan.Users,
 	}
 
 	err = meili.AddDocument(meiliObj)
