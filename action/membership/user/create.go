@@ -13,22 +13,25 @@ import (
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"
+	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
 )
 
-// create - Create organisation
-// @Summary Create organisation
-// @Description Create organisation
-// @Tags Organisation
-// @ID add-organisation
+// create - Create Membership user
+// @Summary Create Membership user
+// @Description Create Membership user
+// @Tags MembershipUser
+// @ID create-membership-user
 // @Consume json
 // @Produce json
 // @Param X-User header string true "User ID"
-// @Param Organisation body organisation true "Organisation Object"
-// @Success 201 {object} orgWithRole
+// @Param X-Organisation header string true "Organisation ID"
+// @Param membership_id path string true "Membership ID"
+// @Param Request body userRequest true "User Request Object"
+// @Success 201
 // @Failure 400 {array} string
-// @Router /organisations [post]
-func delete(w http.ResponseWriter, r *http.Request) {
+// @Router /memberships/{membership_id}/users [post]
+func create(w http.ResponseWriter, r *http.Request) {
 	uID, err := util.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
@@ -43,8 +46,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	planID := chi.URLParam(r, "plan_id")
-	pID, err := strconv.Atoi(planID)
+	membershipID := chi.URLParam(r, "membership_id")
+	memID, err := strconv.Atoi(membershipID)
 
 	if err != nil {
 		loggerx.Error(err)
@@ -52,18 +55,23 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	planUserID := chi.URLParam(r, "user_id")
-	userID, err := strconv.Atoi(planUserID)
-
+	user := &userRequest{}
+	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		return
+	}
+
+	validationError := validationx.Check(user)
+	if validationError != nil {
+		loggerx.Error(errors.New("validation error"))
+		errorx.Render(w, validationError)
 		return
 	}
 
 	// Check if logged in user is owner
 	isAdmin, err := util.CheckOwnerFromKavach(uID, oID)
-
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
@@ -75,10 +83,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		errorx.Render(w, errorx.Parser(errorx.Unauthorized()))
 		return
 	}
-	plan := model.Plan{}
-	plan.ID = uint(pID)
 
-	err = model.DB.First(&plan).Error
+	// Check if membership exist
+	membership := model.Membership{}
+	membership.ID = uint(memID)
+
+	err = model.DB.Preload("Plan").First(&membership).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -86,7 +96,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(pID) + ":users")
+	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:dataportal:membership:" + fmt.Sprint(memID) + ":users")
 
 	resp, err := keto.GetPolicy("/engines/acp/ory/regex/roles/" + adminRoleID)
 	if err != nil {
@@ -105,16 +115,20 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(adminRole.Members) < 2 {
-		loggerx.Error(errors.New("Cannot add delete last user"))
+	if len(adminRole.Members) >= membership.Plan.Users {
+		loggerx.Error(errors.New("Cannot add more users"))
 		errorx.Render(w, errorx.Parser(errorx.Message{
 			Code:    http.StatusUnprocessableEntity,
-			Message: "Cannot add more user",
+			Message: "Cannot add more users",
 		}))
 		return
 	}
 
-	err = keto.DeletePolicy("/engines/acp/ory/regex/roles/roles:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(pID) + ":users/members" + fmt.Sprint(userID))
+	/* add user to application */
+	reqRole := &model.Role{}
+	reqRole.Members = []string{fmt.Sprint(user.UserID)}
+
+	err = keto.UpdateRole("/engines/acp/ory/regex/roles/roles:org:"+fmt.Sprint(oID)+"app:dataportal:membership:"+fmt.Sprint(memID)+":users/members", reqRole)
 
 	if err != nil {
 		loggerx.Error(err)

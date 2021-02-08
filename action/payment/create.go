@@ -168,9 +168,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		/* creating user groups of plan */
+		/* creating user groups of membership */
 		reqRole := &model.Role{}
-		reqRole.ID = "roles:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":users"
+		reqRole.ID = "roles:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":users"
 		reqRole.Members = []string{fmt.Sprint(uID)}
 
 		err = keto.UpdateRole("/engines/acp/ory/regex/roles", reqRole)
@@ -184,10 +184,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 		/* creating policy for plan users */
 		reqPolicy := &model.KetoPolicy{}
-		reqPolicy.ID = "org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":users"
+		reqPolicy.ID = "id:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":users"
 		reqPolicy.Subjects = []string{reqRole.ID}
-		reqPolicy.Resources = []string{"resources:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":<.*>"}
-		reqPolicy.Actions = []string{"actions:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(membership.PlanID) + ":<.*>"}
+		reqPolicy.Resources = []string{"resources:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
+		reqPolicy.Actions = []string{"actions:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
 		reqPolicy.Effect = "allow"
 
 		err = keto.UpdatePolicy("/engines/acp/ory/regex/policies", reqPolicy)

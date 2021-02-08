@@ -15,6 +15,7 @@ require (
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.1.1
 	github.com/go-openapi/swag v0.19.9 // indirect
+	github.com/golangci/golangci-lint v1.36.0 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jinzhu/gorm v1.9.16
@@ -23,12 +24,10 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
 	github.com/meilisearch/meilisearch-go v0.12.1
 	github.com/moul/http2curl v1.0.0 // indirect
-	github.com/onsi/ginkgo v1.14.0 // indirect
 	github.com/razorpay/razorpay-go v0.0.0-20200616141002-0e6c7c357e18
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/swaggo/http-swagger v0.0.0-20200308142732-58ac5e232fba
 	github.com/swaggo/swag v1.6.7
 	github.com/valyala/fasthttp v1.16.0 // indirect

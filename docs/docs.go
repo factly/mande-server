@@ -223,7 +223,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -333,6 +335,55 @@ var doc = `{
                             "items": {
                                 "type": "string"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/catalogs/my": {
+            "get": {
+                "description": "Get all catalogs owned by user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Show all catalogs owned by user",
+                "operationId": "get-all-catalogs-owned-by-user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limt per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/catalog.paging"
                         }
                     }
                 }
@@ -480,7 +531,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -736,7 +789,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -993,7 +1048,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1056,7 +1113,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/format.paging"
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging"
                         }
                     }
                 }
@@ -1161,7 +1218,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1217,7 +1276,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/format.paging"
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_format.paging"
                         }
                     }
                 }
@@ -1418,7 +1477,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1675,7 +1736,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -1879,7 +1942,183 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/memberships/{membership_id}/users": {
+            "get": {
+                "description": "List Membership users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MembershipUser"
+                ],
+                "summary": "List Membership users",
+                "operationId": "list-membership-user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Membership ID",
+                        "name": "membership_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_membership_user.paging"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create Membership user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MembershipUser"
+                ],
+                "summary": "Create Membership user",
+                "operationId": "create-membership-user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Membership ID",
+                        "name": "membership_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User Request Object",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.userRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/memberships/{membership_id}/users/{user_id}": {
+            "delete": {
+                "description": "Delete Membership user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MembershipUser"
+                ],
+                "summary": "Delete Membership user",
+                "operationId": "delete-membership-user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Membership ID",
+                        "name": "membership_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -2074,7 +2313,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -2272,7 +2513,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -2520,7 +2763,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -2645,7 +2890,7 @@ var doc = `{
                     "Product"
                 ],
                 "summary": "Show a product by id",
-                "operationId": "get-product-by-id",
+                "operationId": "get-my-products",
                 "parameters": [
                     {
                         "type": "string",
@@ -2830,7 +3075,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -2879,7 +3126,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {}
+                    "200": {
+                        "description": ""
+                    }
                 }
             }
         },
@@ -2926,7 +3175,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tag.paging"
+                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_user.paging"
                         }
                     }
                 }
@@ -3127,7 +3376,9 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": ""
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -3326,7 +3577,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3342,7 +3592,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3453,13 +3702,55 @@ var doc = `{
                 }
             }
         },
-        "format.paging": {
+        "github.com_factly_data-portal-server_action_dataset_format.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.DatasetFormat"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_factly_data-portal-server_action_format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.Format"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_factly_data-portal-server_action_membership_user.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_factly_data-portal-server_action_user.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.User"
                     }
                 },
                 "total": {
@@ -3566,14 +3857,12 @@ var doc = `{
                     "type": "integer"
                 },
                 "membership": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Membership"
                 },
                 "membership_id": {
                     "type": "integer"
                 },
                 "product": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Product"
                 },
                 "product_id": {
@@ -3609,7 +3898,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3697,7 +3985,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -3713,7 +4000,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -3788,7 +4074,6 @@ var doc = `{
                     "type": "string"
                 },
                 "format": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Format"
                 },
                 "format_id": {
@@ -3896,6 +4181,7 @@ var doc = `{
         "model.Membership": {
             "type": "object",
             "required": [
+                "organisation_id",
                 "plan_id",
                 "status",
                 "user_id"
@@ -3913,15 +4199,16 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "organisation_id": {
+                    "type": "integer"
+                },
                 "payment": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
                     "type": "integer"
                 },
                 "plan": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Plan"
                 },
                 "plan_id": {
@@ -3964,7 +4251,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "payment": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Payment"
                 },
                 "payment_id": {
@@ -4012,7 +4298,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4051,7 +4336,8 @@ var doc = `{
                 "duration",
                 "name",
                 "price",
-                "status"
+                "status",
+                "users"
             ],
             "properties": {
                 "all_products": {
@@ -4070,7 +4356,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4102,6 +4387,9 @@ var doc = `{
                 },
                 "updated_by_id": {
                     "type": "integer"
+                },
+                "users": {
+                    "type": "integer"
                 }
             }
         },
@@ -4128,7 +4416,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4144,7 +4431,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4220,6 +4506,44 @@ var doc = `{
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "birth_date": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -4311,7 +4635,8 @@ var doc = `{
                 "currency_id",
                 "duration",
                 "name",
-                "price"
+                "price",
+                "users"
             ],
             "properties": {
                 "all_products": {
@@ -4340,6 +4665,9 @@ var doc = `{
                 },
                 "status": {
                     "type": "string"
+                },
+                "users": {
+                    "type": "integer"
                 }
             }
         },
@@ -4420,7 +4748,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Currency"
                 },
                 "currency_id": {
@@ -4436,7 +4763,6 @@ var doc = `{
                     "type": "string"
                 },
                 "featured_medium": {
-                    "type": "object",
                     "$ref": "#/definitions/model.Medium"
                 },
                 "featured_medium_id": {
@@ -4532,6 +4858,17 @@ var doc = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "user.userRequest": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

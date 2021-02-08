@@ -16,10 +16,10 @@ import (
 	"github.com/factly/data-portal-server/action/format"
 	"github.com/factly/data-portal-server/action/medium"
 	"github.com/factly/data-portal-server/action/membership"
+	"github.com/factly/data-portal-server/action/membership/user"
 	"github.com/factly/data-portal-server/action/order"
 	"github.com/factly/data-portal-server/action/payment"
 	"github.com/factly/data-portal-server/action/plan"
-	"github.com/factly/data-portal-server/action/plan/user"
 	"github.com/factly/data-portal-server/action/product"
 	"github.com/factly/data-portal-server/action/search"
 	"github.com/factly/data-portal-server/action/tag"
@@ -79,7 +79,7 @@ func RegisterUserRoutes() http.Handler {
 	r.With(util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.UserRouter())
-		r.Mount("/plans/{plan_id}/users", user.UserRouter())
+		r.Mount("/memberships/{membership_id}/users", user.UserRouter())
 		r.Mount("/memberships", membership.UserRouter())
 		r.Mount("/payments", payment.UserRouter())
 		r.Mount("/tags", tag.UserRouter())

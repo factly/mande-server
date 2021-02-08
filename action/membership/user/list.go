@@ -20,18 +20,20 @@ type paging struct {
 	Total int   `json:"total"`
 }
 
-// create - Create organisation
-// @Summary Create organisation
-// @Description Create organisation
-// @Tags Organisation
-// @ID add-organisation
+// list - List Membership users
+// @Summary List Membership users
+// @Description List Membership users
+// @Tags MembershipUser
+// @ID list-membership-user
 // @Consume json
 // @Produce json
 // @Param X-User header string true "User ID"
-// @Param Organisation body organisation true "Organisation Object"
-// @Success 201 {object} orgWithRole
+// @Param X-Organisation header string true "Organisation ID"
+// @Param membership_id path string true "Membership ID"
+// @Param user_id path string true "User ID"
+// @Success 200 {object} paging
 // @Failure 400 {array} string
-// @Router /organisations [post]
+// @Router /memberships/{membership_id}/users [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
 	oID, err := util.GetOrganisation(r.Context())
@@ -41,8 +43,8 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	planID := chi.URLParam(r, "plan_id")
-	pID, err := strconv.Atoi(planID)
+	membershipID := chi.URLParam(r, "membership_id")
+	memID, err := strconv.Atoi(membershipID)
 
 	if err != nil {
 		loggerx.Error(err)
@@ -50,10 +52,11 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	plan := model.Plan{}
-	plan.ID = uint(pID)
+	// Check if membership exist
+	membership := model.Membership{}
+	membership.ID = uint(memID)
 
-	err = model.DB.First(&plan).Error
+	err = model.DB.First(&membership).Error
 
 	if err != nil {
 		loggerx.Error(err)
@@ -61,7 +64,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + ":plan:" + fmt.Sprint(pID) + ":users")
+	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:dataportal:membership:" + fmt.Sprint(memID) + ":users")
 
 	resp, err := keto.GetPolicy("/engines/acp/ory/regex/roles/" + adminRoleID)
 	if err != nil {
@@ -89,5 +92,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	result.Total = len(adminRole.Members)
 
-	renderx.JSON(w, http.StatusCreated, result)
+	renderx.JSON(w, http.StatusOK, result)
 }

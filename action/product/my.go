@@ -15,7 +15,7 @@ import (
 // @Summary Show a product by id
 // @Description Get product by ID
 // @Tags Product
-// @ID get-product-by-id
+// @ID get-my-products
 // @Produce  json
 // @Param X-User header string true "User ID"
 // @Param X-Organisation header string true "Organisation ID"
