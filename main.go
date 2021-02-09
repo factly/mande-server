@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/x/meilisearchx"
 	"github.com/spf13/viper"
 
 	"github.com/factly/data-portal-server/action"
@@ -35,7 +35,7 @@ func main() {
 
 	model.Migration()
 
-	meili.SetupMeiliSearch()
+	meilisearchx.SetupMeiliSearch("data-portal", []string{"name", "slug", "description", "title", "contact_name", "contact_email", "license", "caption", "alt_text", "plan_name", "plan_info"})
 
 	razorpay.SetupClient()
 

@@ -7,9 +7,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/middlewarex"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
@@ -149,7 +149,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"dataset_ids": product.DatasetIDs,
 	}
 
-	err = meili.UpdateDocument(meiliObj)
+	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

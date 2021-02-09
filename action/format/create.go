@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/middlewarex"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
@@ -76,7 +76,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"is_default":  result.IsDefault,
 	}
 
-	err = meili.AddDocument(meiliObj)
+	err = meilisearchx.AddDocument("data-portal", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

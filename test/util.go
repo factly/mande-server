@@ -8,7 +8,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/meili"
+	"github.com/factly/x/meilisearchx"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
@@ -33,7 +33,7 @@ func SetupMockDB() sqlmock.Sqlmock {
 	viper.Set("keto_url", "http://keto:4466")
 	viper.Set("kavach_url", "http://kavach:8000")
 
-	meili.Client = meilisearch.NewClient(meilisearch.Config{
+	meilisearchx.Client = meilisearch.NewClient(meilisearch.Config{
 		Host:   viper.GetString("meili_url"),
 		APIKey: viper.GetString("meili_key"),
 	})
