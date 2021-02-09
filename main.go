@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/data-portal-server/util/razorpay"
 	"github.com/spf13/viper"
 
 	"github.com/factly/data-portal-server/action"
 	"github.com/factly/data-portal-server/config"
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/meili"
 )
 
 // @title Data portal API

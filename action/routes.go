@@ -6,6 +6,7 @@ import (
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/x/healthx"
+	"github.com/factly/x/middlewarex"
 
 	"github.com/factly/data-portal-server/util"
 
@@ -76,7 +77,7 @@ func RegisterUserRoutes() http.Handler {
 	r.Mount("/datasets", dataset.PublicRouter())
 	r.Mount("/plans", plan.UserRouter())
 
-	r.With(util.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
+	r.With(middlewarex.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.UserRouter())
 		r.Mount("/memberships/{membership_id}/users", user.UserRouter())
@@ -99,7 +100,7 @@ func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.With(util.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
+	r.With(middlewarex.CheckUser, util.CheckOrganisation, util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.AdminRouter())
 		r.Mount("/plans", plan.AdminRouter())
