@@ -47,9 +47,14 @@ func main() {
 	// register routes
 	userRouter := action.RegisterUserRoutes()
 	adminRouter := action.RegisterAdminRoutes()
+	webhookRouter := action.RegisterWebHookRoutes()
 
 	go func() {
 		log.Fatal(http.ListenAndServe(":7720", userRouter))
+	}()
+
+	go func() {
+		log.Fatal(http.ListenAndServe(":7722", webhookRouter))
 	}()
 
 	log.Fatal(http.ListenAndServe(":7721", adminRouter))
