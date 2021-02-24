@@ -27,3 +27,4 @@ COPY --from=build_base /tmp/data-portal-server/out/data-portal-server /app/data-
 
 # Run the binary program produced by `go install`
 ENTRYPOINT ["/app/data-portal-server"]
+CMD ["serve"]
