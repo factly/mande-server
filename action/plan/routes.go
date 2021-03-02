@@ -12,6 +12,7 @@ type plan struct {
 	Duration    uint   `json:"duration" validate:"required"`
 	Status      string `json:"status"`
 	Price       int    `json:"price" validate:"required"`
+	Users       int    `json:"users" validate:"required"`
 	CurrencyID  uint   `json:"currency_id" validate:"required"`
 	CatalogIDs  []uint `json:"catalog_ids"`
 	AllProducts bool   `json:"all_products"`

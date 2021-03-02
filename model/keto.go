@@ -8,3 +8,9 @@ type KetoPolicy struct {
 	Effect      string   `json:"effect"`
 	Description string   `json:"description"`
 }
+
+// Role in keto
+type Role struct {
+	ID      string   `json:"id"`
+	Members []string `json:"members"`
+}

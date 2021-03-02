@@ -120,7 +120,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       data_standard:
@@ -131,7 +130,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       formats:
@@ -206,11 +204,38 @@ definitions:
     required:
     - name
     type: object
-  format.paging:
+  github.com_factly_data-portal-server_action_dataset_format.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.DatasetFormat'
+        type: array
+      total:
+        type: integer
+    type: object
+  github.com_factly_data-portal-server_action_format.paging:
     properties:
       nodes:
         items:
           $ref: '#/definitions/model.Format'
+        type: array
+      total:
+        type: integer
+    type: object
+  github.com_factly_data-portal-server_action_membership_user.paging:
+    properties:
+      nodes:
+        items:
+          type: integer
+        type: array
+      total:
+        type: integer
+    type: object
+  github.com_factly_data-portal-server_action_user.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.User'
         type: array
       total:
         type: integer
@@ -278,12 +303,10 @@ definitions:
         type: integer
       membership:
         $ref: '#/definitions/model.Membership'
-        type: object
       membership_id:
         type: integer
       product:
         $ref: '#/definitions/model.Product'
-        type: object
       product_id:
         type: integer
       status:
@@ -311,7 +334,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -367,7 +389,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       data_standard:
@@ -378,7 +399,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       frequency:
@@ -431,7 +451,6 @@ definitions:
         type: string
       format:
         $ref: '#/definitions/model.Format'
-        type: object
       format_id:
         type: integer
       id:
@@ -509,14 +528,14 @@ definitions:
         type: string
       id:
         type: integer
+      organisation_id:
+        type: integer
       payment:
         $ref: '#/definitions/model.Payment'
-        type: object
       payment_id:
         type: integer
       plan:
         $ref: '#/definitions/model.Plan'
-        type: object
       plan_id:
         type: integer
       razorpay_order_id:
@@ -530,6 +549,7 @@ definitions:
       user_id:
         type: integer
     required:
+    - organisation_id
     - plan_id
     - status
     - user_id
@@ -546,7 +566,6 @@ definitions:
         type: integer
       payment:
         $ref: '#/definitions/model.Payment'
-        type: object
       payment_id:
         type: integer
       products:
@@ -577,7 +596,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -616,7 +634,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       deleted_at:
@@ -637,12 +654,15 @@ definitions:
         type: string
       updated_by_id:
         type: integer
+      users:
+        type: integer
     required:
     - currency_id
     - duration
     - name
     - price
     - status
+    - users
     type: object
   model.Product:
     properties:
@@ -656,7 +676,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       datasets:
@@ -667,7 +686,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -728,6 +746,31 @@ definitions:
     required:
     - slug
     - title
+    type: object
+  model.User:
+    properties:
+      birth_date:
+        type: string
+      created_at:
+        type: string
+      created_by_id:
+        type: integer
+      deleted_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      updated_at:
+        type: string
+      updated_by_id:
+        type: integer
     type: object
   order.paging:
     properties:
@@ -799,11 +842,14 @@ definitions:
         type: integer
       status:
         type: string
+      users:
+        type: integer
     required:
     - currency_id
     - duration
     - name
     - price
+    - users
     type: object
   product.paging:
     properties:
@@ -853,7 +899,6 @@ definitions:
         type: integer
       currency:
         $ref: '#/definitions/model.Currency'
-        type: object
       currency_id:
         type: integer
       datasets:
@@ -864,7 +909,6 @@ definitions:
         type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
-        type: object
       featured_medium_id:
         type: integer
       id:
@@ -933,6 +977,13 @@ definitions:
     required:
     - slug
     - title
+    type: object
+  user.userRequest:
+    properties:
+      user_id:
+        type: integer
+    required:
+    - user_id
     type: object
 host: localhost:7721
 info:
@@ -1041,7 +1092,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1176,7 +1228,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1261,6 +1314,39 @@ paths:
       summary: Update a catalog by id
       tags:
       - Catalog
+  /catalogs/my:
+    get:
+      description: Get all catalogs owned by user
+      operationId: get-all-catalogs-owned-by-user
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      - description: limt per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/catalog.paging'
+      summary: Show all catalogs owned by user
+      tags:
+      - Product
   /currencies:
     get:
       description: Get all currencies
@@ -1351,7 +1437,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1525,7 +1612,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1644,7 +1732,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/format.paging'
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging'
       summary: Show all datsets format
       tags:
       - Dataset Format
@@ -1715,7 +1803,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1754,7 +1843,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/format.paging'
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_format.paging'
       summary: Show all formats
       tags:
       - Format
@@ -1815,7 +1904,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -1990,7 +2080,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2169,7 +2260,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2214,6 +2306,125 @@ paths:
       summary: Show a membership by id
       tags:
       - Membership
+  /memberships/{membership_id}/users:
+    get:
+      description: List Membership users
+      operationId: list-membership-user
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      - description: Membership ID
+        in: path
+        name: membership_id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_membership_user.paging'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: List Membership users
+      tags:
+      - MembershipUser
+    post:
+      description: Create Membership user
+      operationId: create-membership-user
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      - description: Membership ID
+        in: path
+        name: membership_id
+        required: true
+        type: string
+      - description: User Request Object
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user.userRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create Membership user
+      tags:
+      - MembershipUser
+  /memberships/{membership_id}/users/{user_id}:
+    delete:
+      description: Delete Membership user
+      operationId: delete-membership-user
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      - description: Membership ID
+        in: path
+        name: membership_id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Delete Membership user
+      tags:
+      - MembershipUser
   /orders:
     get:
       description: Get all orders
@@ -2302,7 +2513,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2437,7 +2649,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2566,7 +2779,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2741,7 +2955,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
@@ -2829,7 +3044,7 @@ paths:
   /products/my:
     get:
       description: Get product by ID
-      operationId: get-product-by-id
+      operationId: get-my-products
       parameters:
       - description: User ID
         in: header
@@ -2885,7 +3100,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200": {}
+        "200":
+          description: ""
       summary: Global search for all entities
       tags:
       - Search
@@ -2918,7 +3134,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tag.paging'
+            $ref: '#/definitions/github.com_factly_data-portal-server_action_user.paging'
       summary: Show all tags
       tags:
       - Tag
@@ -2979,7 +3195,8 @@ paths:
         required: true
         type: string
       responses:
-        "200": {}
+        "200":
+          description: ""
         "400":
           description: Bad Request
           schema:
