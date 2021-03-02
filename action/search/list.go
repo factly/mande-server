@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/meilisearch/meilisearch-go"
@@ -42,7 +42,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := meili.Client.Search("data-portal").Search(meilisearch.SearchRequest{
+	result, err := meilisearchx.Client.Search("data-portal").Search(meilisearch.SearchRequest{
 		Query:        searchQuery.Query,
 		Limit:        searchQuery.Limit,
 		Filters:      searchQuery.Filters,

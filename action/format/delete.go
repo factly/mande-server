@@ -6,9 +6,9 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -64,7 +64,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	tx := model.DB.Begin()
 	tx.Delete(&result)
 
-	err = meili.DeleteDocument(result.ID, "format")
+	err = meilisearchx.DeleteDocument("data-portal", result.ID, "format")
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

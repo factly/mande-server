@@ -7,10 +7,10 @@ import (
 	"strconv"
 
 	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
+	"github.com/factly/x/middlewarex"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 	"github.com/go-chi/chi"
@@ -31,7 +31,7 @@ import (
 // @Failure 400 {array} string
 // @Router /catalogs/{catalog_id} [put]
 func update(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r.Context())
+	uID, err := middlewarex.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -129,7 +129,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"product_ids":    catalog.ProductIDs,
 	}
 
-	err = meili.UpdateDocument(meiliObj)
+	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

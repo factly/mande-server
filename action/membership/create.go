@@ -9,10 +9,11 @@ import (
 
 	"github.com/factly/data-portal-server/model"
 	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/meili"
 	"github.com/factly/data-portal-server/util/razorpay"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
+	"github.com/factly/x/meilisearchx"
+	"github.com/factly/x/middlewarex"
 	"github.com/factly/x/renderx"
 	"github.com/factly/x/validationx"
 )
@@ -31,7 +32,7 @@ import (
 // @Failure 400 {array} string
 // @Router /memberships [post]
 func create(w http.ResponseWriter, r *http.Request) {
-	uID, err := util.GetUser(r.Context())
+	uID, err := middlewarex.GetUser(r.Context())
 	if err != nil {
 		loggerx.Error(err)
 		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
@@ -140,7 +141,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"plan_id":         result.PlanID,
 	}
 
-	err = meili.AddDocument(meiliObj)
+	err = meilisearchx.AddDocument("data-portal", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
