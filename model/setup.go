@@ -17,7 +17,7 @@ import (
 var DB *gorm.DB
 
 // SetupDB is database setup
-func SetupDB(DSN interface{}) {
+func SetupDB() {
 	fmt.Println("connecting to database ...")
 
 	dbString := fmt.Sprint("host=", viper.GetString("database_host"), " ",

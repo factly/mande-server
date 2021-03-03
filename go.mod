@@ -32,7 +32,7 @@ require (
 	github.com/razorpay/razorpay-go v0.0.0-20200616141002-0e6c7c357e18
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.7.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/swaggo/http-swagger v0.0.0-20200308142732-58ac5e232fba
@@ -49,7 +49,6 @@ require (
 	golang.org/x/tools v0.0.0-20210105210202-9ed45478a130 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/h2non/gock.v1 v1.0.15
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/postgres v1.0.5
 	gorm.io/gorm v1.20.7
 )
