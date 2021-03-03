@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/keto"
+	"github.com/factly/mande-server/model"
+	"github.com/factly/mande-server/util"
+	"github.com/factly/mande-server/util/keto"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/renderx"

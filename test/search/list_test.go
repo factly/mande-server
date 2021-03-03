@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/factly/data-portal-server/action"
-	"github.com/factly/data-portal-server/test"
+	"github.com/factly/mande-server/action"
+	"github.com/factly/mande-server/test"
 	"github.com/gavv/httpexpect"
 	"gopkg.in/h2non/gock.v1"
 )

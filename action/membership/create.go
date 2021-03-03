@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/mande-server/model"
+	"github.com/factly/mande-server/util"
+	"github.com/factly/mande-server/util/razorpay"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/meilisearchx"

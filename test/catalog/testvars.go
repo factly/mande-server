@@ -6,13 +6,13 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/factly/data-portal-server/test/dataset"
-	"github.com/factly/data-portal-server/test/tag"
+	"github.com/factly/mande-server/test/dataset"
+	"github.com/factly/mande-server/test/tag"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/product"
+	"github.com/factly/mande-server/test"
+	"github.com/factly/mande-server/test/medium"
+	"github.com/factly/mande-server/test/product"
 	"github.com/gavv/httpexpect"
 )
 

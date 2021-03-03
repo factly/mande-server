@@ -3,7 +3,7 @@ package plan
 import (
 	"net/http"
 
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/paginationx"
 	"github.com/factly/x/renderx"
 )

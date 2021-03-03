@@ -5,14 +5,14 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/factly/data-portal-server/test/product"
+	"github.com/factly/mande-server/test/product"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/catalog"
-	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/payment"
-	"github.com/factly/data-portal-server/test/plan"
+	"github.com/factly/mande-server/test"
+	"github.com/factly/mande-server/test/catalog"
+	"github.com/factly/mande-server/test/currency"
+	"github.com/factly/mande-server/test/payment"
+	"github.com/factly/mande-server/test/plan"
 	"github.com/gavv/httpexpect"
 )
 

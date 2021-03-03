@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/factly/data-portal-server/cmd"
+	"github.com/factly/mande-server/cmd"
 )
 
 // @title Data portal API

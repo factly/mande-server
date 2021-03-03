@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/mande-server/util/razorpay"
 
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/meilisearchx"

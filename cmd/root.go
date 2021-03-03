@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"github.com/factly/data-portal-server/config"
+	"github.com/factly/mande-server/config"
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "data-portal-server",
-	Short: "data-portal-server is backend for MandE application",
+	Use:   "mande-server",
+	Short: "mande-server is backend for MandE application",
 	Long:  `MandE server is developed in Go. Manage datasets available for download in multiple formats including APIs.`,
 }
 
