@@ -64,7 +64,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:dataportal:membership:" + fmt.Sprint(memID) + ":users")
+	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:mande:membership:" + fmt.Sprint(memID) + ":users")
 
 	resp, err := keto.GetPolicy("/engines/acp/ory/regex/roles/" + adminRoleID)
 	if err != nil {

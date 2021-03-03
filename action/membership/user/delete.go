@@ -90,7 +90,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:dataportal:membership:" + fmt.Sprint(memID) + ":users")
+	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:mande:membership:" + fmt.Sprint(memID) + ":users")
 
 	resp, err := keto.GetPolicy("/engines/acp/ory/regex/roles/" + adminRoleID)
 	if err != nil {
@@ -118,7 +118,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = keto.DeletePolicy("roles:org:" + fmt.Sprint(oID) + "app:dataportal:membership:" + fmt.Sprint(memID) + ":users/members/" + fmt.Sprint(userID))
+	err = keto.DeletePolicy("roles:org:" + fmt.Sprint(oID) + "app:mande:membership:" + fmt.Sprint(memID) + ":users/members/" + fmt.Sprint(userID))
 
 	if err != nil {
 		loggerx.Error(err)

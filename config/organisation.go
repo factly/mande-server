@@ -31,7 +31,7 @@ var ketoPolicyPath string = "/engines/acp/ory/regex/policies"
 // CheckSuperOrganisation checks if super organisation is present in kavach or not
 func CheckSuperOrganisation() bool {
 	// check if policy is present in keto
-	req, _ := http.NewRequest("GET", viper.GetString("keto_url")+ketoPolicyPath+"/app:dataportal:superorg", nil)
+	req, _ := http.NewRequest("GET", viper.GetString("keto_url")+ketoPolicyPath+"/app:mande:superorg", nil)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -245,7 +245,7 @@ func createKavachOrganisation(userID string) (*http.Response, error) {
 
 func createKetoPolicy(organisationID uint) (*http.Response, error) {
 	policy := model.KetoPolicy{
-		ID:        "app:dataportal:superorg",
+		ID:        "app:mande:superorg",
 		Subjects:  []string{fmt.Sprint(organisationID)},
 		Resources: []string{fmt.Sprint("resources:org:", organisationID, ":<.*>")},
 		Actions:   []string{fmt.Sprint("actions:org:", organisationID, ":<.*>")},

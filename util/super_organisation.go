@@ -25,7 +25,7 @@ func CheckSuperOrganisation(h http.Handler) http.Handler {
 			return
 		}
 
-		superOrgID, err := middlewarex.GetSuperOrganisationID("dataportal")
+		superOrgID, err := middlewarex.GetSuperOrganisationID("mande")
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return

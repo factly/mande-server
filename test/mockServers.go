@@ -149,7 +149,7 @@ func RazorpayGock() {
 }
 
 var Dummy_SinglePolicy = map[string]interface{}{
-	"id":          "app:dataportal:superorg",
+	"id":          "app:mande:superorg",
 	"description": "",
 	"subjects": []string{
 		"1",

@@ -17,7 +17,7 @@
 DATABASE_HOST=postgres 
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=dataportal 
+DATABASE_NAME=mande 
 DATABASE_PORT=5432 
 DATABASE_SSL_MODE=disable
 MODE=development
