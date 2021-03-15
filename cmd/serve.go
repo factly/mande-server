@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/factly/data-portal-server/action"
-	"github.com/factly/data-portal-server/model"
-	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/mande-server/action"
+	"github.com/factly/mande-server/model"
+	"github.com/factly/mande-server/util/razorpay"
 	"github.com/factly/x/meilisearchx"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ func init() {
 
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Starts server for data-portal-server.",
+	Short: "Starts server for mande-server.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// db setup
 		model.SetupDB()

@@ -3,7 +3,7 @@ FROM golang:1.13-alpine AS build_base
 RUN apk add --no-cache git
 
 # Set the Current Working Directory inside the container
-WORKDIR /tmp/data-portal-server
+WORKDIR /tmp/mande-server
 
 # We want to populate the module cache based on the go.{mod,sum} files.
 COPY go.mod .
@@ -17,14 +17,14 @@ COPY . .
 # RUN CGO_ENABLED=0 go test -v
 
 # Build the Go app
-RUN go build -o ./out/data-portal-server .
+RUN go build -o ./out/mande-server .
 
 # Start fresh from a smaller image
 FROM alpine:3.9 
 RUN apk add ca-certificates
 
-COPY --from=build_base /tmp/data-portal-server/out/data-portal-server /app/data-portal-server
+COPY --from=build_base /tmp/mande-server/out/mande-server /app/mande-server
 
 # Run the binary program produced by `go install`
-ENTRYPOINT ["/app/data-portal-server"]
+ENTRYPOINT ["/app/mande-server"]
 CMD ["serve"]

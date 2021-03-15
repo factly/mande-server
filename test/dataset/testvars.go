@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/format"
-	"github.com/factly/data-portal-server/test/medium"
-	"github.com/factly/data-portal-server/test/tag"
+	"github.com/factly/mande-server/test"
+	"github.com/factly/mande-server/test/currency"
+	"github.com/factly/mande-server/test/format"
+	"github.com/factly/mande-server/test/medium"
+	"github.com/factly/mande-server/test/tag"
 	"github.com/gavv/httpexpect"
 	"github.com/jinzhu/gorm/dialects/postgres"
 )

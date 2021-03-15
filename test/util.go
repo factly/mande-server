@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/meilisearchx"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/spf13/viper"

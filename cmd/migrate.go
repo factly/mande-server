@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +11,7 @@ func init() {
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
-	Short: "Applies database migrations for data-portal-server.",
+	Short: "Applies database migrations for mande-server.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// db setup
 		model.SetupDB()

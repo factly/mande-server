@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/factly/data-portal-server/util"
-	"github.com/factly/data-portal-server/util/keto"
-	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/mande-server/util"
+	"github.com/factly/mande-server/util/keto"
+	"github.com/factly/mande-server/util/razorpay"
 
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/meilisearchx"
@@ -171,7 +171,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 		/* creating user groups of membership */
 		reqRole := &model.Role{}
-		reqRole.ID = "roles:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":users"
+		reqRole.ID = "roles:org:" + fmt.Sprint(oID) + ":app:mande:membership:" + fmt.Sprint(membership.ID) + ":users"
 		reqRole.Members = []string{fmt.Sprint(uID)}
 
 		err = keto.UpdateRole("/engines/acp/ory/regex/roles", reqRole)
@@ -185,10 +185,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 		/* creating policy for plan users */
 		reqPolicy := &model.KetoPolicy{}
-		reqPolicy.ID = "id:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":users"
+		reqPolicy.ID = "id:org:" + fmt.Sprint(oID) + ":app:mande:membership:" + fmt.Sprint(membership.ID) + ":users"
 		reqPolicy.Subjects = []string{reqRole.ID}
-		reqPolicy.Resources = []string{"resources:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
-		reqPolicy.Actions = []string{"actions:org:" + fmt.Sprint(oID) + ":app:dataportal:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
+		reqPolicy.Resources = []string{"resources:org:" + fmt.Sprint(oID) + ":app:mande:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
+		reqPolicy.Actions = []string{"actions:org:" + fmt.Sprint(oID) + ":app:mande:membership:" + fmt.Sprint(membership.ID) + ":<.*>"}
 		reqPolicy.Effect = "allow"
 
 		err = keto.UpdatePolicy("/engines/acp/ory/regex/policies", reqPolicy)

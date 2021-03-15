@@ -3,8 +3,8 @@ package cmd
 import (
 	"log"
 
-	"github.com/factly/data-portal-server/config"
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/config"
+	"github.com/factly/mande-server/model"
 	"github.com/spf13/cobra"
 )
 

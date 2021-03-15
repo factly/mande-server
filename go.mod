@@ -1,4 +1,4 @@
-module github.com/factly/data-portal-server
+module github.com/factly/mande-server
 
 go 1.14
 

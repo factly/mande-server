@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/factly/data-portal-server/util/razorpay"
+	"github.com/factly/mande-server/util/razorpay"
 	"github.com/spf13/viper"
 
 	"gopkg.in/h2non/gock.v1"
@@ -149,7 +149,7 @@ func RazorpayGock() {
 }
 
 var Dummy_SinglePolicy = map[string]interface{}{
-	"id":          "app:dataportal:superorg",
+	"id":          "app:mande:superorg",
 	"description": "",
 	"subjects": []string{
 		"1",

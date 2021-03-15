@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
+	"github.com/factly/mande-server/test"
 	"gopkg.in/h2non/gock.v1"
 
-	"github.com/factly/data-portal-server/action"
+	"github.com/factly/mande-server/action"
 	"github.com/gavv/httpexpect"
 )
 

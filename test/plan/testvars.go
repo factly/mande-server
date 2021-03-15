@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/factly/data-portal-server/test"
-	"github.com/factly/data-portal-server/test/catalog"
-	"github.com/factly/data-portal-server/test/currency"
-	"github.com/factly/data-portal-server/test/dataset"
-	"github.com/factly/data-portal-server/test/product"
-	"github.com/factly/data-portal-server/test/tag"
+	"github.com/factly/mande-server/test"
+	"github.com/factly/mande-server/test/catalog"
+	"github.com/factly/mande-server/test/currency"
+	"github.com/factly/mande-server/test/dataset"
+	"github.com/factly/mande-server/test/product"
+	"github.com/factly/mande-server/test/tag"
 )
 
 var headers = map[string]string{

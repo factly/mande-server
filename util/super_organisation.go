@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/factly/data-portal-server/model"
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/middlewarex"
 	"github.com/spf13/viper"
 )
@@ -25,7 +25,7 @@ func CheckSuperOrganisation(h http.Handler) http.Handler {
 			return
 		}
 
-		superOrgID, err := middlewarex.GetSuperOrganisationID("dataportal")
+		superOrgID, err := middlewarex.GetSuperOrganisationID("mande")
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
