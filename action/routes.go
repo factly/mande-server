@@ -101,7 +101,7 @@ func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
 
-	r.With(middlewarex.CheckUser, util.CheckOrganisation, middlewarex.CheckAccess("data-portal", 0, util.GetOrganisation), util.CheckSuperOrganisation).Group(func(r chi.Router) {
+	r.With(middlewarex.CheckUser, util.CheckOrganisation, middlewarex.CheckAccess("mande", 0, util.GetOrganisation), util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.AdminRouter())
 		r.Mount("/plans", plan.AdminRouter())

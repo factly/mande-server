@@ -57,7 +57,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = meilisearchx.DeleteDocument("data-portal", result.ID, "cartitem")
+	err = meilisearchx.DeleteDocument("mande", result.ID, "cartitem")
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

@@ -121,7 +121,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"users":        plan.Users,
 	}
 
-	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
+	err = meilisearchx.UpdateDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

@@ -115,7 +115,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"is_public":     dataset.IsPublic,
 	}
 
-	err = meilisearchx.AddDocument("data-portal", meiliObj)
+	err = meilisearchx.AddDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

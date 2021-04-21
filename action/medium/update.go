@@ -102,7 +102,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"dimensions":  result.Dimensions,
 	}
 
-	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
+	err = meilisearchx.UpdateDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

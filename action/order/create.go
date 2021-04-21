@@ -134,7 +134,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"payment_id": result.PaymentID,
 	}
 
-	err = meilisearchx.AddDocument("data-portal", meiliObj)
+	err = meilisearchx.AddDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

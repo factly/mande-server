@@ -92,7 +92,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"product_ids":    catalog.ProductIDs,
 	}
 
-	err = meilisearchx.AddDocument("data-portal", meiliObj)
+	err = meilisearchx.AddDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

@@ -213,7 +213,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"status":      result.Status,
 	}
 
-	err = meilisearchx.AddDocument("data-portal", meiliObj)
+	err = meilisearchx.AddDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
