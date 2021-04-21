@@ -6,6 +6,7 @@ import "gorm.io/gorm"
 type Product struct {
 	Base
 	Title            string    `gorm:"column:title" json:"title" validate:"required"`
+	Description      string    `gorm:"column:description" json:"description"`
 	Slug             string    `gorm:"column:slug" json:"slug" validate:"required"`
 	Price            int       `gorm:"column:price" json:"price" validate:"required"`
 	Status           string    `gorm:"column:status" json:"status" validate:"required"`
