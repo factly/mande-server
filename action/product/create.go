@@ -66,6 +66,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		Status:           product.Status,
 		CurrencyID:       product.CurrencyID,
 		FeaturedMediumID: featuredMediumID,
+		Description:      product.Description,
 	}
 
 	if len(product.TagIDs) > 0 {
@@ -99,6 +100,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"currency_id": result.CurrencyID,
 		"tag_ids":     product.TagIDs,
 		"dataset_ids": product.DatasetIDs,
+		"description": result.Description,
 	}
 
 	err = meilisearchx.AddDocument("data-portal", meiliObj)

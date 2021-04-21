@@ -9,17 +9,19 @@ import (
 
 // Dataset request body
 type dataset struct {
-	Title            string         `json:"title"`
-	Description      string         `json:"description"`
-	Source           string         `json:"source"`
-	Frequency        string         `json:"frequency"`
-	TemporalCoverage string         `json:"temporal_coverage"`
-	Granularity      string         `json:"granularity"`
-	ContactName      string         `json:"contact_name"`
-	ContactEmail     string         `json:"contact_email"`
-	License          string         `json:"license"`
+	Title            string         `json:"title" validate:"required"`
+	Description      string         `json:"description" validate:"required"`
+	Source           string         `json:"source" validate:"required"`
+	Frequency        string         `json:"frequency" validate:"required"`
+	TemporalCoverage string         `json:"temporal_coverage" validate:"required"`
+	Granularity      string         `json:"granularity" validate:"required"`
+	ContactName      string         `json:"contact_name" validate:"required"`
+	ContactEmail     string         `json:"contact_email" validate:"required"`
+	License          string         `json:"license" validate:"required"`
 	DataStandard     string         `json:"data_standard"`
 	SampleURL        string         `json:"sample_url"`
+	ProfilingURL     string         `json:"profiling_url" validate:"required"`
+	IsPublic         bool           `json:"is_public" validate:"required"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `json:"time_saved"`
 	Price            int            `json:"price" validate:"required"`
@@ -44,6 +46,7 @@ func PublicRouter() chi.Router {
 
 	r.Route("/{dataset_id}", func(r chi.Router) {
 		r.Get("/", userDetails) // GET /datasets/{dataset_id} - read a single dataset by :dataset_id
+		r.Mount("/format", format.UserRouter())
 	})
 
 	return r

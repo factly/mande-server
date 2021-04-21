@@ -14,6 +14,7 @@ type product struct {
 	FeaturedMediumID uint   `json:"featured_medium_id"`
 	DatasetIDs       []uint `json:"dataset_ids"`
 	TagIDs           []uint `json:"tag_ids"`
+	Description      string `json:"description"`
 }
 
 var userContext model.ContextKey = "product_user"

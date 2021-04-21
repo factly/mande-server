@@ -121,6 +121,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
 		FeaturedMediumID: featuredMediumID,
+		ProfilingURL:     dataset.ProfilingURL,
+		IsPublic:         dataset.IsPublic,
 	}).Preload("FeaturedMedium").Preload("Currency").Preload("Tags").First(&result.Dataset).Error
 
 	if err != nil {
@@ -150,6 +152,8 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"price":         result.Price,
 		"currency_id":   result.CurrencyID,
 		"tag_IDs":       dataset.TagIDs,
+		"profiling_url": dataset.ProfilingURL,
+		"is_public":     dataset.IsPublic,
 	}
 
 	err = meilisearchx.UpdateDocument("data-portal", meiliObj)

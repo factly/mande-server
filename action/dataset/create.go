@@ -76,6 +76,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		FeaturedMediumID: featuredMediumID,
 		Price:            dataset.Price,
 		CurrencyID:       dataset.CurrencyID,
+		ProfilingURL:     dataset.ProfilingURL,
+		IsPublic:         dataset.IsPublic,
 	}
 
 	if len(dataset.TagIDs) > 0 {
@@ -109,6 +111,8 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"price":         result.Price,
 		"currency_id":   result.CurrencyID,
 		"tag_IDs":       dataset.TagIDs,
+		"profiling_url": dataset.ProfilingURL,
+		"is_public":     dataset.IsPublic,
 	}
 
 	err = meilisearchx.AddDocument("data-portal", meiliObj)

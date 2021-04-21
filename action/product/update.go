@@ -127,6 +127,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Price:            product.Price,
 		FeaturedMediumID: featuredMediumID,
 		Slug:             product.Slug,
+		Description:      product.Description,
 	}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result).Error
 
 	if err != nil {
@@ -147,6 +148,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"currency_id": result.CurrencyID,
 		"tag_ids":     product.TagIDs,
 		"dataset_ids": product.DatasetIDs,
+		"description": result.Description,
 	}
 
 	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
