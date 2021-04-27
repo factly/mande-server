@@ -89,7 +89,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"is_default":  result.IsDefault,
 	}
 
-	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
+	err = meilisearchx.UpdateDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)

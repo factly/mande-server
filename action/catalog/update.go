@@ -129,7 +129,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"product_ids":    catalog.ProductIDs,
 	}
 
-	err = meilisearchx.UpdateDocument("data-portal", meiliObj)
+	err = meilisearchx.UpdateDocument("mande", meiliObj)
 	if err != nil {
 		tx.Rollback()
 		loggerx.Error(err)
