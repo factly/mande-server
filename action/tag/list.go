@@ -8,7 +8,6 @@ import (
 	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/paginationx"
 	"github.com/factly/x/renderx"
-	"log"
 )
 
 // list response
@@ -45,9 +44,6 @@ func list(w http.ResponseWriter, r *http.Request) {
 		var hits []interface{}
 
 		hits, err = meilisearchx.SearchWithQuery("mande", searchQuery, "", "tag")
-
-		log.Println("hits", hits)
-		log.Println("hits err", err)
 
 		if err != nil {
 			loggerx.Error(err)

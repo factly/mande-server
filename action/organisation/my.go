@@ -141,5 +141,5 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderx.JSON(w, http.StatusUnauthorized, allOrg)
+	renderx.JSON(w, http.StatusOK, allOrg)
 }
