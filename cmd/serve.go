@@ -22,7 +22,7 @@ var serveCmd = &cobra.Command{
 		// db setup
 		model.SetupDB()
 
-		meilisearchx.SetupMeiliSearch("data-portal", []string{"name", "slug", "description", "title", "contact_name", "contact_email", "license", "caption", "alt_text", "plan_name", "plan_info"})
+		meilisearchx.SetupMeiliSearch("mande", []string{"name", "slug", "description", "title", "contact_name", "contact_email", "license", "caption", "alt_text", "plan_name", "plan_info"})
 
 		razorpay.SetupClient()
 

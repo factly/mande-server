@@ -42,7 +42,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := meilisearchx.Client.Search("data-portal").Search(meilisearch.SearchRequest{
+	result, err := meilisearchx.Client.Search("mande").Search(meilisearch.SearchRequest{
 		Query:        searchQuery.Query,
 		Limit:        searchQuery.Limit,
 		Filters:      searchQuery.Filters,
