@@ -19,6 +19,8 @@ type Dataset struct {
 	License          string         `gorm:"column:license" json:"license"`
 	DataStandard     string         `gorm:"column:data_standard" json:"data_standard"`
 	SampleURL        string         `gorm:"column:sample_url" json:"sample_url"`
+	ProfilingURL     string         `gorm:"column:profiling_url" json:"profiling_url"`
+	IsPublic         bool           `gorm:"column:is_public" json:"is_public"`
 	RelatedArticles  postgres.Jsonb `gorm:"column:related_articles" json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `gorm:"column:time_saved" json:"time_saved"`
 	Price            int            `gorm:"column:price" json:"price" validate:"required"`
