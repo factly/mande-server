@@ -19,6 +19,7 @@ import (
 	"github.com/factly/mande-server/action/membership"
 	"github.com/factly/mande-server/action/membership/user"
 	"github.com/factly/mande-server/action/order"
+	"github.com/factly/mande-server/action/organisation"
 	"github.com/factly/mande-server/action/payment"
 	"github.com/factly/mande-server/action/plan"
 	"github.com/factly/mande-server/action/product"
@@ -78,6 +79,10 @@ func RegisterUserRoutes() http.Handler {
 	r.Mount("/datasets", dataset.PublicRouter())
 	r.Mount("/plans", plan.UserRouter())
 
+	r.With(middlewarex.CheckUser).Group(func(r chi.Router) {
+		r.Mount("/organisations", organisation.UserRouter())
+	})
+
 	r.With(middlewarex.CheckUser, util.CheckOrganisation).Group(func(r chi.Router) {
 
 		r.Mount("/currencies", currency.UserRouter())
@@ -100,6 +105,10 @@ func RegisterUserRoutes() http.Handler {
 func RegisterAdminRoutes() http.Handler {
 
 	r := GetCommonRouter()
+
+	r.With(middlewarex.CheckUser).Group(func(r chi.Router) {
+		r.Mount("/organisations", organisation.AdminRouter())
+	})
 
 	r.With(middlewarex.CheckUser, util.CheckOrganisation, middlewarex.CheckAccess("mande", 0, util.GetOrganisation), util.CheckSuperOrganisation).Group(func(r chi.Router) {
 
