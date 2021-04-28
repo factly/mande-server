@@ -1,6 +1,8 @@
 package dataset
 
 import (
+	"time"
+
 	"github.com/factly/mande-server/action/dataset/format"
 	"github.com/factly/mande-server/model"
 	"github.com/go-chi/chi"
@@ -12,18 +14,24 @@ type dataset struct {
 	Title            string         `json:"title" validate:"required"`
 	Description      string         `json:"description" validate:"required"`
 	Source           string         `json:"source" validate:"required"`
-	Frequency        string         `json:"frequency" validate:"required"`
+	SourceLink       string         `json:"source_link" validate:"required"`
+	ArchiveLink      string         `json:"archive_link"`
+	Sectors          string         `json:"sectors" validate:"required"`
+	Organisation     string         `json:"organisation" validate:"required"`
+	NextUpdate       *time.Time     `json:"next_update"`
+	Units            string         `json:"units"`
+	Frequency        string         `json:"frequency" `
 	TemporalCoverage string         `json:"temporal_coverage" validate:"required"`
 	Granularity      string         `json:"granularity" validate:"required"`
-	ContactName      string         `json:"contact_name" validate:"required"`
-	ContactEmail     string         `json:"contact_email" validate:"required"`
-	License          string         `json:"license" validate:"required"`
+	ContactName      string         `json:"contact_name"`
+	ContactEmail     string         `json:"contact_email"`
+	License          string         `json:"license"`
 	DataStandard     string         `json:"data_standard"`
 	SampleURL        string         `json:"sample_url"`
 	ProfilingURL     string         `json:"profiling_url" validate:"required"`
 	IsPublic         bool           `json:"is_public" validate:"required"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles" swaggertype:"primitive,string"`
-	TimeSaved        int            `json:"time_saved"`
+	TimeSaved        int            `json:"time_saved" validate:"required"`
 	Price            int            `json:"price" validate:"required"`
 	CurrencyID       uint           `json:"currency_id"`
 	FeaturedMediumID uint           `json:"featured_medium_id"`

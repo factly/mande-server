@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm/dialects/postgres"
 	"gorm.io/gorm"
 )
@@ -11,6 +13,12 @@ type Dataset struct {
 	Title            string         `gorm:"column:title" json:"title"`
 	Description      string         `gorm:"column:description" json:"description"`
 	Source           string         `gorm:"column:source" json:"source"`
+	SourceLink       string         `gorm:"column:source_link" json:"source_link"`
+	ArchiveLink      string         `gorm:"column:archive_link" json:"archive_link"`
+	Sectors          string         `gorm:"column:sectors" json:"sectors"`
+	Organisation     string         `gorm:"column:organisation" json:"organisation"`
+	Units            string         `gorm:"column:units" json:"units"`
+	NextUpdate       *time.Time     `gorm:"column:next_update" json:"next_update"  sql:"DEFAULT:NULL"`
 	Frequency        string         `gorm:"column:frequency" json:"frequency"`
 	TemporalCoverage string         `gorm:"column:temporal_coverage" json:"temporal_coverage"`
 	Granularity      string         `gorm:"column:granularity" json:"granularity"`

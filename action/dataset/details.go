@@ -7,7 +7,6 @@ import (
 	"github.com/factly/mande-server/model"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
-	"github.com/factly/x/middlewarex"
 	"github.com/factly/x/renderx"
 	"github.com/go-chi/chi"
 )
@@ -26,12 +25,12 @@ import (
 // @Router /datasets/{dataset_id} [get]
 func userDetails(w http.ResponseWriter, r *http.Request) {
 
-	uID, err := middlewarex.GetUser(r.Context())
-	if err != nil {
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
-		return
-	}
+	// uID, err := middlewarex.GetUser(r.Context())
+	// if err != nil {
+	// 	loggerx.Error(err)
+	// 	errorx.Render(w, errorx.Parser(errorx.InvalidID()))
+	// 	return
+	// }
 
 	datasetID := chi.URLParam(r, "dataset_id")
 	id, err := strconv.Atoi(datasetID)
@@ -54,12 +53,12 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check if the user owns dataset
-	if checkOrderAssociation(uID, id) != 0 {
-		model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
-			DatasetID: uint(id),
-		}).Preload("Format").Find(&result.Formats)
-	}
+	// // Check if the user owns dataset
+	// if checkOrderAssociation(uID, id) != 0 {
+	model.DB.Model(&model.DatasetFormat{}).Where(&model.DatasetFormat{
+		DatasetID: uint(id),
+	}).Preload("Format").Find(&result.Formats)
+	//}
 
 	renderx.JSON(w, http.StatusOK, result)
 }
