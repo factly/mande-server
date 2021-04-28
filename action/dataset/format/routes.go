@@ -13,6 +13,15 @@ type datasetFormat struct {
 
 var userContext model.ContextKey = "dataset_user"
 
+// UserRouter - Group of tag router
+func UserRouter() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", list)
+
+	return r
+}
+
 // AdminRouter - Group of tag router
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()

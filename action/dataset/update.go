@@ -108,6 +108,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 		Title:            dataset.Title,
 		Description:      dataset.Description,
 		Source:           dataset.Source,
+		SourceLink:       dataset.SourceLink,
+		ArchiveLink:      dataset.ArchiveLink,
+		Sectors:          dataset.Sectors,
+		Organisation:     dataset.Organisation,
+		Units:            dataset.Units,
+		NextUpdate:       dataset.NextUpdate,
 		Frequency:        dataset.Frequency,
 		TemporalCoverage: dataset.TemporalCoverage,
 		Granularity:      dataset.Granularity,
@@ -136,6 +142,11 @@ func update(w http.ResponseWriter, r *http.Request) {
 		DatasetID: uint(id),
 	}).Preload("Format").Find(&result.Formats)
 
+	var meiliNextUpdateDate int64 = 0
+	if result.NextUpdate != nil {
+		meiliNextUpdateDate = result.NextUpdate.Unix()
+	}
+
 	// Update into meili index
 	meiliObj := map[string]interface{}{
 		"id":            result.ID,
@@ -143,6 +154,12 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"title":         result.Title,
 		"description":   result.Description,
 		"source":        result.Source,
+		"source_link":   dataset.SourceLink,
+		"archive_link":  dataset.ArchiveLink,
+		"sectors":       dataset.Sectors,
+		"organisation":  dataset.Organisation,
+		"units":         dataset.Units,
+		"next_update":   meiliNextUpdateDate,
 		"frequency":     result.Frequency,
 		"granuality":    result.Granularity,
 		"contact_name":  result.ContactName,
