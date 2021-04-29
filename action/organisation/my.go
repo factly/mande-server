@@ -87,6 +87,7 @@ func my(w http.ResponseWriter, r *http.Request) {
 	for _, org := range allOrg {
 		if org.ID == uint(superOrgID) {
 			renderx.JSON(w, http.StatusOK, org)
+			return
 		}
 	}
 
