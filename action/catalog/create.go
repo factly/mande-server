@@ -85,6 +85,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	tx.Preload("FeaturedMedium").Preload("Currency").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
 
+	var meiliPublishedDate int64 = 0
+	if result.PublishedDate != nil {
+		meiliPublishedDate = result.PublishedDate.Unix()
+	}
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
 		"id":             result.ID,
@@ -94,7 +98,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		"price":          result.Price,
 		"currency_id":    result.CurrencyID,
 		"description":    result.Description,
-		"published_date": result.PublishedDate.Unix(),
+		"published_date": meiliPublishedDate,
 		"product_ids":    catalog.ProductIDs,
 	}
 

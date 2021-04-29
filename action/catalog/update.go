@@ -122,6 +122,11 @@ func update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var meiliPublishedDate int64 = 0
+	if result.PublishedDate != nil {
+		meiliPublishedDate = result.PublishedDate.Unix()
+	}
+
 	// Update into meili index
 	meiliObj := map[string]interface{}{
 		"id":             result.ID,
@@ -131,7 +136,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		"price":          result.Price,
 		"currency_id":    result.CurrencyID,
 		"description":    result.Description,
-		"published_date": result.PublishedDate.Unix(),
+		"published_date": meiliPublishedDate,
 		"product_ids":    catalog.ProductIDs,
 	}
 

@@ -13,7 +13,7 @@ type Product struct {
 	FeaturedMediumID *uint     `gorm:"column:featured_medium_id;default:NULL" json:"featured_medium_id"`
 	FeaturedMedium   *Medium   `gorm:"foreignKey:featured_medium_id"  json:"featured_medium"`
 	CurrencyID       uint      `gorm:"column:currency_id" json:"currency_id"`
-	Currency         *Currency `gorm:"foreignKey:currency_id"  json:"currency"`
+	Currency         Currency  `gorm:"foreignKey:currency_id"  json:"currency"`
 	Catalogs         []Catalog `gorm:"many2many:catalog_product;" json:"catalogs"`
 	Tags             []Tag     `gorm:"many2many:product_tag;" json:"tags"`
 	Datasets         []Dataset `gorm:"many2many:product_dataset;" json:"datasets"`

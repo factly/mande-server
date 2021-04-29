@@ -13,7 +13,7 @@ type Catalog struct {
 	Slug             string     `gorm:"column:slug" json:"slug"`
 	Price            int        `gorm:"column:price" json:"price"`
 	CurrencyID       uint       `gorm:"column:currency_id" json:"currency_id"`
-	Currency         *Currency  `gorm:"foreignKey:currency_id"  json:"currency"`
+	Currency         Currency   `gorm:"foreignKey:currency_id"  json:"currency"`
 	Description      string     `gorm:"column:description" json:"description"`
 	FeaturedMediumID *uint      `gorm:"column:featured_medium_id;default:NULL" json:"featured_medium_id"`
 	FeaturedMedium   *Medium    `gorm:"foreignKey:featured_medium_id"  json:"featured_medium"`
