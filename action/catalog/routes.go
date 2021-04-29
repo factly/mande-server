@@ -9,11 +9,14 @@ import (
 
 // Catalog request body
 type catalog struct {
-	Title            string    `json:"title" validate:"required"`
-	Description      string    `json:"description" `
-	FeaturedMediumID uint      `json:"featured_medium_id"`
-	PublishedDate    time.Time `json:"published_date" validate:"required"`
-	ProductIDs       []uint    `json:"product_ids"`
+	Title            string     `json:"title" validate:"required"`
+	Slug             string     `json:"slug" validate:"required"`
+	Price            int        `json:"price" validate:"required"`
+	Description      string     `json:"description"`
+	CurrencyID       uint       `json:"currency_id"`
+	FeaturedMediumID uint       `json:"featured_medium_id"`
+	PublishedDate    *time.Time `json:"published_date"`
+	ProductIDs       []uint     `json:"product_ids"`
 }
 
 var userContext model.ContextKey = "catalog_user"
