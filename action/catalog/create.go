@@ -61,6 +61,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	result = model.Catalog{
 		Title:            catalog.Title,
+		Slug:             catalog.Slug,
+		Price:            catalog.Price,
+		CurrencyID:       catalog.CurrencyID,
 		Description:      catalog.Description,
 		FeaturedMediumID: featuredMediumID,
 		PublishedDate:    catalog.PublishedDate,
@@ -80,13 +83,16 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tx.Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
+	tx.Preload("FeaturedMedium").Preload("Currency").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result)
 
 	// Insert into meili index
 	meiliObj := map[string]interface{}{
 		"id":             result.ID,
 		"kind":           "catalog",
 		"title":          result.Title,
+		"slug":           result.Slug,
+		"price":          result.Price,
+		"currency_id":    result.CurrencyID,
 		"description":    result.Description,
 		"published_date": result.PublishedDate.Unix(),
 		"product_ids":    catalog.ProductIDs,
