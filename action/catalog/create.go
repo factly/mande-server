@@ -69,6 +69,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 		PublishedDate:    catalog.PublishedDate,
 	}
 
+	if len(catalog.ProductTitles) > 0 {
+		model.DB.Model(&model.Product{}).Where("title IN ?", catalog.ProductTitles).Find(&result.Products)
+	}
+
 	if len(catalog.ProductIDs) > 0 {
 		model.DB.Model(&model.Product{}).Where(catalog.ProductIDs).Find(&result.Products)
 	}

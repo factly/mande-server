@@ -99,23 +99,30 @@ func userDetails(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {array} string
 // @Router /products/{product_id} [get]
 func adminDetails(w http.ResponseWriter, r *http.Request) {
+	result := &model.Product{}
+	tx := model.DB.Model(&model.Product{}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets")
 
 	productID := chi.URLParam(r, "product_id")
 	id, err := strconv.Atoi(productID)
 
 	if err != nil {
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
-		return
+		tx.Where(&model.Product{
+			Title: productID,
+		})
+	} else {
+		tx.Where(&model.Product{
+			Base: model.Base{
+				ID: uint(id),
+			},
+		})
 	}
 
-	result := &model.Product{}
 	result.Tags = make([]model.Tag, 0)
 	result.Datasets = make([]model.Dataset, 0)
 
 	result.ID = uint(id)
 
-	err = model.DB.Model(&model.Product{}).Preload("Currency").Preload("FeaturedMedium").Preload("Tags").Preload("Datasets").First(&result).Error
+	err = tx.First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)
