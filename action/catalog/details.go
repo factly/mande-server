@@ -24,20 +24,25 @@ import (
 // @Failure 400 {array} string
 // @Router /catalogs/{catalog_id} [get]
 func details(w http.ResponseWriter, r *http.Request) {
+	result := &model.Catalog{}
+	tx := model.DB.Model(&model.Catalog{}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets")
 
 	catalogID := chi.URLParam(r, "catalog_id")
 	id, err := strconv.Atoi(catalogID)
 
 	if err != nil {
-		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.InvalidID()))
-		return
+		tx.Where(&model.Catalog{
+			Title: catalogID,
+		})
+	} else {
+		tx.Where(&model.Catalog{
+			Base: model.Base{
+				ID: uint(id),
+			},
+		})
 	}
 
-	result := &model.Catalog{}
-	result.ID = uint(id)
-
-	err = model.DB.Model(&model.Catalog{}).Preload("FeaturedMedium").Preload("Products").Preload("Products.Currency").Preload("Products.FeaturedMedium").Preload("Products.Tags").Preload("Products.Datasets").First(&result).Error
+	err = tx.First(&result).Error
 
 	if err != nil {
 		loggerx.Error(err)

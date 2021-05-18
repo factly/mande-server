@@ -14,7 +14,7 @@ type dataset struct {
 	Title            string         `json:"title" validate:"required"`
 	Description      string         `json:"description" validate:"required"`
 	Source           string         `json:"source" validate:"required"`
-	SourceLink       string         `json:"source_link" validate:"required"`
+	SourceLink       string         `json:"source_link"`
 	ArchiveLink      string         `json:"archive_link"`
 	Sectors          string         `json:"sectors" validate:"required"`
 	Organisation     string         `json:"organisation" validate:"required"`

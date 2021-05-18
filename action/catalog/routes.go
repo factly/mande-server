@@ -17,6 +17,7 @@ type catalog struct {
 	FeaturedMediumID uint       `json:"featured_medium_id"`
 	PublishedDate    *time.Time `json:"published_date"`
 	ProductIDs       []uint     `json:"product_ids"`
+	ProductTitles    []string   `json:"product_titles"`
 }
 
 var userContext model.ContextKey = "catalog_user"
