@@ -16,6 +16,7 @@ import (
 	"github.com/factly/mande-server/action/dataset"
 	"github.com/factly/mande-server/action/format"
 	"github.com/factly/mande-server/action/medium"
+	"github.com/factly/mande-server/action/member"
 	"github.com/factly/mande-server/action/membership"
 	"github.com/factly/mande-server/action/membership/user"
 	"github.com/factly/mande-server/action/order"
@@ -96,6 +97,7 @@ func RegisterUserRoutes() http.Handler {
 		r.Mount("/media", medium.UserRouter())
 		r.Mount("/search", search.Router())
 		r.Mount("/users", userList.UserListRouter())
+		r.Mount("/members", member.Router())
 
 	})
 	return r
