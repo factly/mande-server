@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/factly/mande-server/action/member"
 	"github.com/factly/mande-server/model"
 	"github.com/factly/mande-server/util"
 	"github.com/factly/mande-server/util/keto"
@@ -16,8 +17,8 @@ import (
 )
 
 type paging struct {
-	Nodes []int `json:"nodes"`
-	Total int   `json:"total"`
+	Nodes []model.Member `json:"nodes"`
+	Total int            `json:"total"`
 }
 
 // list - List Membership users
@@ -64,7 +65,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + "app:mande:membership:" + fmt.Sprint(memID) + ":users")
+	adminRoleID := fmt.Sprint("roles:org:" + fmt.Sprint(oID) + ":app:mande:membership:" + fmt.Sprint(memID) + ":users")
 
 	resp, err := keto.GetPolicy("/engines/acp/ory/regex/roles/" + adminRoleID)
 	if err != nil {
@@ -84,10 +85,19 @@ func list(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := paging{}
+	result.Nodes = make([]model.Member, 0)
+
+	// Get members
+	members, err := member.All(r.Context())
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
 
 	for _, each := range adminRole.Members {
-		id, _ := strconv.Atoi(each)
-		result.Nodes = append(result.Nodes, id)
+		result.Nodes = append(result.Nodes, members[each])
 	}
 
 	result.Total = len(adminRole.Members)
