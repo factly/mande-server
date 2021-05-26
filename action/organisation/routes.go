@@ -6,7 +6,7 @@ import "github.com/go-chi/chi"
 func UserRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list) // GET /organisations - return list of orgs
+	r.Get("/my", list) // GET /organisations - return list of orgs
 
 	return r
 }
