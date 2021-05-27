@@ -32,6 +32,39 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/organisations/my": {
+            "get": {
+                "description": "Get all org",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Organisation"
+                ],
+                "summary": "Get all org",
+                "operationId": "get-all-organisation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organisation.organisationApplication"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/cartitems": {
             "get": {
                 "description": "Get all carts",
@@ -546,6 +579,55 @@ var doc = `{
                 }
             }
         },
+        "/core/members": {
+            "get": {
+                "description": "Get all members",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Show all members",
+                "operationId": "get-all-members",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Space ID",
+                        "name": "X-Space",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limit per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/member.paging"
+                        }
+                    }
+                }
+            }
+        },
         "/currencies": {
             "get": {
                 "description": "Get all currencies",
@@ -634,6 +716,52 @@ var doc = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Currency"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/currencies/default": {
+            "post": {
+                "description": "Create default currency",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "Create default currency",
+                "operationId": "add-default-currency",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/currency.paging"
                         }
                     },
                     "400": {
@@ -1113,7 +1241,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging"
+                            "$ref": "#/definitions/github.com_factly_mande-server_action_dataset_format.paging"
                         }
                     }
                 }
@@ -1276,7 +1404,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_format.paging"
+                            "$ref": "#/definitions/github.com_factly_mande-server_action_format.paging"
                         }
                     }
                 }
@@ -1321,6 +1449,52 @@ var doc = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Format"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/formats/default": {
+            "post": {
+                "description": "Create default format",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Format"
+                ],
+                "summary": "Create default format",
+                "operationId": "add-default-format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "X-User",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organisation ID",
+                        "name": "X-Organisation",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_factly_mande-server_action_format.paging"
                         }
                     },
                     "400": {
@@ -2002,7 +2176,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_membership_user.paging"
+                            "$ref": "#/definitions/github.com_factly_mande-server_action_membership_user.paging"
                         }
                     },
                     "400": {
@@ -3175,7 +3349,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github.com_factly_data-portal-server_action_user.paging"
+                            "$ref": "#/definitions/tag.paging"
                         }
                     }
                 }
@@ -3390,6 +3564,47 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/webhooks/failed-payment": {
+            "post": {
+                "description": "receive failed payment webhook",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webhook"
+                ],
+                "summary": "receive failed payment webhook",
+                "operationId": "failed-payment",
+                "parameters": [
+                    {
+                        "description": "Failed Payment object",
+                        "name": "FailedPaymentEvent",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.FailedPaymentEvent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.FailedPaymentEvent"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -3428,14 +3643,21 @@ var doc = `{
         "catalog.catalog": {
             "type": "object",
             "required": [
-                "published_date",
+                "price",
+                "slug",
                 "title"
             ],
             "properties": {
+                "currency_id": {
+                    "type": "integer"
+                },
                 "description": {
                     "type": "string"
                 },
                 "featured_medium_id": {
+                    "type": "integer"
+                },
+                "price": {
                     "type": "integer"
                 },
                 "product_ids": {
@@ -3444,7 +3666,16 @@ var doc = `{
                         "type": "integer"
                     }
                 },
+                "product_titles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "published_date": {
+                    "type": "string"
+                },
+                "slug": {
                     "type": "string"
                 },
                 "title": {
@@ -3498,9 +3729,22 @@ var doc = `{
         "dataset.dataset": {
             "type": "object",
             "required": [
-                "price"
+                "description",
+                "granularity",
+                "is_public",
+                "organisation",
+                "price",
+                "profiling_url",
+                "sectors",
+                "source",
+                "temporal_coverage",
+                "time_saved",
+                "title"
             ],
             "properties": {
+                "archive_link": {
+                    "type": "string"
+                },
                 "contact_email": {
                     "type": "string"
                 },
@@ -3525,11 +3769,23 @@ var doc = `{
                 "granularity": {
                     "type": "string"
                 },
+                "is_public": {
+                    "type": "boolean"
+                },
                 "license": {
+                    "type": "string"
+                },
+                "next_update": {
+                    "type": "string"
+                },
+                "organisation": {
                     "type": "string"
                 },
                 "price": {
                     "type": "integer"
+                },
+                "profiling_url": {
+                    "type": "string"
                 },
                 "related_articles": {
                     "type": "string"
@@ -3537,7 +3793,13 @@ var doc = `{
                 "sample_url": {
                     "type": "string"
                 },
+                "sectors": {
+                    "type": "string"
+                },
                 "source": {
+                    "type": "string"
+                },
+                "source_link": {
                     "type": "string"
                 },
                 "tag_ids": {
@@ -3554,6 +3816,9 @@ var doc = `{
                 },
                 "title": {
                     "type": "string"
+                },
+                "units": {
+                    "type": "string"
                 }
             }
         },
@@ -3564,6 +3829,9 @@ var doc = `{
                 "price"
             ],
             "properties": {
+                "archive_link": {
+                    "type": "string"
+                },
                 "contact_email": {
                     "type": "string"
                 },
@@ -3612,7 +3880,16 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_public": {
+                    "type": "boolean"
+                },
                 "license": {
+                    "type": "string"
+                },
+                "next_update": {
+                    "type": "string"
+                },
+                "organisation": {
                     "type": "string"
                 },
                 "price": {
@@ -3624,13 +3901,22 @@ var doc = `{
                         "$ref": "#/definitions/model.Product"
                     }
                 },
+                "profiling_url": {
+                    "type": "string"
+                },
                 "related_articles": {
                     "type": "string"
                 },
                 "sample_url": {
                     "type": "string"
                 },
+                "sectors": {
+                    "type": "string"
+                },
                 "source": {
+                    "type": "string"
+                },
+                "source_link": {
                     "type": "string"
                 },
                 "tags": {
@@ -3646,6 +3932,9 @@ var doc = `{
                     "type": "integer"
                 },
                 "title": {
+                    "type": "string"
+                },
+                "units": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -3702,7 +3991,7 @@ var doc = `{
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_dataset_format.paging": {
+        "github.com_factly_mande-server_action_dataset_format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
@@ -3716,7 +4005,7 @@ var doc = `{
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_format.paging": {
+        "github.com_factly_mande-server_action_format.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
@@ -3730,13 +4019,13 @@ var doc = `{
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_membership_user.paging": {
+        "github.com_factly_mande-server_action_membership_user.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/model.Member"
                     }
                 },
                 "total": {
@@ -3744,7 +4033,7 @@ var doc = `{
                 }
             }
         },
-        "github.com_factly_data-portal-server_action_user.paging": {
+        "github.com_factly_mande-server_action_user.paging": {
             "type": "object",
             "properties": {
                 "nodes": {
@@ -3804,6 +4093,20 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.Medium"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "member.paging": {
+            "type": "object",
+            "properties": {
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Member"
                     }
                 },
                 "total": {
@@ -3891,6 +4194,12 @@ var doc = `{
                 "created_by_id": {
                     "type": "integer"
                 },
+                "currency": {
+                    "$ref": "#/definitions/model.Currency"
+                },
+                "currency_id": {
+                    "type": "integer"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -3912,6 +4221,9 @@ var doc = `{
                         "$ref": "#/definitions/model.Plan"
                     }
                 },
+                "price": {
+                    "type": "integer"
+                },
                 "products": {
                     "type": "array",
                     "items": {
@@ -3919,6 +4231,9 @@ var doc = `{
                     }
                 },
                 "published_date": {
+                    "type": "string"
+                },
+                "slug": {
                     "type": "string"
                 },
                 "title": {
@@ -3972,6 +4287,9 @@ var doc = `{
                 "price"
             ],
             "properties": {
+                "archive_link": {
+                    "type": "string"
+                },
                 "contact_email": {
                     "type": "string"
                 },
@@ -4014,7 +4332,16 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_public": {
+                    "type": "boolean"
+                },
                 "license": {
+                    "type": "string"
+                },
+                "next_update": {
+                    "type": "string"
+                },
+                "organisation": {
                     "type": "string"
                 },
                 "price": {
@@ -4026,13 +4353,22 @@ var doc = `{
                         "$ref": "#/definitions/model.Product"
                     }
                 },
+                "profiling_url": {
+                    "type": "string"
+                },
                 "related_articles": {
                     "type": "string"
                 },
                 "sample_url": {
                     "type": "string"
                 },
+                "sectors": {
+                    "type": "string"
+                },
                 "source": {
+                    "type": "string"
+                },
+                "source_link": {
                     "type": "string"
                 },
                 "tags": {
@@ -4048,6 +4384,9 @@ var doc = `{
                     "type": "integer"
                 },
                 "title": {
+                    "type": "string"
+                },
+                "units": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -4090,6 +4429,32 @@ var doc = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "model.FailedPaymentEvent": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "string"
+                },
+                "contains": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "entity": {
+                    "type": "string"
+                },
+                "event": {
+                    "type": "string"
+                },
+                "payload": {
+                    "$ref": "#/definitions/model.PaymentPayload"
                 }
             }
         },
@@ -4175,6 +4540,65 @@ var doc = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Member": {
+            "type": "object",
+            "properties": {
+                "birth_date": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "display_name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "featured_medium_id": {
+                    "type": "integer"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kid": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "medium": {
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "social_media_urls": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4329,6 +4753,22 @@ var doc = `{
                 }
             }
         },
+        "model.PaymentEntity": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "$ref": "#/definitions/model.RazorpayPayment"
+                }
+            }
+        },
+        "model.PaymentPayload": {
+            "type": "object",
+            "properties": {
+                "payment": {
+                    "$ref": "#/definitions/model.PaymentEntity"
+                }
+            }
+        },
         "model.Plan": {
             "type": "object",
             "required": [
@@ -4395,13 +4835,6 @@ var doc = `{
         },
         "model.Product": {
             "type": "object",
-            "required": [
-                "currency_id",
-                "price",
-                "slug",
-                "status",
-                "title"
-            ],
             "properties": {
                 "catalogs": {
                     "type": "array",
@@ -4428,6 +4861,9 @@ var doc = `{
                     }
                 },
                 "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "featured_medium": {
@@ -4468,6 +4904,101 @@ var doc = `{
                 },
                 "updated_by_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.RazorpayPayment": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "amount_refunded": {
+                    "type": "integer"
+                },
+                "aquirer_data": {
+                    "type": "object"
+                },
+                "bank": {
+                    "type": "string"
+                },
+                "captured": {
+                    "type": "boolean"
+                },
+                "card_id": {
+                    "type": "object"
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "object"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "entity": {
+                    "type": "string"
+                },
+                "error_code": {
+                    "type": "string"
+                },
+                "error_description": {
+                    "type": "string"
+                },
+                "error_reason": {
+                    "type": "string"
+                },
+                "error_source": {
+                    "type": "string"
+                },
+                "error_step": {
+                    "type": "string"
+                },
+                "fee": {
+                    "type": "object"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "international": {
+                    "type": "boolean"
+                },
+                "invoice_id": {
+                    "type": "object"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "order_id": {
+                    "type": "string"
+                },
+                "refund_status": {
+                    "type": "object"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "object"
+                },
+                "vpa": {
+                    "type": "object"
+                },
+                "wallet": {
+                    "type": "object"
                 }
             }
         },
@@ -4564,6 +5095,79 @@ var doc = `{
                     }
                 },
                 "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "organisation.application": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "medium": {
+                    "$ref": "#/definitions/model.Medium"
+                },
+                "medium_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by_id": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "organisation.organisationApplication": {
+            "type": "object",
+            "properties": {
+                "applications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/organisation.application"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by_id": {
                     "type": "integer"
                 }
             }
@@ -4702,6 +5306,9 @@ var doc = `{
                         "type": "integer"
                     }
                 },
+                "description": {
+                    "type": "string"
+                },
                 "featured_medium_id": {
                     "type": "integer"
                 },
@@ -4727,13 +5334,6 @@ var doc = `{
         },
         "product.productRes": {
             "type": "object",
-            "required": [
-                "currency_id",
-                "price",
-                "slug",
-                "status",
-                "title"
-            ],
             "properties": {
                 "catalogs": {
                     "type": "array",
@@ -4760,6 +5360,9 @@ var doc = `{
                     }
                 },
                 "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "featured_medium": {

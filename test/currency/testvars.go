@@ -14,8 +14,8 @@ var headers = map[string]string{
 }
 
 var Currency map[string]interface{} = map[string]interface{}{
-	"name":     "Test Name",
-	"iso_code": "Test ISO Code",
+	"name":     "Indian Rupees",
+	"iso_code": "INR",
 }
 
 var undecodableCurrency map[string]interface{} = map[string]interface{}{
@@ -24,17 +24,18 @@ var undecodableCurrency map[string]interface{} = map[string]interface{}{
 }
 
 var invalidCurrency map[string]interface{} = map[string]interface{}{
-	"nam":     "Test Name",
+	"nam":     "Indian Rupee",
 	"isocode": "Test ISO Code",
 }
 
 var CurrencyCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "iso_code", "name"}
 
-var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_currency"`)
+var selectQuery string = `SELECT (.+) FROM "dp_currency"`
 var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_currency"`)
 
 const basePath string = "/currencies"
 const path string = "/currencies/{currency_id}"
+const defaultPath string = "/currencies/default"
 
 func CurrencySelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).

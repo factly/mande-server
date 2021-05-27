@@ -1,0 +1,17 @@
+[
+    {
+        "name": "JSON",
+        "description": "JSON",
+        "is_default": false
+    },
+    {
+        "name": "CSV",
+        "description": "CSV",
+        "is_default": false
+    },
+    {
+        "name": "PDF",
+        "description": "PDF",
+        "is_default": false
+    }
+]

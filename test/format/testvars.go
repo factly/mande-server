@@ -44,6 +44,24 @@ var formatlist []map[string]interface{} = []map[string]interface{}{
 	},
 }
 
+var defaultFormats []map[string]interface{} = []map[string]interface{}{
+	{
+		"name":        "JSON",
+		"description": "JSON",
+		"is_default":  false,
+	},
+	{
+		"name":        "CSV",
+		"description": "CSV",
+		"is_default":  false,
+	},
+	{
+		"name":        "PDF",
+		"description": "PDF",
+		"is_default":  false,
+	},
+}
+
 var FormatCols []string = []string{"id", "created_at", "updated_at", "deleted_at", "created_by_id", "updated_by_id", "name", "description", "is_default"}
 
 var selectQuery string = regexp.QuoteMeta(`SELECT * FROM "dp_format"`)
@@ -51,6 +69,7 @@ var countQuery string = regexp.QuoteMeta(`SELECT count(1) FROM "dp_format"`)
 
 const basePath string = "/formats"
 const path string = "/formats/{format_id}"
+const defaultPath string = "/formats/default"
 
 func FormatSelectMock(mock sqlmock.Sqlmock, args ...driver.Value) {
 	mock.ExpectQuery(selectQuery).

@@ -30,8 +30,9 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", create) // POST /formats - create a new format and persist it
-	r.Get("/", list)    // GET /formats - return list of formats
+	r.Post("/", create)               // POST /formats - create a new format and persist it
+	r.Get("/", list)                  // GET /formats - return list of formats
+	r.Post("/default", createDefault) // POST /formats/default - create a new format and persist it
 
 	r.Route("/{format_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /formats/{format_id} - read a single format by :format_id
