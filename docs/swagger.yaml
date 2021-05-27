@@ -1201,21 +1201,6 @@ definitions:
       updated_by_id:
         type: integer
     type: object
-  search.searchQuery:
-    properties:
-      facetFilters:
-        items:
-          type: string
-        type: array
-      filters:
-        type: string
-      limit:
-        type: integer
-      q:
-        type: string
-    required:
-    - q
-    type: object
   tag.paging:
     properties:
       nodes:
@@ -3452,7 +3437,7 @@ paths:
       tags:
       - Product
   /search:
-    post:
+    get:
       description: Global search for all entities
       operationId: search-entities
       parameters:
@@ -3466,11 +3451,15 @@ paths:
         name: X-Organisation
         required: true
         type: string
-      - description: Search
-        in: body
-        name: Search
-        schema:
-          $ref: '#/definitions/search.searchQuery'
+      - description: Query
+        in: query
+        name: q
+        required: true
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: string
       produces:
       - application/json
       responses:
@@ -3508,7 +3497,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tag.paging'
+            $ref: '#/definitions/github.com_factly_mande-server_action_user.paging'
       summary: Show all tags
       tags:
       - Tag

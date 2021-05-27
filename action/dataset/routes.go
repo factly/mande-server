@@ -29,7 +29,7 @@ type dataset struct {
 	DataStandard     string         `json:"data_standard"`
 	SampleURL        string         `json:"sample_url"`
 	ProfilingURL     string         `json:"profiling_url" validate:"required"`
-	IsPublic         bool           `json:"is_public" validate:"required"`
+	IsPublic         bool           `json:"is_public"`
 	RelatedArticles  postgres.Jsonb `json:"related_articles" swaggertype:"primitive,string"`
 	TimeSaved        int            `json:"time_saved" validate:"required"`
 	Price            int            `json:"price" validate:"required"`
