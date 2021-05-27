@@ -4,11 +4,16 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/dlmiddlecote/sqlstats"
 	"github.com/factly/mande-server/action"
 	"github.com/factly/mande-server/model"
 	"github.com/factly/mande-server/util/razorpay"
 	"github.com/factly/x/meilisearchx"
+	"github.com/go-chi/chi"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -32,14 +37,26 @@ var serveCmd = &cobra.Command{
 		webhookRouter := action.RegisterWebHookRoutes()
 
 		go func() {
-			log.Fatal(http.ListenAndServe(":7720", userRouter))
+			promRouter := chi.NewRouter()
+
+			sqlDB, _ := model.DB.DB()
+			collector := sqlstats.NewStatsCollector(viper.GetString("database_name"), sqlDB)
+
+			prometheus.MustRegister(collector)
+
+			promRouter.Mount("/metrics", promhttp.Handler())
+			log.Fatal(http.ListenAndServe(":8001", promRouter))
 		}()
 
 		go func() {
-			log.Fatal(http.ListenAndServe(":7722", webhookRouter))
+			log.Fatal(http.ListenAndServe(":8002", userRouter))
 		}()
 
-		log.Fatal(http.ListenAndServe(":7721", adminRouter))
+		go func() {
+			log.Fatal(http.ListenAndServe(":8003", webhookRouter))
+		}()
+
+		log.Fatal(http.ListenAndServe(":8000", adminRouter))
 
 	},
 }
