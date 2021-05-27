@@ -23,20 +23,31 @@ definitions:
     type: object
   catalog.catalog:
     properties:
+      currency_id:
+        type: integer
       description:
         type: string
       featured_medium_id:
+        type: integer
+      price:
         type: integer
       product_ids:
         items:
           type: integer
         type: array
+      product_titles:
+        items:
+          type: string
+        type: array
       published_date:
+        type: string
+      slug:
         type: string
       title:
         type: string
     required:
-    - published_date
+    - price
+    - slug
     - title
     type: object
   catalog.paging:
@@ -69,6 +80,8 @@ definitions:
     type: object
   dataset.dataset:
     properties:
+      archive_link:
+        type: string
       contact_email:
         type: string
       contact_name:
@@ -85,15 +98,27 @@ definitions:
         type: string
       granularity:
         type: string
+      is_public:
+        type: boolean
       license:
+        type: string
+      next_update:
+        type: string
+      organisation:
         type: string
       price:
         type: integer
+      profiling_url:
+        type: string
       related_articles:
         type: string
       sample_url:
         type: string
+      sectors:
+        type: string
       source:
+        type: string
+      source_link:
         type: string
       tag_ids:
         items:
@@ -105,11 +130,25 @@ definitions:
         type: integer
       title:
         type: string
+      units:
+        type: string
     required:
+    - description
+    - granularity
+    - is_public
+    - organisation
     - price
+    - profiling_url
+    - sectors
+    - source
+    - temporal_coverage
+    - time_saved
+    - title
     type: object
   dataset.datasetData:
     properties:
+      archive_link:
+        type: string
       contact_email:
         type: string
       contact_name:
@@ -142,7 +181,13 @@ definitions:
         type: string
       id:
         type: integer
+      is_public:
+        type: boolean
       license:
+        type: string
+      next_update:
+        type: string
+      organisation:
         type: string
       price:
         type: integer
@@ -150,11 +195,17 @@ definitions:
         items:
           $ref: '#/definitions/model.Product'
         type: array
+      profiling_url:
+        type: string
       related_articles:
         type: string
       sample_url:
         type: string
+      sectors:
+        type: string
       source:
+        type: string
+      source_link:
         type: string
       tags:
         items:
@@ -165,6 +216,8 @@ definitions:
       time_saved:
         type: integer
       title:
+        type: string
+      units:
         type: string
       updated_at:
         type: string
@@ -204,7 +257,7 @@ definitions:
     required:
     - name
     type: object
-  github.com_factly_data-portal-server_action_dataset_format.paging:
+  github.com_factly_mande-server_action_dataset_format.paging:
     properties:
       nodes:
         items:
@@ -213,7 +266,7 @@ definitions:
       total:
         type: integer
     type: object
-  github.com_factly_data-portal-server_action_format.paging:
+  github.com_factly_mande-server_action_format.paging:
     properties:
       nodes:
         items:
@@ -222,16 +275,16 @@ definitions:
       total:
         type: integer
     type: object
-  github.com_factly_data-portal-server_action_membership_user.paging:
+  github.com_factly_mande-server_action_membership_user.paging:
     properties:
       nodes:
         items:
-          type: integer
+          $ref: '#/definitions/model.Member'
         type: array
       total:
         type: integer
     type: object
-  github.com_factly_data-portal-server_action_user.paging:
+  github.com_factly_mande-server_action_user.paging:
     properties:
       nodes:
         items:
@@ -271,6 +324,15 @@ definitions:
       nodes:
         items:
           $ref: '#/definitions/model.Medium'
+        type: array
+      total:
+        type: integer
+    type: object
+  member.paging:
+    properties:
+      nodes:
+        items:
+          $ref: '#/definitions/model.Member'
         type: array
       total:
         type: integer
@@ -328,6 +390,10 @@ definitions:
         type: string
       created_by_id:
         type: integer
+      currency:
+        $ref: '#/definitions/model.Currency'
+      currency_id:
+        type: integer
       deleted_at:
         type: string
       description:
@@ -342,11 +408,15 @@ definitions:
         items:
           $ref: '#/definitions/model.Plan'
         type: array
+      price:
+        type: integer
       products:
         items:
           $ref: '#/definitions/model.Product'
         type: array
       published_date:
+        type: string
+      slug:
         type: string
       title:
         type: string
@@ -379,6 +449,8 @@ definitions:
     type: object
   model.Dataset:
     properties:
+      archive_link:
+        type: string
       contact_email:
         type: string
       contact_name:
@@ -407,7 +479,13 @@ definitions:
         type: string
       id:
         type: integer
+      is_public:
+        type: boolean
       license:
+        type: string
+      next_update:
+        type: string
+      organisation:
         type: string
       price:
         type: integer
@@ -415,11 +493,17 @@ definitions:
         items:
           $ref: '#/definitions/model.Product'
         type: array
+      profiling_url:
+        type: string
       related_articles:
         type: string
       sample_url:
         type: string
+      sectors:
+        type: string
       source:
+        type: string
+      source_link:
         type: string
       tags:
         items:
@@ -430,6 +514,8 @@ definitions:
       time_saved:
         type: integer
       title:
+        type: string
+      units:
         type: string
       updated_at:
         type: string
@@ -461,6 +547,23 @@ definitions:
         type: integer
       url:
         type: string
+    type: object
+  model.FailedPaymentEvent:
+    properties:
+      account_id:
+        type: string
+      contains:
+        items:
+          type: string
+        type: array
+      created_at:
+        type: integer
+      entity:
+        type: string
+      event:
+        type: string
+      payload:
+        $ref: '#/definitions/model.PaymentPayload'
     type: object
   model.Format:
     properties:
@@ -517,6 +620,45 @@ definitions:
         type: integer
       url:
         type: string
+    type: object
+  model.Member:
+    properties:
+      birth_date:
+        type: string
+      created_at:
+        type: string
+      created_by_id:
+        type: integer
+      deleted_at:
+        type: string
+      description:
+        type: string
+      display_name:
+        type: string
+      email:
+        type: string
+      featured_medium_id:
+        type: integer
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      kid:
+        type: string
+      last_name:
+        type: string
+      medium:
+        $ref: '#/definitions/model.Medium'
+      slug:
+        type: string
+      social_media_urls:
+        type: string
+      updated_at:
+        type: string
+      updated_by_id:
+        type: integer
     type: object
   model.Membership:
     properties:
@@ -620,6 +762,16 @@ definitions:
     - gateway
     - status
     type: object
+  model.PaymentEntity:
+    properties:
+      entity:
+        $ref: '#/definitions/model.RazorpayPayment'
+    type: object
+  model.PaymentPayload:
+    properties:
+      payment:
+        $ref: '#/definitions/model.PaymentEntity'
+    type: object
   model.Plan:
     properties:
       all_products:
@@ -684,6 +836,8 @@ definitions:
         type: array
       deleted_at:
         type: string
+      description:
+        type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
       featured_medium_id:
@@ -710,12 +864,69 @@ definitions:
         type: string
       updated_by_id:
         type: integer
-    required:
-    - currency_id
-    - price
-    - slug
-    - status
-    - title
+    type: object
+  model.RazorpayPayment:
+    properties:
+      amount:
+        type: integer
+      amount_refunded:
+        type: integer
+      aquirer_data:
+        type: object
+      bank:
+        type: string
+      captured:
+        type: boolean
+      card_id:
+        type: object
+      contact:
+        type: string
+      created_at:
+        type: integer
+      currency:
+        type: string
+      description:
+        type: object
+      email:
+        type: string
+      entity:
+        type: string
+      error_code:
+        type: string
+      error_description:
+        type: string
+      error_reason:
+        type: string
+      error_source:
+        type: string
+      error_step:
+        type: string
+      fee:
+        type: object
+      id:
+        type: string
+      international:
+        type: boolean
+      invoice_id:
+        type: object
+      method:
+        type: string
+      notes:
+        items:
+          type: object
+        type: array
+      order_id:
+        type: string
+      refund_status:
+        type: object
+      status:
+        type: string
+      tax:
+        type: object
+      vpa:
+        type: object
+      wallet:
+        type: object
     type: object
   model.Tag:
     properties:
@@ -779,6 +990,54 @@ definitions:
           $ref: '#/definitions/model.Order'
         type: array
       total:
+        type: integer
+    type: object
+  organisation.application:
+    properties:
+      created_at:
+        type: string
+      created_by_id:
+        type: integer
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      medium:
+        $ref: '#/definitions/model.Medium'
+      medium_id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      updated_by_id:
+        type: integer
+      url:
+        type: string
+    type: object
+  organisation.organisationApplication:
+    properties:
+      applications:
+        items:
+          $ref: '#/definitions/organisation.application'
+        type: array
+      created_at:
+        type: string
+      created_by_id:
+        type: integer
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      updated_by_id:
         type: integer
     type: object
   payment.paging:
@@ -868,6 +1127,8 @@ definitions:
         items:
           type: integer
         type: array
+      description:
+        type: string
       featured_medium_id:
         type: integer
       price:
@@ -907,6 +1168,8 @@ definitions:
         type: array
       deleted_at:
         type: string
+      description:
+        type: string
       featured_medium:
         $ref: '#/definitions/model.Medium'
       featured_medium_id:
@@ -937,12 +1200,6 @@ definitions:
         type: string
       updated_by_id:
         type: integer
-    required:
-    - currency_id
-    - price
-    - slug
-    - status
-    - title
     type: object
   search.searchQuery:
     properties:
@@ -998,6 +1255,28 @@ info:
   title: Data portal API
   version: "1.0"
 paths:
+  /admin/organisations/my:
+    get:
+      description: Get all org
+      operationId: get-all-organisation
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/organisation.organisationApplication'
+            type: array
+      summary: Get all org
+      tags:
+      - Organisation
   /cartitems:
     get:
       description: Get all carts
@@ -1347,6 +1626,39 @@ paths:
       summary: Show all catalogs owned by user
       tags:
       - Product
+  /core/members:
+    get:
+      description: Get all members
+      operationId: get-all-members
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Space ID
+        in: header
+        name: X-Space
+        required: true
+        type: string
+      - description: limit per page
+        in: query
+        name: limit
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/member.paging'
+      summary: Show all members
+      tags:
+      - Members
   /currencies:
     get:
       description: Get all currencies
@@ -1520,6 +1832,37 @@ paths:
               type: string
             type: array
       summary: Update a currency by id
+      tags:
+      - Currency
+  /currencies/default:
+    post:
+      description: Create default currency
+      operationId: add-default-currency
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/currency.paging'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create default currency
       tags:
       - Currency
   /datasets:
@@ -1732,7 +2075,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_dataset_format.paging'
+            $ref: '#/definitions/github.com_factly_mande-server_action_dataset_format.paging'
       summary: Show all datsets format
       tags:
       - Dataset Format
@@ -1843,7 +2186,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_format.paging'
+            $ref: '#/definitions/github.com_factly_mande-server_action_format.paging'
       summary: Show all formats
       tags:
       - Format
@@ -1988,6 +2331,37 @@ paths:
               type: string
             type: array
       summary: Update a format by id
+      tags:
+      - Format
+  /formats/default:
+    post:
+      description: Create default format
+      operationId: add-default-format
+      parameters:
+      - description: User ID
+        in: header
+        name: X-User
+        required: true
+        type: string
+      - description: Organisation ID
+        in: header
+        name: X-Organisation
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_factly_mande-server_action_format.paging'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Create default format
       tags:
       - Format
   /media:
@@ -2337,7 +2711,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_membership_user.paging'
+            $ref: '#/definitions/github.com_factly_mande-server_action_membership_user.paging'
         "400":
           description: Bad Request
           schema:
@@ -3134,7 +3508,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github.com_factly_data-portal-server_action_user.paging'
+            $ref: '#/definitions/tag.paging'
       summary: Show all tags
       tags:
       - Tag
@@ -3281,4 +3655,31 @@ paths:
       summary: Update a tag by id
       tags:
       - Tag
+  /webhooks/failed-payment:
+    post:
+      description: receive failed payment webhook
+      operationId: failed-payment
+      parameters:
+      - description: Failed Payment object
+        in: body
+        name: FailedPaymentEvent
+        required: true
+        schema:
+          $ref: '#/definitions/model.FailedPaymentEvent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.FailedPaymentEvent'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              type: string
+            type: array
+      summary: receive failed payment webhook
+      tags:
+      - Webhook
 swagger: "2.0"

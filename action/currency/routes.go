@@ -30,8 +30,9 @@ func UserRouter() chi.Router {
 func AdminRouter() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get("/", list)    // GET /currencies - return list of currencies
-	r.Post("/", create) // POST /currencies - create a new currency and persist it
+	r.Get("/", list)                  // GET /currencies - return list of currencies
+	r.Post("/", create)               // POST /currencies - create a new currency and persist it
+	r.Post("/default", createDefault) // POST /currencies/default - create a new currency and persist it
 
 	r.Route("/{currency_id}", func(r chi.Router) {
 		r.Get("/", details)   // GET /currencies/{currency_id} - read a single currency by :currency_id
