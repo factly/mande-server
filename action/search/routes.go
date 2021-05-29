@@ -15,7 +15,7 @@ type searchQuery struct {
 func Router() chi.Router {
 	r := chi.NewRouter()
 
-	r.Post("/", list)
+	r.Get("/", list)
 
 	return r
 }

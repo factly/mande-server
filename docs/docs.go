@@ -3265,7 +3265,7 @@ var doc = `{
             }
         },
         "/search": {
-            "post": {
+            "get": {
                 "description": "Global search for all entities",
                 "produces": [
                     "application/json"
@@ -3291,12 +3291,17 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "Search",
-                        "name": "Search",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/search.searchQuery"
-                        }
+                        "type": "string",
+                        "description": "Query",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3349,7 +3354,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tag.paging"
+                            "$ref": "#/definitions/github.com_factly_mande-server_action_user.paging"
                         }
                     }
                 }
@@ -5409,29 +5414,6 @@ var doc = `{
                 },
                 "updated_by_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "search.searchQuery": {
-            "type": "object",
-            "required": [
-                "q"
-            ],
-            "properties": {
-                "facetFilters": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "filters": {
-                    "type": "string"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "q": {
-                    "type": "string"
                 }
             }
         },

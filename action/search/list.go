@@ -1,15 +1,14 @@
 package search
 
 import (
-	"encoding/json"
-	"errors"
 	"net/http"
+	"strconv"
 
+	"github.com/factly/mande-server/model"
 	"github.com/factly/x/errorx"
 	"github.com/factly/x/loggerx"
 	"github.com/factly/x/meilisearchx"
 	"github.com/factly/x/renderx"
-	"github.com/factly/x/validationx"
 	"github.com/meilisearch/meilisearch-go"
 )
 
@@ -22,31 +21,35 @@ import (
 // @Consume json
 // @Param X-User header string true "User ID"
 // @Param X-Organisation header string true "Organisation ID"
-// @Param Search body searchQuery false "Search"
+// @Param q query string true "Query"
+// @Param limit query string false "Limit"
 // @Success 200
-// @Router /search [post]
+// @Router /search [get]
 func list(w http.ResponseWriter, r *http.Request) {
 
-	searchQuery := &searchQuery{}
-	err := json.NewDecoder(r.Body).Decode(&searchQuery)
-	if err != nil {
+	q := r.URL.Query().Get("q")
+	if q == "" {
+		errorx.Render(w, errorx.Parser(errorx.GetMessage("provide query param q", http.StatusBadRequest)))
+		return
+	}
+
+	limitQ := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(limitQ)
+	if err != nil && limitQ != "" {
 		loggerx.Error(err)
-		errorx.Render(w, errorx.Parser(errorx.DecodeError()))
+		errorx.Render(w, errorx.Parser(errorx.GetMessage("invalid limit param", http.StatusBadRequest)))
 		return
 	}
 
-	validationError := validationx.Check(searchQuery)
-	if validationError != nil {
-		loggerx.Error(errors.New("validation error"))
-		errorx.Render(w, validationError)
-		return
-	}
+	products := make([]model.Product, 0)
+	datasets := make([]model.Dataset, 0)
+	catalogs := make([]model.Catalog, 0)
 
+	// search for products
 	result, err := meilisearchx.Client.Search("mande").Search(meilisearch.SearchRequest{
-		Query:        searchQuery.Query,
-		Limit:        searchQuery.Limit,
-		Filters:      searchQuery.Filters,
-		FacetFilters: searchQuery.FacetFilters,
+		Query:        q,
+		Limit:        int64(limit),
+		FacetFilters: []string{"kind:product"},
 	})
 
 	if err != nil {
@@ -55,5 +58,58 @@ func list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderx.JSON(w, http.StatusOK, result.Hits)
+	productIDs := meilisearchx.GetIDArray(result.Hits)
+
+	// fetch filtered products
+	if len(productIDs) > 0 {
+		model.DB.Model(&model.Product{}).Where(productIDs).Find(&products)
+	}
+
+	// search for datasets
+	result, err = meilisearchx.Client.Search("mande").Search(meilisearch.SearchRequest{
+		Query:        q,
+		Limit:        int64(limit),
+		FacetFilters: []string{"kind:dataset"},
+	})
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	datasetIDs := meilisearchx.GetIDArray(result.Hits)
+
+	// fetch filtered datasets
+	if len(datasetIDs) > 0 {
+		model.DB.Model(&model.Dataset{}).Where(datasetIDs).Find(&datasets)
+	}
+
+	// search for catalogs
+	result, err = meilisearchx.Client.Search("mande").Search(meilisearch.SearchRequest{
+		Query:        q,
+		Limit:        int64(limit),
+		FacetFilters: []string{"kind:catalog"},
+	})
+
+	if err != nil {
+		loggerx.Error(err)
+		errorx.Render(w, errorx.Parser(errorx.InternalServerError()))
+		return
+	}
+
+	catalogIDs := meilisearchx.GetIDArray(result.Hits)
+
+	// fetch filtered catalogs
+	if len(catalogIDs) > 0 {
+		model.DB.Model(&model.Catalog{}).Where(catalogIDs).Find(&catalogs)
+	}
+
+	resp := map[string]interface{}{
+		"products": products,
+		"datasets": datasets,
+		"catalogs": catalogs,
+	}
+
+	renderx.JSON(w, http.StatusOK, resp)
 }
